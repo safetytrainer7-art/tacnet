@@ -149,8 +149,8 @@
                     const voices = window.speechSynthesis.getVoices();
                     const clearMaleVoice = voices.find(v => v.name.includes('Google US English') || v.name.includes('Male') || v.lang === 'en-US');
                     if (clearMaleVoice) utterance.voice = clearMaleVoice;
-                    utterance.rate = 1.25;  
-                    utterance.pitch =1.25; 
+                    utterance.rate = 1.0;  
+                    utterance.pitch =1.0; 
                     window.speechSynthesis.speak(utterance);
                 }, 150); 
             }
