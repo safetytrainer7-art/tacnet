@@ -7,12 +7,44 @@
     "title": "Assault and battery; penalty",
     "penalty": "Class 1 Misdemeanor"
   },
+  "18.2-248": {
+    "title": "Manufacturing, selling, giving, distributing, or possessing with intent to manufacture, sell, give, or distribute a controlled substance or an imitation controlled substance",
+    "penalty": "Unclassified Felony (Variable Felony Sentencing)"
+  },
+  "18.2-460": {
+    "title": "Obstructing justice; resistance to execution of lawful process; penalty",
+    "penalty": "Class 1 Misdemeanor"
+  },
+  "18.2-137": {
+    "title": "Injuring, destroying, defacing, or removing property, real or personal, not one's own",
+    "penalty": "Class 1 Misdemeanor (Class 6 Felony if value exceeds $1,000)"
+  },
   "46.2-852": {
     "title": "Reckless driving; general rule",
+    "penalty": "Class 1 Misdemeanor"
+  },
+  "46.2-894": {
+    "title": "Duty of driver to stop, etc., in event of accident involving injury or death or damage to attended property; penalty",
+    "penalty": "Class 5 Felony (Class 1 Misdemeanor if property damage under $1,000)"
+  },
+  "46.2-301": {
+    "title": "Driving while license, permit, or privilege to drive suspended or revoked",
     "penalty": "Class 1 Misdemeanor"
   },
   "46.2-391": {
     "title": "Revocation of license for conviction of driving while intoxicated",
     "penalty": "Statutory Driver's License Revocation"
+  },
+  "29.1-521": {
+    "title": "Unlawful hunting, trapping, fishing, or possession of wild birds or wild animals",
+    "penalty": "Class 3 Misdemeanor"
+  },
+  "16.1-253.1": {
+    "title": "Preliminary protective order in cases of family abuse",
+    "penalty": "Statutory Order / Violation constitutes Class 1 Misdemeanor"
+  },
+  "18.2-371.1": {
+    "title": "Abuse and neglect of children; penalty",
+    "penalty": "Class 4 Felony (Class 6 Felony if no serious injury)"
   }
 }
