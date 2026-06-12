@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,7 +14,6 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(10px);
         }
-        /* Locks your exact uploaded image perfectly to the screen background */
         .tacnet-graphic-bg {
             background-image: url('./tac-bg.jpg');
             background-size: contain;
@@ -46,12 +46,16 @@
             </a>
         </div>
 
-        <!-- TARGET SEARCH COMPONENT -->
+        <!-- TARGET SEARCH COMPONENT (RE-WIRING THE LINK FOR DIRECT INTERACTION) -->
         <div class="flex flex-col space-y-1">
             <label class="text-[9px] font-black tracking-widest text-blue-400 uppercase">LOG TARGET AREA / OPERATION LOCATION</label>
             <div class="flex items-center space-x-1.5">
                 <input id="search-address" type="text" placeholder="Enter perimeter staging address..." class="w-full bg-slate-950 border border-slate-700 px-3 py-1.5 rounded text-xs font-semibold focus:outline-none focus:border-blue-500 text-white">
-                <button onclick="logAddressPerimeter()" class="bg-blue-600 hover:bg-blue-500 font-black text-xs px-3 py-1.5 rounded tracking-widest uppercase">LOG</button>
+                
+                <!-- This direct link container bypasses the iOS security popup blockade -->
+                <a id="native-map-link" href="#" onclick="logAddressPerimeter(event)" class="bg-blue-600 hover:bg-blue-500 text-white font-black text-xs px-4 py-2 rounded tracking-widest uppercase text-center flex items-center justify-center">
+                    LOG
+                </a>
             </div>
         </div>
 
@@ -101,7 +105,7 @@
                 <i class="fa-solid fa-hand-fist"></i> <span>OFFICER DISTRESS</span>
             </button>
             <button onclick="terminateSearchSequence()" class="bg-amber-600 hover:bg-amber-500 font-black tracking-widest uppercase text-xs py-2.5 rounded-lg flex items-center justify-center space-x-1.5 border border-amber-500">
-                <i class="fa-solid fa-CLOSE SEARCH LOG"></i> <span>CLOSE SEARCH LOG</span>
+                <i class="fa-solid fa-circle-stop"></i> <span>CLOSE SEARCH LOG</span>
             </button>
         </div>
     </footer>
@@ -113,28 +117,33 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             reportRecorder = new CourtReportGenerator("OP-2026-AMHERST", "Deputy Earl Wood (Ret.)");
-            reportRecorder.logSearchEvent("SYSTEM", "TACNET Graphic Frame Layer Engaged.");
+            reportRecorder.logSearchEvent("SYSTEM", "TACNET Wired Layer Online.");
         });
 
-        // WIRED: Logs address to ticker, saves to court dossier, and fires native mapping launcher
-        function logAddressPerimeter() {
+        // WIRED TO FORCE BYPASS ON APPLE POPUP SECURITY GATEWAYS
+        function logAddressPerimeter(event) {
             const addr = document.getElementById('search-address').value.trim();
-            if (!addr) return;
             
-            // 1. Update live ticker display text
+            if (!addr) {
+                event.preventDefault(); // Stop click if line is blank
+                return;
+            }
+            
+            // 1. Instantly log data locally to screen ticker and court array
             document.getElementById('status-readout').innerText = `📍 PERIMETER SITE BOUND: ${addr.toUpperCase()}`;
+            if(reportRecorder) reportRecorder.logSearchEvent("COMMAND", `Staging Area Location Verified: ${addr}`);
             
-            // 2. Log event entry directly into court timeline tracker
-            if(reportRecorder) reportRecorder.logSearchEvent("COMMAND", `Staging Area Perimeter Verified Location: ${addr}`);
+            // 2. Map direct destination address formatting parameters natively
+            const linkElement = document.getElementById('native-map-link');
             
-            // 3. Fire the native iOS map protocol redirect link instantly
-            setTimeout(() => {
-                const nativeMapUrl = `maps://?q=${encodeURIComponent(addr)}`;
-                window.location.href = nativeMapUrl;
-            }, 800);
+            // Detect user platform environment (Universal mapping address protocols)
+            if (navigator.userAgent.match(/(iPhone|iPod|iPad)/)) {
+                linkElement.href = `maps://?q=${encodeURIComponent(addr)}`;
+            } else {
+                linkElement.href = `https://maps.google.com/?q=${encodeURIComponent(addr)}`;
+            }
         }
 
-        // WIRED: Logs operations token to green digital ticker and registers timeline accountability
         function initializeMeshTracking() {
             const token = document.getElementById('op-token').value.trim().toUpperCase();
             if(!token) return;
