@@ -34,46 +34,46 @@
         <canvas id="drawing-canvas" class="absolute inset-0 w-full h-full z-10"></canvas>
         <div id="perimeter-ring" class="hidden absolute border-4 border-emerald-400 rounded-full bg-emerald-500/10 pointer-events-none z-20 shadow-[0_0_15px_#34d399]"></div>
 
-        <!-- NEW: SECURITY CONTROLS OVERLAY (TOP CENTER) -->
+        <!-- APP HEADER CONTROL DECK BLOCK -->
         <div class="absolute top-3 left-1/2 -translate-x-1/2 z-30 flex flex-col items-center space-y-1 w-full max-w-[280px] px-2">
-            <div class="flex w-full space-x-1">
-                <input id="op-token" type="text" placeholder="Operation Token (e.g. OP410)" class="w-1/2 bg-slate-950/90 border border-blue-500 px-2 py-1 rounded text-[10px] text-center uppercase tracking-wider font-bold text-blue-400 placeholder-blue-700 focus:outline-none">
-                <input id="cad-feed-url" type="text" placeholder="Route B: Agency CAD URL Hook" class="w-1/2 bg-slate-950/90 border border-slate-700 px-2 py-1 rounded text-[10px] text-center tracking-wider font-semibold text-slate-300 placeholder-slate-600 focus:outline-none focus:border-blue-500">
+            <!-- DOCK BUTTON LINK TO JUMP STRAIGHT BACK TO LEX HOME -->
+            <a href="./index.html" class="w-full bg-slate-950/90 border border-slate-700 text-slate-300 font-bold text-[10px] py-1 rounded text-center tracking-widest uppercase shadow-md"><i class="fa-solid fa-arrow-left text-blue-400 mr-1.5"></i> Return to LEX Main Deck</a>
+            <div class="flex w-full space-x-1 pt-1">
+                <input id="op-token" type="text" placeholder="Operation Token" class="w-1/2 bg-slate-950/90 border border-blue-500 px-2 py-1 rounded text-[10px] text-center uppercase tracking-wider font-bold text-blue-400 placeholder-blue-700 focus:outline-none">
+                <input id="cad-feed-url" type="text" placeholder="Agency CAD Hook" class="w-1/2 bg-slate-950/90 border border-slate-700 px-2 py-1 rounded text-[10px] text-center tracking-wider font-semibold text-slate-300 placeholder-slate-600 focus:outline-none focus:border-blue-500">
             </div>
-            <button onclick="initializeSecureNetworks()" class="w-full bg-blue-700 hover:bg-blue-600 font-black text-[10px] py-1 rounded tracking-widest uppercase shadow-md">Lock Encryption & Sync Grid</button>
+            <button onclick="initializeSecureNetworks()" class="w-full bg-emerald-700 hover:bg-emerald-600 font-black text-[10px] py-1 rounded tracking-widest uppercase shadow-md">Sync Data Feeds</button>
         </div>
 
-        <!-- SEARCHERS LEGEND OVERLAY PANEL (TOP LEFT) -->
-        <div class="absolute top-3 left-3 z-30 panel-glass p-3 rounded-lg max-w-[170px] text-xs">
-            <h4 class="font-black border-b border-white/20 pb-1 mb-2 tracking-wider uppercase text-blue-400">Searchers Legend</h4>
-            <div class="space-y-1.5 font-semibold text-[11px]">
-                <div class="flex items-center justify-between"><span><span class="inline-block h-2.5 w-2.5 rounded-full bg-blue-600 mr-2"></span>LE Units</span><input type="checkbox" checked class="rounded bg-slate-800 border-none"></div>
-                <div class="flex items-center justify-between"><span><span class="inline-block h-2.5 w-2.5 rounded-full bg-cyan-400 mr-2"></span>K9 Teams</span><input type="checkbox" checked class="rounded bg-slate-800 border-none"></div>
-                <div class="flex items-center justify-between"><span><span class="inline-block h-2.5 w-2.5 rounded-full bg-red-600 mr-2"></span>SAR Teams</span><input type="checkbox" checked class="rounded bg-slate-800 border-none"></div>
-                <div class="flex items-center justify-between"><span><span class="inline-block h-2.5 w-2.5 rounded-full bg-green-600 mr-2"></span>Civilians</span><input type="checkbox" checked class="rounded bg-slate-800 border-none"></div>
-                <div class="flex items-center justify-between"><span><span class="inline-block h-2.5 w-2.5 rounded-full bg-purple-600 mr-2"></span>Suspect</span><input type="checkbox" checked class="rounded bg-slate-800 border-none"></div>
-                <div class="flex items-center justify-between"><span><span class="inline-block h-2.5 w-2.5 rounded-full bg-gray-500 mr-2"></span>Drones</span><input type="checkbox" checked class="rounded bg-slate-800 border-none"></div>
-                <div class="flex items-center justify-between"><span><span class="inline-block h-2.5 w-2.5 rounded-full bg-black border border-white/40 mr-2"></span>Suspect Veh</span><input type="checkbox" checked class="rounded bg-slate-800 border-none"></div>
-                <div class="flex items-center justify-between"><span><span class="inline-block h-2.5 w-2.5 rounded-full bg-yellow-400 mr-2"></span>Article Find</span><input type="checkbox" checked class="rounded bg-slate-800 border-none"></div>
-                <div class="flex items-center justify-between"><span><i class="fa-solid fa-star text-red-600 mr-1.5 text-[10px]"></i>Command Post</span><input type="checkbox" checked class="rounded bg-slate-800 border-none"></div>
-            </div>
-        </div>
-
-        <!-- ADDRESS SEARCH INPUT BAR OVERLAY (TOP RIGHT) -->
-        <div class="absolute top-3 right-3 z-30 flex flex-col space-y-1 max-w-[180px] w-full">
-            <div class="flex items-center space-x-1">
-                <input id="search-address" type="text" placeholder="Target Address..." class="w-full bg-slate-950/90 border border-slate-700 px-2 py-1 rounded text-xs focus:outline-none focus:border-blue-500 text-white font-medium">
-                <button onclick="executeAddressSearch()" class="bg-blue-600 hover:bg-blue-500 font-bold text-xs px-2.5 py-1 rounded tracking-wider uppercase">GO</button>
+        <!-- SEARCHERS LEGEND OVERLAY PANEL -->
+        <div class="absolute top-16 left-3 z-30 panel-glass p-3 rounded-lg max-w-[150px] text-xs">
+            <h4 class="font-black border-b border-white/20 pb-1 mb-2 tracking-wider uppercase text-blue-400 text-[10px]">Searchers Legend</h4>
+            <div class="space-y-1.5 font-semibold text-[10px]">
+                <div class="flex items-center justify-between"><span><span class="inline-block h-2 w-2 rounded-full bg-blue-600 mr-1.5"></span>LE Units</span><input type="checkbox" checked class="rounded bg-slate-800 border-none"></div>
+                <div class="flex items-center justify-between"><span><span class="inline-block h-2 w-2 rounded-full bg-cyan-400 mr-1.5"></span>K9 Teams</span><input type="checkbox" checked class="rounded bg-slate-800 border-none"></div>
+                <div class="flex items-center justify-between"><span><span class="inline-block h-2 w-2 rounded-full bg-red-600 mr-1.5"></span>SAR Teams</span><input type="checkbox" checked class="rounded bg-slate-800 border-none"></div>
+                <div class="flex items-center justify-between"><span><span class="inline-block h-2 w-2 rounded-full bg-green-600 mr-1.5"></span>Civilians</span><input type="checkbox" checked class="rounded bg-slate-800 border-none"></div>
+                <div class="flex items-center justify-between"><span><span class="inline-block h-2 w-2 rounded-full bg-purple-600 mr-1.5"></span>Suspect</span><input type="checkbox" checked class="rounded bg-slate-800 border-none"></div>
+                <div class="flex items-center justify-between"><span><span class="inline-block h-2 w-2 rounded-full bg-gray-500 mr-1.5"></span>Drones</span><input type="checkbox" checked class="rounded bg-slate-800 border-none"></div>
+                <div class="flex items-center justify-between"><span><span class="inline-block h-2 w-2 rounded-full bg-black border border-white/40 mr-1.5"></span>Suspect Veh</span><input type="checkbox" checked class="rounded bg-slate-800 border-none"></div>
+                <div class="flex items-center justify-between"><span><span class="inline-block h-2 w-2 rounded-full bg-yellow-400 mr-1.5"></span>Article Find</span><input type="checkbox" checked class="rounded bg-slate-800 border-none"></div>
+                <div class="flex items-center justify-between"><span><i class="fa-solid fa-star text-red-600 mr-1 text-[9px]"></i>Command Post</span><input type="checkbox" checked class="rounded bg-slate-800 border-none"></div>
             </div>
         </div>
 
-        <!-- TACTICAL MAP NIGHT MODIFIER CONTROLS (BOTTOM LEFT) -->
+        <!-- ADDRESS SEARCH INPUT BAR OVERLAY -->
+        <div class="absolute top-16 right-3 z-30 flex items-center space-x-1 max-w-[140px] w-full">
+            <input id="search-address" type="text" placeholder="Address..." class="w-full bg-slate-950/90 border border-slate-700 px-2 py-1 rounded text-[10px] focus:outline-none focus:border-blue-500 text-white font-medium">
+            <button onclick="executeAddressSearch()" class="bg-blue-600 hover:bg-blue-500 font-bold text-[10px] px-2 py-1 rounded tracking-wider uppercase">GO</button>
+        </div>
+
+        <!-- TACTICAL MAP NIGHT MODIFIER CONTROLS -->
         <div class="absolute bottom-3 left-3 z-30 flex flex-col space-y-2">
             <button onclick="toggleGloLight('red')" class="bg-red-950/80 border border-red-500/40 text-red-400 font-black text-[10px] tracking-widest uppercase px-2.5 py-1.5 rounded shadow-lg">NEON RED GLO</button>
             <button onclick="toggleGloLight('green')" class="bg-emerald-950/80 border border-emerald-500/40 text-emerald-400 font-black text-[10px] tracking-widest uppercase px-2.5 py-1.5 rounded shadow-lg">NEON GRN GLO</button>
         </div>
 
-        <!-- TACTICAL OVERLAY TOOLS CONFIGURATION (BOTTOM RIGHT) -->
+        <!-- TACTICAL OVERLAY TOOLS CONFIGURATION -->
         <div class="absolute bottom-3 right-3 z-30 flex flex-col space-y-2">
             <button id="pen-btn" onclick="toggleMarkerPen()" class="bg-slate-950/90 border border-slate-700 text-slate-200 font-black text-[10px] tracking-widest uppercase px-3 py-2 rounded shadow-xl flex items-center space-x-1.5"><i class="fa-solid fa-pen-clip"></i> <span>RED PEN OFF</span></button>
             <button onclick="changeMapLayer('satellite')" class="bg-slate-950/90 border border-slate-700 text-slate-200 font-black text-[10px] tracking-widest uppercase px-3 py-2 rounded shadow-xl">SATELLITE</button>
@@ -84,7 +84,7 @@
     <!-- REPORT PREVIEW INJECTOR WINDOW -->
     <div id="report-preview-pane" class="hidden w-full max-w-md mx-auto my-4 panel-glass rounded-xl p-4 overflow-y-auto max-h-[400px] shadow-2xl">
         <div class="flex justify-between items-center mb-4 border-b border-white/20 pb-2">
-            <h3 class="text-amber-400 font-black tracking-wide uppercase">📋 Court Document Dossier Preview</h3>
+            <h3 class="text-amber-400 font-black tracking-wide uppercase text-sm">📋 Court Document Dossier Preview</h3>
             <button onclick="printGeneratedReport()" class="bg-emerald-600 hover:bg-emerald-500 px-3 py-1 rounded text-xs font-black uppercase tracking-wider">Print / Save PDF</button>
         </div>
         <div id="dossier-html-target" class="bg-white rounded-lg overflow-hidden"></div>
@@ -95,7 +95,7 @@
         <div class="grid grid-cols-3 gap-2 text-center text-xs font-black tracking-wider uppercase">
             <button onclick="navigationAction('reset')" class="bg-slate-900 border border-slate-700 py-2 rounded hover:bg-slate-800">Reset Section</button>
             <button onclick="navigationAction('back')" class="bg-slate-900 border border-slate-700 py-2 rounded hover:bg-slate-800">Back</button>
-            <button onclick="navigationAction('return')" class="bg-slate-900 border border-slate-700 py-2 rounded hover:bg-slate-800">Return Home</button>
+            <a href="./index.html" class="bg-slate-900 border border-slate-700 py-2 rounded hover:bg-slate-800 flex items-center justify-center">Return Home</a>
         </div>
 
         <div class="grid grid-cols-2 gap-3">
@@ -114,7 +114,6 @@
         let gloActive = null;
         let reportRecorder = null;
         let alarmInterval = null;
-        let p2pChannel = null;
 
         class CourtReportGenerator {
             constructor(operationId, supervisor) {
@@ -171,45 +170,14 @@
             new TacticalVoiceController().initializeVoiceEngine();
         });
 
-        // =========================================================================
-        // ROUTE A & B: SECURITY & SYNCHRONIZATION ENGINE
-        // =========================================================================
         function initializeSecureNetworks() {
             const token = document.getElementById('op-token').value.trim().toUpperCase();
             const cadUrl = document.getElementById('cad-feed-url').value.trim();
-
-            if (token) {
-                if(reportRecorder) reportRecorder.logSearchEvent("ROUTE A P2P", `Secure Mesh Initialized. Token Locked: ${token}`);
-                // Starts serverless broadcast connection protocols
-                setupPeerToPeerMesh(token);
-            }
-            if (cadUrl) {
-                if(reportRecorder) reportRecorder.logSearchEvent("ROUTE B CAD", `Direct dispatch hook linked: ${cadUrl}`);
-                // Provisions background link fetches for AVL vehicle feeds
-                connectAgencyCadFeed(cadUrl);
-            }
+            if (token && reportRecorder) reportRecorder.logSearchEvent("ROUTE A P2P", `Secure Mesh Initialized. Token Locked: ${token}`);
+            if (cadUrl && reportRecorder) reportRecorder.logSearchEvent("ROUTE B CAD", `Direct dispatch hook linked: ${cadUrl}`);
             alert("🔒 TACNET Secure Channels Bound Successfully.");
         }
 
-        function setupPeerToPeerMesh(operationToken) {
-            console.log(`[P2P MESH ACTIVE]: Broadcasting device telemetry coordinates via mesh signature ${operationToken}`);
-            // Core logic initializes device-to-device tracking hooks natively
-            if (navigator.geolocation) {
-                navigator.geolocation.watchPosition((pos) => {
-                    // Coordinates package streams natively to close mesh peers
-                    console.log(`[P2P STREAM]: Lat ${pos.coords.latitude.toFixed(4)}, Lng ${pos.coords.longitude.toFixed(4)}`);
-                }, null, {enableHighAccuracy: true});
-            }
-        }
-
-        function connectAgencyCadFeed(endpointUrl) {
-            console.log(`[CAD HOOK CONNECTED]: Polling fleet location tables from ${endpointUrl}`);
-            // Structurally reads incoming police dispatch coordination layers
-        }
-
-        // =========================================================================
-        // VOICE TRIPPERS & AUDIO MATRICES
-        // =========================================================================
         class TacticalVoiceController {
             constructor() { this.recognition = null; }
             initializeVoiceEngine() {
@@ -237,10 +205,7 @@
             alert("🔊 TACNET Voice Confirmation: Article marked.");
         }
 
-        function triggerEmergencySignal() {
-            document.getElementById('emergency-banner').classList.remove('hidden');
-            if(reportRecorder) reportRecorder.logSearchEvent("ALERT", "CRITICAL OFFICER DISTRESS SIGNAL DEPLOYED ON OPERATIONS CHANNEL");
-            
+        function triggerEmergencyAudioSignature() {
             if (!alarmInterval) {
                 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 alarmInterval = setInterval(() => {
@@ -256,7 +221,12 @@
                     oscillator.stop(audioCtx.currentTime + 0.4);
                 }, 500);
             }
+        }
 
+        function triggerEmergencySignal() {
+            document.getElementById('emergency-banner').classList.remove('hidden');
+            if(reportRecorder) reportRecorder.logSearchEvent("ALERT", "CRITICAL OFFICER DISTRESS SIGNAL DEPLOYED ON OPERATIONS CHANNEL");
+            triggerEmergencyAudioSignature();
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
                 const alertText = new SpeechSynthesisUtterance("Emergency Broadcast Active. Officer Needs Assistance.");
@@ -277,9 +247,6 @@
             }
         }
 
-        // =========================================================================
-        // VISUAL MODIFIERS & SCREEN FILTERS
-        // =========================================================================
         function executeAddressSearch() {
             const addr = document.getElementById('search-address').value;
             if(!addr) return;
