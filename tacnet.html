@@ -64,7 +64,7 @@
         </div>
     </header>
 
-    <!-- CORE DISPLAY FIELD RE-DESIGNED WITH YOUR EXACT IMAGE -->
+    <!-- CORE DISPLAY FIELD RUNNING YOUR EXACT IMAGE -->
     <main class="w-full flex-grow relative tacnet-graphic-bg border-y border-slate-900">
         
         <!-- FLUID DISPLAY CONTROLS PLACED OVER BACKGROUND GRAPHIC -->
@@ -79,6 +79,7 @@
             </div>
         </div>
 
+        <!-- LIVE INTERACTIVE DIGITAL STATUS TICKER -->
         <div id="status-readout" class="absolute bottom-2 left-1/2 -translate-x-1/2 z-30 bg-slate-950/90 border border-emerald-500/30 rounded px-3 py-1 font-mono text-[9px] text-emerald-400 text-center tracking-wide w-[85%] shadow-2xl">
             📡 MESH SYSTEM SECURE // MONITORING FOOTPRINT CHANNELS...
         </div>
@@ -100,7 +101,7 @@
                 <i class="fa-solid fa-hand-fist"></i> <span>OFFICER DISTRESS</span>
             </button>
             <button onclick="terminateSearchSequence()" class="bg-amber-600 hover:bg-amber-500 font-black tracking-widest uppercase text-xs py-2.5 rounded-lg flex items-center justify-center space-x-1.5 border border-amber-500">
-                <i class="fa-solid fa-circle-stop"></i> <span>CLOSE SEARCH LOG</span>
+                <i class="fa-solid fa-CLOSE SEARCH LOG"></i> <span>CLOSE SEARCH LOG</span>
             </button>
         </div>
     </footer>
@@ -115,16 +116,29 @@
             reportRecorder.logSearchEvent("SYSTEM", "TACNET Graphic Frame Layer Engaged.");
         });
 
+        // WIRED: Logs address to ticker, saves to court dossier, and fires native mapping launcher
         function logAddressPerimeter() {
             const addr = document.getElementById('search-address').value.trim();
             if (!addr) return;
+            
+            // 1. Update live ticker display text
             document.getElementById('status-readout').innerText = `📍 PERIMETER SITE BOUND: ${addr.toUpperCase()}`;
-            if(reportRecorder) reportRecorder.logSearchEvent("COMMAND", ` Staging Area Perimeter Verified Location: ${addr}`);
+            
+            // 2. Log event entry directly into court timeline tracker
+            if(reportRecorder) reportRecorder.logSearchEvent("COMMAND", `Staging Area Perimeter Verified Location: ${addr}`);
+            
+            // 3. Fire the native iOS map protocol redirect link instantly
+            setTimeout(() => {
+                const nativeMapUrl = `maps://?q=${encodeURIComponent(addr)}`;
+                window.location.href = nativeMapUrl;
+            }, 800);
         }
 
+        // WIRED: Logs operations token to green digital ticker and registers timeline accountability
         function initializeMeshTracking() {
             const token = document.getElementById('op-token').value.trim().toUpperCase();
             if(!token) return;
+            
             document.getElementById('status-readout').innerText = `🔒 SYSTEM STREAM SECURE VIA OPERATIONS MESH SEC-TOKEN: [${token}]`;
             if(reportRecorder) reportRecorder.logSearchEvent("MESH", `Channel encryption handshakes verified under token signature: ${token}`);
         }
@@ -143,11 +157,17 @@
                 });
             }
             compileFinalDossier() {
-                let htmlDossier = `<div style='font-family:Arial;padding:8px;color:#111;'><h6>TACNET COMPREHENSIVE COURT DOSSIER</h6><hr style='margin:4px 0;'>`;
+                let htmlDossier = `
+                    <div style='font-family:Arial,sans-serif;padding:10px;color:#111;background-color:#ffffff;'>
+                        <h4 style='margin:0;color:#1e3a8a;font-weight:900;'>TACNET COMPREHENSIVE COURT DOSSIER</h4>
+                        <p style='margin:2px 0;font-size:10px;color:#475569;'><b>Operational Control Log // Case File Accountability Timeline</b></p>
+                        <hr style='border:1px solid #cbd5e1;margin:6px 0;'>
+                `;
                 this.timelineEvents.forEach(ev => {
-                    htmlDossier += `<p style='margin:2px 0;font-size:9px;'><b>[${ev.timestamp}] [${ev.unit}]:</b> ${ev.description}</p>`;
+                    htmlDossier += `<p style='margin:4px 0;font-size:10px;line-height:1.3;'><b>[${ev.timestamp}] [${ev.unit}]:</b> ${ev.description}</p>`;
                 });
-                return htmlDossier + "</div>";
+                htmlDossier += `</div>`;
+                return htmlDossier;
             }
         }
 
@@ -193,7 +213,9 @@
         function printGeneratedReport() {
             const docContent = document.getElementById('dossier-html-target').innerHTML;
             const w = window.open('', '_blank');
-            w.document.write(docContent); w.document.close(); w.print();
+            w.document.write(`<html><head><title>TACNET Log</title></head><body style='background:#fff;'>${docContent}</body></html>`); 
+            w.document.close(); 
+            setTimeout(() => { w.print(); }, 250);
         }
     </script>
 </body>
