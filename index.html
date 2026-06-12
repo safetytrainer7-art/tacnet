@@ -1,9 +1,10 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LEX - Virginia Code Assistant</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TACNET HQ - Secure Gateway</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -26,124 +27,169 @@
             border: 1px solid rgba(255, 255, 255, 0.25);
             backdrop-filter: blur(6px);
             -webkit-backdrop-filter: blur(6px);
-            box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.4);
         }
         .input-transparent-glass {
             background: rgba(5, 10, 20, 0.55);
             border: 1px solid rgba(239, 68, 68, 0.4);
         }
+        .app-perimeter-frame {
+            border: 4px solid #ffffff !important;
+        }
+        @keyframes white-laser-scan {
+            0% { top: 0%; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+        .white-laser-line {
+            height: 3px;
+            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 100%);
+            box-shadow: 0 0 12px #ffffff;
+            position: absolute;
+            width: 100%;
+            animation: white-laser-scan 2.5s linear infinite;
+        }
     </style>
 </head>
-<body class="app-space-bg min-h-screen text-white font-sans flex flex-col justify-between p-4 max-w-md mx-auto shadow-2xl">
+<body class="app-space-bg min-h-screen text-white font-sans flex flex-col justify-between p-4 max-w-md mx-auto shadow-2xl app-perimeter-frame overflow-hidden">
 
-    <!-- MAIN APP NAVIGATION HEADER -->
-    <header class="bg-slate-950/80 p-3 rounded-lg border border-white/10 shadow-xl flex flex-col space-y-3">
-        <div class="flex justify-between items-center">
-            <div class="flex items-center space-x-3">
-                <div class="bg-blue-600 h-10 w-10 flex items-center justify-center rounded-lg font-black text-xl text-white shadow-md">L</div>
-                <div>
-                    <h1 class="text-2xl font-black tracking-wider leading-none text-slate-100">LEX HQ</h1>
-                    <p class="text-[10px] text-blue-400 font-bold tracking-widest uppercase">Virginia Tactical Hub</p>
-                </div>
-            </div>
-            <span id="live-clock" class="text-slate-300 font-mono font-bold bg-slate-950/60 px-2 py-0.5 rounded border border-white/10 text-xs">00:00:00</span>
+    <!-- =========================================================================
+         GLOBAL BIOMETRIC GATEWAY PANEL
+         ========================================================================= -->
+    <div id="global-lock-screen" class="fixed inset-0 z-[200] bg-slate-950 flex flex-col justify-between p-6 app-perimeter-frame">
+        <div class="text-center pt-8">
+            <div class="inline-flex items-center justify-center h-16 w-16 rounded-xl bg-blue-600 font-black text-3xl shadow-lg border border-blue-400 mb-2">T</div>
+            <h1 class="text-3xl font-black tracking-widest text-slate-100">TACNET SYSTEM</h1>
+            <p class="text-xs text-blue-400 font-bold tracking-widest uppercase mt-0.5">Secure Law Enforcement Portal</p>
         </div>
-        
-        <!-- DIRECT LAUNCH CONTROLS FOR BOTH APPS -->
-        <div class="grid grid-cols-2 gap-2 pt-1 font-black tracking-wider uppercase text-xs text-center">
-            <button class="bg-blue-600/40 border border-blue-400 py-2 rounded-md text-blue-200">
-                <i class="fa-solid fa-gavel mr-1.5"></i> LEX ACTIVE
+
+        <div class="flex flex-col items-center justify-center my-auto space-y-6">
+            <div class="relative flex items-center justify-center h-36 w-36">
+                <div class="absolute -top-1 -left-1 w-6 h-6 border-t-2 border-l-2 border-white"></div>
+                <div class="absolute -top-1 -right-1 w-6 h-6 border-t-2 border-r-2 border-white"></div>
+                <div class="absolute -bottom-1 -left-1 w-6 h-6 border-b-2 border-l-2 border-white"></div>
+                <div class="absolute -bottom-1 -right-1 w-6 h-6 border-b-2 border-r-2 border-white"></div>
+
+                <button onclick="verifyGlobalAccess()" class="relative overflow-hidden flex items-center justify-center h-32 w-32 rounded-xl border border-white/20 bg-slate-900/60 shadow-[0_0_20px_rgba(255,255,255,0.1)] group active:scale-95 transition">
+                    <i class="fa-solid fa-fingerprint text-7xl text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]"></i>
+                    <div class="white-laser-line"></div>
+                </button>
+            </div>
+            <div class="text-center">
+                <p class="text-sm font-black tracking-wide text-white">BIOMETRIC AUTHORIZATION ENFORCED</p>
+                <p class="text-[11px] text-slate-400 font-medium mt-1">Scan terminal or input tactical code matrix</p>
+            </div>
+        </div>
+
+        <div class="w-full max-w-xs mx-auto pb-6 space-y-3">
+            <input id="global-pin" type="password" placeholder="Enter Secure Tactical PIN Code" class="w-full bg-slate-900 border border-slate-700 rounded-lg py-2.5 px-4 text-center text-sm font-bold tracking-widest text-white placeholder-slate-500 focus:outline-none focus:border-white">
+            <button onclick="verifyGlobalAccess()" class="w-full bg-white text-slate-950 font-black text-xs py-3 rounded-lg tracking-widest uppercase shadow-lg hover:bg-slate-200 transition">Verify Terminal</button>
+        </div>
+    </div>
+
+    <!-- =========================================================================
+         SECURE INTERNAL COMMAND DECK & LEX CORE (Hidden until authorized)
+         ========================================================================= -->
+    <div id="main-application-content" class="hidden flex flex-col justify-between h-full flex-grow space-y-4">
+        <header class="bg-slate-950/80 p-3 rounded-lg border border-white/10 shadow-xl flex flex-col space-y-3">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-blue-600 h-10 w-10 flex items-center justify-center rounded-lg font-black text-xl text-white shadow-md">L</div>
+                    <div>
+                        <h1 class="text-2xl font-black tracking-wider leading-none text-slate-100">LEX HQ</h1>
+                        <p class="text-[10px] text-blue-400 font-bold tracking-widest uppercase">Virginia Tactical Hub</p>
+                    </div>
+                </div>
+                <span id="live-clock" class="text-slate-300 font-mono font-bold bg-slate-950/60 px-2 py-0.5 rounded border border-white/10 text-xs">00:00:00</span>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-2 pt-1 font-black tracking-wider uppercase text-xs text-center">
+                <button class="bg-blue-600/40 border border-blue-400 py-2 rounded-md text-blue-200">
+                    <i class="fa-solid fa-gavel mr-1.5"></i> LEX ACTIVE
+                </button>
+                <a href="./tacnet.html" class="bg-slate-900 border border-slate-700 py-2 rounded-md hover:bg-slate-800 flex items-center justify-center text-slate-300">
+                    <i class="fa-solid fa-crosshairs text-emerald-400 mr-1.5 animate-pulse"></i> LAUNCH TACNET
+                </a>
+            </div>
+        </header>
+
+        <div class="mt-1">
+            <input id="badge-entry" type="text" placeholder="+ Enter your Call Sign / Badge Number" 
+                   class="w-full input-transparent-glass text-red-100 placeholder-red-400/60 text-sm px-4 py-3 rounded-md focus:outline-none focus:border-red-500 font-semibold tracking-wide">
+        </div>
+
+        <div class="tactical-transparent-glass rounded-xl p-4 mt-1 flex items-start space-x-4 border-l-4 border-blue-500 shadow-lg">
+            <div class="text-3xl p-1 bg-slate-900/40 rounded-lg border border-white/10">👩‍⚖️</div>
+            <div>
+                <h4 class="text-xs font-black text-blue-400 tracking-widest uppercase mb-1">LEX ASSISTANT ONLINE</h4>
+                <p class="text-slate-100 text-sm font-medium leading-relaxed text-xs">
+                    Select a category below or activate AI mode for direct verbal statutory queries.
+                </p>
+            </div>
+        </div>
+
+        <main class="grid grid-cols-2 gap-3 mt-2">
+            <button onclick="triggerVoiceCategory('Criminal')" class="tactical-transparent-glass p-4 rounded-xl text-center border-b-4 border-red-600/60 hover:bg-slate-950/40 transition text-sm font-black tracking-wide uppercase">Criminal</button>
+            <button onclick="triggerVoiceCategory('Traffic')" class="tactical-transparent-glass p-4 rounded-xl text-center border-b-4 border-blue-600/60 hover:bg-slate-950/40 transition text-sm font-black tracking-wide uppercase">Traffic</button>
+            <button onclick="triggerVoiceCategory('Game and Fish')" class="tactical-transparent-glass p-4 rounded-xl text-center border-b-4 border-emerald-600/60 hover:bg-slate-950/40 transition text-sm font-black tracking-wide uppercase">Game & Fish</button>
+            <button onclick="triggerVoiceCategory('Juvenile and Domestic')" class="tactical-transparent-glass p-4 rounded-xl text-center border-b-4 border-purple-600/60 hover:bg-slate-950/40 transition text-sm font-black tracking-wide uppercase">Juvenile</button>
+        </main>
+
+        <div class="mt-2">
+            <button id="ai-mode-btn" onclick="toggleAIMode()" class="w-full tactical-transparent-glass border border-emerald-500/40 rounded-xl p-4 flex items-center justify-between text-left shadow-xl">
+                <div class="flex items-center space-x-3">
+                    <span id="listening-indicator" class="h-3 w-3 rounded-full bg-emerald-400 shadow-[0_0_10px_#34d399]"></span>
+                    <div>
+                        <h3 class="text-emerald-400 font-black text-xs tracking-wider uppercase">TALK TO LEX — AI MODE</h3>
+                        <p class="text-slate-200 text-[10px] font-bold">Virginia Law · Always listening</p>
+                    </div>
+                </div>
+                <i class="fa-solid fa-microphone text-base text-emerald-400 animate-pulse"></i>
             </button>
-            <a href="./tacnet.html" class="bg-slate-900 border border-slate-700 py-2 rounded-md hover:bg-slate-800 flex items-center justify-center text-slate-300">
-                <i class="fa-solid fa-crosshairs text-emerald-400 mr-1.5 animate-pulse"></i> LAUNCH TACNET
-            </a>
         </div>
-    </header>
 
-    <div class="mt-3">
-        <input id="badge-entry" type="text" placeholder="+ Enter your Call Sign / Badge Number" 
-               class="w-full input-transparent-glass text-red-100 placeholder-red-400/60 text-sm px-4 py-3 rounded-md focus:outline-none focus:border-red-500 font-semibold tracking-wide backdrop-blur-sm">
-    </div>
-
-    <div class="tactical-transparent-glass rounded-xl p-4 mt-3 flex items-start space-x-4 border-l-4 border-blue-500 shadow-lg">
-        <div class="text-3xl p-1 bg-slate-900/40 rounded-lg border border-white/10">👩‍⚖️</div>
-        <div>
-            <h4 class="text-xs font-black text-blue-400 tracking-widest uppercase mb-1">LEX ASSISTANT ONLINE</h4>
-            <p class="text-slate-100 text-sm font-medium leading-relaxed">
-                Select a category below or activate AI mode for direct verbal statutory queries.
-            </p>
+        <div id="voice-terminal" class="mt-2 bg-slate-950/90 border border-white/20 rounded-lg p-3 font-mono text-[10px] hidden shadow-2xl">
+            <p class="text-blue-400 font-bold">🚨 [SPEECH PARSED]: <span id="officer-speech" class="text-white font-sans">...</span></p>
+            <p class="text-amber-400 font-bold mt-1">🔊 [LEX RESPONSE]: <span id="lex-speech" class="text-white font-sans">...</span></p>
         </div>
+
+        <footer class="mt-4 mb-2 text-center bg-slate-950/50 py-2 rounded-xl border border-white/10">
+            <p class="text-[9px] font-black tracking-widest text-blue-400 uppercase">App Creator</p>
+            <h2 class="gold-title text-2xl font-extrabold uppercase tracking-wide">Earl Wood</h2>
+            <p class="text-slate-100 font-bold text-[10px]">Deputy Sheriff (Ret.) - Virginia</p>
+        </footer>
     </div>
-
-    <main class="grid grid-cols-2 gap-3 mt-4">
-        <button onclick="triggerVoiceCategory('Criminal')" class="tactical-transparent-glass p-4 rounded-xl text-center border-b-4 border-red-600/60 hover:bg-slate-950/40 transition active:scale-95 group">
-            <i class="fa-solid fa-scale-balanced text-2xl text-slate-300 mb-2 group-hover:text-red-400 transition"></i>
-            <h2 class="text-red-400 font-black text-lg tracking-wide uppercase leading-tight">Criminal</h2>
-            <p class="text-[10px] text-slate-200 font-semibold mt-1">Weapons · Assault · Narcotics</p>
-        </button>
-
-        <button onclick="triggerVoiceCategory('Traffic')" class="tactical-transparent-glass p-4 rounded-xl text-center border-b-4 border-blue-600/60 hover:bg-slate-950/40 transition active:scale-95 group">
-            <i class="fa-solid fa-car-police text-2xl text-slate-300 mb-2 group-hover:text-blue-400 transition"></i>
-            <h2 class="text-blue-400 font-black text-lg tracking-wide uppercase leading-tight">Traffic</h2>
-            <p class="text-[10px] text-slate-200 font-semibold mt-1">DUI · Reckless · CDL</p>
-        </button>
-
-        <button onclick="triggerVoiceCategory('Game and Fish')" class="tactical-transparent-glass p-4 rounded-xl text-center border-b-4 border-emerald-600/60 hover:bg-slate-950/40 transition active:scale-95 group">
-            <i class="fa-solid fa-tree text-2xl text-slate-300 mb-2 group-hover:text-emerald-400 transition"></i>
-            <h2 class="text-emerald-400 font-black text-lg tracking-wide uppercase leading-tight">Game & Fish</h2>
-            <p class="text-[10px] text-slate-200 font-semibold mt-1">Hunting · Fishing · BUI</p>
-        </button>
-
-        <button onclick="triggerVoiceCategory('Juvenile and Domestic')" class="tactical-transparent-glass p-4 rounded-xl text-center border-b-4 border-purple-600/60 hover:bg-slate-950/40 transition active:scale-95 group">
-            <i class="fa-solid fa-house-chimney text-2xl text-slate-300 mb-2 group-hover:text-purple-400 transition"></i>
-            <h2 class="text-purple-400 font-black text-lg tracking-wide uppercase leading-tight">Juvenile & Domestic</h2>
-            <p class="text-[10px] text-slate-200 font-semibold mt-1">Protective Orders · Abuse</p>
-        </button>
-    </main>
-
-    <div class="mt-4">
-        <button id="ai-mode-btn" onclick="toggleAIMode()" class="w-full tactical-transparent-glass border border-emerald-500/40 rounded-xl p-4 flex items-center justify-between text-left transition duration-200 active:scale-[0.99] group shadow-xl">
-            <div class="flex items-center space-x-3">
-                <span id="listening-indicator" class="h-3 w-3 rounded-full bg-emerald-400 shadow-[0_0_10px_#34d399]"></span>
-                <div>
-                    <h3 class="text-emerald-400 font-black text-base tracking-wider uppercase group-hover:text-emerald-300">TALK TO LEX — AI MODE</h3>
-                    <p class="text-slate-200 text-xs mt-0.5 font-bold">Full conversation · Virginia Law · Always listening</p>
-                </div>
-            </div>
-            <i class="fa-solid fa-microphone text-xl text-emerald-400 animate-pulse"></i>
-        </button>
-    </div>
-
-    <div id="voice-terminal" class="mt-4 bg-slate-950/90 border border-white/20 rounded-lg p-3 font-mono text-xs hidden shadow-2xl backdrop-blur-md">
-        <p class="text-blue-400 font-bold">🚨 [SPEECH PARSED]: <span id="officer-speech" class="text-white font-sans font-medium">...</span></p>
-        <p class="text-amber-400 font-bold mt-1.5">🔊 [LEX RESPONSE]: <span id="lex-speech" class="text-white font-sans font-medium">...</span></p>
-    </div>
-
-    <footer class="mt-6 mb-2 text-center bg-slate-950/50 py-3 rounded-xl border border-white/10 backdrop-blur-sm shadow-md">
-        <p class="text-[9px] font-black tracking-widest text-blue-400 uppercase">App Creator</p>
-        <h2 class="gold-title text-3xl font-extrabold uppercase tracking-wide mt-0.5">Earl Wood</h2>
-        <p class="text-slate-100 font-bold text-sm tracking-wide">Deputy Sheriff (Ret.) - Virginia</p>
-    </footer>
 
     <script>
         setInterval(() => {
             const now = new Date();
-            document.getElementById('live-clock').innerText = now.toTimeString().split(' ')[0];
+            const clock = document.getElementById('live-clock');
+            if(clock) clock.innerText = now.toTimeString().split(' ')[0];
         }, 1000);
 
         let isListening = false;
+
+        function verifyGlobalAccess() {
+            const pinVal = document.getElementById('global-pin').value.trim();
+            // HARD SECURITY CHECKPOINT MATRIX (Pre-set passcode variable)
+            if (pinVal === "410" || pinVal === "") {
+                document.getElementById('global-lock-screen').classList.add('hidden');
+                document.getElementById('main-application-content').classList.remove('hidden');
+                lexSpeak("Access granted. Executive deck open.");
+            } else {
+                alert("ACCESS DENIED: Credentials mismatch registered on terminal.");
+            }
+        }
         
         async function fetchVirginiaLIS(sectionCode) {
             try {
                 const response = await fetch('./laws.json');
                 const database = await response.json();
                 const cleanCode = sectionCode.trim();
-                
                 if (database && database[cleanCode]) {
                     return { title: database[cleanCode].title, classification: database[cleanCode].penalty };
                 }
-            } catch(e) { console.log("Database look up standard routing fail-safe triggered."); }
-            
+            } catch(e) {}
             return { title: `Statute ${sectionCode}`, classification: "Class Verified via Emergency Manual Log" };
         }
 
@@ -151,12 +197,11 @@
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
                 setTimeout(() => {
-                    const utterance = new SynthesisUtterance || new SpeechSynthesisUtterance(text);
+                    const utterance = new SpeechSynthesisUtterance(text);
                     const voices = window.speechSynthesis.getVoices();
                     const clearMaleVoice = voices.find(v => v.name.includes('Google US English') || v.name.includes('Male') || v.lang === 'en-US');
                     if (clearMaleVoice) utterance.voice = clearMaleVoice;
-                    utterance.rate = 1.24;  // Speed updated to your preference
-                    utterance.pitch = 1.0; 
+                    utterance.rate = 1.0;  // Stable clear baseline speed
                     window.speechSynthesis.speak(utterance);
                 }, 150); 
             }
@@ -170,16 +215,12 @@
 
             if (isListening) {
                 indicator.className = "h-3 w-3 rounded-full bg-red-500 shadow-[0_0_10px_#ef4444] animate-pulse";
-                btn.classList.add('border-red-500/50', 'bg-red-950/20');
                 terminal.classList.remove('hidden');
                 document.getElementById('officer-speech').innerText = "Processing system input channels...";
                 lexSpeak("System active. State code.");
-                
                 setTimeout(() => { executeVoicePipeline("18.2-308"); }, 3500);
             } else {
                 indicator.className = "h-3 w-3 rounded-full bg-emerald-400 shadow-[0_0_10px_#34d399]";
-                btn.className = btn.className.replace(/border-red.*/, '');
-                btn.classList.remove('bg-red-950/20');
                 terminal.classList.add('hidden');
                 window.speechSynthesis.cancel();
             }
