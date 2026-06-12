@@ -36,20 +36,27 @@
 </head>
 <body class="app-space-bg min-h-screen text-white font-sans flex flex-col justify-between p-4 max-w-md mx-auto shadow-2xl">
 
-    <header class="flex justify-between items-center bg-slate-950/70 p-3 rounded-lg border border-white/10 shadow-xl">
-        <div class="flex items-center space-x-3">
-            <div class="bg-blue-600 h-10 w-10 flex items-center justify-center rounded-lg font-black text-xl text-white shadow-md">L</div>
-            <div>
-                <h1 class="text-2xl font-black tracking-wider leading-none text-slate-100">LEX</h1>
-                <p class="text-[10px] text-blue-400 font-bold tracking-widest uppercase">Virginia Code Assistant</p>
+    <!-- MAIN APP NAVIGATION HEADER -->
+    <header class="bg-slate-950/80 p-3 rounded-lg border border-white/10 shadow-xl flex flex-col space-y-3">
+        <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="bg-blue-600 h-10 w-10 flex items-center justify-center rounded-lg font-black text-xl text-white shadow-md">L</div>
+                <div>
+                    <h1 class="text-2xl font-black tracking-wider leading-none text-slate-100">LEX HQ</h1>
+                    <p class="text-[10px] text-blue-400 font-bold tracking-widest uppercase">Virginia Tactical Hub</p>
+                </div>
             </div>
+            <span id="live-clock" class="text-slate-300 font-mono font-bold bg-slate-950/60 px-2 py-0.5 rounded border border-white/10 text-xs">00:00:00</span>
         </div>
-        <div class="flex items-center space-x-4 text-xs font-semibold">
-            <div class="flex items-center space-x-1.5">
-                <span class="h-2.5 w-2.5 rounded-full bg-green-500 animate-pulse shadow-[0_0_8px_#22c55e]"></span>
-                <span class="text-slate-200">GitHub Core Online</span>
-            </div>
-            <span id="live-clock" class="text-slate-300 font-mono font-bold bg-slate-950/60 px-2 py-0.5 rounded border border-white/10">00:00:00</span>
+        
+        <!-- DIRECT LAUNCH CONTROLS FOR BOTH APPS -->
+        <div class="grid grid-cols-2 gap-2 pt-1 font-black tracking-wider uppercase text-xs text-center">
+            <button class="bg-blue-600/40 border border-blue-400 py-2 rounded-md text-blue-200">
+                <i class="fa-solid fa-gavel mr-1.5"></i> LEX ACTIVE
+            </button>
+            <a href="./tacnet.html" class="bg-slate-900 border border-slate-700 py-2 rounded-md hover:bg-slate-800 flex items-center justify-center text-slate-300">
+                <i class="fa-solid fa-crosshairs text-emerald-400 mr-1.5 animate-pulse"></i> LAUNCH TACNET
+            </a>
         </div>
     </header>
 
@@ -61,9 +68,9 @@
     <div class="tactical-transparent-glass rounded-xl p-4 mt-3 flex items-start space-x-4 border-l-4 border-blue-500 shadow-lg">
         <div class="text-3xl p-1 bg-slate-900/40 rounded-lg border border-white/10">👩‍⚖️</div>
         <div>
-            <h4 class="text-xs font-black text-blue-400 tracking-widest uppercase mb-1">LEX WELCOME!</h4>
+            <h4 class="text-xs font-black text-blue-400 tracking-widest uppercase mb-1">LEX ASSISTANT ONLINE</h4>
             <p class="text-slate-100 text-sm font-medium leading-relaxed">
-                Running securely via GitHub server hosting. Select a category or speak directly in AI mode.
+                Select a category below or activate AI mode for direct verbal statutory queries.
             </p>
         </div>
     </div>
@@ -116,7 +123,6 @@
         <p class="text-[9px] font-black tracking-widest text-blue-400 uppercase">App Creator</p>
         <h2 class="gold-title text-3xl font-extrabold uppercase tracking-wide mt-0.5">Earl Wood</h2>
         <p class="text-slate-100 font-bold text-sm tracking-wide">Deputy Sheriff (Ret.) - Virginia</p>
-        <p class="text-[10px] text-slate-300 font-semibold tracking-wider mt-1.5">LEX Virginia · Built by Law Enforcement for Law Enforcement</p>
     </footer>
 
     <script>
@@ -136,7 +142,7 @@
                 if (database && database[cleanCode]) {
                     return { title: database[cleanCode].title, classification: database[cleanCode].penalty };
                 }
-            } catch(e) { console.log("Database lookup anomaly. Reverting to structural fallback."); }
+            } catch(e) { console.log("Database look up standard routing fail-safe triggered."); }
             
             return { title: `Statute ${sectionCode}`, classification: "Class Verified via Emergency Manual Log" };
         }
@@ -145,12 +151,12 @@
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
                 setTimeout(() => {
-                    const utterance = new SpeechSynthesisUtterance(text);
+                    const utterance = new SynthesisUtterance || new SpeechSynthesisUtterance(text);
                     const voices = window.speechSynthesis.getVoices();
                     const clearMaleVoice = voices.find(v => v.name.includes('Google US English') || v.name.includes('Male') || v.lang === 'en-US');
                     if (clearMaleVoice) utterance.voice = clearMaleVoice;
-                    utterance.rate = 1.0;  
-                    utterance.pitch =1.0; 
+                    utterance.rate = 1.24;  // Speed updated to your preference
+                    utterance.pitch = 1.0; 
                     window.speechSynthesis.speak(utterance);
                 }, 150); 
             }
@@ -166,8 +172,8 @@
                 indicator.className = "h-3 w-3 rounded-full bg-red-500 shadow-[0_0_10px_#ef4444] animate-pulse";
                 btn.classList.add('border-red-500/50', 'bg-red-950/20');
                 terminal.classList.remove('hidden');
-                document.getElementById('officer-speech').innerText = "System open. Processing query...";
-                lexSpeak("System active. Say code.");
+                document.getElementById('officer-speech').innerText = "Processing system input channels...";
+                lexSpeak("System active. State code.");
                 
                 setTimeout(() => { executeVoicePipeline("18.2-308"); }, 3500);
             } else {
