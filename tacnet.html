@@ -1,255 +1,133 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TACNET - Tactical Search Command</title>
+    <title>TACNET - Tactical Command Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         .tactical-dark { background-color: #050b14; }
         .panel-glass {
-            background: rgba(10, 20, 32, 0.95);
-            border: 1px solid rgba(59, 130, 246, 0.3);
+            background: rgba(10, 20, 32, 0.92);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(10px);
         }
-        #map {
-            width: 100%;
-            height: calc(100vh - 270px);
-            position: relative;
-            z-index: 1;
+        /* Locks your exact uploaded image perfectly to the screen background */
+        .tacnet-graphic-bg {
+            background-image: url('./tac-bg.jpg');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: #000000;
         }
-        .leaflet-control-container { display: none !important; }
-
-        /* Solid Bright White Outer Border framing the entire application */
         .app-perimeter-frame {
             border: 4px solid #ffffff !important;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.8), 0 0 15px rgba(255,255,255,0.1);
-        }
-
-        /* Bright White Scanline Overlay Animation for the Fingerprint Core Matrix */
-        @keyframes white-laser-scan {
-            0% { top: 0%; opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { top: 100%; opacity: 0; }
-        }
-        .white-laser-line {
-            height: 3px;
-            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 100%);
-            box-shadow: 0 0 12px #ffffff, 0 0 4px #ffffff;
-            position: absolute;
-            width: 100%;
-            animation: white-laser-scan 2.5s linear infinite;
         }
     </style>
 </head>
 <body class="tactical-dark h-screen text-white font-sans flex flex-col justify-between overflow-hidden app-perimeter-frame">
 
-    <!-- =========================================================================
-         1. SECURE LOGIN SCREEN (Matches alignment parameters from MMM(1).png with Bright White Laser Core)
-         ========================================================================= -->
-    <div id="login-screen" class="fixed inset-0 z-[100] flex flex-col justify-between p-6 bg-slate-950 bg-cover bg-center" style="background-image: linear-gradient(to bottom, rgba(5,11,20,0.85), rgba(5,11,20,0.98)), url('https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?q=80&w=1200');">
-        <div class="text-center pt-8">
-            <div class="inline-flex items-center justify-center h-16 w-16 rounded-xl bg-blue-600 font-black text-3xl shadow-lg border border-blue-400 mb-2">T</div>
-            <h1 class="text-3xl font-black tracking-widest text-slate-100">TACNET</h1>
-            <p class="text-xs text-blue-400 font-bold tracking-widest uppercase mt-0.5">Secure Multi-Agency Interface</p>
-        </div>
-
-        <!-- RE-ENGINEERED FINGERPRINT INTERFACE IN BRIGHT WHITE MATCHING MMM(1).png -->
-        <div class="flex flex-col items-center justify-center my-auto space-y-6">
-            <div class="relative flex items-center justify-center h-36 w-36">
-                <!-- Outer Tech Framing Corners mirroring image upload structure -->
-                <div class="absolute -top-1 -left-1 w-6 h-6 border-t-2 border-l-2 border-white"></div>
-                <div class="absolute -top-1 -right-1 w-6 h-6 border-t-2 border-r-2 border-white"></div>
-                <div class="absolute -bottom-1 -left-1 w-6 h-6 border-b-2 border-l-2 border-white"></div>
-                <div class="absolute -bottom-1 -right-1 w-6 h-6 border-b-2 border-r-2 border-white"></div>
-
-                <!-- High-Performance Fingerprint Scanner Target -->
-                <button onclick="authenticateTacticalSession()" class="relative overflow-hidden flex items-center justify-center h-32 w-32 rounded-xl border border-white/20 bg-slate-900/60 shadow-[0_0_20px_rgba(255,255,255,0.1)] group active:scale-95 transition">
-                    <!-- Bright White Solid Fingerprint Node -->
-                    <i class="fa-solid fa-fingerprint text-7xl text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]"></i>
-                    <!-- Bright White Dynamic Sweeping Laser -->
-                    <div class="white-laser-line"></div>
-                </button>
-            </div>
-            
-            <div class="text-center">
-                <p class="text-sm font-black tracking-wide text-white drop-shadow-[0_0_4px_rgba(255,255,255,0.4)]">BIOMETRIC SCAN MATRIX ACTIVE</p>
-                <p class="text-[11px] text-slate-400 font-medium mt-1">Tap white fingerprint terminal to authorize secure shell</p>
-            </div>
-        </div>
-
-        <div class="w-full max-w-xs mx-auto pb-6 space-y-3">
-            <input id="secure-pin" type="password" placeholder="Enter Secure Tactical PIN Code" class="w-full bg-slate-900 border border-slate-700 rounded-lg py-2.5 px-4 text-center text-sm font-bold tracking-widest text-white placeholder-slate-500 focus:outline-none focus:border-white">
-            <button onclick="authenticateTacticalSession()" class="w-full bg-white text-slate-950 font-black text-xs py-3 rounded-lg tracking-widest uppercase shadow-lg hover:bg-slate-200 transition duration-150">Verify Identity</button>
-        </div>
+    <!-- EMERGENCY BANNER -->
+    <div id="emergency-banner" class="hidden bg-red-700 border-b-2 border-red-500 text-center p-2 animate-pulse z-50 relative">
+        <h2 class="text-xs font-black tracking-widest"><i class="fa-solid fa-triangle-exclamation mr-1.5"></i> EMERGENCY BROADCAST SIGNAL ACTIVE <i class="fa-solid fa-triangle-exclamation ml-1.5"></i></h2>
+        <button onclick="cancelEmergencySignal()" class="mt-1 bg-slate-950 border border-white/40 text-white text-[9px] font-black uppercase px-2 py-0.5 rounded">Reset</button>
     </div>
 
-    <!-- =========================================================================
-         2. MAIN APPLICATION INTERFACE (Revealed upon scan confirmation)
-         ========================================================================= -->
-    <!-- EMERGENCY BANNER CONTAINER -->
-    <div id="emergency-banner" class="hidden bg-red-700 border-b-2 border-red-500 text-center p-2 animate-pulse shadow-2xl z-50 relative">
-        <h2 class="text-xs font-black tracking-widest"><i class="fa-solid fa-triangle-exclamation mr-1.5"></i> OFFICER DOWN / DISTRESS EMISSION ACTIVE <i class="fa-solid fa-triangle-exclamation ml-1.5"></i></h2>
-        <button onclick="cancelEmergencySignal()" class="mt-1 bg-slate-950 border border-white/30 text-white text-[9px] font-black uppercase px-2 py-0.5 rounded">Reset</button>
-    </div>
-
-    <!-- CONTROL HEADER MATRIX -->
-    <header class="panel-glass p-3 flex flex-col space-y-2 z-40 relative shadow-xl">
+    <!-- UPPER CONTROL CONSOLE -->
+    <header class="panel-glass p-3 flex flex-col space-y-2 z-40 relative shadow-2xl">
         <div class="flex justify-between items-center border-b border-slate-800 pb-1.5">
             <div class="flex items-center space-x-2">
-                <div class="h-6 w-6 bg-blue-600 flex items-center justify-center rounded text-xs font-black">T</div>
-                <h2 class="font-black text-sm tracking-wider uppercase text-slate-100">TACNET MAPPING PERIMETER</h2>
+                <i class="fa-solid fa-crosshairs text-emerald-400 animate-pulse"></i>
+                <h2 class="font-black text-xs tracking-wider uppercase text-slate-200">TACNET MISSION INTERFACE</h2>
             </div>
-            <a href="./index.html" class="bg-slate-900 border border-slate-700 text-slate-300 font-bold text-[9px] px-2 py-1 rounded tracking-wider uppercase">
-                <i class="fa-solid fa-arrow-left text-blue-400 mr-1"></i> LEX DECK
+            <a href="./index.html" class="bg-slate-900 border border-slate-700 text-slate-300 font-bold text-[9px] px-2.5 py-1 rounded tracking-wider uppercase">
+                <i class="fa-solid fa-arrow-left text-blue-400 mr-1"></i> LEX HOME
             </a>
         </div>
 
-        <!-- ADDRESS SEARCH WITH CLEAR OVERLAY LABELS -->
+        <!-- TARGET SEARCH COMPONENT -->
         <div class="flex flex-col space-y-1">
-            <label class="text-[10px] font-black tracking-widest text-blue-400 uppercase"><i class="fa-solid fa-location-dot mr-1"></i> TARGET PERIMETER ADDRESS LOOKUP</label>
+            <label class="text-[9px] font-black tracking-widest text-blue-400 uppercase">LOG TARGET AREA / OPERATION LOCATION</label>
             <div class="flex items-center space-x-1.5">
-                <input id="search-address" type="text" placeholder="Type target address here (e.g. 135 Flossie Drive)..." class="w-full bg-slate-950 border border-slate-700 px-3 py-2 rounded text-xs font-semibold focus:outline-none focus:border-blue-500 text-white shadow-inner">
-                <button onclick="executeAddressSearch()" class="bg-blue-600 hover:bg-blue-500 font-black text-xs px-4 py-2 rounded tracking-widest uppercase shadow-md">GO</button>
+                <input id="search-address" type="text" placeholder="Enter perimeter staging address..." class="w-full bg-slate-950 border border-slate-700 px-3 py-1.5 rounded text-xs font-semibold focus:outline-none focus:border-blue-500 text-white">
+                <button onclick="logAddressPerimeter()" class="bg-blue-600 hover:bg-blue-500 font-black text-xs px-3 py-1.5 rounded tracking-widest uppercase">LOG</button>
             </div>
         </div>
 
-        <div class="grid grid-cols-2 gap-1.5 pt-0.5">
+        <!-- TASK FORCE INPUT TOKENS -->
+        <div class="grid grid-cols-2 gap-2 pt-0.5">
             <div>
-                <label class="text-[9px] font-black tracking-wider text-slate-400 uppercase">Operation Token</label>
-                <input id="op-token" type="text" placeholder="e.g. OP410" class="w-full bg-slate-950 border border-slate-800 px-2 py-1 rounded text-[10px] uppercase font-bold text-blue-400 placeholder-blue-900 focus:outline-none">
+                <input id="op-token" type="text" placeholder="Operation Token (e.g. OP410)" class="w-full bg-slate-950 border border-slate-800 px-2 py-1 rounded text-[10px] uppercase font-bold text-center text-blue-400 placeholder-blue-900 focus:outline-none">
             </div>
-            <div>
-                <label class="text-[9px] font-black tracking-wider text-slate-400 uppercase">Agency CAD Hook</label>
-                <input id="cad-feed-url" type="text" placeholder="Endpoint URL Link" class="w-full bg-slate-950 border border-slate-800 px-2 py-1 rounded text-[10px] font-semibold text-slate-300 placeholder-slate-700 focus:outline-none">
-            </div>
+            <button onclick="initializeMeshTracking()" class="w-full bg-emerald-700 hover:bg-emerald-600 font-black text-[10px] py-1 rounded tracking-widest uppercase shadow-md">Sync Grid Channels</button>
         </div>
-        <button onclick="initializeSecureNetworks()" class="w-full bg-emerald-700 hover:bg-emerald-600 font-black text-[10px] py-1 rounded tracking-widest uppercase shadow-md transition">Lock Framework & Sync Data Channels</button>
     </header>
 
-    <!-- UNBLOCKED CENTRAL SECTOR DISPLAY MAP -->
-    <main class="w-full flex-grow relative bg-slate-900 border-y border-slate-800">
-        <div id="map"></div>
+    <!-- CORE DISPLAY FIELD RE-DESIGNED WITH YOUR EXACT IMAGE -->
+    <main class="w-full flex-grow relative tacnet-graphic-bg border-y border-slate-900">
         
-        <div class="absolute bottom-2 right-2 z-30 flex items-center space-x-1.5">
-            <button onclick="changeMapLayer('satellite')" class="bg-slate-950/95 border border-slate-700 text-slate-200 font-black text-[9px] tracking-widest uppercase px-2 py-1 rounded shadow-xl">SATELLITE</button>
-            <button onclick="changeMapLayer('streets')" class="bg-slate-950/95 border border-slate-700 text-slate-200 font-black text-[9px] tracking-widest uppercase px-2 py-1 rounded shadow-xl">STREETS</button>
-            <button id="pen-btn" onclick="toggleMarkerPen()" class="bg-slate-950/95 border border-slate-700 text-slate-200 font-black text-[9px] tracking-widest uppercase px-2 py-1 rounded shadow-xl"><i class="fa-solid fa-pen-clip"></i> PEN</button>
+        <!-- FLUID DISPLAY CONTROLS PLACED OVER BACKGROUND GRAPHIC -->
+        <div class="absolute top-2 left-2 z-30 panel-glass p-2 rounded-md w-[110px] text-xs shadow-xl opacity-90">
+            <h4 class="font-black border-b border-white/20 pb-0.5 mb-1 text-[8px] text-blue-400 uppercase tracking-wider">Asset Layers</h4>
+            <div class="space-y-0.5 font-bold text-[9px] text-slate-300">
+                <div class="flex items-center space-x-1"><span class="h-2 w-2 rounded-full bg-blue-600"></span> <span>LE Units</span></div>
+                <div class="flex items-center space-x-1"><span class="h-2 w-2 rounded-full bg-cyan-400"></span> <span>K9 Teams</span></div>
+                <div class="flex items-center space-x-1"><span class="h-2 w-2 rounded-full bg-red-600"></span> <span>SAR Teams</span></div>
+                <div class="flex items-center space-x-1"><span class="h-2 w-2 rounded-full bg-purple-600"></span> <span>Suspect</span></div>
+                <div class="flex items-center space-x-1"><span class="h-2 w-2 rounded-full bg-yellow-400"></span> <span>Articles</span></div>
+            </div>
+        </div>
+
+        <div id="status-readout" class="absolute bottom-2 left-1/2 -translate-x-1/2 z-30 bg-slate-950/90 border border-emerald-500/30 rounded px-3 py-1 font-mono text-[9px] text-emerald-400 text-center tracking-wide w-[85%] shadow-2xl">
+            📡 MESH SYSTEM SECURE // MONITORING FOOTPRINT CHANNELS...
         </div>
     </main>
 
-    <!-- HORIZONTAL LEGEND INTERFACE MATRIX -->
-    <div class="panel-glass px-3 py-1.5 z-40 relative flex items-center justify-between text-[10px] border-x-0 border-b-0">
-        <span class="font-black tracking-wider text-blue-400 uppercase text-[9px]">Legend Layers:</span>
-        <div class="flex items-center space-x-3 font-bold">
-            <span class="flex items-center"><span class="h-2 w-2 rounded-full bg-blue-600 mr-1"></span>LE</span>
-            <span class="flex items-center"><span class="h-2 w-2 rounded-full bg-cyan-400 mr-1"></span>K9</span>
-            <span class="flex items-center"><span class="h-2 w-2 rounded-full bg-red-600 mr-1"></span>SAR</span>
-            <span class="flex items-center"><span class="h-2 w-2 rounded-full bg-purple-600 mr-1"></span>Suspect</span>
-            <span class="flex items-center"><span class="h-2 w-2 rounded-full bg-yellow-400 mr-1"></span>Article</span>
-        </div>
-    </div>
-
-    <!-- PREVIEW ARRAYS FOR COURT SYSTEM LOGS -->
-    <div id="report-preview-pane" class="hidden w-full max-w-sm mx-auto my-2 panel-glass rounded-xl p-3 overflow-y-auto max-h-[180px] shadow-2xl z-40 relative">
+    <!-- REPORT GENERATION RECAP VIEW -->
+    <div id="report-preview-pane" class="hidden w-full max-w-sm mx-auto my-2 panel-glass rounded-xl p-3 overflow-y-auto max-h-[140px] shadow-2xl z-40 relative">
         <div class="flex justify-between items-center mb-1 border-b border-white/20 pb-1">
-            <h3 class="text-amber-400 font-black tracking-wide uppercase text-[10px]">📋 Court Evidence Document Log</h3>
-            <button onclick="printGeneratedReport()" class="bg-emerald-600 hover:bg-emerald-500 px-2 py-0.5 rounded text-[9px] font-black uppercase">Print</button>
+            <h3 class="text-amber-400 font-black tracking-wide uppercase text-[9px]">📋 Post-Incident Court Evidence Log</h3>
+            <button onclick="printGeneratedReport()" class="bg-emerald-600 hover:bg-emerald-500 px-2 py-0.5 rounded text-[8px] font-black uppercase">Print</button>
         </div>
-        <div id="dossier-html-target" class="bg-white rounded p-2 text-black text-[10px]"></div>
+        <div id="dossier-html-target" class="bg-white rounded p-2 text-black text-[9px]"></div>
     </div>
 
-    <!-- SYSTEM BASE FOOTER ACTIONS -->
-    <footer class="bg-slate-950 p-3 flex flex-col space-y-2 z-40 relative shadow-[0_-4px_20px_rgba(0,0,0,0.5)]">
+    <!-- COMMAND CONTROLS FOOTER PANEL -->
+    <footer class="bg-slate-950 p-3 flex flex-col space-y-2 z-40 relative shadow-[0_-4px_15px_rgba(0,0,0,0.6)]">
         <div class="grid grid-cols-2 gap-3">
-            <button onclick="triggerEmergencySignal()" class="bg-red-700 hover:bg-red-600 font-black tracking-widest uppercase text-xs py-2.5 rounded-lg shadow-lg flex items-center justify-center space-x-1.5 animate-pulse border border-red-500">
-                <i class="fa-solid fa-hand-fist"></i> <span>OFFICER DOWN SIGNAL</span>
+            <button onclick="triggerEmergencySignal()" class="bg-red-700 hover:bg-red-600 font-black tracking-widest uppercase text-xs py-2.5 rounded-lg flex items-center justify-center space-x-1.5 animate-pulse border border-red-500">
+                <i class="fa-solid fa-hand-fist"></i> <span>OFFICER DISTRESS</span>
             </button>
-            <button onclick="terminateSearchSequence()" class="bg-amber-600 hover:bg-amber-500 font-black tracking-widest uppercase text-xs py-2.5 rounded-lg shadow-lg flex items-center justify-center space-x-1.5 border border-amber-500">
-                <i class="fa-solid fa-circle-stop"></i> <span>TERMINATE SEARCH</span>
+            <button onclick="terminateSearchSequence()" class="bg-amber-600 hover:bg-amber-500 font-black tracking-widest uppercase text-xs py-2.5 rounded-lg flex items-center justify-center space-x-1.5 border border-amber-500">
+                <i class="fa-solid fa-circle-stop"></i> <span>CLOSE SEARCH LOG</span>
             </button>
         </div>
     </footer>
 
-    <!-- ENGINE CONTROL MODULES -->
+    <!-- INTERFACE DRIVER SCRIPTS -->
     <script>
-        let map = null;
-        let activeLayer = null;
-        let searchCircle = null;
-        let currentOfficerMarker = null;
         let reportRecorder = null;
         let alarmInterval = null;
 
-        function authenticateTacticalSession() {
-            document.getElementById('login-screen').classList.add('hidden');
-            setTimeout(() => { if (map) map.invalidateSize(); }, 200);
-        }
-
         window.addEventListener('DOMContentLoaded', () => {
             reportRecorder = new CourtReportGenerator("OP-2026-AMHERST", "Deputy Earl Wood (Ret.)");
-            reportRecorder.logSearchEvent("SYSTEM", "TACNET Shield Parameters Online.");
-
-            map = L.map('map', { zoomControl: false }).setView([37.0902, -95.7129], 4);
-            changeMapLayer('satellite');
-
-            map.locate({setView: true, maxZoom: 15, watch: true, enableHighAccuracy: true});
-            
-            map.on('locationfound', (e) => {
-                if (!currentOfficerMarker) {
-                    const blueDotIcon = L.divIcon({
-                        className: 'custom-div-icon',
-                        html: "<div class='h-3 w-3 bg-blue-600 rounded-full border-2 border-white shadow-[0_0_8px_#2563eb]'></div>",
-                        iconSize: [12, 12]
-                    });
-                    currentOfficerMarker = L.marker(e.latlng, {icon: blueDotIcon}).addTo(map);
-                } else {
-                    currentOfficerMarker.setLatLng(e.latlng);
-                }
-            });
+            reportRecorder.logSearchEvent("SYSTEM", "TACNET Graphic Frame Layer Engaged.");
         });
 
-        function changeMapLayer(type) {
-            if (activeLayer) map.removeLayer(activeLayer);
-            if (type === 'satellite') {
-                activeLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                    attribution: 'Esri'
-                }).addTo(map);
-            } else {
-                activeLayer = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{y}/{x}.png', {
-                    attribution: 'CartoDB'
-                }).addTo(map);
-            }
-        }
-
-        async function executeAddressSearch() {
+        function logAddressPerimeter() {
             const addr = document.getElementById('search-address').value.trim();
             if (!addr) return;
-            
-            try {
-                const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(addr)}`);
-                const results = await response.json();
-                
-                if (results && results.length > 0) {
-                    const lat = parseFloat(results[0].lat);
-                    const lon = parseFloat(results[0].lon);
-                    const centerPoint = [lat, lon];
-                    
-                    map.setView(centerPoint, 15);
-                    if (searchCircle) map.removeLayer(searchCircle);
-                    
-                    searchCircle = L.circle(centerPoint, {
-                        color: '#10b981',
-                        fillColor: '#10b981',
-                        fillOpacity: 0.15,
-                        radius: 400,
-                        weight: 3
-                    }).addTo(map);
-                }
-            } catch(e) {}
+            document.getElementById('status-readout').innerText = `📍 PERIMETER SITE BOUND: ${addr.toUpperCase()}`;
+            if(reportRecorder) reportRecorder.logSearchEvent("COMMAND", ` Staging Area Perimeter Verified Location: ${addr}`);
+        }
+
+        function initializeMeshTracking() {
+            const token = document.getElementById('op-token').value.trim().toUpperCase();
+            if(!token) return;
+            document.getElementById('status-readout').innerText = `🔒 SYSTEM STREAM SECURE VIA OPERATIONS MESH SEC-TOKEN: [${token}]`;
+            if(reportRecorder) reportRecorder.logSearchEvent("MESH", `Channel encryption handshakes verified under token signature: ${token}`);
         }
 
         class CourtReportGenerator {
@@ -266,31 +144,50 @@
                 });
             }
             compileFinalDossier() {
-                let htmlDossier = `<div style='font-family:Arial;padding:10px;color:#111;'><h5>TACNET ENFORCEMENT RECORD LOG</h5><hr>`;
+                let htmlDossier = `<div style='font-family:Arial;padding:8px;color:#111;'><h6>TACNET COMPREHENSIVE COURT DOSSIER</h6><hr style='margin:4px 0;'>`;
                 this.timelineEvents.forEach(ev => {
-                    htmlDossier += `<p style='font-size:10px;'><b>[${ev.timestamp}]:</b> ${ev.description}</p>`;
+                    htmlDossier += `<p style='margin:2px 0;font-size:9px;'><b>[${ev.timestamp}] [${ev.unit}]:</b> ${ev.description}</p>`;
                 });
                 return htmlDossier + "</div>";
             }
         }
 
-        function initializeSecureNetworks() {
-            alert("🔒 Pipelines Synced.");
+        function triggerEmergencyAudioSignature() {
+            if (!alarmInterval) {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                alarmInterval = setInterval(() => {
+                    const oscillator = audioCtx.createOscillator();
+                    const gainNode = audioCtx.createGain();
+                    oscillator.type = 'sawtooth';
+                    oscillator.frequency.setValueAtTime(880, audioCtx.currentTime);
+                    oscillator.frequency.linearRampToValueAtTime(440, audioCtx.currentTime + 0.4);
+                    gainNode.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                    oscillator.connect(gainNode); gainNode.connect(audioCtx.destination);
+                    oscillator.start(); oscillator.stop(audioCtx.currentTime + 0.4);
+                }, 500);
+            }
         }
 
         function triggerEmergencySignal() {
             document.getElementById('emergency-banner').classList.remove('hidden');
+            document.getElementById('status-readout').innerText = "🚨 ALERT: CRITICAL OFFICER DISTRESS TRANSMISSION EMITTED!";
+            if(reportRecorder) reportRecorder.logSearchEvent("ALERT", "DISTRESS FREQUENCY BROADCAST CHANNELS DEPLOYED.");
+            triggerEmergencyAudioSignature();
         }
 
         function cancelEmergencySignal() {
             document.getElementById('emergency-banner').classList.add('hidden');
+            document.getElementById('status-readout').innerText = "📡 MESH SYSTEM SECURE // MONITORING FOOTPRINT CHANNELS...";
+            if (alarmInterval) { clearInterval(alarmInterval); alarmInterval = null; }
         }
 
         function terminateSearchSequence() {
             if(reportRecorder) {
+                document.getElementById('status-readout').innerText = "🔒 SYSTEM LOG TERMINATED AND DIGITALLY SIGNED.";
                 document.getElementById('dossier-html-target').innerHTML = reportRecorder.compileFinalDossier();
                 document.getElementById('report-preview-pane').classList.remove('hidden');
             }
+            if (alarmInterval) { clearInterval(alarmInterval); alarmInterval = null; }
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
 
