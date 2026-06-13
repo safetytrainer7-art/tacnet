@@ -1,36 +1,15 @@
-let lastSummary = "No data loaded.";
-let timer;
 
-function speakResult(text) {
-    window.speechSynthesis.cancel();
-    const msg = new SpeechSynthesisUtterance(text);
-    msg.rate = 1.1;
-    window.speechSynthesis.speak(msg);
-    document.getElementById('display').innerText = text;
+// Initialize Recognition
+const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+recognition.continuous = true;
+recognition.onresult = (event) => {
+    const transcript = event.results[event.results.length - 1][0].transcript;
+    document.getElementById('display').innerText = "COMMAND: " + transcript;
+    // Logic to parse for Title 18.2, etc.
+};
+recognition.start();
+
+function trigger911() {
+    document.body.style.backgroundColor = "red";
+    // Add GPS logic here
 }
-
-function stopAudio() {
-    window.speechSynthesis.cancel();
-    document.getElementById('display').innerText = "AUDIO TERMINATED";
-}
-
-function repeatLast() { speakResult(lastSummary); }
-
-async function query(type) {
-    let code = prompt("Enter Statute Number:");
-    if (!code) return;
-    // Placeholder for LIS API call
-    let response = "STATUTE " + code + " SUMMARY: [DATA RETRIEVED FROM LIS]";
-    lastSummary = response;
-    speakResult(response);
-}
-
-function startPress() {
-    timer = setTimeout(() => {
-        document.body.style.backgroundColor = "red";
-        speakResult("EMERGENCY. DIALING 911.");
-        window.location.href = "tel:911";
-    }, 3000);
-}
-
-function endPress() { clearTimeout(timer); }
