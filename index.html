@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>TACNET - Task Force Command Console</title>
+<style>
+:root {
+  --bg-color: #080c10;
+  --panel-bg: rgba(13, 22, 33, 0.85);
+  --border-gold: #c5a059;
+  --text-main: #e2e8f0;
+  --neon-red: #ff3b30;
+  --neon-green: #4cd964;
+  --map-blue: #007aff;
+  --suspect-purple: #af52de;
+}
+
+/* Night Mode Toggles */
+body.night-red {
+  filter: grayscale(1) sepia(1) hue-rotate(-50deg) saturate(3);
+}
+body.night-green {
+  filter: grayscale(1) sepia(1) hue-rotate(70deg) saturate(3);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
+body { background: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+/* HEADER BRAND FROM IMAGE BLUEPRINT */
+.tacnet-header {
+  background: linear-gradient(135deg, #0f1e36 0%, #070d19 100%);
+  border-bottom: 2px solid var(--border-gold);
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.brand-block { display: flex; align-items: center; gap: 12px; }
+.logo-icon { width: 36px; height: 36px; border: 2px solid var(--border-gold); border-radius: 6px; background: #112543; display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--border-gold); }
+.brand-text h1 { font-size: 24px; font-weight: 800; letter-spacing: 2px; color: #ffffff; }
+.brand-text p { font-size: 10px; color: var(--border-gold); letter-spacing: 1px; font-weight: bold; }
+
+.nav-arrows { display: flex; gap: 15px; }
+.arrow-btn { background: none; border: 1px solid rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 4px; color: white; cursor: pointer; font-size: 12px; }
+
+/* MAIN CONSOLE LAYOUT */
+.console-grid { flex: 1; display: grid; grid-template-columns: 320px 1fr; overflow: hidden; }
+
+/* LEFT SIDEBAR: INTELLIGENCE & CONTROLS */
+.sidebar { background: var(--panel-bg); border-right: 1px solid rgba(255,255,255,0.1); padding: 15px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; }
+
+.search-box-row { display: flex; gap: 8px; }
+.search-box-row input { flex: 1; background: #000; border: 1px solid var(--border-gold); border-radius: 6px; padding: 8px; color: white; font-size: 13px; }
+.search-box-row button { background: var(--border-gold); border: none; padding: 0 15px; border-radius: 6px; font-weight: bold; cursor: pointer; color: #000; }
+
+.control-group { border: 1px solid rgba(255,255,255,0.1); padding: 10px; border-radius: 8px; background: rgba(0,0,0,0.3); }
+.control-title { font-size: 11px; color: var(--border-gold); text-transform: uppercase; font-weight: bold; margin-bottom: 8px; letter-spacing: 0.5px; }
+
+.toggle-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.toggle-btn { background: #162235; border: 1px solid rgba(255,255,255,0.15); padding: 8px; border-radius: 6px; color: white; font-size: 12px; cursor: pointer; text-align: center; }
+.toggle-btn.active { border-color: var(--neon-green); background: rgba(76, 217, 100, 0.2); }
+.toggle-btn.active-red { border-color: var(--neon-red); background: rgba(255, 59, 48, 0.2); }
+
+.range-slider { width: 100%; margin: 8px 0; accent-color: var(--border-gold); }
+
+/* CRITICAL SOS SYSTEM */
+.sos-master-btn { background: var(--neon-red); color: white; border: none; padding: 15px; border-radius: 8px; font-size: 16px; font-weight: 800; letter-spacing: 1px; cursor: pointer; animation: pulseSOS 1.5s infinite; text-align: center; }
+@keyframes pulseSOS { 0% { box-shadow: 0 0 0 0 rgba(255,59,48,0.7); } 100% { box-shadow: 0 0 0 15px rgba(255,59,48,0); } }
+
+/* RIGHT SIDEBAR: FIELD MAP & CANVAS */
+.map-viewport { position: relative; background: #111e16; display: flex; justify-content: center; align-items: center; }
+#mapCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; pointer-events: none; }
+#mapCanvas.drawing-active { pointer-events: auto; }
+
+/* FLOATING MAP LEGEND BOX */
+.map-legend { position: absolute; top: 15px; right: 15px; background: rgba(7, 13, 25, 0.9); border: 1px solid var(--border-gold); border-radius: 8px; padding: 10px; z-index: 10; font-size: 11px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; }
+.legend-item { display: flex; align-items: center; gap: 6px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+
+/* MASTER TERMINATION FOOTER */
+.control-footer { background: #070d19; border-top: 2px solid var(--border-gold); padding: 12px 20px; display: flex; justify-content: space-between; gap: 15px; }
+.footer-btn { flex: 1; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; text-align: center; border: none; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+.btn-terminate { background: #991b1b; color: white; border: 1px solid var(--neon-red); }
+.btn-reset { background: #1e293b; color: #cbd5e1; border: 1px solid rgba(255,255,255,0.2); }
+
+/* AUTO-GENERATED REPORT MODAL OVERLAY */
+.report-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 100; display: none; justify-content: center; align-items: center; padding: 20px; }
+.report-content { background: #ffffff; color: #000000; width: 100%; max-width: 650px; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; max-height: 90vh; }
+.report-header-banner { background: #0f1e36; color: white; padding: 20px; border-bottom: 4px solid #c5a059; text-align: center; }
+.report-body { padding: 25px; overflow-y: auto; font-size: 14px; line-height: 1.6; }
+.report-body h2 { border-bottom: 2px solid #0f1e36; padding-bottom: 5px; margin-bottom: 15px; margin-top: 15px; font-size: 16px; color: #0f1e36; }
+.itemized-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed #ccc; }
+.report-actions { padding: 15px; background: #f1f5f9; border-top: 1px solid #e2e8f0; display: flex; gap: 10px; justify-content: flex-end; }
+.print-btn { padding: 8px 20px; border-radius: 6px; border: none; font-weight: bold; cursor: pointer; background: #0f1e36; color: white; }
+</style>
+</head>
+<body>
+
+  <!-- TACNET MASTER BRANDING HEADER -->
+  <div class="tacnet-header">
+    <div class="brand-block">
+      <div class="logo-icon">T</div>
+      <div class="brand-text">
+        <h1>TACNET</h1>
+        <p>MULTI-AGENCY TASK FORCE SEARCH APP</p>
+      </div>
+    </div>
+    <div class="nav-arrows">
+      <button class="arrow-btn" onclick="alert('Returning to Secure Gatekeeper Screen...')">⬅ Return Arrow</button>
+      <button class="arrow-btn" onclick="alert('System Back')">📁 System Back</button>
+    </div>
+  </div>
+
+  <div class="console-grid">
+    
+    <!-- LEFT SIDEBAR: PURE OPERATIONS CONTROLS -->
+    <div class="sidebar">
+      
+      <!-- ADDRESS CONSOLE DIRECT LOOKUP -->
+      <div class="search-box-row">
+        <input type="text" id="addressSearch" placeholder="Enter Target Search Address...">
+        <button onclick="alert('Target Lock Initialized at Coordinate Nodes')">GO</button>
+      </div>
+
+      <!-- NIGHT VISION NEON SWITCH PANEL -->
+      <div class="control-group">
+        <div class="control-title">Night Vision Matrix</div>
+        <div class="toggle-grid">
+          <div class="toggle-btn" id="redNeon" onclick="toggleNightVision('red')">🔴 Neon Red</div>
+          <div class="toggle-btn" id="greenNeon" onclick="toggleNightVision('green')">🟢 Neon Green</div>
+        </div>
+      </div>
+
+      <!-- AUTOMATED ADJUSTABLE PERIMETER SCALING -->
+      <div class="control-group">
+        <div class="control-title">Perimeter Range Control</div>
+        <input type="range" class="range-slider" min="100" max="2000" value="500" id="perimeterSlider" oninput="updatePerimeterRadius(this.value)">
+        <div style="font-size: 11px; text-align: space-between; display: flex; justify-content: space-between;">
+          <span>Min: 100m</span>
+          <span id="radiusDisplay" style="color: var(--border-gold); font-weight: bold;">Current: 500m</span>
+          <span>Max: 2000m</span>
+        </div>
+      </div>
+
+      <!-- FREE HAND MARKER LAYER LOCK SYSTEM -->
+      <div class="control-group">
+        <div class="control-title">Tactical Red Freehand Marker</div>
+        <div class="toggle-grid">
+          <div class="toggle-btn" id="drawToggle" onclick="toggleDrawingMode()">✏️ Draw Notes</div>
+          <div class="toggle-btn" id="lockToggle" onclick="toggleMapLock()">🔒 Map Lock</div>
+        </div>
+      </div>
+
+      <!-- REPLAY SYSTEM LOGIC ARCHIVE -->
+      <div class="control-group">
+        <div class="control-title">Mission Replay Engine</div>
+        <div class="toggle-grid" style="grid-template-columns: 1fr;">
+          <div class="toggle-btn" onclick="alert('Replaying all synchronized mission events from point of origin...')">▶️ Replay All Mission Events</div>
+        </div>
+      </div>
+
+      <!-- MASTER EMERGENCY DOWN BROADCAST LINK -->
+      <button class="sos-master-btn" onclick="triggerEmergencySOS()">🚨 SOS OFFICER DOWN</button>
+
+    </div>
+
+    <!-- FIELD VIEWPORT GRID CONTAINER -->
+    <div class="map-viewport" id="mapZone">
+      <canvas id="mapCanvas"></canvas>
+      
+      <!-- LIVE FIELD MARKER IDENTIFICATION GUIDE -->
+      <div class="map-legend">
+        <div class="legend-item"><span class="dot" style="background:#007aff;"></span> K9 Team / L.E. (Blue)</div>
+        <div class="legend-item"><span class="dot" style="background:#ff3b30;"></span> SAR (Red)</div>
+        <div class="legend-item"><span class="dot" style="background:#4cd964;"></span> Civilian (Green)</div>
+        <div class="legend-item"><span class="dot" style="background:#8e8e93;"></span> Drone (Gray)</div>
+        <div class="legend-item"><span class="dot" style="background:#af52de;"></span> Suspect (Purple)</div>
+        <div class="legend-item"><span class="dot" style="background:#000000; border: 1px solid white;"></span> Suspect Vehicle</div>
+        <div class="legend-item"><span class="dot" style="background:#ffcc00;"></span> Article Find (Yellow)</div>
+        <div class="legend-item"><span class="dot" style="background:#a52a2a;"></span> Command Post ⭐</div>
+      </div>
+
+      <!-- Simulated tactical vector background footprint representation -->
+      <div style="color: rgba(255,255,255,0.15); font-size: 14px; text-align: center; font-weight: bold;">
+        [ PWA Live Real-Time Tracking Grid Screen Asset Area ]<br>
+        <span style="font-size: 11px; color: var(--border-gold);">GPS Active Tracking Stream Enabled All Personnel Visibility</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CONTROL FOOTER SYSTEM SWITCHBOARD -->
+  <div class="control-footer">
+    <button class="footer-btn btn-reset" onclick="executeTotalReset()">🔄 Total Reset For New Search</button>
+    <button class="footer-btn btn-terminate" onclick="terminateAndGenerateReport()">🛑 Terminate The Search</button>
+  </div>
+
+  <!-- AUTO-GENERATED FINAL REPORT POPUP CONSOLE -->
+  <div class="report-overlay" id="reportOverlay">
+    <div class="report-content">
+      <div class="report-header-banner">
+        <h1 style="letter-spacing: 3px; font-size: 26px;">TACNET</h1>
+        <p style="font-size: 11px; color: #c5a059; font-weight: bold; margin-top: 4px;">OFFICIAL MULTI-AGENCY MISSION REPORT</p>
+      </div>
+      <div class="report-body">
+        <h2 style="margin-top: 0;">1. Command Hierarchy Footprint</h2>
+        <div class="itemized-row"><span>App Creator & Architect:</span><strong>Earl Wood, Deputy Sheriff (Ret.) - Virginia</strong></div>
+        <div class="itemized-row"><span>Operation Status:</span><strong style="color: #991b1b;">TERMINATED & CLOSED OUT</strong></div>
+        <div class="itemized-row"><span>GPS Tracking Logs:</span><strong>Synchronized & Locked to Incident File</strong></div>
+        
+        <h2>2. Itemized Personnel Asset Grid Dispatches</h2>
+        <div class="itemized-row"><span>K9 Teams Deployed:</span><strong>3 Active Tracking Teams (Blue Units Linked to Handlers)</strong></div>
+        <div class="itemized-row"><span>Law Enforcement Search Assets:</span><strong>Active Perimeter Officer Line</strong></div>
+        <div class="itemized-row"><span>Search & Rescue Units (SAR):</span><strong>Red Dot Mutual Aid Support</strong></div>
+        <div class="itemized-row"><span>Civilian Vol Search Elements:</span><strong>Green Dot Restricted Grid Allocation</strong></div>
+        <div class="itemized-row"><span>Air Support Recon:</span><strong>Gray Drone Units Tracking</strong></div>
+
+        <h2>3. Target Intercept Coordinates</h2>
+        <div class="itemized-row"><span>Suspect Vector Points:</span><strong>Purple Team Target Capture Coordinates Locked</strong></div>
+        <div class="itemized-row"><span>Suspect Vehicle Location:</span><strong>Black Indicator Vector Logged</strong></div>
+        <div class="itemized-row"><span>Evidentiary Article Discoveries:</span><strong>Yellow Notification Point Flagged</strong></div>
+      </div>
+      <div class="report-actions">
+        <button class="print-btn" style="background: #4b5563;" onclick="document.getElementById('reportOverlay').style.display='none'">Close View</button>
+        <button class="print-btn" onclick="window.print()">Print Report / Save PDF</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+// INITIALIZE OPERATIONAL VARIABLES
+let nightModeState = null;
+let drawingActive = false;
+let mapLocked = false;
+
+// CANVAS DRAWING MECHANICS FOR REDTactical Freehand MARKER
+const canvas = document.getElementById('mapCanvas');
+const ctx = canvas.getContext('2d');
+let drawingNow = false;
+
+function resizeCanvas() {
+  canvas.width = document.getElementById('mapZone').clientWidth;
+  canvas.height = document.getElementById('mapZone').clientHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+setTimeout(resizeCanvas, 200);
+
+// NIGHT VISION ROUTING SWITCHES
+function toggleNightVision(mode) {
+  document.body.classList.remove('night-red', 'night-green');
+  document.getElementById('redNeon').classList.remove('active-red');
+  document.getElementById('greenNeon').classList.remove('active');
+  
+  if (nightModeState === mode) {
+    nightModeState = null; // Turn off toggle completely if tapped again
+  } else {
+    nightModeState = mode;
+    if (mode === 'red') {
+      document.body.classList.add('night-red');
+      document.getElementById('redNeon').classList.add('active-red');
+    } else if (mode === 'green') {
+      document.body.classList.add('night-green');
+      document.getElementById('greenNeon').classList.add('active');
+    }
+  }
+}
+
+// PERIMETER CONTROLLER UPDATE PACKETS
+function updatePerimeterRadius(val) {
+  document.getElementById('radiusDisplay').innerText = `Current: ${val}m`;
+  console.log(`Perimeter boundary dynamically adjusted to radius footprint node: ${val} meters.`);
+}
+
+// INTERACTIVE DRAWER MAP LOGIC OVERRIDES
+function toggleDrawingMode() {
+  drawingActive = !drawingActive;
+  const btn = document.getElementById('drawToggle');
+  if (drawingActive) {
+    btn.classList.add('active');
+    canvas.classList.add('drawing-active');
+    initializeCanvasDrawEngine();
+  } else {
+    btn.classList.remove('active');
+    canvas.classList.remove('drawing-active');
+  }
+}
+
+function toggleMapLock() {
+  mapLocked = !mapLocked;
+  const btn = document.getElementById('lockToggle');
+  if (mapLocked) {
+    btn.classList.add('active-red');
+    console.log("Tactical Map Asset Coordinates LOCKED. Canvas scaling isolated.");
+  } else {
+    btn.classList.remove('active-red');
+  }
+}
+
+function initializeCanvasDrawEngine() {
+  canvas.onmousedown = (e) => { if(!drawingActive) return; drawingNow = true; ctx.beginPath(); ctx.strokeStyle = '#ff3b30'; ctx.lineWidth = 3; ctx.moveTo(e.offsetX, e.offsetY); };
+  canvas.onmousemove = (e) => { if (drawingNow && drawingActive) { ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); } };
+  canvas.onmouseup = () => { drawingNow = false; };
+}
+
+// GLOBAL SOS EMERGENCY BROADCAST EMITTER
+function triggerEmergencySOS() {
+  alert("🚨 CRITICAL BROADCAST: SOS OFFICER DOWN TRANSMITTING TO ALL AGENTS OVER THE PWA REAL-TIME TRACKING LINE LINK INTERFACE LIVE IMMEDIATELY.");
+}
+
+// MASTER TERMINATION ROUTINE HANDSHAKE
+function terminateAndGenerateReport() {
+  console.log("Search mission sequence complete. Halting data streams.");
+  document.getElementById('reportOverlay').style.display = 'flex';
+}
+
+// TOTAL CONSOLE NEW ERA RESET CLEARING ROUTINE
+function executeTotalReset() {
+  if (confirm("Execute total search reset? This wipes current coordinates and clears the tactical workspace for a new deployment.")) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    document.getElementById('addressSearch').value = '';
+    document.getElementById('perimeterSlider').value = 500;
+    document.getElementById('radiusDisplay').innerText = 'Current: 500m';
+    if(drawingActive) toggleDrawingMode();
+    if(mapLocked) toggleMapLock();
+    document.body.classList.remove('night-red', 'night-green');
+    document.getElementById('redNeon').classList.remove('active-red');
+    document.getElementById('greenNeon').classList.remove('active');
+    nightModeState = null;
+    alert("Workspace sanitized. TACNET initialized for clean search operation.");
+  }
+}
+</script>
+</body>
+</html>
