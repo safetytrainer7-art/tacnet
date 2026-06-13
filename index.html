@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>LEX - Virginia Code Assistant</title>
+
+<style>
+:root {
+  --bg-space: #030712;
+  --panel-blue: rgba(15, 23, 42, 0.75);
+  --border-red: rgba(239, 68, 68, 0.85);
+  --glow-red: rgba(239, 68, 68, 0.4);
+  --text-gold: #ffcf66;
+  --text-light: #f8fafc;
+  --terminal-green: #4ade80;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-space);
+  background-image: 
+    radial-gradient(circle at top, rgba(30, 41, 59, 0.5) 0%, rgba(3, 7, 18, 0.95) 80%),
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 100% 100%, 20px 20px, 20px 20px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--text-light);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+}
+
+.app-container {
+  width: 100%;
+  max-width: 500px;
+  background: rgba(7, 11, 22, 0.85);
+  border-radius: 24px;
+  border: 1px solid var(--border-red);
+  box-shadow: 0 0 20px var(--glow-red), inset 0 0 15px rgba(0,0,0,0.6);
+  padding: 20px;
+  backdrop-filter: blur(12px);
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-badge {
+  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+  color: white;
+  font-weight: 900;
+  font-size: 20px;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(29, 78, 216, 0.6);
+}
+
+.brand-text h1 {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  line-height: 1;
+}
+
+.brand-text p {
+  font-size: 10px;
+  color: #94a3b8;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+
+.system-status {
+  text-align: right;
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--terminal-green);
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 4px;
+  box-shadow: 0 0 8px var(--terminal-green);
+}
+
+.badge-input-container {
+  margin-bottom: 15px;
+}
+
+.badge-input-container input {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  padding: 10px 15px;
+  border-radius: 8px;
+  color: var(--text-light);
+  font-size: 13px;
+  text-align: center;
+}
+
+.lex-welcome {
+  background: var(--panel-blue);
+  border-left: 3px solid #3b82f6;
+  border-radius: 12px;
+  padding: 15px;
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.assistant-avatar {
+  font-size: 32px;
+}
+
+.welcome-text h2 {
+  font-size: 13px;
+  color: #3b82f6;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+
+.welcome-text p {
+  font-size: 13px;
+  line-height: 1.4;
+  color: #cbd5e1;
+}
+
+/* --- SECTOR TILES --- */
+.matrix-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.matrix-card {
+  background: var(--panel-blue);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 15px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.matrix-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-red);
+}
+
+.card-icon {
+  font-size: 24px;
+  margin-bottom: 6px;
+}
+
+.matrix-card h3 {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.matrix-card p {
+  font-size: 10px;
+  color: #94a3b8;
+}
+
+.card-criminal h3 { color: #f87171; }
+.card-traffic h3 { color: #60a5fa; }
+.card-gamefish h3 { color: #4ade80; }
+.card-juvenile h3 { color: #fbbf24; }
+
+/* --- TWO WAY LIVE SPEECH CHANNEL PANEL --- */
+.ai-trigger-panel {
+  background: rgba(6, 78, 59, 0.4);
+  border: 2px solid #10b981;
+  border-radius: 14px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  cursor: pointer;
+  margin-bottom: 15px;
+  transition: all 0.2s ease;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+}
+
+.ai-trigger-panel.active {
+  background: rgba(153, 27, 27, 0.5);
+  border-color: #ef4444;
+  animation: pulseMic 0.8s infinite alternate;
+}
+
+@keyframes pulseMic {
+  0% { box-shadow: 0 0 4px #ef4444; }
+  100% { box-shadow: 0 0 25px #ef4444; }
+}
+
+.pulse-indicator {
+  width: 12px;
+  height: 12px;
+  background: #10b981;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #10b981;
+}
+.ai-trigger-panel.active .pulse-indicator {
+  background: #ef4444;
+  box-shadow: 0 0 12px #ef4444;
+}
+
+.ai-panel-text h3 {
+  color: #34d399;
+  font-size: 16px;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+.ai-trigger-panel.active .ai-panel-text h3 {
+  color: #f87171;
+}
+
+.ai-panel-text p {
+  font-size: 12px;
+  color: #a7f3d0;
+}
+.ai-trigger-panel.active .ai-panel-text p {
+  color: #fca5a5;
+}
+
+/* --- RICHMOND PORTAL HEADER BANNER --- */
+.richmond-stream-banner {
+  background: rgba(0, 0, 0, 0.9);
+  border: 1px solid var(--terminal-green);
+  box-shadow: 0 0 8px rgba(74, 222, 128, 0.2);
+  border-radius: 8px;
+  padding: 8px;
+  text-align: center;
+  font-size: 11px;
+  font-weight: bold;
+  color: var(--terminal-green);
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+/* --- TERMINAL READOUT BOX --- */
+.lis-terminal-display {
+  background: #020617;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 14px;
+  padding: 15px;
+  min-height: 120px;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.terminal-header {
+  font-size: 11px;
+  color: var(--border-red);
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 4px;
+  margin-bottom: 8px;
+}
+
+.terminal-body {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #e2e8f0;
+}
+
+/* --- EMERGENCY MUTE TRANS-BUFFER --- */
+.incident-report-panel {
+  background: rgba(30, 27, 75, 0.5);
+  border: 1px solid #4338ca;
+  border-radius: 14px;
+  padding: 12px 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 15px;
+  cursor: pointer;
+}
+
+.incident-text h3 {
+  color: #c084fc;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.incident-text p {
+  font-size: 11px;
+  color: #cbd5e1;
+}
+
+/* --- FOOTER CREDIT --- */
+.app-footer {
+  text-align: center;
+  margin-top: 20px;
+  padding-top: 10px;
+}
+
+.footer-title {
+  font-size: 10px;
+  color: #3b82f6;
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.creator-name {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--text-light);
+  letter-spacing: 0.5px;
+  margin: 2px 0;
+}
+
+.creator-rank {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.footer-note {
+  font-size: 10px;
+  color: #64748b;
+  margin-top: 6px;
+}
+</style>
+</head>
+<body>
+
+<div class="app-container">
+  <header>
+    <div class="brand">
+      <div class="logo-badge">L</div>
+      <div class="brand-text">
+        <h1>LEX</h1>
+        <p>VIRGINIA CODE ASSISTANT</p>
+      </div>
+    </div>
+    <div class="system-status">
+      <span class="status-dot"></span> Online <span id="timeDisplay">— 00:00:00</span>
+    </div>
+  </header>
+
+  <div class="badge-input-container">
+    <input type="text" placeholder="+ Enter your Call Sign / Badge Number">
+  </div>
+
+  <div class="lex-welcome">
+    <div class="assistant-avatar">👩‍⚖️</div>
+    <div class="welcome-text">
+      <h2>LEX AUDIO INTEL</h2>
+      <p>Two-way verbal link initialized. Tap the green bar below, state the violation or code, and hear the unedited LIS text read back instantly.</p>
+    </div>
+  </div>
+
+  <div class="matrix-grid">
+    <div class="matrix-card card-criminal" onclick="triggerCategory('Criminal')">
+      <div class="card-icon">⚖️</div>
+      <h3>Criminal</h3>
+      <p>Weapons · Assault · Narcotics</p>
+    </div>
+    <div class="matrix-card card-traffic" onclick="triggerCategory('Traffic')">
+      <div class="card-icon">🚔</div>
+      <h3>Traffic</h3>
+      <p>DUI · Reckless · Suspended</p>
+    </div>
+    <div class="matrix-card card-gamefish" onclick="triggerCategory('Game & Fish')">
+      <div class="card-icon">🌲</div>
+      <h3>Game & Fish</h3>
+      <p>Hunting · Fishing · Poaching</p>
+    </div>
+    <div class="matrix-card card-juvenile" onclick="triggerCategory('Juvenile & Domestic')">
+      <div class="card-icon">🏠</div>
+      <h3>Juvenile & Domestic</h3>
+      <p>Protective Orders · Abuse</p>
+    </div>
+  </div>
+
+  <!-- TWO WAY SPEECH TRIGGER CHANNEL PANEL -->
+  <div class="ai-trigger-panel" id="micTrigger">
+    <div class="pulse-indicator"></div>
+    <div class="ai-panel-text">
+      <h3 id="micStatusHeader">🎤 TAP TO OPERATE AUDIO LINK</h3>
+      <p id="micStatusSubText">Tap and speak violation description or clean statute numbers</p>
+    </div>
+  </div>
+
+  <div class="richmond-stream-banner">
+    📡 TWO-WAY SPEECH INTERFACE — RICHMOND, VA DATA LINK
+  </div>
+
+  <div class="lis-terminal-display">
+    <div class="terminal-header" id="outputHeader">LIS PORTAL DIAGNOSTIC</div>
+    <div class="terminal-body" id="outputBody">Vocal interfaces aligned. Tap the speech bar above, listen for the beep context tone, and declare an inquiry.</div>
+  </div>
+
+  <div class="incident-report-panel" style="margin-top: 15px;" onclick="window.speechSynthesis.cancel(); document.getElementById('outputHeader').innerText='🔇 AUDIO TERMINATED';">
+    <div class="card-icon">🛑</div>
+    <div class="incident-text">
+      <h3>MUTE VOICE TERMINAL</h3>
+      <p>Tap here to instantly cut off active audio playback mid-sentence.</p>
+    </div>
+  </div>
+
+  <footer class="app-footer">
+    <div class="footer-title">APP CREATOR</div>
+    <div class="creator-name">Earl Wood</div>
+    <div class="creator-rank">Deputy Sheriff (Ret.) · Virginia</div>
+    <div class="footer-note">LEX Virginia · Built by Law Enforcement for Law Enforcement</div>
+  </footer>
+</div>
+
+<script>
+// ======================================================================
+// REGISTERED ENCRYPTION CREDENTIAL ENTRIES
+// ======================================================================
+const LIS_CONFIG = {
+  endpoint: "https://data.lis.virginia.gov/v1/api/codeofva",
+  apiKey: "DD52A887-4E99-42B5-B9FA-6E9F76010272"
+};
+
+// Local scrub dictionary mapping common vocal strings directly to precise LIS records
+const phoneticScrubEngine = {
+  "assault": "18.2-57", "battery": "18.2-57", "assaulting an officer": "18.2-57",
+  "domestic assault": "18.2-57.2", "domestic battery": "18.2-57.2",
+  "strangulation": "18.2-51.6", "choking": "18.2-51.6",
+  "grand larceny": "18.2-95", "petit larceny": "18.2-96", "theft": "18.2-96",
+  "trespassing": "18.2-119", "trespass": "18.2-119", "property damage": "18.2-137",
+  "destruction of property": "18.2-137", "brandishing": "18.2-282",
+  "drunk in public": "18.2-388", "public intoxication": "18.2-388",
+  "dui": "18.2-266", "driving under the influence": "18.2-266", "dwi": "18.2-266",
+  "refusal": "18.2-268.3", "refused breath": "18.2-268.3",
+  "suspended license": "46.2-301", "driving suspended": "46.2-301", "driving while suspended": "46.2-301",
+  "no license": "46.2-300", "no drivers license": "46.2-300",
+  "reckless driving": "46.2-852", "reckless general": "46.2-852",
+  "reckless speed": "46.2-862", "speeding": "46.2-862", "20 over": "46.2-862", "85 mph": "46.2-862",
+  "eluding": "46.2-817", "fleeing": "46.2-817", "police chase": "46.2-817",
+  "hit and run": "46.2-894", "holding phone": "46.2-818.2", "texting while driving": "46.2-818.2",
+  "protective order violation": "16.1-253.2", "child abuse": "18.2-371.1", "child neglect": "18.2-371.1"
+};
+
+const outputHeader = document.getElementById("outputHeader");
+const outputBody = document.getElementById("outputBody");
+const micTrigger = document.getElementById("micTrigger");
+const micStatusHeader = document.getElementById("micStatusHeader");
+const micStatusSubText = document.getElementById("micStatusSubText");
+
+function updateClock() {
+  const now = new Date();
+  document.getElementById("timeDisplay").innerText = `— ${now.toTimeString().split(' ')[0]}`;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// HIGH-COMPREHENSION AUDIO CONSOLE READBACK
+function vocalizeResponse(text) {
+  window.speechSynthesis.cancel();
+  
+  // Format punctuation out textually to ensure clean speech synthesis pacing
+  let clearPhonetics = text.replace(/-/g, " dash ").replace(/\./g, " point ");
+  const utterance = new SpeechSynthesisUtterance(clearPhonetics);
+  utterance.rate = 0.85; // Medium slow field operations deployment speed
+  
+  const voices = window.speechSynthesis.getVoices();
+  const professionalVoice = voices.find(v => (v.name.includes("Female") || v.name.includes("Zira") || v.name.includes("Google US English")) && v.lang.includes("en"));
+  if (professionalVoice) utterance.voice = professionalVoice;
+  
+  window.speechSynthesis.speak(utterance);
+}
+
+// 100% SECURE GATEWAY INBOUND/OUTBOUND PARSER TO RICHMOND PORTALS
+async function performVocalLISQuery(formattedCode) {
+  outputHeader.innerHTML = `📡 CONNECTING TO RICHMOND LIS... [SEC ${formattedCode}]`;
+  outputBody.innerHTML = `Transmitting vocal signature packet token... Requesting statute texts.`;
+  
+  try {
+    const response = await fetch(`${LIS_CONFIG.endpoint}?section=${encodeURIComponent(formattedCode)}`, {
+      method: "GET",
+      headers: {
+        "X-API-KEY": LIS_CONFIG.apiKey,
+        "Accept": "application/json"
+      }
+    });
+
+    if (!response.ok) throw new Error(`State link nodes rejected inquiry (${response.status})`);
+    const payload = await response.json();
+
+    const officialText = payload.bodyText || payload.text || "No readable statute content returned from state link gateway.";
+    const legalTitle = payload.catchLine || `Section ${formattedCode}`;
+
+    outputHeader.innerHTML = `🔊 VOCALIZING LIS DATA RECOVERY: SEC ${formattedCode}`;
+    outputBody.innerHTML = `<strong>${legalTitle}</strong><br><br>${officialText}`;
+    
+    // Fire vocal engine response automatically back to the officer's ear
+    vocalizeResponse(`${legalTitle}. ${officialText}`);
+
+  } catch (err) {
+    console.error(err);
+    outputHeader.innerHTML = "❌ RICHMOND NETWORK DISCONNECT";
+    outputBody.innerHTML = `Could not extract live text parameters for section [${formattedCode}] from state registries. Verify API authorization.`;
+    vocalizeResponse("Communication failure. State database inaccessible.");
+  }
+}
+
+// SCRUB SPEECH DATA INTO FLUID SYSTEM COORDINATES
+function transformVoiceToCodePattern(speechTranscript) {
+  let clean = speechTranscript.toLowerCase().trim();
+  
+  // 1. Evaluate Direct Operational Keyword Targets
+  for (let [phraseKey, codeVal] of Object.entries(phoneticScrubEngine)) {
+    if (clean.includes(phraseKey)) {
+      return codeVal;
+    }
+  }
+
+  // 2. Perform Dynamic Structural Replacements on Numeric Strings
+  clean = clean.replace(/forty\s*six/g, "46")
+               .replace(/eighteen/g, "18")
+               .replace(/sixteen/g, "16")
+               .replace(/twenty\s*nine/g, "29")
+               .replace(/point/g, ".")
+               .replace(/dash/g, "-")
+               .replace(/\s+/g, "");
+
+  let patternExtract = clean.match(/(\d+\.\d+\-\d+(\.\d+)?)/);
+  if (patternExtract) return patternExtract[0];
+
+  return null;
+}
+
+function processVocalSignature(transcriptText) {
+  const resolvedCode = transformVoiceToCodePattern(transcriptText);
+  if (resolvedCode) {
+    performVocalLISQuery(resolvedCode);
+  } else {
+    outputHeader.innerHTML = "❓ INTERPRETATION EXHAUSTED";
+    outputBody.innerHTML = `Captured Transcript: "${transcriptText}"<br><br>The local translation engine could not convert this entry into a strict legislative search value.<br><br><strong>Speak clearly into your terminal device:</strong><br>• "Forty-six point two dash eight fifty-two"<br>• "DUI", "Suspended license", "Reckless speed", or "Assault"`;
+    vocalizeResponse("Inquiry structural configuration unverified.");
+  }
+}
+
+// BROWSER VOICE CAPTURE HARDWARE PIPELINES
+let operationalSpeechCore = null;
+if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+  const CaptureEngine = window.SpeechRecognition || window.webkitSpeechRecognition;
+  operationalSpeechCore = new CaptureEngine();
+  operationalSpeechCore.lang = "en-US";
+  operationalSpeechCore.continuous = false;
+  operationalSpeechCore.interimResults = false;
+
+  operationalSpeechCore.onstart = () => {
+    micTrigger.classList.add("active");
+    micStatusHeader.innerText = "🎤 AUDIO CHANNEL UNLOCKED — SPEAK NOW";
+    micStatusSubText.innerText = "State your statutory code target or violation context description clear and direct...";
+  };
+
+  operationalSpeechCore.onend = () => {
+    micTrigger.classList.remove("active");
+    micStatusHeader.innerText = "🎤 TAP TO OPERATE AUDIO LINK";
+    micStatusSubText.innerText = "Tap and speak violation description or clean statute numbers";
+  };
+
+  operationalSpeechCore.onresult = (event) => {
+    const speechResult = event.results[0][0].transcript;
+    outputHeader.innerHTML = "🔤 TRANSLATING AUDIO SIGNATURE...";
+    outputBody.innerHTML = `Processing inbound verbal transmission stream: "${speechResult}"`;
+    processVocalSignature(speechResult);
+  };
+
+  micTrigger.onclick = async () => {
+    try {
+      await navigator.mediaDevices.getUserMedia({ audio: true });
+      operationalSpeechCore.start();
+    } catch(err) {
+      alert("Microphone hardware configuration access is denied or offline.");
+    }
+  };
+} else {
+  micStatusHeader.innerText = "AUDIO CONTROLLERS OFFLINE";
+  micTrigger.style.opacity = "0.4";
+}
+
+function triggerCategory(label) {
+  outputHeader.innerHTML = `📂 ${label.toUpperCase()} CHANNELS STANDING BY`;
+  outputBody.innerHTML = `Vocal routing engines active for the ${label} matrix cluster. Engage the speech channel to query Richmond.`;
+  vocalizeResponse(`${label} channel monitoring.`);
+}
+
+if (window.speechSynthesis.onvoiceschanged !== undefined) {
+  window.speechSynthesis.onvoiceschanged = () => {
+    setTimeout(() => { vocalizeResponse("Vocal interface armed. Link online both ways."); }, 300);
+  };
+} else {
+  setTimeout(() => { vocalizeResponse("Vocal interface armed. Link online both ways."); }, 500);
+}
+</script>
+</body>
+</html>
