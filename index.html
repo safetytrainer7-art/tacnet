@@ -6,30 +6,37 @@
 <title>TACNET - Task Force Command Console</title>
 <style>
 :root {
-  --bg-color: #080c10;
-  --panel-bg: rgba(13, 22, 33, 0.85);
+  /* REENGINEERED COLOR MATRIX: NO MILITARY GREEN, NO FLAT BLACK */
+  --bg-slate: #111827; 
+  --panel-navy: rgba(17, 24, 39, 0.9);
   --border-gold: #c5a059;
-  --text-main: #e2e8f0;
-  --neon-red: #ff3b30;
-  --neon-green: #4cd964;
-  --map-blue: #007aff;
-  --suspect-purple: #af52de;
+  --text-main: #f8fafc;
+  --neon-red: #ef4444; /* Crisp red pinstripe matrix */
+  --neon-green: #22c55e;
+  --map-blue: #3b82f6;
+  --suspect-purple: #a855f7;
 }
 
-/* Night Mode Toggles */
-body.night-red {
-  filter: grayscale(1) sepia(1) hue-rotate(-50deg) saturate(3);
-}
-body.night-green {
-  filter: grayscale(1) sepia(1) hue-rotate(70deg) saturate(3);
-}
+/* Night Vision Matrix Transforms */
+body.night-red { filter: grayscale(1) sepia(1) hue-rotate(-50deg) saturate(3); }
+body.night-green { filter: grayscale(1) sepia(1) hue-rotate(70deg) saturate(3); }
 
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
-body { background: var(--bg-color); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
-/* HEADER BRAND FROM IMAGE BLUEPRINT */
+/* MAIN CHASSIS RED PINSTRIPE */
+body { 
+  background: var(--bg-slate); 
+  color: var(--text-main); 
+  min-height: 100vh; 
+  display: flex; 
+  flex-direction: column; 
+  overflow: hidden;
+  border: 3px solid var(--neon-red); 
+}
+
+/* BRAND HEADER WITH DYNAMIC CONTROLS */
 .tacnet-header {
-  background: linear-gradient(135deg, #0f1e36 0%, #070d19 100%);
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
   border-bottom: 2px solid var(--border-gold);
   padding: 12px 20px;
   display: flex;
@@ -37,62 +44,115 @@ body { background: var(--bg-color); color: var(--text-main); min-height: 100vh; 
   align-items: center;
 }
 .brand-block { display: flex; align-items: center; gap: 12px; }
-.logo-icon { width: 36px; height: 36px; border: 2px solid var(--border-gold); border-radius: 6px; background: #112543; display: flex; align-items: center; justify-content: center; font-weight: bold; color: var(--border-gold); }
+.logo-icon { 
+  width: 36px; height: 36px; 
+  border: 2px solid var(--neon-red); /* Red pinstripe around logo */
+  border-radius: 6px; 
+  background: #0f172a; 
+  display: flex; align-items: center; justify-content: center; 
+  font-weight: bold; color: var(--border-gold); 
+}
 .brand-text h1 { font-size: 24px; font-weight: 800; letter-spacing: 2px; color: #ffffff; }
 .brand-text p { font-size: 10px; color: var(--border-gold); letter-spacing: 1px; font-weight: bold; }
 
 .nav-arrows { display: flex; gap: 15px; }
-.arrow-btn { background: none; border: 1px solid rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 4px; color: white; cursor: pointer; font-size: 12px; }
+.arrow-btn { background: none; border: 1px solid var(--neon-red); padding: 5px 12px; border-radius: 4px; color: white; cursor: pointer; font-size: 12px; font-weight: bold; }
 
-/* MAIN CONSOLE LAYOUT */
-.console-grid { flex: 1; display: grid; grid-template-columns: 320px 1fr; overflow: hidden; }
+/* THE MASTER WORKSPACE PANEL */
+.console-grid { flex: 1; display: grid; grid-template-columns: 340px 1fr; overflow: hidden; }
 
-/* LEFT SIDEBAR: INTELLIGENCE & CONTROLS */
-.sidebar { background: var(--panel-bg); border-right: 1px solid rgba(255,255,255,0.1); padding: 15px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; }
+/* LEFT SIDEBAR PANEL SETUP */
+.sidebar { 
+  background: var(--panel-navy); 
+  border-right: 2px solid var(--neon-red); 
+  padding: 15px; 
+  display: flex; 
+  flex-direction: column; 
+  gap: 12px; 
+  overflow-y: auto; 
+}
 
-.search-box-row { display: flex; gap: 8px; }
-.search-box-row input { flex: 1; background: #000; border: 1px solid var(--border-gold); border-radius: 6px; padding: 8px; color: white; font-size: 13px; }
-.search-box-row button { background: var(--border-gold); border: none; padding: 0 15px; border-radius: 6px; font-weight: bold; cursor: pointer; color: #000; }
-
-.control-group { border: 1px solid rgba(255,255,255,0.1); padding: 10px; border-radius: 8px; background: rgba(0,0,0,0.3); }
+.control-group { 
+  border: 1px solid var(--neon-red); /* Icon control group red border */
+  padding: 12px; 
+  border-radius: 8px; 
+  background: rgba(15, 23, 42, 0.6); 
+}
 .control-title { font-size: 11px; color: var(--border-gold); text-transform: uppercase; font-weight: bold; margin-bottom: 8px; letter-spacing: 0.5px; }
 
+/* SEARCH BAR INFRASTRUCTURE */
+.search-box-row { display: flex; gap: 8px; }
+.search-box-row input { flex: 1; background: #000; border: 1px solid var(--border-gold); border-radius: 6px; padding: 8px; color: white; font-size: 13px; }
+.search-box-row button { background: var(--neon-red); color: white; border: none; padding: 0 15px; border-radius: 6px; font-weight: bold; cursor: pointer; }
+
+/* DYNAMIC DEPLOYMENT HUB (PLACING SEARCHERS IN/OUT) */
+.deployment-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.deploy-btn { 
+  background: #1e293b; 
+  border: 1px solid var(--neon-red); /* Icon buttons wrapped in red pinstripe */
+  padding: 6px; 
+  border-radius: 4px; 
+  color: #fff; 
+  font-size: 11px; 
+  font-weight: bold; 
+  cursor: pointer; 
+  text-align: left; 
+}
+.deploy-btn:hover { background: #334155; }
+
+/* INTERFACE TOGGLE BASICS */
 .toggle-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.toggle-btn { background: #162235; border: 1px solid rgba(255,255,255,0.15); padding: 8px; border-radius: 6px; color: white; font-size: 12px; cursor: pointer; text-align: center; }
-.toggle-btn.active { border-color: var(--neon-green); background: rgba(76, 217, 100, 0.2); }
-.toggle-btn.active-red { border-color: var(--neon-red); background: rgba(255, 59, 48, 0.2); }
+.toggle-btn { background: #1e293b; border: 1px solid var(--neon-red); padding: 8px; border-radius: 6px; color: white; font-size: 12px; cursor: pointer; text-align: center; font-weight: bold; }
+.toggle-btn.active { border-color: var(--neon-green); background: rgba(34, 197, 94, 0.2); }
+.toggle-btn.active-red { border-color: var(--neon-red); background: rgba(239, 68, 68, 0.3); }
 
-.range-slider { width: 100%; margin: 8px 0; accent-color: var(--border-gold); }
+.range-slider { width: 100%; margin: 8px 0; accent-color: var(--neon-red); }
 
-/* CRITICAL SOS SYSTEM */
-.sos-master-btn { background: var(--neon-red); color: white; border: none; padding: 15px; border-radius: 8px; font-size: 16px; font-weight: 800; letter-spacing: 1px; cursor: pointer; animation: pulseSOS 1.5s infinite; text-align: center; }
-@keyframes pulseSOS { 0% { box-shadow: 0 0 0 0 rgba(255,59,48,0.7); } 100% { box-shadow: 0 0 0 15px rgba(255,59,48,0); } }
+/* SOS ALERT SYSTEM CHASSIS */
+.sos-master-btn { background: var(--neon-red); color: white; border: 2px solid #fff; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 900; letter-spacing: 1px; cursor: pointer; animation: pulseSOS 1.5s infinite; text-align: center; }
+@keyframes pulseSOS { 0% { box-shadow: 0 0 0 0 rgba(239,68,68,0.8); } 100% { box-shadow: 0 0 0 12px rgba(239,68,68,0); } }
 
-/* RIGHT SIDEBAR: FIELD MAP & CANVAS */
-.map-viewport { position: relative; background: #111e16; display: flex; justify-content: center; align-items: center; }
-#mapCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; pointer-events: none; }
+/* RIGHT VIEWPORT MAP HUB */
+.map-viewport { position: relative; background: #1e293b; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+
+/* SIMULATED GPS ENGINE LAYER OVERLAYS */
+.map-bg-layer { position: absolute; width: 100%; height: 100%; background-size: cover; background-position: center; transition: all 0.3s; opacity: 0.45; }
+.layer-satellite { background-image: radial-gradient(circle, transparent 20%, #0f172a 90%), url('https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1200&q=80'); }
+.layer-terrain { background-image: radial-gradient(circle, transparent 20%, #0f172a 90%), url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80'); }
+.layer-street { background-image: radial-gradient(circle, transparent 20%, #0f172a 90%), url('https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?auto=format&fit=crop&w=1200&q=80'); }
+
+#mapCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; }
 #mapCanvas.drawing-active { pointer-events: auto; }
 
-/* FLOATING MAP LEGEND BOX */
-.map-legend { position: absolute; top: 15px; right: 15px; background: rgba(7, 13, 25, 0.9); border: 1px solid var(--border-gold); border-radius: 8px; padding: 10px; z-index: 10; font-size: 11px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; }
-.legend-item { display: flex; align-items: center; gap: 6px; }
-.dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+/* LAYER VIEWPORT SEPARATOR CONTROLLERS */
+.layer-controls { position: absolute; bottom: 20px; right: 20px; background: rgba(15, 23, 42, 0.95); border: 2px solid var(--neon-red); border-radius: 8px; padding: 6px; z-index: 20; display: flex; gap: 6px; }
+.layer-btn { background: #334155; border: 1px solid var(--border-gold); color: white; padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; }
+.layer-btn.active { background: var(--neon-red); border-color: #fff; }
 
-/* MASTER TERMINATION FOOTER */
-.control-footer { background: #070d19; border-top: 2px solid var(--border-gold); padding: 12px 20px; display: flex; justify-content: space-between; gap: 15px; }
-.footer-btn { flex: 1; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; text-align: center; border: none; font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
-.btn-terminate { background: #991b1b; color: white; border: 1px solid var(--neon-red); }
-.btn-reset { background: #1e293b; color: #cbd5e1; border: 1px solid rgba(255,255,255,0.2); }
+/* LEGEND BOX CAPTURES */
+.map-legend { position: absolute; top: 15px; right: 15px; background: rgba(15, 23, 42, 0.95); border: 2px solid var(--neon-red); border-radius: 8px; padding: 10px; z-index: 20; font-size: 11px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; }
+.legend-item { display: flex; align-items: center; gap: 6px; font-weight: bold; }
+.dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; border: 1px solid #fff; }
 
-/* AUTO-GENERATED REPORT MODAL OVERLAY */
-.report-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 100; display: none; justify-content: center; align-items: center; padding: 20px; }
-.report-content { background: #ffffff; color: #000000; width: 100%; max-width: 650px; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; max-height: 90vh; }
-.report-header-banner { background: #0f1e36; color: white; padding: 20px; border-bottom: 4px solid #c5a059; text-align: center; }
+/* ON-SCREEN ACTIVE DEPLOYED ITEMS CONTAINER */
+#visualMarkerLayer { position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: 15; pointer-events: auto; }
+.field-marker { position: absolute; width: 22px; height: 22px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 8px rgba(0,0,0,0.8); cursor: pointer; transform: translate(-50%, -50%); display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: bold; color: white; }
+
+/* MAIN CLOSURE MASTER BUTTON FOOTER */
+.control-footer { background: #0f172a; border-top: 2px solid var(--border-gold); padding: 12px 20px; display: flex; justify-content: space-between; gap: 15px; }
+.footer-btn { flex: 1; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; text-align: center; border: 2px solid var(--neon-red); font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
+.btn-terminate { background: #b91c1c; color: white; }
+.btn-reset { background: #334155; color: #f8fafc; }
+
+/* AUTO REPORT OUTPUT SHEET MODAL */
+.report-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 100; display: none; justify-content: center; align-items: center; padding: 20px; }
+.report-content { background: #ffffff; color: #000000; width: 100%; max-width: 650px; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; max-height: 90vh; border: 4px solid var(--neon-red); }
+.report-header-banner { background: #0f172a; color: white; padding: 20px; border-bottom: 4px solid var(--border-gold); text-align: center; }
 .report-body { padding: 25px; overflow-y: auto; font-size: 14px; line-height: 1.6; }
-.report-body h2 { border-bottom: 2px solid #0f1e36; padding-bottom: 5px; margin-bottom: 15px; margin-top: 15px; font-size: 16px; color: #0f1e36; }
+.report-body h2 { border-bottom: 2px solid #0f172a; padding-bottom: 5px; margin-bottom: 12px; margin-top: 15px; font-size: 15px; color: #0f172a; text-transform: uppercase; letter-spacing: 0.5px; }
 .itemized-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed #ccc; }
-.report-actions { padding: 15px; background: #f1f5f9; border-top: 1px solid #e2e8f0; display: flex; gap: 10px; justify-content: flex-end; }
-.print-btn { padding: 8px 20px; border-radius: 6px; border: none; font-weight: bold; cursor: pointer; background: #0f1e36; color: white; }
+.report-actions { padding: 15px; background: #e2e8f0; display: flex; gap: 10px; justify-content: flex-end; }
+.print-btn { padding: 8px 20px; border-radius: 6px; border: none; font-weight: bold; cursor: pointer; background: #0f172a; color: white; }
 </style>
 </head>
 <body>
@@ -108,42 +168,52 @@ body { background: var(--bg-color); color: var(--text-main); min-height: 100vh; 
     </div>
     <div class="nav-arrows">
       <button class="arrow-btn" onclick="alert('Returning to Secure Gatekeeper Screen...')">⬅ Return Arrow</button>
-      <button class="arrow-btn" onclick="alert('System Back')">📁 System Back</button>
+      <button class="arrow-btn" onclick="alert('System Dashboard Synchronized')">📁 System Back</button>
     </div>
   </div>
 
   <div class="console-grid">
     
-    <!-- LEFT SIDEBAR: PURE OPERATIONS CONTROLS -->
+    <!-- SIDEBAR OPERATIONAL MANAGEMENT -->
     <div class="sidebar">
       
-      <!-- ADDRESS CONSOLE DIRECT LOOKUP -->
-      <div class="search-box-row">
-        <input type="text" id="addressSearch" placeholder="Enter Target Search Address...">
-        <button onclick="alert('Target Lock Initialized at Coordinate Nodes')">GO</button>
-      </div>
-
-      <!-- NIGHT VISION NEON SWITCH PANEL -->
+      <!-- ADDRESS LOOKUP INTERFACE PANEL -->
       <div class="control-group">
-        <div class="control-title">Night Vision Matrix</div>
-        <div class="toggle-grid">
-          <div class="toggle-btn" id="redNeon" onclick="toggleNightVision('red')">🔴 Neon Red</div>
-          <div class="toggle-btn" id="greenNeon" onclick="toggleNightVision('green')">🟢 Neon Green</div>
+        <div class="control-title">Address Target Entry</div>
+        <div class="search-box-row">
+          <input type="text" id="addressSearch" placeholder="Type target tracking address...">
+          <button onclick="executeAddressSearchGo()">GO</button>
         </div>
       </div>
 
-      <!-- AUTOMATED ADJUSTABLE PERIMETER SCALING -->
+      <!-- TASK FORCE DEPLOYMENT CONTROLLER (PLACING SEARCHERS IN/OUT) -->
       <div class="control-group">
-        <div class="control-title">Perimeter Range Control</div>
+        <div class="control-title">Perimeter Deployment Hub</div>
+        <div style="font-size: 10px; color:#cbd5e1; margin-bottom: 8px;">Tap an asset to deploy it inside perimeter. Tap a marker on the map to recall them.</div>
+        <div class="deployment-grid">
+          <button class="deploy-btn" onclick="addSearcherToMap('k9', '🐾 Link')">➕ K9 Team (Blue)</button>
+          <button class="deploy-btn" onclick="addSearcherToMap('officer', '👮 Officer')">➕ LE Officer (Blue)</button>
+          <button class="deploy-btn" onclick="addSearcherToMap('sar', '🚁 SAR')">➕ SAR Unit (Red)</button>
+          <button class="deploy-btn" onclick="addSearcherToMap('civilian', '🚶 Vol')">➕ Civilian (Green)</button>
+          <button class="deploy-btn" onclick="addSearcherToMap('drone', '🛸 Air')">➕ Drone (Gray)</button>
+          <button class="deploy-btn" onclick="addSearcherToMap('suspect', '⚠️ Susp')">➕ Suspect (Purple)</button>
+          <button class="deploy-btn" onclick="addSearcherToMap('vehicle', '🚘 Car')">➕ Suspect Vehicle</button>
+          <button class="deploy-btn" onclick="addSearcherToMap('article', '💎 Find')">➕ Article (Yellow)</button>
+        </div>
+      </div>
+
+      <!-- DYNAMIC SCALE PERIMETER CONFIGURATOR -->
+      <div class="control-group">
+        <div class="control-title">Perimeter Scaling Loop</div>
         <input type="range" class="range-slider" min="100" max="2000" value="500" id="perimeterSlider" oninput="updatePerimeterRadius(this.value)">
-        <div style="font-size: 11px; text-align: space-between; display: flex; justify-content: space-between;">
+        <div style="font-size: 11px; display: flex; justify-content: space-between;">
           <span>Min: 100m</span>
           <span id="radiusDisplay" style="color: var(--border-gold); font-weight: bold;">Current: 500m</span>
           <span>Max: 2000m</span>
         </div>
       </div>
 
-      <!-- FREE HAND MARKER LAYER LOCK SYSTEM -->
+      <!-- FREEHAND GRAPHIC CANVAS CONTROLS -->
       <div class="control-group">
         <div class="control-title">Tactical Red Freehand Marker</div>
         <div class="toggle-grid">
@@ -152,89 +222,103 @@ body { background: var(--bg-color); color: var(--text-main); min-height: 100vh; 
         </div>
       </div>
 
-      <!-- REPLAY SYSTEM LOGIC ARCHIVE -->
+      <!-- MAP VIEW CONSOLE SYSTEM INTEGRITY SWITCH -->
       <div class="control-group">
-        <div class="control-title">Mission Replay Engine</div>
-        <div class="toggle-grid" style="grid-template-columns: 1fr;">
-          <div class="toggle-btn" onclick="alert('Replaying all synchronized mission events from point of origin...')">▶️ Replay All Mission Events</div>
+        <div class="control-title">Night Vision Matrix</div>
+        <div class="toggle-grid">
+          <div class="toggle-btn" id="redNeon" onclick="toggleNightVision('red')">🔴 Neon Red</div>
+          <div class="toggle-btn" id="greenNeon" onclick="toggleNightVision('green')">🟢 Neon Green</div>
         </div>
       </div>
 
-      <!-- MASTER EMERGENCY DOWN BROADCAST LINK -->
-      <button class="sos-master-btn" onclick="triggerEmergencySOS()">🚨 SOS OFFICER DOWN</button>
-
-    </div>
-
-    <!-- FIELD VIEWPORT GRID CONTAINER -->
-    <div class="map-viewport" id="mapZone">
-      <canvas id="mapCanvas"></canvas>
-      
-      <!-- LIVE FIELD MARKER IDENTIFICATION GUIDE -->
-      <div class="map-legend">
-        <div class="legend-item"><span class="dot" style="background:#007aff;"></span> K9 Team / L.E. (Blue)</div>
-        <div class="legend-item"><span class="dot" style="background:#ff3b30;"></span> SAR (Red)</div>
-        <div class="legend-item"><span class="dot" style="background:#4cd964;"></span> Civilian (Green)</div>
-        <div class="legend-item"><span class="dot" style="background:#8e8e93;"></span> Drone (Gray)</div>
-        <div class="legend-item"><span class="dot" style="background:#af52de;"></span> Suspect (Purple)</div>
-        <div class="legend-item"><span class="dot" style="background:#000000; border: 1px solid white;"></span> Suspect Vehicle</div>
-        <div class="legend-item"><span class="dot" style="background:#ffcc00;"></span> Article Find (Yellow)</div>
-        <div class="legend-item"><span class="dot" style="background:#a52a2a;"></span> Command Post ⭐</div>
+      <div class="control-group">
+        <div class="control-title">Incident Recorder Archive</div>
+        <button class="toggle-btn" style="width: 100%;" onclick="alert('Replaying complete synchronized tactical GPS sequence logs from timeline origin...')">▶️ Replay Mission Sequence</button>
       </div>
 
-      <!-- Simulated tactical vector background footprint representation -->
-      <div style="color: rgba(255,255,255,0.15); font-size: 14px; text-align: center; font-weight: bold;">
-        [ PWA Live Real-Time Tracking Grid Screen Asset Area ]<br>
-        <span style="font-size: 11px; color: var(--border-gold);">GPS Active Tracking Stream Enabled All Personnel Visibility</span>
+      <button class="sos-master-btn" onclick="triggerEmergencySOS()">🚨 SOS OFFICER DOWN</button>
+    </div>
+
+    <!-- FIELD CONTROL MAP TRACK VIEWPORT -->
+    <div class="map-viewport" id="mapZone">
+      
+      <!-- INDEPENDENT MULTI-WAY SEPARATE GPS VIEW CHANNELS -->
+      <div class="map-bg-layer layer-satellite" id="viewSatellite"></div>
+      <div class="map-bg-layer layer-terrain" id="viewTerrain" style="display: none;"></div>
+      <div class="map-bg-layer layer-street" id="viewStreet" style="display: none;"></div>
+
+      <!-- INTERACTIVE MARKER PLACEMENT MATRIX LAYER -->
+      <div id="visualMarkerLayer"></div>
+      
+      <!-- FREEHAND CANVAS -->
+      <canvas id="mapCanvas"></canvas>
+      
+      <!-- MAP VIEW SWAP HOOK CONTROL SEPARATORS -->
+      <div class="layer-controls">
+        <button class="layer-btn active" id="btnSat" onclick="switchMapLayer('satellite')">Satellite</button>
+        <button class="layer-btn" id="btnTerr" onclick="switchMapLayer('terrain')">Terrain</button>
+        <button class="layer-btn" id="btnSt" onclick="switchMapLayer('street')">Street</button>
+      </div>
+      
+      <!-- ASSET COLOR MAP INSIGNIA CODES -->
+      <div class="map-legend">
+        <div class="legend-item"><span class="dot" style="background:#3b82f6;"></span> K9 / L.E. (Blue)</div>
+        <div class="legend-item"><span class="dot" style="background:#ef4444;"></span> SAR Team (Red)</div>
+        <div class="legend-item"><span class="dot" style="background:#22c55e;"></span> Civilian (Green)</div>
+        <div class="legend-item"><span class="dot" style="background:#8e8e93;"></span> Drone (Gray)</div>
+        <div class="legend-item"><span class="dot" style="background:#a855f7;"></span> Suspect (Purple)</div>
+        <div class="legend-item"><span class="dot" style="background:#000000;"></span> Vehicle (Black)</div>
+        <div class="legend-item"><span class="dot" style="background:#eab308;"></span> Article Find (Yellow)</div>
+        <div class="legend-item"><span class="dot" style="background:#a52a2a;"></span> Command Post ⭐</div>
       </div>
     </div>
 
   </div>
 
-  <!-- CONTROL FOOTER SYSTEM SWITCHBOARD -->
+  <!-- STAGE MASTER FINALIZE INTERACTION BUTTONS -->
   <div class="control-footer">
     <button class="footer-btn btn-reset" onclick="executeTotalReset()">🔄 Total Reset For New Search</button>
     <button class="footer-btn btn-terminate" onclick="terminateAndGenerateReport()">🛑 Terminate The Search</button>
   </div>
 
-  <!-- AUTO-GENERATED FINAL REPORT POPUP CONSOLE -->
+  <!-- AUTO-GENERATED FINAL REPORT OVERLAY -->
   <div class="report-overlay" id="reportOverlay">
     <div class="report-content">
       <div class="report-header-banner">
         <h1 style="letter-spacing: 3px; font-size: 26px;">TACNET</h1>
-        <p style="font-size: 11px; color: #c5a059; font-weight: bold; margin-top: 4px;">OFFICIAL MULTI-AGENCY MISSION REPORT</p>
+        <p style="font-size: 11px; color: #c5a059; font-weight: bold; margin-top: 4px;">OFFICIAL REPORT — TASK FORCE DISPATCH CLOSURE</p>
       </div>
       <div class="report-body">
-        <h2 style="margin-top: 0;">1. Command Hierarchy Footprint</h2>
-        <div class="itemized-row"><span>App Creator & Architect:</span><strong>Earl Wood, Deputy Sheriff (Ret.) - Virginia</strong></div>
-        <div class="itemized-row"><span>Operation Status:</span><strong style="color: #991b1b;">TERMINATED & CLOSED OUT</strong></div>
-        <div class="itemized-row"><span>GPS Tracking Logs:</span><strong>Synchronized & Locked to Incident File</strong></div>
+        <h2 style="margin-top: 0;">1. Command Parameters</h2>
+        <div class="itemized-row"><span>App Creator & Systems Lead:</span><strong>Earl Wood, Deputy Sheriff (Ret.) - Virginia</strong></div>
+        <div class="itemized-row"><span>Operation Status:</span><strong style="color: #ef4444;">TERMINATED & LOCKED</strong></div>
+        <div class="itemized-row"><span>GPS Coordinate Buffer:</span><strong>PWA Real-Time Live Stream Archived</strong></div>
         
-        <h2>2. Itemized Personnel Asset Grid Dispatches</h2>
-        <div class="itemized-row"><span>K9 Teams Deployed:</span><strong>3 Active Tracking Teams (Blue Units Linked to Handlers)</strong></div>
-        <div class="itemized-row"><span>Law Enforcement Search Assets:</span><strong>Active Perimeter Officer Line</strong></div>
-        <div class="itemized-row"><span>Search & Rescue Units (SAR):</span><strong>Red Dot Mutual Aid Support</strong></div>
-        <div class="itemized-row"><span>Civilian Vol Search Elements:</span><strong>Green Dot Restricted Grid Allocation</strong></div>
-        <div class="itemized-row"><span>Air Support Recon:</span><strong>Gray Drone Units Tracking</strong></div>
+        <h2>2. Itemized Search Grid Tracking Statistics</h2>
+        <div class="itemized-row"><span>Deployed K9 Search Elements:</span><span id="repK9">0 Deployed</span></div>
+        <div class="itemized-row"><span>Active Perimeter Enforcement Officers:</span><span id="repLE">0 Deployed</span></div>
+        <div class="itemized-row"><span>Search & Rescue Mutual Aid Units (SAR):</span><span id="repSAR">0 Deployed</span></div>
+        <div class="itemized-row"><span>Civilian Grid Assets Tracked:</span><span id="repCiv">0 Deployed</span></div>
+        <div class="itemized-row"><span>Air Support Drones Registered:</span><span id="repDrone">0 Deployed</span></div>
 
-        <h2>3. Target Intercept Coordinates</h2>
-        <div class="itemized-row"><span>Suspect Vector Points:</span><strong>Purple Team Target Capture Coordinates Locked</strong></div>
-        <div class="itemized-row"><span>Suspect Vehicle Location:</span><strong>Black Indicator Vector Logged</strong></div>
-        <div class="itemized-row"><span>Evidentiary Article Discoveries:</span><strong>Yellow Notification Point Flagged</strong></div>
+        <h2>3. Field Intercept Milestones</h2>
+        <div class="itemized-row"><span>Suspect Target Signatures Logged:</span><span id="repSusp">0 Located</span></div>
+        <div class="itemized-row"><span>Suspect Vehicle Fix Points:</span><span id="repVeh">0 Logged</span></div>
+        <div class="itemized-row"><span>Recovered Article Evidence Finds:</span><span id="repArt">0 Flagged</span></div>
       </div>
       <div class="report-actions">
-        <button class="print-btn" style="background: #4b5563;" onclick="document.getElementById('reportOverlay').style.display='none'">Close View</button>
-        <button class="print-btn" onclick="window.print()">Print Report / Save PDF</button>
+        <button class="print-btn" style="background: #4b5563;" onclick="document.getElementById('reportOverlay').style.display='none'">Return To Workspace</button>
+        <button class="print-btn" onclick="window.print()">Print Official Report / Export PDF</button>
       </div>
     </div>
   </div>
 
 <script>
-// INITIALIZE OPERATIONAL VARIABLES
 let nightModeState = null;
 let drawingActive = false;
 let mapLocked = false;
+let trackingRegistry = { k9: 0, officer: 0, sar: 0, civilian: 0, drone: 0, suspect: 0, vehicle: 0, article: 0 };
 
-// CANVAS DRAWING MECHANICS FOR REDTactical Freehand MARKER
 const canvas = document.getElementById('mapCanvas');
 const ctx = canvas.getContext('2d');
 let drawingNow = false;
@@ -246,14 +330,103 @@ function resizeCanvas() {
 window.addEventListener('resize', resizeCanvas);
 setTimeout(resizeCanvas, 200);
 
-// NIGHT VISION ROUTING SWITCHES
+// THREE VIEW SEPARATE INDEPENDENT GPS LAYER CONTROL PACKETS
+function switchMapLayer(targetLayer) {
+  document.getElementById('viewSatellite').style.display = 'none';
+  document.getElementById('viewTerrain').style.display = 'none';
+  document.getElementById('viewStreet').style.display = 'none';
+  
+  document.getElementById('btnSat').classList.remove('active');
+  document.getElementById('btnTerr').classList.remove('active');
+  document.getElementById('btnSt').classList.remove('active');
+  
+  if (targetLayer === 'satellite') {
+    document.getElementById('viewSatellite').style.display = 'block';
+    document.getElementById('btnSat').classList.add('active');
+  } else if (targetLayer === 'terrain') {
+    document.getElementById('viewTerrain').style.display = 'block';
+    document.getElementById('btnTerr').classList.add('active');
+  } else if (targetLayer === 'street') {
+    document.getElementById('viewStreet').style.display = 'block';
+    document.getElementById('btnSt').classList.add('active');
+  }
+}
+
+// ADDRESS CONSOLE FUNCTIONAL GATEWAY
+function executeAddressSearchGo() {
+  const addressQuery = document.getElementById('addressSearch').value.trim();
+  if (!addressQuery) {
+    alert("Please enter a target address string first.");
+    return;
+  }
+  
+  // Wipe out any existing command post stars to prevent field confusion
+  const existingCP = document.getElementById('commandPostMarker');
+  if(existingCP) existingCP.remove();
+  
+  // Drop Command Post exactly at center of viewport array
+  const container = document.getElementById('visualMarkerLayer');
+  const cpMarker = document.createElement('div');
+  cpMarker.id = 'commandPostMarker';
+  cpMarker.className = 'field-marker';
+  cpMarker.style.backgroundColor = '#a52a2a';
+  cpMarker.style.borderColor = varColor('gold');
+  cpMarker.style.left = '50%';
+  cpMarker.style.top = '50%';
+  cpMarker.innerHTML = '⭐';
+  cpMarker.onclick = () => { if(confirm("Recall Command Post position marker?")) cpMarker.remove(); };
+  container.appendChild(cpMarker);
+  
+  alert(`Target address [${addressQuery}] locked. Drawing operational perimeter and anchoring Command Post Star at tactical center.`);
+}
+
+// HOW SEARCHERS ARE PLACED IN/OUT OF PERIMETER DYNAMIC HUB
+function addSearcherToMap(type, labelText) {
+  const container = document.getElementById('visualMarkerLayer');
+  const marker = document.createElement('div');
+  marker.className = 'field-marker';
+  
+  // Color code maps mapping specifically to individual tracking types
+  let colorHex = '#3b82f6';
+  if (type === 'sar') colorHex = '#ef4444';
+  if (type === 'civilian') colorHex = '#22c55e';
+  if (type === 'drone') colorHex = '#8e8e93';
+  if (type === 'suspect') colorHex = '#a855f7';
+  if (type === 'vehicle') colorHex = '#000000';
+  if (type === 'article') colorHex = '#eab308';
+  
+  marker.style.backgroundColor = colorHex;
+  
+  // Scatter placement logic keeping searchers inside the viewport bounds
+  let horizontalRandom = Math.floor(Math.random() * 40) + 30; // 30% to 70% width
+  let verticalRandom = Math.floor(Math.random() * 40) + 30;   // 30% to 70% height
+  
+  marker.style.left = `${horizontalRandom}%`;
+  marker.style.top = `${verticalRandom}%`;
+  marker.innerHTML = labelText.split(' ')[0]; // Drop icon snippet directly onto layout
+  
+  // RECALL LOGIC: Tapping an active marker instantly pulls them off the map
+  marker.onclick = () => {
+    if (confirm(`Remove this active ${type.toUpperCase()} asset unit from tactical tracking field grid?`)) {
+      trackingRegistry[type]--;
+      marker.remove();
+    }
+  };
+  
+  container.appendChild(marker);
+  trackingRegistry[type]++;
+  console.log(`Asset registered inside tracking nodes. Active ${type} inventory count: ${trackingRegistry[type]}`);
+}
+
+function varColor(name) { return name === 'gold' ? '#c5a059' : '#fff'; }
+
 function toggleNightVision(mode) {
   document.body.classList.remove('night-red', 'night-green');
   document.getElementById('redNeon').classList.remove('active-red');
   document.getElementById('greenNeon').classList.remove('active');
   
   if (nightModeState === mode) {
-    nightModeState = null; // Turn off toggle completely if tapped again
+    nightModeState = null;
   } else {
     nightModeState = mode;
     if (mode === 'red') {
@@ -266,13 +439,10 @@ function toggleNightVision(mode) {
   }
 }
 
-// PERIMETER CONTROLLER UPDATE PACKETS
 function updatePerimeterRadius(val) {
   document.getElementById('radiusDisplay').innerText = `Current: ${val}m`;
-  console.log(`Perimeter boundary dynamically adjusted to radius footprint node: ${val} meters.`);
 }
 
-// INTERACTIVE DRAWER MAP LOGIC OVERRIDES
 function toggleDrawingMode() {
   drawingActive = !drawingActive;
   const btn = document.getElementById('drawToggle');
@@ -291,43 +461,54 @@ function toggleMapLock() {
   const btn = document.getElementById('lockToggle');
   if (mapLocked) {
     btn.classList.add('active-red');
-    console.log("Tactical Map Asset Coordinates LOCKED. Canvas scaling isolated.");
   } else {
     btn.classList.remove('active-red');
   }
 }
 
 function initializeCanvasDrawEngine() {
-  canvas.onmousedown = (e) => { if(!drawingActive) return; drawingNow = true; ctx.beginPath(); ctx.strokeStyle = '#ff3b30'; ctx.lineWidth = 3; ctx.moveTo(e.offsetX, e.offsetY); };
+  canvas.onmousedown = (e) => { if(!drawingActive) return; drawingNow = true; ctx.beginPath(); ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 3; ctx.moveTo(e.offsetX, e.offsetY); };
   canvas.onmousemove = (e) => { if (drawingNow && drawingActive) { ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); } };
   canvas.onmouseup = () => { drawingNow = false; };
 }
 
-// GLOBAL SOS EMERGENCY BROADCAST EMITTER
 function triggerEmergencySOS() {
-  alert("🚨 CRITICAL BROADCAST: SOS OFFICER DOWN TRANSMITTING TO ALL AGENTS OVER THE PWA REAL-TIME TRACKING LINE LINK INTERFACE LIVE IMMEDIATELY.");
+  alert("🚨 BROADCAST OUT: SOS ALARM FORWARDED INTERFACES LIVE TO ALL LOGGED DEVICE NODES IN TASK FORCE MATRIX.");
 }
 
-// MASTER TERMINATION ROUTINE HANDSHAKE
+// TERMINATE AND AUTO-POPULATE FINAL ITEMIZED REPORT VALUES
 function terminateAndGenerateReport() {
-  console.log("Search mission sequence complete. Halting data streams.");
+  document.getElementById('repK9').innerText = `${trackingRegistry.k9} Deployed Dog Teams`;
+  document.getElementById('repLE').innerText = `${trackingRegistry.officer} Officers Tracked`;
+  document.getElementById('repSAR').innerText = `${trackingRegistry.sar} Active Mutual Aid Fixed Points`;
+  document.getElementById('repCiv').innerText = `${trackingRegistry.civilian} Grid Personnel Logs`;
+  document.getElementById('repDrone').innerText = `${trackingRegistry.drone} Airborne Surveillance Feeds`;
+  document.getElementById('repSusp').innerText = `${trackingRegistry.suspect} Threat Targets Logged`;
+  document.getElementById('repVeh').innerText = `${trackingRegistry.vehicle} Vehicle Fix Coordinates Archived`;
+  document.getElementById('repArt').innerText = `${trackingRegistry.article} Evidence Items Registered`;
+  
   document.getElementById('reportOverlay').style.display = 'flex';
 }
 
-// TOTAL CONSOLE NEW ERA RESET CLEARING ROUTINE
 function executeTotalReset() {
-  if (confirm("Execute total search reset? This wipes current coordinates and clears the tactical workspace for a new deployment.")) {
+  if (confirm("Sanitize tactical environment workspace and dump current data buffers?")) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     document.getElementById('addressSearch').value = '';
     document.getElementById('perimeterSlider').value = 500;
     document.getElementById('radiusDisplay').innerText = 'Current: 500m';
+    document.getElementById('visualMarkerLayer').innerHTML = '';
+    
+    for (let key in trackingRegistry) { trackingRegistry[key] = 0; }
+    
     if(drawingActive) toggleDrawingMode();
     if(mapLocked) toggleMapLock();
+    switchMapLayer('satellite');
+    
     document.body.classList.remove('night-red', 'night-green');
     document.getElementById('redNeon').classList.remove('active-red');
     document.getElementById('greenNeon').classList.remove('active');
     nightModeState = null;
-    alert("Workspace sanitized. TACNET initialized for clean search operation.");
+    alert("Workspace sanitized. TACNET ready for deployment.");
   }
 }
 </script>
