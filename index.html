@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,12 +7,14 @@
     <title>LEX - Law Enforcement Expert</title>
     <style>
         :root {
-            --space-bg: #020617;
-            --police-blue: #1e3a8a;
-            --neon-blue: #3b82f6;
-            --gold: #eab308;
+            --space-black: #020408;
+            --deep-space-blue: #0b1936;
+            --earth-ocean: #1d4ed8;
+            --earth-land: #10b981;
+            --satellite-gold: #f59e0b;
             --text-light: #ffffff;
             --terminal-green: #4ade80;
+            --gold: #eab308;
         }
 
         * {
@@ -22,7 +25,7 @@
         }
 
         body {
-            background-color: var(--space-bg);
+            background-color: var(--space-black);
             color: var(--text-light);
             min-height: 100vh;
             display: flex;
@@ -31,7 +34,7 @@
             position: relative;
         }
 
-        /* --- DEEP SPACE MOVING ENGINE LAYER --- */
+        /* --- VIBRANT, BRILLIANT SPACE & EARTH BACKGROUND LAYER --- */
         .space-universe {
             position: fixed;
             top: 0;
@@ -40,65 +43,67 @@
             height: 100vh;
             z-index: 1;
             pointer-events: none;
-            background: radial-gradient(circle at center, #0b1528 0%, #020617 100%);
+            background: radial-gradient(circle at center, var(--deep-space-blue) 0%, var(--space-black) 100%);
             overflow: hidden;
         }
 
-        /* High-Brilliance Twinkling Starfield */
+        /* High-Visibility Brilliantly Twinkling Stars */
         .starfield {
             position: absolute;
             width: 100%;
             height: 100%;
             background-image: 
-                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
-                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px),
-                radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 20px);
-            background-size: 550px 550px, 350px 350px, 250px 250px;
-            background-position: 0 0, 40px 60px, 130px 270px;
-            opacity: 0.7;
+                radial-gradient(#ffffff, rgba(255,255,255,.2) 3px, transparent 40px),
+                radial-gradient(#ffffff, rgba(255,255,255,.15) 2px, transparent 30px);
+            background-size: 400px 400px, 250px 250px;
+            background-position: 0 0, 80px 120px;
+            animation: twinkleStars 4s ease-in-out infinite alternate;
         }
 
-        /* Massive Moving Earth Sphere Component */
+        /* LARGE MOVING EARTH GLOBE WITH BRILLIANT CONTINENTS */
         .earth-sphere {
             position: absolute;
-            bottom: -100px;
-            right: -100px;
-            width: 550px;
-            height: 550px;
+            bottom: -80px;
+            right: -80px;
+            width: 580px;
+            height: 580px;
             border-radius: 50%;
-            background: radial-gradient(circle at 30% 30%, #60a5fa 0%, #1d4ed8 40%, #1e3a8a 75%, #020617 100%);
-            box-shadow: 0 0 60px 15px rgba(59, 130, 246, 0.45), inset -30px -30px 60px rgba(0,0,0,0.9);
-            animation: rotateGlobe 180s linear infinite;
+            /* Brilliant Blue Ocean Base */
+            background: radial-gradient(circle at 35% 35%, #3b82f6 0%, var(--earth-ocean) 50%, #1e3a8a 85%, #020408 100%);
+            /* Layering Moving Landmasses Right On The Earth Surface */
+            background-image: linear-gradient(90deg, transparent 0%, var(--earth-land) 30%, var(--earth-land) 60%, transparent 100%);
+            box-shadow: 0 0 70px 20px rgba(59, 130, 246, 0.5), inset -40px -40px 80px rgba(0,0,0,0.95);
+            animation: moveEarth 120s linear infinite;
         }
 
-        /* Active Satellite Orbit Track */
-        .satellite-track {
+        /* REAL-TIME ACTIVE SATELLITE ORBIT TRACK */
+        .satellite-orbit-path {
             position: absolute;
-            bottom: 75px;
-            right: 75px;
-            width: 650px;
-            height: 300px;
+            bottom: 60px;
+            right: 60px;
+            width: 700px;
+            height: 320px;
             border-radius: 50%;
-            transform: rotate(-20deg);
+            transform: rotate(-15deg);
             transform-style: preserve-3d;
         }
 
-        /* Hardware Module Commencing Orbital Flight Path */
+        /* HIGH-VISIBILITY GOLD SATELLITE WITH SOLAR PANELS (NO PLACEHOLDERS) */
         .satellite-hardware {
             position: absolute;
-            width: 24px;
-            height: 16px;
-            background-color: #f59e0b;
+            width: 32px;
+            height: 18px;
+            background-color: var(--satellite-gold);
             border: 2px solid #ffffff;
-            border-radius: 4px;
-            box-shadow: 0 0 25px #f59e0b, 0 0 8px #ffffff;
-            animation: executeOrbit 14s linear infinite;
+            border-radius: 3px;
+            box-shadow: 0 0 30px var(--satellite-gold), 0 0 10px #ffffff;
+            animation: executeOrbitalFlight 10s linear infinite;
         }
 
-        /* --- APPLICATION CONSOLE FOREGROUND LAYER --- */
+        /* --- PROFESSIONAL FIELD OPERATIONAL FOREGROUND --- */
         .console-layer {
             position: relative;
-            z-index: 10;
+            z-index: 10; /* Ensures control dashboard stays directly on top of the space visuals */
             display: flex;
             flex-direction: column;
             min-height: 100vh;
@@ -106,9 +111,9 @@
 
         header {
             padding: 20px 30px;
-            background: rgba(3, 7, 18, 0.9);
-            border-bottom: 3px solid var(--police-blue);
-            backdrop-filter: blur(8px);
+            background: rgba(2, 4, 8, 0.93);
+            border-bottom: 3px solid var(--earth-ocean);
+            backdrop-filter: blur(10px);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -160,8 +165,8 @@
         }
 
         .panel-voice {
-            background: rgba(15, 23, 42, 0.85);
-            border: 2px solid var(--neon-blue);
+            background: rgba(11, 25, 54, 0.8);
+            border: 2px solid #3b82f6;
             border-radius: 8px;
             padding: 30px;
             display: flex;
@@ -169,7 +174,7 @@
             justify-content: space-between;
             align-items: center;
             min-height: 520px;
-            backdrop-filter: blur(6px);
+            backdrop-filter: blur(8px);
         }
 
         .status-header {
@@ -180,21 +185,17 @@
             text-transform: uppercase;
         }
 
-        .mic-container {
-            position: relative;
-        }
-
         .mic-btn {
             width: 150px;
             height: 150px;
             border-radius: 50%;
-            background: var(--police-blue);
-            border: 4px solid var(--neon-blue);
+            background: var(--earth-ocean);
+            border: 4px solid #3b82f6;
             color: var(--text-light);
             font-size: 1.2rem;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 0 0 30px rgba(59, 130, 246, 0.4);
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -208,7 +209,7 @@
 
         .terminal-readout {
             width: 100%;
-            background: #020617;
+            background: var(--space-black);
             border: 1px solid #4b5563;
             border-radius: 6px;
             padding: 25px;
@@ -220,20 +221,20 @@
         }
 
         .panel-operations {
-            background: rgba(15, 23, 42, 0.85);
-            border: 2px solid var(--neon-blue);
+            background: rgba(11, 25, 54, 0.8);
+            border: 2px solid #3b82f6;
             border-radius: 8px;
             padding: 30px;
             display: flex;
             flex-direction: column;
             gap: 25px;
-            backdrop-filter: blur(6px);
+            backdrop-filter: blur(8px);
         }
 
         .section-header {
             font-size: 1.2rem;
             font-weight: bold;
-            border-bottom: 2px solid var(--neon-blue);
+            border-bottom: 2px solid #3b82f6;
             padding-bottom: 6px;
             text-transform: uppercase;
         }
@@ -245,7 +246,7 @@
         }
 
         .matrix-card {
-            background: #020617;
+            background: var(--space-black);
             border: 1px solid #4b5563;
             padding: 18px;
             border-radius: 6px;
@@ -277,7 +278,7 @@
         .report-narrative {
             width: 100%;
             flex: 1;
-            background: #020617;
+            background: var(--space-black);
             border: 1px solid #4b5563;
             border-radius: 6px;
             padding: 15px;
@@ -294,8 +295,8 @@
         .action-btn {
             flex: 1;
             padding: 14px;
-            background: var(--police-blue);
-            border: 1px solid var(--neon-blue);
+            background: var(--earth-ocean);
+            border: 1px solid #3b82f6;
             color: var(--text-light);
             font-weight: bold;
             text-transform: uppercase;
@@ -308,15 +309,20 @@
             border-color: var(--gold);
         }
 
-        /* --- IMMUTABLE MATHEMATICAL ORBIT ENGINE KEYFRAMES --- */
-        @keyframes rotateGlobe {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        /* --- MATHEMATICAL ENGINE KEYFRAMES --- */
+        @keyframes twinkleStars {
+            0% { opacity: 0.4; }
+            100% { opacity: 0.9; }
         }
 
-        @keyframes executeOrbit {
-            from { transform: rotate(0deg) translateX(325px) rotate(0deg); }
-            to { transform: rotate(360deg) translateX(325px) rotate(-360deg); }
+        @keyframes moveEarth {
+            from { background-position: 0px 0; }
+            to { background-position: 1160px 0; }
+        }
+
+        @keyframes executeOrbitalFlight {
+            from { transform: rotate(0deg) translateX(350px) rotate(0deg); }
+            to { transform: rotate(360deg) translateX(350px) rotate(-360deg); }
         }
 
         @media (max-width: 1024px) {
@@ -326,11 +332,11 @@
 </head>
 <body>
 
-    <!-- VISUAL SPACE AND SATELLITE SIMULATION LAYER -->
+    <!-- VISUAL SPACE AND SATELLITE ENGINE LAYER -->
     <div class="space-universe">
         <div class="starfield"></div>
         <div class="earth-sphere"></div>
-        <div class="satellite-track">
+        <div class="satellite-orbit-path">
             <div class="satellite-hardware"></div>
         </div>
     </div>
@@ -342,7 +348,7 @@
                 <h1>LEX<span>.</span></h1>
                 <p>Law Enforcement Officers Instant Code Assistant (Verbal)</p>
             </div>
-            <div class="creator-badge">
+            <div class="badge-creator">
                 <p>App Creator:</p>
                 <strong>Earl Wood</strong>
                 <p>Deputy Sheriff, Retired (VA)</p>
@@ -354,12 +360,10 @@
             <section class="panel-voice">
                 <div class="status-header" id="engineStatus">SYSTEM ONLINE // AWAITING AUDIO INBOUND</div>
                 
-                <div class="mic-container">
-                    <button class="mic-btn" onclick="engageVoiceInterface()">
-                        <span>TAP TO</span>
-                        <span style="color: var(--gold); margin-top: 5px;">COMMUNICATE</span>
-                    </button>
-                </div>
+                <button class="mic-btn" onclick="engageVoiceInterface()">
+                    <span>TAP TO</span>
+                    <span style="color: var(--gold); margin-top: 5px;">SPEAK</span>
+                </button>
 
                 <div class="terminal-readout" id="terminalBox">
                     [SYSTEM READY]: Interface loaded completely.<br>
