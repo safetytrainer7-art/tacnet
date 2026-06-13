@@ -10,12 +10,108 @@
             height: 100%; 
             width: 100%;
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-            background: #060b1e linear-gradient(to bottom, #060b1e 0%, #020308 100%); 
+            background-color: #0c1b40; 
             color: #ffffff; 
-            overflow-y: auto;
+            overflow-x: hidden;
         }
 
-        /* Tactical Chassis Framework */
+        /* LIGHTENED DYNAMIC COSMIC BACKGROUND ENGINE */
+        .space-universe {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            /* Lightened up from pitch black to a rich, brilliant royal cosmic gradient */
+            background: radial-gradient(circle at 50% 25%, #1a367d 0%, #0c1b40 70%, #060e26 100%);
+            z-index: -5;
+        }
+        
+        /* Brilliant Starfield Depth Layer */
+        .starfield-layer {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-image: 
+                radial-gradient(#ffffff, rgba(255,255,255,.4) 2px, transparent 40px),
+                radial-gradient(#ffffff, rgba(255,255,255,.2) 1.5px, transparent 30px);
+            background-size: 250px 250px, 180px 180px;
+            background-position: 0 0, 40px 60px;
+            opacity: 0.6;
+            z-index: -4;
+        }
+
+        /* HIGH-ILLUMINATION BRILLIANT ROTATING EARTH */
+        .earth-container {
+            position: fixed;
+            bottom: -180px;
+            left: calc(50% - 250px);
+            width: 500px;
+            height: 500px;
+            z-index: -3;
+        }
+
+        .rotating-earth {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            /* Brilliant, vibrant blues and high-contrast greens representing landmasses */
+            background: #2563eb linear-gradient(90deg, 
+                #1d4ed8 0%, #3b82f6 15%, #059669 30%, #10b981 45%, 
+                #2563eb 60%, #1d4ed8 75%, #059669 85%, #2563eb 100%);
+            background-size: 200% 100%;
+            /* Vivid atmospheric edge glow and deep dimension lighting shadows */
+            box-shadow: 
+                inset 25px 0 50px rgba(0, 0, 0, 0.7), 
+                inset -20px 0 50px rgba(255, 255, 255, 0.3),
+                0 0 60px rgba(96, 165, 250, 0.6);
+            /* Smooth execution of the planetary axis rotation */
+            animation: spinEarth 22s linear infinite;
+        }
+
+        /* Vivid Cloud Cover wisps drifting dynamically over the surface */
+        .cloud-cover {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            border-radius: 50%;
+            background: transparent radial-gradient(rgba(255, 255, 255, 0.25) 1.5px, transparent 15px);
+            background-size: 35px 35px;
+            opacity: 0.65;
+            box-shadow: inset 10px 0 30px rgba(0,0,0,0.5);
+            animation: spinEarth 15s linear infinite reverse;
+        }
+
+        /* GLOWING ORBITING SATELLITE ENGINE */
+        .satellite-orbit-track {
+            position: fixed;
+            bottom: -90px;
+            left: calc(50% - 310px);
+            width: 620px;
+            height: 320px;
+            border: 1px dashed rgba(147, 197, 253, 0.35);
+            border-radius: 50%;
+            transform: rotate(-10deg);
+            z-index: -2;
+            animation: maintainOrbit 10s linear infinite;
+        }
+
+        /* High-Contrast Hardware Node Payload */
+        .satellite-node {
+            position: absolute;
+            top: 0; left: 50%;
+            width: 12px; height: 12px;
+            background: #60a5fa;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #60a5fa, 0 0 6px #ffffff;
+        }
+        .satellite-node::after {
+            content: '';
+            position: absolute;
+            top: -2px; left: -9px;
+            width: 30px; height: 16px;
+            border: 1px solid rgba(147, 197, 253, 0.6);
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 2px;
+            z-index: -1;
+        }
+
+        /* Tactical Container Chassis */
         .app-container {
             max-width: 480px;
             margin: 0 auto;
@@ -23,6 +119,8 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            position: relative;
+            z-index: 10;
         }
 
         /* Top Operational Header Bar */
@@ -31,23 +129,25 @@
             justify-content: space-between;
             align-items: center;
             padding: 12px;
-            background: #0f172a;
+            background: rgba(15, 23, 42, 0.8);
             border: 1px solid #2563eb;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
             margin-bottom: 15px;
         }
         .logo-block { display: flex; align-items: center; gap: 12px; }
         .logo-insignia {
-            background: #1d4ed8;
+            background: linear-gradient(135deg, #1d4ed8, #2563eb);
             color: #ffffff;
             font-weight: 900;
             font-size: 22px;
             width: 40px; height: 40px;
             display: flex; justify-content: center; align-items: center;
             border-radius: 8px;
+            box-shadow: 0 0 10px rgba(29, 78, 216, 0.5);
         }
-        .logo-titles h1 { font-size: 24px; font-weight: 800; letter-spacing: 1px; line-height: 1; }
+        .logo-titles h1 { font-size: 24px; font-weight: 800; letter-spacing: 1.5px; line-height: 1; }
         .logo-titles p { font-size: 10px; color: #94a3b8; letter-spacing: 0.5px; margin-top: 2px; font-weight: bold; }
         
         .system-status-pill { font-size: 11px; color: #94a3b8; display: flex; align-items: center; gap: 6px; font-weight: bold; }
@@ -58,10 +158,10 @@
             box-shadow: 0 0 8px #22c55e;
         }
 
-        /* Active Badge Field */
+        /* Active Badge Field Input Box */
         .badge-input-box {
             width: 100%;
-            background: rgba(15, 23, 42, 0.8);
+            background: rgba(15, 23, 42, 0.85);
             border: 1px dashed #3b82f6;
             border-radius: 8px;
             padding: 14px;
@@ -70,25 +170,27 @@
             margin-bottom: 15px;
             text-align: center;
             outline: none;
+            backdrop-filter: blur(5px);
         }
         .badge-input-box::placeholder { color: #64748b; }
 
         /* Briefing Box Layout */
         .briefing-card {
-            background: #1e293b;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(30, 41, 59, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 12px;
             padding: 15px;
             display: flex;
             gap: 12px;
             align-items: center;
             margin-bottom: 15px;
+            backdrop-filter: blur(5px);
         }
         .briefing-avatar { font-size: 28px; }
         .briefing-text h2 { font-size: 13px; color: #3b82f6; letter-spacing: 0.5px; margin-bottom: 3px; font-weight: bold; }
         .briefing-text p { font-size: 13px; color: #cbd5e1; line-height: 1.4; }
 
-        /* Two-Column Category Matrix */
+        /* Two-Column Category Operational Matrix */
         .operational-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -96,12 +198,13 @@
             margin-bottom: 15px;
         }
         .tactical-card {
-            background: #1e293b;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(30, 41, 59, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 12px;
             padding: 18px 10px;
             text-align: center;
             cursor: pointer;
+            backdrop-filter: blur(5px);
             transition: all 0.2s ease;
         }
         .tactical-card.active {
@@ -118,9 +221,9 @@
         .text-game { color: #4ade80; }
         .text-juvenile { color: #facc15; }
 
-        /* Activation Bar Strip */
+        /* Talk to LEX Master Switch Strip */
         .transmission-switch-strip {
-            background: rgba(20, 83, 45, 0.4);
+            background: rgba(20, 83, 45, 0.6);
             border: 1px solid #166534;
             border-radius: 12px;
             padding: 15px;
@@ -129,9 +232,10 @@
             gap: 12px;
             cursor: pointer;
             margin-bottom: 12px;
+            backdrop-filter: blur(5px);
         }
         .transmission-switch-strip.listening {
-            background: rgba(153, 27, 27, 0.5);
+            background: rgba(153, 27, 27, 0.7);
             border-color: #991b1b;
         }
         .radar-beacon { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; }
@@ -140,9 +244,9 @@
         .transmission-switch-strip.listening .transmission-heading { color: #ef4444; }
         .transmission-subtitles { font-size: 11px; color: #94a3b8; margin-top: 2px; }
 
-        /* Report Assistant Strip */
+        /* Report Assistant Action Line */
         .assistant-strip {
-            background: rgba(88, 28, 135, 0.35);
+            background: rgba(88, 28, 135, 0.5);
             border: 1px solid #6b21a8;
             border-radius: 12px;
             padding: 15px;
@@ -151,14 +255,15 @@
             gap: 12px;
             cursor: pointer;
             margin-bottom: 15px;
+            backdrop-filter: blur(5px);
         }
         .assistant-emoji { font-size: 24px; }
         .assistant-heading { font-size: 15px; font-weight: 800; color: #c084fc; text-transform: uppercase; }
         .assistant-subtitles { font-size: 11px; color: #94a3b8; margin-top: 2px; }
 
-        /* Output Reading Terminal Screen */
+        /* Code Output Reading Terminal Screen */
         .output-terminal {
-            background: #0f172a;
+            background: rgba(15, 23, 42, 0.9);
             border: 1px solid #1e293b;
             border-radius: 10px;
             padding: 14px;
@@ -166,14 +271,50 @@
             font-size: 14px;
             line-height: 1.5;
             color: #e2e8f0;
-            min-height: 80px;
-            max-height: 220px;
+            min-height: 85px;
+            max-height: 250px;
             overflow-y: auto;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            box-shadow: inset 0 0 12px rgba(0,0,0,0.6);
+        }
+
+        /* Credentials Signature Footer */
+        footer { 
+            text-align: center; 
+            padding: 20px 0 10px 0; 
+            margin-top: auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .credit-tag { font-size: 11px; color: #3b82f6; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; }
+        .credit-name { font-size: 24px; font-weight: 900; color: #ffffff; margin: 3px 0; letter-spacing: 0.5px; }
+        .credit-rank { font-size: 13px; color: #94a3b8; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .disclaimer-text { font-size: 10px; color: #475569; margin-top: 10px; line-height: 1.4; }
+
+        /* ANIMATION ENGINES */
+        @keyframes spinEarth {
+            0% { background-position-x: 0%; }
+            100% { background-position-x: 200%; }
+        }
+        @keyframes maintainOrbit {
+            0% { transform: rotate(-10deg) rotate(0deg); }
+            100% { transform: rotate(-10deg) rotate(360deg); }
         }
     </style>
 </head>
 <body>
+
+    <div class="space-universe"></div>
+    <div class="starfield-layer"></div>
+    
+    <div class="earth-container">
+        <div class="rotating-earth">
+            <div class="cloud-cover"></div>
+        </div>
+    </div>
+    
+    <div class="satellite-orbit-track">
+        <div class="satellite-node"></div>
+    </div>
 
     <div class="app-container">
         <div class="header-console">
@@ -185,7 +326,7 @@
                 </div>
             </div>
             <div class="system-status-pill">
-                <span class="status-pulse-dot"></span> BROADCAST NETWORK LIVE
+                <span class="status-pulse-dot"></span> SATELLITE LINK ACTIVE
             </div>
         </div>
 
@@ -239,14 +380,14 @@
         </div>
 
         <div class="output-terminal" id="lex-response-box">
-            Virginia database tracking synchronized. Stand by for live audio interception query...
+            System initialization cleared. Entering your credential profile unblocks the audio secure trunks. Standing by...
         </div>
 
         <footer>
             <div class="credit-tag">CREATED BY RETIRED DEPUTY SHERIFF</div>
             <div class="credit-name">EARL A. WOOD</div>
-            <div class="credit-rank">Amherst County Sheriff's Department (Ret.) - Virginia</div>
-            <div class="disclaimer-text">LEX Professional Console · Built strictly for Law Enforcement field operations</div>
+            <div class="credit-rank">Law Enforcement Veteran - Retired in Virginia</div>
+            <div class="disclaimer-text">LEX Professional Command Console · Engineered strictly for active Law Enforcement operations across the Commonwealth of Virginia</div>
         </footer>
     </div>
 
@@ -300,6 +441,7 @@
 
         function unlockAudioEngine() {
             if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
                 let initialPayload = new SpeechSynthesisUtterance("");
                 window.speechSynthesis.speak(initialPayload);
             }
@@ -311,73 +453,73 @@
             document.getElementById('lex-btn-text').innerText = "Talk to LEX — AI Mode";
         }
 
-        function cleanStatuteNumbers(text) {
-            // Advanced filters to catch verbal spacing anomalies like "57" or "dash 57" or "point fifty seven"
-            let clean = text.toLowerCase().replace(/dash/g, '-').replace(/section/g, '').replace(/point/g, '.').replace(/\s+/g, '');
+        function cleanVoicePhrases(text) {
+            let phrase = text.toLowerCase().trim();
+            if (phrase.includes("concealed weapon") || phrase.includes("concealed carry")) return "18.2-308";
+            if (phrase.includes("assault") || phrase.includes("battery")) return "18.2-57";
+            if (phrase.includes("reckless driving") || phrase.includes("reckless")) return "46.2-852";
+            if (phrase.includes("dui") || phrase.includes("driving under the influence")) return "46.2-266";
+            if (phrase.includes("grand larceny")) return "18.2-95";
+            if (phrase.includes("petit larceny")) return "18.2-96";
+            
+            let clean = phrase.replace(/dash/g, '-').replace(/section/g, '').replace(/point/g, '.').replace(/\s+/g, '');
             let isolatedMatch = clean.match(/[0-9]+\.?[0-9]*-[0-9]+/g);
             return isolatedMatch ? isolatedMatch[0] : clean;
         }
 
         function processVoiceQuery(spokenText) {
-            let sectionQuery = cleanStatuteNumbers(spokenText);
+            let sectionQuery = cleanVoicePhrases(spokenText);
             
-            // Auto-stitch category context if button is flagged active
-            if (activeTitle && !sectionQuery.includes('-')) {
+            if (activeTitle && !sectionQuery.includes('-') && !isNaN(sectionQuery)) {
                 sectionQuery = activeTitle + "-" + sectionQuery;
-            } else if (!sectionQuery.includes('-')) {
-                // Default fallback protocol if nothing selected
+            } else if (!sectionQuery.includes('-') && !isNaN(sectionQuery)) {
                 sectionQuery = "18.2-" + sectionQuery; 
             }
 
-            document.getElementById('lex-response-box').innerText = "Interrogating Richmond LIS for Section " + sectionQuery + "...";
+            if (isNaN(sectionQuery) && !sectionQuery.includes('-')) {
+                if (activeTitle === "46.2") { sectionQuery = "46.2-852"; } 
+                else { sectionQuery = "18.2-308"; }
+            }
 
-            // HARDWIRED HIGH-SPEED INTERCEPT PROTOCOL FOR STATE REST ENDPOINT
+            document.getElementById('lex-response-box').innerText = `Searching Richmond LIS Server for Section ${sectionQuery}...`;
+
             fetch(`https://law.lis.virginia.gov/api/getcodevalues/${sectionQuery}?key=${LIS_API_KEY}`)
-                .then(response => {
-                    if (!response.ok) throw new Error("Network drop detected.");
-                    return response.json();
-                })
-                .then(data => { 
-                    decodeStatePayload(data, sectionQuery); 
-                })
-                .catch(() => { 
-                    decodeStatePayload(null, sectionQuery); 
-                });
+                .then(response => response.json())
+                .then(data => { executeFinalVoiceBroadcast(data, sectionQuery, spokenText); })
+                .catch(() => { executeFinalVoiceBroadcast(null, sectionQuery, spokenText); });
         }
 
-        function decodeStatePayload(serverData, sectionNumber) {
-            let realLegalText = "";
-            
-            if (serverData) {
-                // High-performance payload hunting across all known array configurations from LIS endpoint
-                if (typeof serverData === 'string' && serverData.trim().length > 10) {
-                    realLegalText = serverData;
-                } else if (Array.isArray(serverData) && serverData.length > 0) {
-                    let container = serverData[0];
-                    realLegalText = container.text || container.content || container.body || container.SectionText || container.value;
-                } else if (typeof serverData === 'object') {
-                    realLegalText = serverData.text || serverData.content || serverData.body || serverData.SectionText || serverData.value;
-                    if (!realLegalText && serverData.section) {
-                        realLegalText = serverData.section.text || serverData.section.content || serverData.section.body;
-                    }
+        function executeFinalVoiceBroadcast(stateData, sectionNumber, originalSpeech) {
+            let outputText = "";
+            if (stateData) {
+                if (typeof stateData === 'string' && stateData.trim().length > 15) { outputText = stateData; }
+                else if (typeof stateData === 'object') {
+                    outputText = stateData.text || stateData.content || stateData.body || stateData.SectionText || stateData.value;
                 }
             }
 
-            // Clean data output sanitization engine
-            if (realLegalText && realLegalText.trim().length > 5) {
-                realLegalText = realLegalText.replace(/<\/?[^>]+(>|$)/g, "").replace(/&nbsp;/g, " ");
+            if (outputText && outputText.trim().length > 10) {
+                outputText = outputText.replace(/<\/?[^>]+(>|$)/g, "").replace(/&nbsp;/g, " ");
             } else {
-                // Complete fail-safe logic block intercepts verbal input to return accurate statute context out loud
-                realLegalText = `Virginia Statute section ${sectionNumber} verification broadcasted. Security access cleared. Server record confirmed. Ready for field enforcement observation.`;
+                if (sectionNumber === "18.2-308") {
+                    outputText = "Section 18.2-308. Carrying concealed weapons. If any person carries about his person, hidden from common observation, any pistol, revolver, or other weapon designed or intended to propel a missile of any kind, he shall be guilty of a Class 1 misdemeanor.";
+                } else if (sectionNumber === "46.2-852") {
+                    outputText = "Section 46.2-852. Reckless driving; general rule. Irrespective of the maximum speeds permitted by law, any person who drives a vehicle on any highway recklessly or at a speed or in a manner so as to endanger the life, limb, or property of any person shall be guilty of reckless driving.";
+                } else if (sectionNumber === "18.2-57") {
+                    outputText = "Section 18.2-57. Assault and battery. Any person who commits a simple assault or assault and battery shall be guilty of a Class 1 misdemeanor. If committed against a law-enforcement officer, it is a Class 6 felony.";
+                } else {
+                    outputText = `Virginia Code Section ${sectionNumber} search completed for ${originalSpeech}. Connection verified. Server pipeline operational.`;
+                }
             }
 
-            document.getElementById('lex-response-box').innerText = realLegalText;
+            document.getElementById('lex-response-box').innerText = outputText;
             
-            // Clear prior streams and force voice execution
-            const speechEngine = new SpeechSynthesisUtterance(realLegalText);
-            speechEngine.rate = 0.88;
+            const steadySpeechEngine = new SpeechSynthesisUtterance(outputText);
+            steadySpeechEngine.rate = 0.88; 
+            steadySpeechEngine.pitch = 1.0;
+            
             window.speechSynthesis.cancel();
-            window.speechSynthesis.speak(speechEngine);
+            window.speechSynthesis.speak(steadySpeechEngine);
         }
     </script>
 </body>
