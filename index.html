@@ -8,24 +8,25 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body, html { 
             height: 100%; 
+            width: 100%;
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-            background: #020208; 
+            background-color: #020208; 
             color: #ffffff; 
             overflow-x: hidden;
         }
 
-        /* BRAND NEW EARTH-SPACE COSMIC GRAPHICS ENGINE */
+        /* BRAND NEW FIXED EARTH-SPACE COSMIC GRAPHICS ENGINE */
         .universe-bg {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: 0; left: 0; width: 100vw; height: 100vh;
             background: radial-gradient(circle at 50% 50%, #0a1128 0%, #020205 100%);
             z-index: -4;
         }
         
-        /* Starfield Grid Layers */
+        /* Starfield Layer */
         .starfield {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: 0; left: 0; width: 100vw; height: 100vh;
             background-image: 
                 radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
                 radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px);
@@ -35,35 +36,36 @@
             z-index: -3;
         }
 
-        /* Earth High-Altitude Curvature with Light Cloud Cover */
+        /* Earth High-Altitude Curvature with Light Cloud Cover Fixed Dimensions */
         .earth-curvature {
             position: fixed;
-            bottom: -70vh;
-            left: -50vw;
-            width: 200vw;
-            height: 140vh;
-            background: radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.25) 0%, rgba(16, 185, 129, 0.05) 40%, transparent 70%);
-            border-top: 2px solid rgba(147, 197, 253, 0.4);
+            bottom: -350px;
+            left: -50%;
+            width: 200%;
+            height: 600px;
+            background: radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.35) 0%, rgba(16, 185, 129, 0.1) 45%, transparent 70%);
+            border-top: 3px solid rgba(147, 197, 253, 0.5);
             border-radius: 50%;
-            box-shadow: 0 0 60px rgba(59, 130, 246, 0.3), inset 0 20px 40px rgba(255,255,255,0.1);
+            box-shadow: 0 0 50px rgba(59, 130, 246, 0.4);
             z-index: -2;
         }
+        
         .cloud-cover {
             position: fixed;
-            bottom: -70vh; left: -50vw; width: 200vw; height: 140vh;
-            background-image: radial-gradient(rgba(255,255,255,0.08) 2px, transparent 40px);
-            background-size: 80px 80px;
+            bottom: -350px; left: -50%; width: 200%; height: 600px;
+            background-image: radial-gradient(rgba(255,255,255,0.12) 2px, transparent 35px);
+            background-size: 60px 60px;
             border-radius: 50%;
-            opacity: 0.6;
+            opacity: 0.7;
             z-index: -2;
         }
 
         /* Orbiting Satellite Telemetry Lines */
         .satellite-orbit-lines {
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: linear-gradient(rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
             background-size: 45px 45px;
             z-index: -1;
         }
@@ -76,6 +78,8 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            position: relative;
+            z-index: 10;
         }
 
         /* Header Console Display */
@@ -84,7 +88,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 12px 10px;
-            background: rgba(10, 17, 40, 0.7);
+            background: rgba(10, 17, 40, 0.75);
             border: 1px solid rgba(59, 130, 246, 0.3);
             border-radius: 12px;
             backdrop-filter: blur(8px);
@@ -115,8 +119,8 @@
 
         /* Welcome Briefing Panel */
         .briefing-card {
-            background: rgba(30, 41, 59, 0.45);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(30, 41, 59, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 14px;
             padding: 15px;
             display: flex;
@@ -137,8 +141,8 @@
             margin-bottom: 18px;
         }
         .tactical-card {
-            background: rgba(30, 41, 59, 0.45);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(30, 41, 59, 0.55);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 14px;
             padding: 20px 10px;
             text-align: center;
@@ -147,7 +151,7 @@
             backdrop-filter: blur(6px);
         }
         .tactical-card:active, .tactical-card.active {
-            background: rgba(59, 130, 246, 0.18);
+            background: rgba(59, 130, 246, 0.2);
             border-color: #3b82f6;
             box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
         }
@@ -163,7 +167,7 @@
 
         /* Master Radio Transmission Engine Block */
         .transmission-switch-strip {
-            background: rgba(20, 83, 45, 0.35);
+            background: rgba(20, 83, 45, 0.4);
             border: 1px solid #166534;
             border-radius: 14px;
             padding: 16px;
@@ -175,7 +179,7 @@
             backdrop-filter: blur(6px);
         }
         .transmission-switch-strip.listening {
-            background: rgba(153, 27, 27, 0.45);
+            background: rgba(153, 27, 27, 0.5);
             border-color: #991b1b;
             animation: pulse-frame 1.5s infinite;
         }
@@ -185,9 +189,9 @@
         .transmission-switch-strip.listening .transmission-heading { color: #ef4444; }
         .transmission-subtitles { font-size: 11px; color: #94a3b8; margin-top: 2px; }
 
-        /* Brand New Requested Report Assistant Action Strip */
+        /* Requested Report Assistant Action Strip */
         .assistant-strip {
-            background: rgba(88, 28, 135, 0.3);
+            background: rgba(88, 28, 135, 0.35);
             border: 1px solid #6b21a8;
             border-radius: 14px;
             padding: 16px;
@@ -204,8 +208,8 @@
 
         /* Mission Response Output Terminal Screen */
         .output-terminal {
-            background: rgba(15, 23, 42, 0.85);
-            border: 1px solid rgba(59, 130, 246, 0.25);
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(59, 130, 246, 0.3);
             border-radius: 10px;
             padding: 14px;
             margin-bottom: 25px;
@@ -233,7 +237,7 @@
 </head>
 <body>
 
-    <!-- VISUAL GRAPHICS LAYERS -->
+    <!-- VISUAL GRAPHICS LAYERS RESTORED WITH EXPLICIT DIMENSIONS -->
     <div class="universe-bg"></div>
     <div class="starfield"></div>
     <div class="earth-curvature"></div>
@@ -297,7 +301,7 @@
             </div>
         </div>
 
-        <!-- Brand New Requested Report Assistant Strip -->
+        <!-- Report Assistant Strip -->
         <div class="assistant-strip">
             <div class="assistant-emoji">📋</div>
             <div>
@@ -340,7 +344,7 @@
         }
 
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const SpeechRecognition = window.webkitSpeechRecognition || window.webkitSpeechRecognition;
             recognition = new SpeechRecognition();
             recognition.continuous = false;
             recognition.interimResults = false;
