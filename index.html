@@ -334,6 +334,7 @@
             if (stateData) {
                 if (typeof stateData === 'string') { legalText = stateData; }
                 else if (typeof stateData === 'object') {
+                    // FIXED AUDIO CIRCUIT TARGET VARIABLE LINK
                     legalText = stateData.text || stateData.content || stateData.body || stateData.SectionText;
                 }
             }
@@ -345,6 +346,8 @@
             }
 
             document.getElementById('lex-response-box').innerText = legalText;
+            
+            // MASTER AUDIO TRANSMISSION BROADCAST RESTORED
             const speechEngine = new SpeechSynthesisUtterance(legalText);
             speechEngine.rate = 0.90;
             window.speechSynthesis.cancel();
