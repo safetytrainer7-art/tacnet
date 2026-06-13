@@ -15,62 +15,102 @@
             overflow-x: hidden;
         }
 
-        /* NATIVE COSMIC GRAPHICS ENGINE - NO IMAGE FILES REQUIRED */
+        /* DYNAMIC COSMIC BACKGROUND CORE */
         .space-universe {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
-            background: radial-gradient(circle at 50% 25%, #081135 0%, #020205 75%);
+            background: radial-gradient(circle at 50% 30%, #060b24 0%, #010103 100%);
             z-index: -5;
         }
         
-        /* Simulated Deep Starfield Layer */
+        /* Starfield Depth Layer */
         .starfield-layer {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
             background-image: 
-                radial-gradient(#ffffff, rgba(255,255,255,.2) 2px, transparent 40px),
-                radial-gradient(#ffffff, rgba(255,255,255,.15) 1px, transparent 30px);
-            background-size: 320px 320px, 220px 220px;
-            background-position: 0 0, 30px 60px;
-            opacity: 0.45;
+                radial-gradient(#ffffff, rgba(255,255,255,.2) 1.5px, transparent 35px),
+                radial-gradient(#ffffff, rgba(255,255,255,.15) 1px, transparent 25px);
+            background-size: 300px 300px, 200px 200px;
+            background-position: 0 0, 40px 60px;
+            opacity: 0.4;
             z-index: -4;
         }
 
-        /* Glowing Curved Earth Horizon with Atmospheric Cloud Gradients */
-        .earth-horizon {
+        /* CINEMATIC ROTATING EARTH SYSTEM */
+        .earth-container {
             position: fixed;
-            bottom: -500px;
-            left: -50%;
-            width: 200%;
-            height: 850px;
-            background: radial-gradient(circle at 50% 0%, #1d4ed8 0%, #0f172a 55%, transparent 75%);
-            border-top: 3px solid #60a5fa;
-            border-radius: 50%;
-            box-shadow: 0 0 75px rgba(29, 78, 216, 0.55), inset 0 25px 50px rgba(255, 255, 255, 0.12);
+            bottom: -220px;
+            left: calc(50% - 250px);
+            width: 500px;
+            height: 500px;
             z-index: -3;
         }
-        
-        .cloud-atmosphere {
-            position: fixed;
-            bottom: -500px; left: -50%; width: 200%; height: 850px;
-            background-image: radial-gradient(rgba(255,255,255,0.12) 2px, transparent 30px);
-            background-size: 50px 50px;
+
+        .rotating-earth {
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
-            opacity: 0.4;
-            z-index: -2;
+            /* Custom CSS procedural texture simulation of continents and oceans */
+            background: #1e3a8a linear-gradient(90deg, 
+                #1e3a8a 0%, #1d4ed8 20%, #065f46 35%, #047857 45%, 
+                #1d4ed8 60%, #1e3a8a 80%, #065f46 90%, #1e3a8a 100%);
+            background-size: 200% 100%;
+            /* Realistic atmospheric light-shading and planet edge curvature wrap */
+            box-shadow: 
+                inset 30px 0 60px rgba(0, 0, 0, 0.85), 
+                inset -15px 0 40px rgba(255, 255, 255, 0.15),
+                0 0 50px rgba(59, 130, 246, 0.45);
+            /* Continuous rotation animation on planetary axis */
+            animation: spinEarth 25s linear infinite;
         }
 
-        /* Orbiting Satellite Telemetry Tracking Grid */
-        .satellite-grid-lines {
+        /* Light Atmospheric Clouds drifting over the planet surface */
+        .cloud-cover {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            border-radius: 50%;
+            background: transparent radial-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 20px);
+            background-size: 40px 40px;
+            opacity: 0.55;
+            box-shadow: inset 10px 0 40px rgba(0,0,0,0.6);
+            animation: spinEarth 18s linear infinite reverse;
+        }
+
+        /* ACTIVE ORBITING SATELLITE ENGINE */
+        .satellite-orbit-track {
             position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            background: linear-gradient(rgba(59, 130, 246, 0.04) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(59, 130, 246, 0.04) 1px, transparent 1px);
-            background-size: 50px 50px;
+            bottom: -120px;
+            left: calc(50% - 320px);
+            width: 640px;
+            height: 300px;
+            border: 1px dashed rgba(96, 165, 250, 0.2);
+            border-radius: 50%;
+            transform: rotate(-12deg);
+            z-index: -2;
+            animation: maintainOrbit 12s linear infinite;
+        }
+
+        /* Hardware node payload detailing */
+        .satellite-node {
+            position: absolute;
+            top: 0; left: 50%;
+            width: 10px; height: 10px;
+            background: #60a5fa;
+            border-radius: 50%;
+            box-shadow: 0 0 12px #60a5fa, 0 0 4px #ffffff;
+        }
+        .satellite-node::after {
+            content: '';
+            position: absolute;
+            top: -3px; left: -8px;
+            width: 26px; height: 16px;
+            border: 1px solid rgba(96, 165, 250, 0.4);
+            background: rgba(30, 41, 59, 0.6);
+            border-radius: 2px;
             z-index: -1;
         }
 
-        /* Main Frame Chassis Container */
+        /* Main Operational Container Console */
         .app-container {
             max-width: 480px;
             margin: 0 auto;
@@ -82,13 +122,13 @@
             z-index: 10;
         }
 
-        /* Premium Top Header Bar Layout */
+        /* Header Bar Dashboard layout */
         .header-console {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 12px;
-            background: rgba(15, 23, 42, 0.75);
+            background: rgba(11, 19, 43, 0.75);
             border: 1px solid rgba(59, 130, 246, 0.3);
             border-radius: 12px;
             backdrop-filter: blur(10px);
@@ -97,7 +137,7 @@
         }
         .logo-block { display: flex; align-items: center; gap: 12px; }
         .logo-insignia {
-            background: #1d4ed8;
+            background: linear-gradient(135deg, #1d4ed8, #2563eb);
             color: #ffffff;
             font-weight: 900;
             font-size: 22px;
@@ -117,21 +157,21 @@
             box-shadow: 0 0 8px #22c55e;
         }
 
-        /* Call Sign Badge Number Input Panel */
+        /* Call Sign Badge Number Input Field */
         .badge-input-box {
             width: 100%;
-            background: rgba(15, 23, 42, 0.6);
+            background: rgba(15, 23, 42, 0.65);
             border: 1px dashed rgba(59, 130, 246, 0.4);
             border-radius: 8px;
             padding: 12px;
             color: #64748b;
             font-size: 13px;
             margin-bottom: 15px;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(6px);
             text-align: center;
         }
 
-        /* System Briefing Welcome Panel */
+        /* Briefing Card Welcome Box */
         .briefing-card {
             background: rgba(30, 41, 59, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -147,7 +187,7 @@
         .briefing-text h2 { font-size: 13px; color: #3b82f6; letter-spacing: 0.5px; margin-bottom: 3px; font-weight: bold; }
         .briefing-text p { font-size: 13px; color: #cbd5e1; line-height: 1.4; }
 
-        /* Two-Column Category Layout */
+        /* Two-Column Category Operational Grid */
         .operational-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -165,7 +205,7 @@
             backdrop-filter: blur(8px);
         }
         .tactical-card:active, .tactical-card.active {
-            background: rgba(59, 130, 246, 0.2);
+            background: rgba(59, 130, 246, 0.25);
             border-color: #3b82f6;
             box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
         }
@@ -173,13 +213,13 @@
         .card-heading { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
         .card-subtitles { font-size: 10px; color: #94a3b8; line-height: 1.3; }
 
-        /* Verified Category Colors */
+        /* Tactical Element Specific Colors */
         .text-criminal { color: #f87171; }
         .text-traffic { color: #60a5fa; }
         .text-game { color: #4ade80; }
         .text-juvenile { color: #facc15; }
 
-        /* Talk to LEX Master Control Strip */
+        /* Talk to LEX Master Activation Strip */
         .transmission-switch-strip {
             background: rgba(20, 83, 45, 0.4);
             border: 1px solid #166534;
@@ -193,7 +233,7 @@
             backdrop-filter: blur(8px);
         }
         .transmission-switch-strip.listening {
-            background: rgba(153, 27, 27, 0.5);
+            background: rgba(153, 27, 27, 0.55);
             border-color: #991b1b;
             animation: pulse-frame 1.5s infinite;
         }
@@ -203,7 +243,7 @@
         .transmission-switch-strip.listening .transmission-heading { color: #ef4444; }
         .transmission-subtitles { font-size: 11px; color: #94a3b8; margin-top: 2px; }
 
-        /* Report Assistant Action Strip */
+        /* Report Assistant Specialized Strip Layout */
         .assistant-strip {
             background: rgba(88, 28, 135, 0.35);
             border: 1px solid #6b21a8;
@@ -220,7 +260,7 @@
         .assistant-heading { font-size: 15px; font-weight: 800; color: #c084fc; text-transform: uppercase; letter-spacing: 0.5px; }
         .assistant-subtitles { font-size: 11px; color: #94a3b8; margin-top: 2px; }
 
-        /* Output Readout Console Terminal */
+        /* Output Core Readout Terminal Display Screen */
         .output-terminal {
             background: rgba(15, 23, 42, 0.9);
             border: 1px solid rgba(59, 130, 246, 0.3);
@@ -235,13 +275,22 @@
             box-shadow: inset 0 0 12px rgba(0,0,0,0.6);
         }
 
-        /* Professional Footer Signature */
+        /* Professional Field Operations Footer */
         footer { text-align: center; padding: 10px 0; margin-top: auto; }
         .credit-tag { font-size: 10px; color: #3b82f6; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; }
         .credit-name { font-size: 22px; font-weight: 900; color: #ffffff; margin: 2px 0; letter-spacing: 0.5px; }
         .credit-rank { font-size: 12px; color: #94a3b8; font-weight: 600; }
         .disclaimer-text { font-size: 10px; color: #475569; margin-top: 8px; }
 
+        /* PLANETARY AND ORBITAL ANIMATION KEYFRAMES */
+        @keyframes spinEarth {
+            0% { background-position-x: 0%; }
+            100% { background-position-x: 200%; }
+        }
+        @keyframes maintainOrbit {
+            0% { transform: rotate(-12deg) rotate(0deg); }
+            100% { transform: rotate(-12deg) rotate(360deg); }
+        }
         @keyframes pulse-frame {
             0% { transform: scale(1); }
             50% { transform: scale(1.02); }
@@ -253,9 +302,16 @@
 
     <div class="space-universe"></div>
     <div class="starfield-layer"></div>
-    <div class="earth-horizon"></div>
-    <div class="cloud-atmosphere"></div>
-    <div class="satellite-grid-lines"></div>
+    
+    <div class="earth-container">
+        <div class="rotating-earth">
+            <div class="cloud-cover"></div>
+        </div>
+    </div>
+    
+    <div class="satellite-orbit-track">
+        <div class="satellite-node"></div>
+    </div>
 
     <div class="app-container">
         <div class="header-console">
@@ -354,7 +410,7 @@
         }
 
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const SpeechRecognition = window.webkitSpeechRecognition || window.webkitSpeechRecognition;
             recognition = new SpeechRecognition();
             recognition.continuous = false;
             recognition.interimResults = false;
