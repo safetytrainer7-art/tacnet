@@ -1,15 +1,32 @@
-#hud-interface { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; padding: 20px; box-sizing: border-box; }
+/* Background Environment */
+body { background: #000; margin: 0; overflow: hidden; }
 
-#display { 
-    background: rgba(0, 0, 0, 0.85); color: #00ff00; border: 1px solid #00ff00; 
-    padding: 15px; margin-bottom: 20px; min-height: 100px; font-weight: bold;
+#earth-container {
+    position: fixed; top: -50%; left: -50%; width: 200%; height: 200%;
+    z-index: -1;
+    background-image: url('https://eoimages.gsfc.nasa.gov/images/imagerecords/73000/73751/world.topo.bathy.200407.3x5400x2700.jpg');
+    background-size: cover;
+    animation: rotateEarth 120s linear infinite; /* Slow, professional rotation */
 }
 
-.control-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.cat-btn { padding: 20px; font-weight: bold; border: none; opacity: 0.9; }
+@keyframes rotateEarth { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-#btn-911 { 
-    position: absolute; top: 20px; right: 20px; background: red; 
-    color: white; border-radius: 50%; width: 80px; height: 80px; 
-    border: 3px solid #fff; font-weight: bold; z-index: 10;
+#satellite-orbit {
+    position: fixed; top: 50%; left: 50%;
+    width: 300px; height: 300px;
+    margin: -150px 0 0 -150px;
+    z-index: 0;
+    border: 1px solid rgba(255,255,255,0.1); /* Optional: Shows orbit path */
+    border-radius: 50%;
+    animation: orbit 15s linear infinite; /* Satellite speed */
 }
+
+#sat-icon {
+    width: 40px; position: absolute; top: -20px; left: 50%;
+    margin-left: -20px;
+}
+
+@keyframes orbit { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+/* UI Overlay remains pinned on top */
+#hud-interface { position: relative; z-index: 10; padding: 20px; }
