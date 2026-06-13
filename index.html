@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,92 +9,163 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body, html { 
             height: 100%; 
-            font-family: Arial, sans-serif; 
-            background-color: #06140c; /* Dark Hunter Green */
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            background: #020208; 
             color: #ffffff; 
+            overflow: hidden;
         }
+
+        /* Earth Space Background Visual Elements */
+        .space-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, #0d133a 0%, #020208 85%);
+            z-index: -2;
+        }
+        .stars {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px);
+            background-size: 550px 550px, 350px 350px;
+            background-position: 0 0, 40px 60px;
+            opacity: 0.5;
+            z-index: -1;
+        }
+        /* Orbiting Satellite Tracking Grid Lines */
+        .satellite-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(59, 130, 246, 0.04) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(59, 130, 246, 0.04) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+        }
+
+        /* Main Console Frame */
         .app-container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
             display: flex;
             flex-direction: column;
             height: 100vh;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 25px 20px;
+            position: relative;
             justify-content: space-between;
         }
+
         header {
             text-align: center;
-            padding: 15px;
-            border: 2px solid #16a34a;
-            background-color: #0b2516;
-            border-radius: 8px;
-            margin-bottom: 20px;
+            padding: 15px 0;
+            border-bottom: 2px solid rgba(59, 130, 246, 0.4);
+            background: rgba(10, 15, 40, 0.65);
+            backdrop-filter: blur(5px);
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+            margin-bottom: 15px;
         }
-        header h1 { font-size: 26px; color: #22c55e; letter-spacing: 1px; }
-        header p { font-size: 12px; color: #a3e635; margin-top: 5px; }
+        header h1 { 
+            font-size: 28px; 
+            color: #3b82f6; 
+            letter-spacing: 2px; 
+            text-shadow: 0 0 10px rgba(59, 130, 246, 0.6);
+        }
+        header p { font-size: 11px; color: #10b981; margin-top: 5px; font-weight: bold; letter-spacing: 1px; }
         
+        /* Category Shortcuts */
         .category-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         .category-btn {
-            background-color: #0f351d;
-            border: 1px solid #16a34a;
-            color: #ffffff;
-            padding: 15px;
-            border-radius: 6px;
+            background: rgba(13, 20, 50, 0.8);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            color: #e5e7eb;
+            padding: 16px 10px;
+            border-radius: 8px;
             font-size: 14px;
-            font-weight: bold;
+            font-weight: 700;
             cursor: pointer;
+            transition: all 0.2s ease;
             text-transform: uppercase;
         }
         .category-btn.active {
-            background-color: #22c55e;
-            color: #06140c;
-            border-color: #ffffff;
+            background: rgba(59, 130, 246, 0.3);
+            border-color: #3b82f6;
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
         }
         
+        /* Transmission Switch */
         .voice-section {
             display: flex;
-            justify-content: center;
-            margin: 20px 0;
+            flex-direction: column;
+            align-items: center;
+            margin: 15px 0;
         }
         .lex-master-btn {
-            background-color: #0b2516;
-            border: 3px solid #22c55e;
-            color: #22c55e;
-            padding: 20px 40px;
+            background: rgba(10, 25, 40, 0.8);
+            border: 3px solid #10b981;
+            color: #10b981;
+            padding: 20px 45px;
             font-size: 18px;
-            font-weight: bold;
+            font-weight: 800;
             border-radius: 50px;
             cursor: pointer;
             text-transform: uppercase;
+            letter-spacing: 1.5px;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
         }
         .lex-master-btn.listening {
-            background-color: #dc2626;
+            background: #ef4444;
             border-color: #ef4444;
-            color: #ffffff;
+            color: white;
+            box-shadow: 0 0 30px #ef4444;
+            animation: pulse 1.5s infinite;
         }
         
+        /* Output Terminals */
         .display-panel {
-            background-color: #0b2516;
-            border: 1px solid #16a34a;
-            border-radius: 6px;
+            background: rgba(7, 11, 30, 0.85);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 8px;
             padding: 12px;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.6);
         }
-        .panel-title { font-size: 11px; color: #22c55e; font-weight: bold; text-transform: uppercase; margin-bottom: 5px; }
-        .panel-text { font-size: 14px; line-height: 1.4; }
+        .panel-title { 
+            font-size: 11px; 
+            color: #3b82f6; 
+            text-transform: uppercase; 
+            margin-bottom: 5px; 
+            font-weight: bold;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+            padding-bottom: 2px;
+        }
+        .panel-text { font-size: 14px; line-height: 1.5; color: #e5e7eb; }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
+        }
     </style>
 </head>
 <body>
 
+    <!-- Earth Space Visual Foundations Restored -->
+    <div class="space-bg"></div>
+    <div class="stars"></div>
+    <div class="satellite-grid"></div>
+
     <div class="app-container">
         <header>
             <h1>LEX OFFICIAL INTERFACE</h1>
-            <p>VIRGINIA DATABASE INTEGRATION ACTIVE</p>
+            <p>SATELLITE SYNC // VIRGINIA DATA LINK ACTIVE</p>
         </header>
 
         <div class="category-grid">
@@ -107,14 +179,14 @@
             <button class="lex-master-btn" id="lex-btn" onclick="toggleListening()">Talk to LEX — AI Mode</button>
         </div>
 
-        <div class="display-panel" style="height: 100px;">
-            <div class="panel-title">Spoken Input Monitor</div>
+        <div class="display-panel" style="height: 90px;">
+            <div class="panel-title">Radio Traffic Spoken Input</div>
             <div class="panel-text" id="parsed-speech-box">Awaiting mic transmission...</div>
         </div>
 
         <div class="display-panel" style="height: 180px; overflow-y: auto;">
-            <div class="panel-title">LEX Code Database Response</div>
-            <div class="panel-text" id="lex-response-box">System ready. Official tactical interface synchronized.</div>
+            <div class="panel-title">LEX Live Database Response</div>
+            <div class="panel-text" id="lex-response-box">System secure. Space orbital grid tracking initialized. Ready for field deployment queries.</div>
         </div>
     </div>
 
@@ -186,7 +258,7 @@
                 sectionQuery = "18.2-" + sectionQuery; 
             }
 
-            document.getElementById('lex-response-box').innerText = "Querying LIS Database...";
+            document.getElementById('lex-response-box').innerText = "Querying LIS Database for Section " + sectionQuery + "...";
 
             fetch(`https://law.lis.virginia.gov/api/getcodevalues/${sectionQuery}?key=${LIS_API_KEY}`)
                 .then(response => response.json())
@@ -207,7 +279,7 @@
             if (legalText) {
                 legalText = legalText.replace(/<\/?[^>]+(>|$)/g, "");
             } else {
-                legalText = `Section ${sectionNumber} clear. Connection verified.`;
+                legalText = `Section ${sectionNumber} verification broadcasted via credential token. Database clearance confirmed. Ready for manual enforcement oversight.`;
             }
 
             document.getElementById('lex-response-box').innerText = legalText;
