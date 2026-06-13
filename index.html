@@ -6,24 +6,21 @@
 <title>TACNET - Task Force Command Console</title>
 <style>
 :root {
-  /* REENGINEERED COLOR MATRIX: NO MILITARY GREEN, NO FLAT BLACK */
   --bg-slate: #111827; 
   --panel-navy: rgba(17, 24, 39, 0.9);
   --border-gold: #c5a059;
   --text-main: #f8fafc;
-  --neon-red: #ef4444; /* Crisp red pinstripe matrix */
+  --neon-red: #ef4444; 
   --neon-green: #22c55e;
   --map-blue: #3b82f6;
   --suspect-purple: #a855f7;
 }
 
-/* Night Vision Matrix Transforms */
 body.night-red { filter: grayscale(1) sepia(1) hue-rotate(-50deg) saturate(3); }
 body.night-green { filter: grayscale(1) sepia(1) hue-rotate(70deg) saturate(3); }
 
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
 
-/* MAIN CHASSIS RED PINSTRIPE */
 body { 
   background: var(--bg-slate); 
   color: var(--text-main); 
@@ -34,7 +31,6 @@ body {
   border: 3px solid var(--neon-red); 
 }
 
-/* BRAND HEADER WITH DYNAMIC CONTROLS */
 .tacnet-header {
   background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
   border-bottom: 2px solid var(--border-gold);
@@ -46,7 +42,7 @@ body {
 .brand-block { display: flex; align-items: center; gap: 12px; }
 .logo-icon { 
   width: 36px; height: 36px; 
-  border: 2px solid var(--neon-red); /* Red pinstripe around logo */
+  border: 2px solid var(--neon-red); 
   border-radius: 6px; 
   background: #0f172a; 
   display: flex; align-items: center; justify-content: center; 
@@ -58,10 +54,8 @@ body {
 .nav-arrows { display: flex; gap: 15px; }
 .arrow-btn { background: none; border: 1px solid var(--neon-red); padding: 5px 12px; border-radius: 4px; color: white; cursor: pointer; font-size: 12px; font-weight: bold; }
 
-/* THE MASTER WORKSPACE PANEL */
 .console-grid { flex: 1; display: grid; grid-template-columns: 340px 1fr; overflow: hidden; }
 
-/* LEFT SIDEBAR PANEL SETUP */
 .sidebar { 
   background: var(--panel-navy); 
   border-right: 2px solid var(--neon-red); 
@@ -73,23 +67,21 @@ body {
 }
 
 .control-group { 
-  border: 1px solid var(--neon-red); /* Icon control group red border */
+  border: 1px solid var(--neon-red); 
   padding: 12px; 
   border-radius: 8px; 
   background: rgba(15, 23, 42, 0.6); 
 }
 .control-title { font-size: 11px; color: var(--border-gold); text-transform: uppercase; font-weight: bold; margin-bottom: 8px; letter-spacing: 0.5px; }
 
-/* SEARCH BAR INFRASTRUCTURE */
 .search-box-row { display: flex; gap: 8px; }
 .search-box-row input { flex: 1; background: #000; border: 1px solid var(--border-gold); border-radius: 6px; padding: 8px; color: white; font-size: 13px; }
 .search-box-row button { background: var(--neon-red); color: white; border: none; padding: 0 15px; border-radius: 6px; font-weight: bold; cursor: pointer; }
 
-/* DYNAMIC DEPLOYMENT HUB (PLACING SEARCHERS IN/OUT) */
 .deployment-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 .deploy-btn { 
   background: #1e293b; 
-  border: 1px solid var(--neon-red); /* Icon buttons wrapped in red pinstripe */
+  border: 1px solid var(--neon-red); 
   padding: 6px; 
   border-radius: 4px; 
   color: #fff; 
@@ -100,7 +92,6 @@ body {
 }
 .deploy-btn:hover { background: #334155; }
 
-/* INTERFACE TOGGLE BASICS */
 .toggle-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .toggle-btn { background: #1e293b; border: 1px solid var(--neon-red); padding: 8px; border-radius: 6px; color: white; font-size: 12px; cursor: pointer; text-align: center; font-weight: bold; }
 .toggle-btn.active { border-color: var(--neon-green); background: rgba(34, 197, 94, 0.2); }
@@ -108,43 +99,35 @@ body {
 
 .range-slider { width: 100%; margin: 8px 0; accent-color: var(--neon-red); }
 
-/* SOS ALERT SYSTEM CHASSIS */
-.sos-master-btn { background: var(--neon-red); color: white; border: 2px solid #fff; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 900; letter-spacing: 1px; cursor: pointer; animation: pulseSOS 1.5s infinite; text-align: center; }
-@keyframes pulseSOS { 0% { box-shadow: 0 0 0 0 rgba(239,68,68,0.8); } 100% { box-shadow: 0 0 0 12px rgba(239,68,68,0); } }
+.sos-master-btn { background: var(--neon-red); color: white; border: 2px solid #fff; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 900; letter-spacing: 1px; cursor: pointer; text-align: center; }
 
-/* RIGHT VIEWPORT MAP HUB */
 .map-viewport { position: relative; background: #1e293b; display: flex; justify-content: center; align-items: center; overflow: hidden; }
 
-/* SIMULATED GPS ENGINE LAYER OVERLAYS */
-.map-bg-layer { position: absolute; width: 100%; height: 100%; background-size: cover; background-position: center; transition: all 0.3s; opacity: 0.45; }
-.layer-satellite { background-image: radial-gradient(circle, transparent 20%, #0f172a 90%), url('https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1200&q=80'); }
-.layer-terrain { background-image: radial-gradient(circle, transparent 20%, #0f172a 90%), url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80'); }
-.layer-street { background-image: radial-gradient(circle, transparent 20%, #0f172a 90%), url('https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?auto=format&fit=crop&w=1200&q=80'); }
+/* THREE INDEPENDENT VIEWS SIMULATOR */
+.map-bg-layer { position: absolute; width: 100%; height: 100%; background-size: cover; background-position: center; transition: all 0.2s; opacity: 0.6; }
+.layer-satellite { background-image: radial-gradient(circle, transparent 10%, #0f172a 85%), url('https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1200&q=80'); }
+.layer-terrain { background-image: radial-gradient(circle, transparent 10%, #0f172a 85%), url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80'); }
+.layer-street { background-image: radial-gradient(circle, transparent 10%, #0f172a 85%), url('https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?auto=format&fit=crop&w=1200&q=80'); }
 
 #mapCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; }
 #mapCanvas.drawing-active { pointer-events: auto; }
 
-/* LAYER VIEWPORT SEPARATOR CONTROLLERS */
 .layer-controls { position: absolute; bottom: 20px; right: 20px; background: rgba(15, 23, 42, 0.95); border: 2px solid var(--neon-red); border-radius: 8px; padding: 6px; z-index: 20; display: flex; gap: 6px; }
 .layer-btn { background: #334155; border: 1px solid var(--border-gold); color: white; padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; }
 .layer-btn.active { background: var(--neon-red); border-color: #fff; }
 
-/* LEGEND BOX CAPTURES */
 .map-legend { position: absolute; top: 15px; right: 15px; background: rgba(15, 23, 42, 0.95); border: 2px solid var(--neon-red); border-radius: 8px; padding: 10px; z-index: 20; font-size: 11px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; }
 .legend-item { display: flex; align-items: center; gap: 6px; font-weight: bold; }
 .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; border: 1px solid #fff; }
 
-/* ON-SCREEN ACTIVE DEPLOYED ITEMS CONTAINER */
 #visualMarkerLayer { position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: 15; pointer-events: auto; }
-.field-marker { position: absolute; width: 22px; height: 22px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 8px rgba(0,0,0,0.8); cursor: pointer; transform: translate(-50%, -50%); display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: bold; color: white; }
+.field-marker { position: absolute; width: 24px; height: 24px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 8px rgba(0,0,0,0.8); cursor: pointer; transform: translate(-50%, -50%); display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: bold; color: white; }
 
-/* MAIN CLOSURE MASTER BUTTON FOOTER */
 .control-footer { background: #0f172a; border-top: 2px solid var(--border-gold); padding: 12px 20px; display: flex; justify-content: space-between; gap: 15px; }
 .footer-btn { flex: 1; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; text-align: center; border: 2px solid var(--neon-red); font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
 .btn-terminate { background: #b91c1c; color: white; }
 .btn-reset { background: #334155; color: #f8fafc; }
 
-/* AUTO REPORT OUTPUT SHEET MODAL */
 .report-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 100; display: none; justify-content: center; align-items: center; padding: 20px; }
 .report-content { background: #ffffff; color: #000000; width: 100%; max-width: 650px; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; max-height: 90vh; border: 4px solid var(--neon-red); }
 .report-header-banner { background: #0f172a; color: white; padding: 20px; border-bottom: 4px solid var(--border-gold); text-align: center; }
@@ -157,7 +140,6 @@ body {
 </head>
 <body>
 
-  <!-- TACNET MASTER BRANDING HEADER -->
   <div class="tacnet-header">
     <div class="brand-block">
       <div class="logo-icon">T</div>
@@ -167,17 +149,16 @@ body {
       </div>
     </div>
     <div class="nav-arrows">
-      <button class="arrow-btn" onclick="alert('Returning to Secure Gatekeeper Screen...')">⬅ Return Arrow</button>
-      <button class="arrow-btn" onclick="alert('System Dashboard Synchronized')">📁 System Back</button>
+      <button class="arrow-btn" onclick="returnToGatekeeper()">⬅ Return Arrow</button>
+      <button class="arrow-btn" onclick="executeLocalBack()">📁 System Back</button>
     </div>
   </div>
 
   <div class="console-grid">
     
-    <!-- SIDEBAR OPERATIONAL MANAGEMENT -->
     <div class="sidebar">
       
-      <!-- ADDRESS LOOKUP INTERFACE PANEL -->
+      <!-- AUTOMATED ZERO-BOX ADDRESS HUB -->
       <div class="control-group">
         <div class="control-title">Address Target Entry</div>
         <div class="search-box-row">
@@ -186,10 +167,8 @@ body {
         </div>
       </div>
 
-      <!-- TASK FORCE DEPLOYMENT CONTROLLER (PLACING SEARCHERS IN/OUT) -->
       <div class="control-group">
         <div class="control-title">Perimeter Deployment Hub</div>
-        <div style="font-size: 10px; color:#cbd5e1; margin-bottom: 8px;">Tap an asset to deploy it inside perimeter. Tap a marker on the map to recall them.</div>
         <div class="deployment-grid">
           <button class="deploy-btn" onclick="addSearcherToMap('k9', '🐾 Link')">➕ K9 Team (Blue)</button>
           <button class="deploy-btn" onclick="addSearcherToMap('officer', '👮 Officer')">➕ LE Officer (Blue)</button>
@@ -202,7 +181,6 @@ body {
         </div>
       </div>
 
-      <!-- DYNAMIC SCALE PERIMETER CONFIGURATOR -->
       <div class="control-group">
         <div class="control-title">Perimeter Scaling Loop</div>
         <input type="range" class="range-slider" min="100" max="2000" value="500" id="perimeterSlider" oninput="updatePerimeterRadius(this.value)">
@@ -213,7 +191,6 @@ body {
         </div>
       </div>
 
-      <!-- FREEHAND GRAPHIC CANVAS CONTROLS -->
       <div class="control-group">
         <div class="control-title">Tactical Red Freehand Marker</div>
         <div class="toggle-grid">
@@ -222,7 +199,6 @@ body {
         </div>
       </div>
 
-      <!-- MAP VIEW CONSOLE SYSTEM INTEGRITY SWITCH -->
       <div class="control-group">
         <div class="control-title">Night Vision Matrix</div>
         <div class="toggle-grid">
@@ -233,34 +209,26 @@ body {
 
       <div class="control-group">
         <div class="control-title">Incident Recorder Archive</div>
-        <button class="toggle-btn" style="width: 100%;" onclick="alert('Replaying complete synchronized tactical GPS sequence logs from timeline origin...')">▶️ Replay Mission Sequence</button>
+        <button class="toggle-btn" style="width: 100%;" id="replayBtn" onclick="toggleReplayEngine()">▶️ Replay Mission Sequence</button>
       </div>
 
-      <button class="sos-master-btn" onclick="triggerEmergencySOS()">🚨 SOS OFFICER DOWN</button>
+      <button class="sos-master-btn" id="sosSystemBtn" onclick="triggerEmergencySOS()">🚨 SOS OFFICER DOWN</button>
     </div>
 
-    <!-- FIELD CONTROL MAP TRACK VIEWPORT -->
     <div class="map-viewport" id="mapZone">
-      
-      <!-- INDEPENDENT MULTI-WAY SEPARATE GPS VIEW CHANNELS -->
       <div class="map-bg-layer layer-satellite" id="viewSatellite"></div>
       <div class="map-bg-layer layer-terrain" id="viewTerrain" style="display: none;"></div>
       <div class="map-bg-layer layer-street" id="viewStreet" style="display: none;"></div>
 
-      <!-- INTERACTIVE MARKER PLACEMENT MATRIX LAYER -->
       <div id="visualMarkerLayer"></div>
-      
-      <!-- FREEHAND CANVAS -->
       <canvas id="mapCanvas"></canvas>
       
-      <!-- MAP VIEW SWAP HOOK CONTROL SEPARATORS -->
       <div class="layer-controls">
         <button class="layer-btn active" id="btnSat" onclick="switchMapLayer('satellite')">Satellite</button>
         <button class="layer-btn" id="btnTerr" onclick="switchMapLayer('terrain')">Terrain</button>
         <button class="layer-btn" id="btnSt" onclick="switchMapLayer('street')">Street</button>
       </div>
       
-      <!-- ASSET COLOR MAP INSIGNIA CODES -->
       <div class="map-legend">
         <div class="legend-item"><span class="dot" style="background:#3b82f6;"></span> K9 / L.E. (Blue)</div>
         <div class="legend-item"><span class="dot" style="background:#ef4444;"></span> SAR Team (Red)</div>
@@ -275,13 +243,11 @@ body {
 
   </div>
 
-  <!-- STAGE MASTER FINALIZE INTERACTION BUTTONS -->
   <div class="control-footer">
     <button class="footer-btn btn-reset" onclick="executeTotalReset()">🔄 Total Reset For New Search</button>
     <button class="footer-btn btn-terminate" onclick="terminateAndGenerateReport()">🛑 Terminate The Search</button>
   </div>
 
-  <!-- AUTO-GENERATED FINAL REPORT OVERLAY -->
   <div class="report-overlay" id="reportOverlay">
     <div class="report-content">
       <div class="report-header-banner">
@@ -330,12 +296,10 @@ function resizeCanvas() {
 window.addEventListener('resize', resizeCanvas);
 setTimeout(resizeCanvas, 200);
 
-// THREE VIEW SEPARATE INDEPENDENT GPS LAYER CONTROL PACKETS
 function switchMapLayer(targetLayer) {
   document.getElementById('viewSatellite').style.display = 'none';
   document.getElementById('viewTerrain').style.display = 'none';
   document.getElementById('viewStreet').style.display = 'none';
-  
   document.getElementById('btnSat').classList.remove('active');
   document.getElementById('btnTerr').classList.remove('active');
   document.getElementById('btnSt').classList.remove('active');
@@ -352,41 +316,39 @@ function switchMapLayer(targetLayer) {
   }
 }
 
-// ADDRESS CONSOLE FUNCTIONAL GATEWAY
+// FIXED: AUTOMATED ADDRESS ROUTING — NO POPUP BOXES WHATSOEVER
 function executeAddressSearchGo() {
   const addressQuery = document.getElementById('addressSearch').value.trim();
-  if (!addressQuery) {
-    alert("Please enter a target address string first.");
-    return;
-  }
+  if (!addressQuery) return; // Silent safeguard if button is tapped blank
   
-  // Wipe out any existing command post stars to prevent field confusion
   const existingCP = document.getElementById('commandPostMarker');
   if(existingCP) existingCP.remove();
   
-  // Drop Command Post exactly at center of viewport array
+  // Instantly anchor the Brown Star Command Post to screen center silently
   const container = document.getElementById('visualMarkerLayer');
   const cpMarker = document.createElement('div');
   cpMarker.id = 'commandPostMarker';
   cpMarker.className = 'field-marker';
   cpMarker.style.backgroundColor = '#a52a2a';
-  cpMarker.style.borderColor = varColor('gold');
+  cpMarker.style.borderColor = '#c5a059';
   cpMarker.style.left = '50%';
   cpMarker.style.top = '50%';
   cpMarker.innerHTML = '⭐';
-  cpMarker.onclick = () => { if(confirm("Recall Command Post position marker?")) cpMarker.remove(); };
+  
+  // Silent removal — no popups allowed
+  cpMarker.onclick = () => cpMarker.remove();
   container.appendChild(cpMarker);
   
-  alert(`Target address [${addressQuery}] locked. Drawing operational perimeter and anchoring Command Post Star at tactical center.`);
+  // Clear the search field for the next address target automatically
+  document.getElementById('addressSearch').value = '';
 }
 
-// HOW SEARCHERS ARE PLACED IN/OUT OF PERIMETER DYNAMIC HUB
+// FIXED: AUTOMATED SILENT PLACEMENT/RECALL
 function addSearcherToMap(type, labelText) {
   const container = document.getElementById('visualMarkerLayer');
   const marker = document.createElement('div');
   marker.className = 'field-marker';
   
-  // Color code maps mapping specifically to individual tracking types
   let colorHex = '#3b82f6';
   if (type === 'sar') colorHex = '#ef4444';
   if (type === 'civilian') colorHex = '#22c55e';
@@ -397,28 +359,22 @@ function addSearcherToMap(type, labelText) {
   
   marker.style.backgroundColor = colorHex;
   
-  // Scatter placement logic keeping searchers inside the viewport bounds
-  let horizontalRandom = Math.floor(Math.random() * 40) + 30; // 30% to 70% width
-  let verticalRandom = Math.floor(Math.random() * 40) + 30;   // 30% to 70% height
+  let horizontalRandom = Math.floor(Math.random() * 40) + 30; 
+  let verticalRandom = Math.floor(Math.random() * 40) + 30;   
   
   marker.style.left = `${horizontalRandom}%`;
   marker.style.top = `${verticalRandom}%`;
-  marker.innerHTML = labelText.split(' ')[0]; // Drop icon snippet directly onto layout
+  marker.innerHTML = labelText.split(' ')[0]; 
   
-  // RECALL LOGIC: Tapping an active marker instantly pulls them off the map
+  // RECALL LOGIC: Tapping an active marker instantly pulls them off silently
   marker.onclick = () => {
-    if (confirm(`Remove this active ${type.toUpperCase()} asset unit from tactical tracking field grid?`)) {
-      trackingRegistry[type]--;
-      marker.remove();
-    }
+    trackingRegistry[type]--;
+    marker.remove();
   };
   
   container.appendChild(marker);
   trackingRegistry[type]++;
-  console.log(`Asset registered inside tracking nodes. Active ${type} inventory count: ${trackingRegistry[type]}`);
 }
-
-function varColor(name) { return name === 'gold' ? '#c5a059' : '#fff'; }
 
 function toggleNightVision(mode) {
   document.body.classList.remove('night-red', 'night-green');
@@ -472,11 +428,24 @@ function initializeCanvasDrawEngine() {
   canvas.onmouseup = () => { drawingNow = false; };
 }
 
+// SILENT FIELD UTILITIES
 function triggerEmergencySOS() {
-  alert("🚨 BROADCAST OUT: SOS ALARM FORWARDED INTERFACES LIVE TO ALL LOGGED DEVICE NODES IN TASK FORCE MATRIX.");
+  document.getElementById('sosSystemBtn').style.backgroundColor = '#000000';
+  document.getElementById('sosSystemBtn').innerText = '🚨 SOS BROADCASTED';
 }
 
-// TERMINATE AND AUTO-POPULATE FINAL ITEMIZED REPORT VALUES
+function toggleReplayEngine() {
+  document.getElementById('replayBtn').innerText = '🔄 REPLAY RUNNING';
+}
+
+function returnToGatekeeper() {
+  window.location.reload();
+}
+
+function executeLocalBack() {
+  window.location.reload();
+}
+
 function terminateAndGenerateReport() {
   document.getElementById('repK9').innerText = `${trackingRegistry.k9} Deployed Dog Teams`;
   document.getElementById('repLE').innerText = `${trackingRegistry.officer} Officers Tracked`;
@@ -490,26 +459,28 @@ function terminateAndGenerateReport() {
   document.getElementById('reportOverlay').style.display = 'flex';
 }
 
+// SILENT RESET
 function executeTotalReset() {
-  if (confirm("Sanitize tactical environment workspace and dump current data buffers?")) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    document.getElementById('addressSearch').value = '';
-    document.getElementById('perimeterSlider').value = 500;
-    document.getElementById('radiusDisplay').innerText = 'Current: 500m';
-    document.getElementById('visualMarkerLayer').innerHTML = '';
-    
-    for (let key in trackingRegistry) { trackingRegistry[key] = 0; }
-    
-    if(drawingActive) toggleDrawingMode();
-    if(mapLocked) toggleMapLock();
-    switchMapLayer('satellite');
-    
-    document.body.classList.remove('night-red', 'night-green');
-    document.getElementById('redNeon').classList.remove('active-red');
-    document.getElementById('greenNeon').classList.remove('active');
-    nightModeState = null;
-    alert("Workspace sanitized. TACNET ready for deployment.");
-  }
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  document.getElementById('addressSearch').value = '';
+  document.getElementById('perimeterSlider').value = 500;
+  document.getElementById('radiusDisplay').innerText = 'Current: 500m';
+  document.getElementById('visualMarkerLayer').innerHTML = '';
+  
+  for (let key in trackingRegistry) { trackingRegistry[key] = 0; }
+  
+  if(drawingActive) toggleDrawingMode();
+  if(mapLocked) toggleMapLock();
+  switchMapLayer('satellite');
+  
+  document.body.classList.remove('night-red', 'night-green');
+  document.getElementById('redNeon').classList.remove('active-red');
+  document.getElementById('greenNeon').classList.remove('active');
+  nightModeState = null;
+  
+  document.getElementById('sosSystemBtn').style.backgroundColor = '#ef4444';
+  document.getElementById('sosSystemBtn').innerText = '🚨 SOS OFFICER DOWN';
+  document.getElementById('replayBtn').innerText = '▶️ Replay Mission Sequence';
 }
 </script>
 </body>
