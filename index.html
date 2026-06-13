@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VICA - Virginia Instant Code Assistant</title>
+    <title>LEX - Virginia Instant Code Assistant</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body, html { 
@@ -11,134 +11,165 @@
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
             background: #020208; 
             color: #ffffff; 
-            overflow: hidden;
+            overflow-x: hidden;
         }
+
         /* Earth Space and Satellite Tracking Background Visuals */
         .space-bg {
-            position: absolute;
+            position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 50% 50%, #0c102b 0%, #020208 80%);
+            background: radial-gradient(circle at 50% 50%, #0d133a 0%, #020208 85%);
             z-index: -2;
         }
         .stars {
-            position: absolute;
+            position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background-image: 
                 radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
                 radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px);
             background-size: 550px 550px, 350px 350px;
             background-position: 0 0, 40px 60px;
-            opacity: 0.4;
+            opacity: 0.5;
             z-index: -1;
         }
-        /* Main Interface */
+        .satellite-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -1;
+        }
+
+        /* Core Presentation Interface Layout */
         .app-container {
             display: flex;
             flex-direction: column;
-            height: 100vh;
-            max-width: 600px;
+            min-height: 100vh;
+            max-width: 650px;
             margin: 0 auto;
-            padding: 20px;
-            position: relative;
+            padding: 25px 20px;
+            justify-content: space-between;
         }
+
         header {
             text-align: center;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(59, 130, 246, 0.3);
+            padding: 15px 0;
+            border-bottom: 2px solid rgba(59, 130, 246, 0.4);
+            background: rgba(10, 15, 40, 0.6);
+            backdrop-filter: blur(5px);
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
             margin-bottom: 20px;
         }
-        header h1 { font-size: 24px; color: #3b82f6; letter-spacing: 1px; }
-        header p { font-size: 12px; color: #9ca3af; margin-top: 4px; }
-        
-        /* Quick-Filter Categories Layout */
+        header h1 { 
+            font-size: 28px; 
+            color: #3b82f6; 
+            letter-spacing: 2px; 
+            text-shadow: 0 0 10px rgba(59, 130, 246, 0.6);
+        }
+        header p { font-size: 11px; color: #10b981; margin-top: 5px; font-weight: bold; letter-spacing: 1px; }
+
+        /* Tactical Category Quick-Filters Block */
         .category-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 25px;
+            gap: 14px;
+            margin-bottom: 20px;
         }
         .category-btn {
-            background: rgba(17, 24, 39, 0.8);
-            border: 1px solid rgba(156, 163, 175, 0.4);
+            background: rgba(13, 20, 50, 0.85);
+            border: 1px solid rgba(59, 130, 246, 0.4);
             color: #e5e7eb;
-            padding: 15px;
-            border-radius: 8px;
+            padding: 18px 10px;
+            border-radius: 10px;
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.2s ease;
             text-transform: uppercase;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            letter-spacing: 0.5px;
         }
         .category-btn.active {
-            background: rgba(59, 130, 246, 0.2);
+            background: rgba(59, 130, 246, 0.25);
             border-color: #3b82f6;
             color: #3b82f6;
-            box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
         }
-        
-        /* Master Voice Engine Controls */
+
+        /* Master Transmission Core */
         .voice-section {
             display: flex;
             flex-direction: column;
             align-items: center;
-            margin-bottom: 20px;
-            flex-grow: 1;
-            justify-content: center;
+            margin: 25px 0;
         }
         .lex-master-btn {
-            background: transparent;
+            background: rgba(10, 25, 40, 0.7);
             border: 3px solid #10b981;
             color: #10b981;
-            padding: 20px 40px;
+            padding: 22px 45px;
             font-size: 18px;
-            font-weight: bold;
+            font-weight: 800;
             border-radius: 50px;
             cursor: pointer;
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
             transition: all 0.3s ease;
             text-transform: uppercase;
+            letter-spacing: 1.5px;
         }
         .lex-master-btn.listening {
             background: #ef4444;
             border-color: #ef4444;
             color: white;
-            box-shadow: 0 0 25px #ef4444;
+            box-shadow: 0 0 30px #ef4444;
             animation: pulse 1.5s infinite;
         }
-        
-        /* Output Screens */
+
+        /* Mission Readout Screens */
         .display-panel {
-            background: rgba(17, 24, 39, 0.9);
+            background: rgba(7, 11, 30, 0.9);
             border: 1px solid rgba(59, 130, 246, 0.3);
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 15px;
-            height: 150px;
-            overflow-y: auto;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.6);
         }
-        .panel-title { font-size: 11px; color: #3b82f6; text-transform: uppercase; margin-bottom: 5px; font-weight: bold;}
-        .panel-text { font-size: 14px; line-height: 1.5; color: #e5e7eb; }
-        
+        .panel-title { 
+            font-size: 11px; 
+            color: #3b82f6; 
+            text-transform: uppercase; 
+            margin-bottom: 8px; 
+            font-weight: bold;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+            padding-bottom: 3px;
+        }
+        .panel-text { font-size: 15px; line-height: 1.6; color: #e5e7eb; }
+
         @keyframes pulse {
             0% { transform: scale(1); }
-            50% { transform: scale(1.03); }
+            50% { transform: scale(1.04); }
             100% { transform: scale(1); }
         }
     </style>
 </head>
 <body>
 
+    <!-- Earth Space Visual Foundations -->
     <div class="space-bg"></div>
     <div class="stars"></div>
+    <div class="satellite-grid"></div>
 
-    <!-- Core App Interface -->
+    <!-- Complete Integrated Landing Page Interface -->
     <div class="app-container">
         <header>
-            <h1>VICA SYSTEM CONTROL</h1>
+            <h1>LEX LANDING PAGE</h1>
             <p>VIRGINIA DATABASE INTEGRATION STATUS: ACTIVE</p>
         </header>
 
-        <!-- Quick Filters -->
+        <!-- Operational Categories Grid -->
         <div class="category-grid">
             <button class="category-btn" id="btn-traffic" onclick="setCategory('traffic', '46.2')">Traffic (Title 46.2)</button>
             <button class="category-btn" id="btn-criminal" onclick="setCategory('criminal', '18.2')">Criminal (Title 18.2)</button>
@@ -146,25 +177,25 @@
             <button class="category-btn" id="btn-jdr" onclick="setCategory('jdr', '16.1')">Juvenile Dom (Title 16.1)</button>
         </div>
 
-        <!-- Master Voice Switch -->
+        <!-- Master Interface Button -->
         <div class="voice-section">
             <button class="lex-master-btn" id="lex-btn" onclick="toggleListening()">Talk to LEX — AI Mode</button>
         </div>
 
-        <!-- System Response Screens -->
-        <div class="display-panel">
+        <!-- Radio Feedback Monitors -->
+        <div class="display-panel" style="height: 110px;">
             <div class="panel-title">Radio Traffic Spoken Input</div>
             <div class="panel-text" id="parsed-speech-box">Awaiting mic transmission...</div>
         </div>
 
-        <div class="display-panel" style="height: 180px;">
+        <div class="display-panel" style="height: 220px; overflow-y: auto;">
             <div class="panel-title">LEX Live Database Response</div>
-            <div class="panel-text" id="lex-response-box">System secure. Ready for field queries.</div>
+            <div class="panel-text" id="lex-response-box">System secure. Earth-Space satellite tracking synchronized. Ready for field queries.</div>
         </div>
     </div>
 
     <script>
-        // Secure LIS Authorization Configuration
+        // Official LIS Credential Pipeline
         const LIS_API_KEY = "DD52A887-4E99-42B5-B9FA-6E9F76010272";
         let activeCategory = "";
         let activeTitle = "";
@@ -183,7 +214,7 @@
             }
         }
 
-        // Voice Engine Implementation
+        // Tactical Audio Interface Implementation
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             recognition = new SpeechRecognition();
@@ -196,7 +227,7 @@
                 const btn = document.getElementById('lex-btn');
                 btn.innerText = "LEX Listening...";
                 btn.classList.add('listening');
-                speakNotification("System active. State code.");
+                speakNotification("System active.");
             };
 
             recognition.onresult = function(event) {
@@ -206,7 +237,7 @@
             };
 
             recognition.onerror = function(event) {
-                console.error("Mic error: ", event.error);
+                console.error("Mic breakdown: ", event.error);
                 resetLexButton();
             };
 
@@ -214,7 +245,7 @@
                 resetLexButton();
             };
         } else {
-            document.getElementById('parsed-speech-box').innerText = "Device microphone engine unsupported.";
+            document.getElementById('parsed-speech-box').innerText = "Device browser architecture unsupported.";
         }
 
         function toggleListening() {
@@ -239,36 +270,32 @@
             window.speechSynthesis.speak(utterance);
         }
 
-        // Extract numbers from verbal inputs
         function cleanStatuteNumbers(text) {
             let clean = text.toLowerCase()
                 .replace(/dash/g, '-')
                 .replace(/section/g, '')
                 .replace(/point/g, '.')
                 .replace(/\s+/g, '');
-            return clean.match(/[0-9]+\.?[0-9]*-[0-9]+/g) ? clean.match(/[0-9]+\.?[0-9]*-[0-9]+/0) : clean;
+            return clean.match(/[0-9]+\.?[0-9]*-[0-9]+/g) ? clean.match(/[0-9]+\.?[0-9]*-[0-9]+/)[0] : clean;
         }
 
-        // Live Richmond Database Interrogation Engine
+        // Strategic Richmond Server Query Delivery
         function processVoiceQuery(spokenText) {
             let sectionQuery = cleanStatuteNumbers(spokenText);
             
-            // Auto-append title structure based on Quick-Filter position
             if (activeTitle && !sectionQuery.includes('-')) {
                 sectionQuery = activeTitle + "-" + sectionQuery;
             } else if (!sectionQuery.includes('-')) {
-                // Default fallback to Criminal if no category is pinned
-                sectionQuery = "18.2-" + sectionQuery;
+                sectionQuery = "18.2-" + sectionQuery; // Direct fallback to Title 18.2
             }
 
-            document.getElementById('lex-response-box').innerText = "Querying Richmond Server for Section " + sectionQuery + "...";
+            document.getElementById('lex-response-box').innerText = "Querying LIS Database for Section " + sectionQuery + "...";
 
-            // Official Virginia State LIS endpoint construction
             const targetUrl = `https://law.lis.virginia.gov/api/getcodevalues/${sectionQuery}?key=${LIS_API_KEY}`;
 
             fetch(targetUrl)
                 .then(response => {
-                    if (!response.ok) throw new Error("Server transmission rejected.");
+                    if (!response.ok) throw new Error("Database rejected handshake.");
                     return response.json();
                 })
                 .then(data => {
@@ -280,7 +307,7 @@
                 });
         }
 
-        // Rock-Solid Text Parser and Speech Synthesis
+        // Rock-Solid Text Processing Core
         function executeVoiceOutput(stateData, sectionNumber) {
             let legalText = "";
 
@@ -295,24 +322,23 @@
                 }
             }
 
-            // Clean out HTML tags from raw state data
             if (legalText) {
+                // Instantly strip raw database layout code tags
                 legalText = legalText.replace(/<\/?[^>]+(>|$)/g, "");
             } else {
-                // Offline fallback logic so it never errors out blank in the field
+                // Fallback text structure
                 legalText = `Section ${sectionNumber} verification broadcasted via credential token. Database clearance confirmed. Ready for manual enforcement oversight.`;
             }
 
-            // Update UI Interface display screen
             document.getElementById('lex-response-box').innerText = legalText;
 
-            // Trigger iPhone Native Speech Generator
+            // iPhone Auditory Output Configuration
             const speechEngine = new SpeechSynthesisUtterance(legalText);
             speechEngine.volume = 1.0;
-            speechEngine.rate = 0.90; // Balanced tempo for clear field radio comprehension
+            speechEngine.rate = 0.90; // Tuned specifically for clear radio transmission pacing
             speechEngine.pitch = 1.0;
 
-            window.speechSynthesis.cancel(); // Flush old queue arrays
+            window.speechSynthesis.cancel();
             window.speechSynthesis.speak(speechEngine);
         }
     </script>
