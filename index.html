@@ -2,26 +2,33 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>LEX | TACTICAL HUD</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div id="hud-viewport">
-        <!-- NASA Earth Background -->
-        <div id="earth-container">
-            <img src="https://eoimages.gsfc.nasa.gov/images/imagerecords/73000/73751/world.topo.bathy.200407.3x5400x2700.jpg" id="earth-map">
-        </div>
+
+    <!-- BACKGROUND ENGINE -->
+    <div id="earth-container"><img src="https://eoimages.gsfc.nasa.gov/images/imagerecords/73000/73751/world.topo.bathy.200407.3x5400x2700.jpg" id="earth-map"></div>
+    <div id="satellite-orbit"><img src="https://cdn-icons-png.flaticon.com/512/3233/3233630.png" id="sat-icon"></div>
+
+    <!-- TACTICAL OVERLAY -->
+    <div id="hud-interface">
+        <div id="header">LEX-VA TACTICAL SYSTEM</div>
         
-        <!-- Satellite Asset -->
-        <div id="satellite-orbit">
-            <img src="https://cdn-icons-png.flaticon.com/512/3233/3233630.png" id="sat-icon">
+        <div id="display">AWAITING VOICE COMMAND...</div>
+        
+        <div class="control-grid">
+            <button class="cat-btn blue" onclick="query('18.2')">CRIMINAL</button>
+            <button class="cat-btn yellow" onclick="query('46.2')">TRAFFIC</button>
+            <button class="cat-btn green" onclick="query('29.1')">GAME-FISH</button>
+            <button class="cat-btn red-cat" onclick="query('16.1')">JUVENILE</button>
+            <button class="action-btn" onclick="stopAudio()">STOP</button>
+            <button class="action-btn" onclick="repeatLast()">REPEAT</button>
         </div>
 
-        <div id="status-overlay">
-            <div id="data-output">SYSTEM READY: WAITING FOR VOICE INPUT</div>
-            <button id="btn-911" onclick="trigger911()">911</button>
-        </div>
+        <button id="btn-911" ontouchstart="startPress()" ontouchend="endPress()">911</button>
     </div>
+
     <script src="js/tactical-core.js"></script>
 </body>
 </html>
+
