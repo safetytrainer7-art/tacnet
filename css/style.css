@@ -1,21 +1,24 @@
-body { background: #000; color: #fff; font-family: sans-serif; margin: 0; padding: 20px; }
+body, html { margin: 0; padding: 0; background: #000; height: 100%; overflow: hidden; }
 
-#display { 
-    height: 300px; border: 2px solid #555; padding: 20px; 
-    font-size: 2rem; font-weight: bold; overflow-y: auto; margin-bottom: 20px; 
+#hud-viewport { position: relative; width: 100vw; height: 100vh; }
+
+#earth-container {
+    position: absolute; width: 300%; height: 100%; 
+    animation: rotateEarth 60s linear infinite;
 }
 
-#emergency-btn { 
-    position: fixed; top: 10px; right: 10px; background: red; color: white; 
-    padding: 30px; border-radius: 50%; font-size: 1.5rem; border: 5px solid white; z-index: 1000;
+#earth-map { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; }
+
+#satellite-orbit {
+    position: absolute; top: 40%; left: 40%; width: 100px; height: 100px;
+    animation: orbit 10s linear infinite;
 }
 
-.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-button { padding: 20px; font-size: 1.2rem; font-weight: bold; border: none; }
+#sat-icon { width: 50px; }
 
-.blue { background: #000088; color: white; }
-.yellow { background: #cccc00; color: black; }
-.green { background: #006600; color: white; }
-.red-cat { background: #880000; color: white; }
-.stop { background: #ff4500; color: white; }
-.repeat { background: #444; color: white; }
+@keyframes rotateEarth { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@keyframes orbit { from { transform: rotate(0deg) translateX(150px) rotate(0deg); } to { transform: rotate(360deg) translateX(150px) rotate(-360deg); } }
+
+#status-overlay { position: absolute; bottom: 20px; width: 100%; text-align: center; z-index: 10; }
+#data-output { color: #00ff00; font-family: monospace; font-size: 1.2rem; background: rgba(0,0,0,0.7); padding: 10px; }
+#btn-911 { background: #ff0000; color: white; border-radius: 50%; padding: 30px; border: none; margin-top: 20px; }
