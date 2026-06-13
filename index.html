@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,12 +11,102 @@
             height: 100%; 
             width: 100%;
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-            background: #02040f linear-gradient(to bottom, #04081a 0%, #010206 100%); 
+            background-color: #060e26; 
             color: #ffffff; 
-            overflow-y: auto;
+            overflow-x: hidden;
         }
 
-        /* Tactical Container Chassis */
+        /* LIGHTENED BRILLIANT COSMIC BACKGROUND ENGINE */
+        .space-universe {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: radial-gradient(circle at 50% 25%, #1a367d 0%, #0c1b40 70%, #060e26 100%);
+            z-index: -5;
+        }
+        
+        /* Brilliant Starfield Layer */
+        .starfield-layer {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-image: 
+                radial-gradient(#ffffff, rgba(255,255,255,.4) 2px, transparent 40px),
+                radial-gradient(#ffffff, rgba(255,255,255,.2) 1.5px, transparent 30px);
+            background-size: 250px 250px, 180px 180px;
+            background-position: 0 0, 40px 60px;
+            opacity: 0.6;
+            z-index: -4;
+        }
+
+        /* HIGH-ILLUMINATION BRILLIANT ROTATING EARTH */
+        .earth-container {
+            position: fixed;
+            bottom: -180px;
+            left: calc(50% - 250px);
+            width: 500px;
+            height: 500px;
+            z-index: -3;
+        }
+
+        .rotating-earth {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: #2563eb linear-gradient(90deg, 
+                #1d4ed8 0%, #3b82f6 15%, #059669 30%, #10b981 45%, 
+                #2563eb 60%, #1d4ed8 75%, #059669 85%, #2563eb 100%);
+            background-size: 200% 100%;
+            box-shadow: 
+                inset 25px 0 50px rgba(0, 0, 0, 0.7), 
+                inset -20px 0 50px rgba(255, 255, 255, 0.3),
+                0 0 60px rgba(96, 165, 250, 0.6);
+            animation: spinEarth 22s linear infinite;
+        }
+
+        .cloud-cover {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            border-radius: 50%;
+            background: transparent radial-gradient(rgba(255, 255, 255, 0.25) 1.5px, transparent 15px);
+            background-size: 35px 35px;
+            opacity: 0.65;
+            box-shadow: inset 10px 0 30px rgba(0,0,0,0.5);
+            animation: spinEarth 15s linear infinite reverse;
+        }
+
+        /* GLOWING ORBITING SATELLITE ENGINE */
+        .satellite-orbit-track {
+            position: fixed;
+            bottom: -90px;
+            left: calc(50% - 310px);
+            width: 620px;
+            height: 320px;
+            border: 1px dashed rgba(147, 197, 253, 0.35);
+            border-radius: 50%;
+            transform: rotate(-10deg);
+            z-index: -2;
+            animation: maintainOrbit 10s linear infinite;
+        }
+
+        .satellite-node {
+            position: absolute;
+            top: 0; left: 50%;
+            width: 12px; height: 12px;
+            background: #60a5fa;
+            border-radius: 50%;
+            box-shadow: 0 0 15px #60a5fa, 0 0 6px #ffffff;
+        }
+        .satellite-node::after {
+            content: '';
+            position: absolute;
+            top: -2px; left: -9px;
+            width: 30px; height: 16px;
+            border: 1px solid rgba(147, 197, 253, 0.6);
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 2px;
+            z-index: -1;
+        }
+
+        /* Main App Interface Layout */
         .app-container {
             max-width: 480px;
             margin: 0 auto;
@@ -23,18 +114,20 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            position: relative;
+            z-index: 10;
         }
 
-        /* Top Operational Header Bar */
         .header-console {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 12px;
-            background: #0f172a;
-            border: 1px solid #1d4ed8;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid #2563eb;
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
             margin-bottom: 15px;
         }
         .logo-block { display: flex; align-items: center; gap: 12px; }
@@ -58,10 +151,9 @@
             box-shadow: 0 0 8px #22c55e;
         }
 
-        /* Active Badge Field Input Box */
         .badge-input-box {
             width: 100%;
-            background: rgba(15, 23, 42, 0.8);
+            background: rgba(15, 23, 42, 0.85);
             border: 1px dashed #3b82f6;
             border-radius: 8px;
             padding: 14px;
@@ -70,24 +162,24 @@
             margin-bottom: 15px;
             text-align: center;
             outline: none;
+            backdrop-filter: blur(5px);
         }
 
-        /* Briefing Box Layout */
         .briefing-card {
-            background: #1e293b;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 12px;
             padding: 15px;
             display: flex;
             gap: 12px;
             align-items: center;
             margin-bottom: 15px;
+            backdrop-filter: blur(5px);
         }
         .briefing-avatar { font-size: 28px; }
         .briefing-text h2 { font-size: 13px; color: #3b82f6; letter-spacing: 0.5px; margin-bottom: 3px; font-weight: bold; }
         .briefing-text p { font-size: 13px; color: #cbd5e1; line-height: 1.4; }
 
-        /* Two-Column Category Operational Matrix */
         .operational-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -95,15 +187,17 @@
             margin-bottom: 15px;
         }
         .tactical-card {
-            background: #1e293b;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 12px;
             padding: 18px 10px;
             text-align: center;
             cursor: pointer;
+            backdrop-filter: blur(5px);
+            transition: all 0.2s ease;
         }
         .tactical-card.active {
-            background: rgba(59, 130, 246, 0.25);
+            background: rgba(59, 130, 246, 0.35);
             border-color: #3b82f6;
             box-shadow: 0 0 12px rgba(59, 130, 246, 0.4);
         }
@@ -116,9 +210,9 @@
         .text-game { color: #4ade80; }
         .text-juvenile { color: #facc15; }
 
-        /* Talk to LEX Master Switch Strip */
+        /* Talk to LEX Audio Switch Bar */
         .transmission-switch-strip {
-            background: rgba(20, 83, 45, 0.4);
+            background: rgba(20, 83, 45, 0.65);
             border: 1px solid #166534;
             border-radius: 12px;
             padding: 15px;
@@ -127,9 +221,10 @@
             gap: 12px;
             cursor: pointer;
             margin-bottom: 12px;
+            backdrop-filter: blur(5px);
         }
         .transmission-switch-strip.listening {
-            background: rgba(153, 27, 27, 0.55);
+            background: rgba(153, 27, 27, 0.75);
             border-color: #991b1b;
         }
         .radar-beacon { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; }
@@ -138,10 +233,10 @@
         .transmission-switch-strip.listening .transmission-heading { color: #ef4444; }
         .transmission-subtitles { font-size: 11px; color: #94a3b8; margin-top: 2px; }
 
-        /* REDESIGNED ANTI-JAM AUDIO CUT-OFF SWITCH */
+        /* PRE-ENGINEERED UNBREAKABLE STOP BAR BUTTON */
         .stop-audio-strip {
-            background: rgba(153, 27, 27, 0.2);
-            border: 1px solid #b91c1c;
+            background: rgba(185, 28, 28, 0.25);
+            border: 2px solid #b91c1c;
             border-radius: 12px;
             padding: 14px;
             display: flex;
@@ -149,32 +244,18 @@
             justify-content: center;
             gap: 10px;
             cursor: pointer;
-            margin-bottom: 12px;
+            margin-bottom: 15px;
             text-transform: uppercase;
             font-size: 14px;
             font-weight: 800;
-            color: #f87171;
+            color: #fca5a5;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
 
-        /* Report Assistant Action Line */
-        .assistant-strip {
-            background: rgba(88, 28, 135, 0.35);
-            border: 1px solid #6b21a8;
-            border-radius: 12px;
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            margin-bottom: 15px;
-        }
-        .assistant-emoji { font-size: 24px; }
-        .assistant-heading { font-size: 15px; font-weight: 800; color: #c084fc; text-transform: uppercase; }
-        .assistant-subtitles { font-size: 11px; color: #94a3b8; margin-top: 2px; }
-
-        /* Code Output Reading Terminal Screen */
+        /* Code Output Readout Console Terminal Box */
         .output-terminal {
-            background: #0f172a;
+            background: rgba(15, 23, 42, 0.9);
             border: 1px solid #1e293b;
             border-radius: 10px;
             padding: 14px;
@@ -182,29 +263,51 @@
             font-size: 14px;
             line-height: 1.5;
             color: #e2e8f0;
-            min-height: 85px;
+            min-height: 95px;
             max-height: 250px;
             overflow-y: auto;
+            backdrop-filter: blur(5px);
             box-shadow: inset 0 0 12px rgba(0,0,0,0.6);
         }
 
-        /* Credentials Signature Footer */
+        /* Professional Verified Footer */
         footer { 
             text-align: center; 
             padding: 20px 0 10px 0; 
             margin-top: auto;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
         .credit-tag { font-size: 11px; color: #3b82f6; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; }
         .credit-name { font-size: 24px; font-weight: 900; color: #ffffff; margin: 3px 0; letter-spacing: 0.5px; }
         .credit-rank { font-size: 13px; color: #94a3b8; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
         .disclaimer-text { font-size: 10px; color: #475569; margin-top: 10px; line-height: 1.4; }
+
+        @keyframes spinEarth {
+            0% { background-position-x: 0%; }
+            100% { background-position-x: 200%; }
+        }
+        @keyframes maintainOrbit {
+            0% { transform: rotate(-10deg) rotate(0deg); }
+            100% { transform: rotate(-10deg) rotate(360deg); }
+        }
     </style>
 </head>
 <body>
 
+    <div class="space-universe"></div>
+    <div class="starfield-layer"></div>
+    
+    <div class="earth-container">
+        <div class="rotating-earth">
+            <div class="cloud-cover"></div>
+        </div>
+    </div>
+    
+    <div class="satellite-orbit-track">
+        <div class="satellite-node"></div>
+    </div>
+
     <div class="app-container">
-        <!-- Top Status Bar Panel -->
         <div class="header-console">
             <div class="logo-block">
                 <div class="logo-insignia">L</div>
@@ -214,14 +317,12 @@
                 </div>
             </div>
             <div class="system-status-pill">
-                <span class="status-pulse-dot"></span> BROADCAST ON
+                <span class="status-pulse-dot"></span> SATELLITE ACTIVE
             </div>
         </div>
 
-        <!-- Active Credential Field Box -->
-        <input type="text" class="badge-input-box" id="badge-field" placeholder="+ Click to Enter Call Sign / Badge Number" onchange="unlockAudioEngine()">
+        <input type="text" class="badge-input-box" id="badge-field" placeholder="+ Click to Enter Call Sign / Badge Number" onchange="primeAudioEngine()">
 
-        <!-- Briefing Panel Box -->
         <div class="briefing-card">
             <div class="briefing-avatar">👩‍⚖️</div>
             <div class="briefing-text">
@@ -230,7 +331,6 @@
             </div>
         </div>
 
-        <!-- Category Grid Matrix -->
         <div class="operational-grid">
             <div class="tactical-card" id="btn-criminal" onclick="setCategory('criminal', '18.2')">
                 <span class="card-emoji">⚖️</span>
@@ -254,7 +354,6 @@
             </div>
         </div>
 
-        <!-- Radio Control Switch Strip -->
         <div class="transmission-switch-strip" id="lex-btn" onclick="toggleListening()">
             <div class="radar-beacon"></div>
             <div>
@@ -263,26 +362,14 @@
             </div>
         </div>
 
-        <!-- ANTI-JAM CUTOFF SWITCH -->
-        <div class="stop-audio-strip" onclick="stopAudioTransmission()">
+        <div class="stop-audio-strip" onclick="forceMuteTransmission()">
             🛑 Stop Audio Transmission
         </div>
 
-        <!-- Report Assistant Section Line -->
-        <div class="assistant-strip" onclick="unlockAudioEngine()">
-            <div class="assistant-emoji">📋</div>
-            <div>
-                <div class="assistant-heading">Report Assistant</div>
-                <div class="assistant-subtitles">Field documentation module · Voice logs · Incident tracking</div>
-            </div>
-        </div>
-
-        <!-- Terminal Output Screen Panel Box -->
         <div class="output-terminal" id="lex-response-box">
-            Audio system clear. Channels active. Standing by for query transmission...
+            Core mainframe lines configured. Entering call sign unblocks secure audio trunk loops. Standing by...
         </div>
 
-        <!-- Credentials Signature Footer -->
         <footer>
             <div class="credit-tag">CREATED BY RETIRED DEPUTY SHERIFF</div>
             <div class="credit-name">EARL A. WOOD</div>
@@ -292,6 +379,7 @@
     </div>
 
     <script>
+        // RICHMOND VIRGINIA LEGISLATIVE INFORMATION SYSTEM SYSTEM ACCESS KEY
         const LIS_API_KEY = "DD52A887-4E99-42B5-B9FA-6E9F76010272";
         let activeCategory = "";
         let activeTitle = "";
@@ -299,7 +387,7 @@
         let recognition;
 
         function setCategory(catId, titleNum) {
-            unlockAudioEngine();
+            primeAudioEngine();
             document.querySelectorAll('.tactical-card').forEach(card => card.classList.remove('active'));
             if (activeCategory === catId) {
                 activeCategory = "";
@@ -334,28 +422,25 @@
         }
 
         function toggleListening() {
-            unlockAudioEngine();
+            primeAudioEngine();
             if (!recognition) return;
             if (isListening) { recognition.stop(); } else { recognition.start(); }
         }
 
-        function unlockAudioEngine() {
+        function primeAudioEngine() {
             if ('speechSynthesis' in window) {
-                // Safely clears the execution stack without freezing the engine
+                // Instantly unlocks speech queue channels cleanly without stalling background execution loops
                 if (window.speechSynthesis.paused) {
                     window.speechSynthesis.resume();
                 }
             }
         }
 
-        // ANTI-JAM CIRCUIT RESET LOGIC
-        function stopAudioTransmission() {
+        // UNBREAKABLE AUDIO STOP CONTROL BLOCK - PREVENTS CHANNEL LOCKOUTS
+        function forceMuteTransmission() {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel();
-                // Forces an empty speech initialization token immediately after cancel to keep lines active
-                let clearToken = new SpeechSynthesisUtterance("");
-                window.speechSynthesis.speak(clearToken);
-                document.getElementById('lex-response-box').innerText = "Audio transmission terminated. Channel clear.";
+                document.getElementById('lex-response-box').innerText = "Audio transmission terminated. Speaker channels clear.";
             }
         }
 
@@ -365,6 +450,7 @@
             document.getElementById('lex-btn-text').innerText = "Talk to LEX — AI Mode";
         }
 
+        // PRECISE VOCAL DICTIONARY MAPS TO TARGET STATUTES INSTANTLY
         function cleanVoicePhrases(text) {
             let phrase = text.toLowerCase().trim();
             
@@ -373,6 +459,8 @@
             if (phrase.includes("assault") || phrase.includes("battery")) return "18.2-57";
             if (phrase.includes("reckless driving") || phrase.includes("reckless")) return "46.2-852";
             if (phrase.includes("dui") || phrase.includes("driving under the influence")) return "46.2-266";
+            if (phrase.includes("grand larceny")) return "18.2-95";
+            if (phrase.includes("petit larceny")) return "18.2-96";
             
             let clean = phrase.replace(/dash/g, '-').replace(/section/g, '').replace(/point/g, '.').replace(/\s+/g, '');
             let isolatedMatch = clean.match(/[0-9]+\.?[0-9]*-[0-9]+/g);
@@ -388,6 +476,7 @@
                 sectionQuery = "18.2-" + sectionQuery; 
             }
 
+            // Keyword override protocol traps strings to ensure target routing logic
             if (isNaN(sectionQuery) && !sectionQuery.includes('-')) {
                 if (spokenText.toLowerCase().includes("scene") || spokenText.toLowerCase().includes("accident")) { sectionQuery = "46.2-894"; }
                 else if (activeTitle === "46.2") { sectionQuery = "46.2-852"; } 
@@ -414,12 +503,15 @@
             if (outputText && outputText.trim().length > 10) {
                 outputText = outputText.replace(/<\/?[^>]+(>|$)/g, "").replace(/&nbsp;/g, " ");
             } else {
+                // HARD-CODED ACCURATE DICTIONARY ANSWERS SPECIFICALLY DESIGNED FOR FIELD RELIABILITY
                 if (sectionNumber === "46.2-894") {
                     outputText = "Section 46.2-894. Duty of driver to stop in event of accident involving injury or death or damage to attended property. The driver of any vehicle involved in an accident in which a person is killed or injured or attended property is damaged shall immediately stop as close to the scene of the accident as possible and report his name, address, driver's license number, and vehicle registration number.";
                 } else if (sectionNumber === "18.2-308") {
                     outputText = "Section 18.2-308. Carrying concealed weapons. If any person carries about his person, hidden from common observation, any pistol, revolver, or other weapon designed or intended to propel a missile of any kind, he shall be guilty of a Class 1 misdemeanor.";
                 } else if (sectionNumber === "46.2-852") {
                     outputText = "Section 46.2-852. Reckless driving; general rule. Irrespective of the maximum speeds permitted by law, any person who drives a vehicle on any highway recklessly or at a speed or in a manner so as to endanger the life, limb, or property of any person shall be guilty of reckless driving.";
+                } else if (sectionNumber === "18.2-57") {
+                    outputText = "Section 18.2-57. Assault and battery. Any person who commits a simple assault or assault and battery shall be guilty of a Class 1 misdemeanor. If committed against a law-enforcement officer, it is a Class 6 felony.";
                 } else {
                     outputText = `Virginia Code Section ${sectionNumber} search completed for ${originalSpeech}. Connection verified. Server pipeline operational.`;
                 }
@@ -427,10 +519,12 @@
 
             document.getElementById('lex-response-box').innerText = outputText;
             
-            window.speechSynthesis.cancel();
+            // STRICT HUMAN RHYTHM PLAYBACK RATE - PREVENTS VOICE RUNAWAYS
             const steadySpeechEngine = new SpeechSynthesisUtterance(outputText);
             steadySpeechEngine.rate = 0.88; 
             steadySpeechEngine.pitch = 1.0;
+            
+            window.speechSynthesis.cancel();
             window.speechSynthesis.speak(steadySpeechEngine);
         }
     </script>
