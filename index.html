@@ -9,9 +9,37 @@
         body, html { 
             height: 100%; 
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-            background: #090d22 linear-gradient(to bottom, #090d22 0%, #03040b 100%); 
+            background: #020208; 
             color: #ffffff; 
-            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        /* Earth Space Visual Background Foundations */
+        .space-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, #0d133a 0%, #020208 85%);
+            z-index: -3;
+        }
+        .stars {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px);
+            background-size: 550px 550px, 350px 350px;
+            background-position: 0 0, 40px 60px;
+            opacity: 0.5;
+            z-index: -2;
+        }
+        /* Orbiting Satellite Tracking Grid Lines */
+        .satellite-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(59, 130, 246, 0.04) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(59, 130, 246, 0.04) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
         }
 
         /* App Container matching dddd.jpg layout */
@@ -21,6 +49,7 @@
             padding: 15px;
             display: flex;
             flex-direction: column;
+            min-height: 100vh;
         }
 
         /* Top Header Bar */
@@ -87,11 +116,12 @@
             color: #64748b;
             font-size: 13px;
             margin-bottom: 15px;
+            backdrop-filter: blur(3px);
         }
 
         /* Welcome Banner Card */
         .welcome-card {
-            background: rgba(30, 41, 59, 0.4);
+            background: rgba(30, 41, 59, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
             padding: 15px;
@@ -113,7 +143,7 @@
             margin-bottom: 15px;
         }
         .grid-card {
-            background: rgba(30, 41, 59, 0.4);
+            background: rgba(30, 41, 59, 0.5);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
             padding: 18px 10px;
@@ -123,13 +153,13 @@
             backdrop-filter: blur(5px);
         }
         .grid-card:active, .grid-card.active {
-            background: rgba(59, 130, 246, 0.15);
+            background: rgba(59, 130, 246, 0.2);
             border-color: #3b82f6;
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
         }
         .card-icon { font-size: 24px; margin-bottom: 8px; display: block; }
         .card-title { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
-        .card-subs { font-size: 10px; color: #64748b; }
+        .card-subs { font-size: 10px; color: #94a3b8; }
 
         /* Specific Colors from Your Blueprint */
         .color-criminal { color: #f87171; }
@@ -139,7 +169,7 @@
 
         /* Master Talk To LEX Engine Strip */
         .lex-action-strip {
-            background: rgba(20, 83, 45, 0.3);
+            background: rgba(20, 83, 45, 0.4);
             border: 1px solid #166534;
             border-radius: 12px;
             padding: 15px;
@@ -148,9 +178,10 @@
             gap: 12px;
             cursor: pointer;
             margin-bottom: 12px;
+            backdrop-filter: blur(5px);
         }
         .lex-action-strip.listening {
-            background: rgba(153, 27, 27, 0.4);
+            background: rgba(153, 27, 27, 0.5);
             border-color: #991b1b;
             animation: pulse 1.5s infinite;
         }
@@ -166,11 +197,11 @@
         }
         .strip-title { font-size: 15px; font-weight: 800; color: #4ade80; text-transform: uppercase; letter-spacing: 0.5px; }
         .lex-action-strip.listening .strip-title { color: #ef4444; }
-        .strip-subs { font-size: 11px; color: #64748b; margin-top: 2px; }
+        .strip-subs { font-size: 11px; color: #94a3b8; margin-top: 2px; }
 
         /* Incident Report Strip */
         .incident-strip {
-            background: rgba(30, 27, 75, 0.4);
+            background: rgba(30, 27, 75, 0.5);
             border: 1px solid #312e81;
             border-radius: 12px;
             padding: 15px;
@@ -178,14 +209,15 @@
             align-items: center;
             gap: 15px;
             margin-bottom: 25px;
+            backdrop-filter: blur(5px);
         }
         .incident-icon { font-size: 24px; }
         .incident-title { font-size: 14px; font-weight: 800; color: #c084fc; text-transform: uppercase; }
-        .incident-subs { font-size: 11px; color: #64748b; margin-top: 2px; }
+        .incident-subs { font-size: 11px; color: #94a3b8; margin-top: 2px; }
 
         /* Live Response Output Terminal */
         .response-terminal {
-            background: rgba(15, 23, 42, 0.8);
+            background: rgba(15, 23, 42, 0.85);
             border: 1px solid rgba(59, 130, 246, 0.2);
             border-radius: 8px;
             padding: 12px;
@@ -194,6 +226,7 @@
             line-height: 1.5;
             color: #e2e8f0;
             min-height: 60px;
+            backdrop-filter: blur(5px);
         }
 
         /* Footer Credits Section */
@@ -215,6 +248,11 @@
     </style>
 </head>
 <body>
+
+    <!-- Earth Space Background & Orbiting Satellite Grid Integrated Behind Elements -->
+    <div class="space-bg"></div>
+    <div class="stars"></div>
+    <div class="satellite-grid"></div>
 
     <div class="app-container">
         <!-- Top Status Bar -->
@@ -288,9 +326,9 @@
             </div>
         </div>
 
-        <!-- Hidden Audio Transcript Monitor Panel -->
+        <!-- Output Terminal Display -->
         <div class="response-terminal" id="lex-response-box">
-            System secure. Ready for field demo transmission.
+            System secure. Satellite orbital tracking synchronized. Ready for field deployment queries.
         </div>
 
         <!-- Footer Signature Section -->
@@ -309,7 +347,6 @@
         let isListening = false;
         let recognition;
 
-        // Keep clock functional matching your layout timestamp style
         setInterval(() => {
             const now = new Date();
             document.getElementById('live-clock').innerText = now.toTimeString().split(' ')[0];
@@ -327,7 +364,6 @@
             }
         }
 
-        // Speech Engine Handshake Configuration
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             recognition = new SpeechRecognition();
