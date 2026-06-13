@@ -1,47 +1,21 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LEX - Virginia Instant Code Assistant</title>
+    <title>LEX - Law Enforcement Exchange Interface</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body, html { 
             height: 100%; 
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-            background: #020208; 
+            background-color: #06140c; /* Official Dark Hunter Green Layout */
             color: #ffffff; 
             overflow-x: hidden;
         }
 
-        /* Earth Space and Satellite Tracking Background Visuals */
-        .space-bg {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 50% 50%, #0d133a 0%, #020208 85%);
-            z-index: -2;
-        }
-        .stars {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: 
-                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
-                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px);
-            background-size: 550px 550px, 350px 350px;
-            background-position: 0 0, 40px 60px;
-            opacity: 0.5;
-            z-index: -1;
-        }
-        .satellite-grid {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
-                        linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
-            z-index: -1;
-        }
-
-        /* Core Presentation Interface Layout */
+        /* Tactical Header Block */
         .app-container {
             display: flex;
             flex-direction: column;
@@ -55,22 +29,21 @@
         header {
             text-align: center;
             padding: 15px 0;
-            border-bottom: 2px solid rgba(59, 130, 246, 0.4);
-            background: rgba(10, 15, 40, 0.6);
-            backdrop-filter: blur(5px);
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            border-bottom: 2px solid #15803d; /* Tactical Green Border */
+            background: rgba(11, 37, 22, 0.9);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
             margin-bottom: 20px;
         }
         header h1 { 
-            font-size: 28px; 
-            color: #3b82f6; 
+            font-size: 26px; 
+            color: #22c55e; /* Crisp LED Green Title */
             letter-spacing: 2px; 
-            text-shadow: 0 0 10px rgba(59, 130, 246, 0.6);
+            text-shadow: 0 0 8px rgba(34, 197, 94, 0.5);
         }
-        header p { font-size: 11px; color: #10b981; margin-top: 5px; font-weight: bold; letter-spacing: 1px; }
+        header p { font-size: 11px; color: #a3e635; margin-top: 5px; font-weight: bold; letter-spacing: 1px; }
 
-        /* Tactical Category Quick-Filters Block */
+        /* Tactical Category Quick-Filters Grid */
         .category-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -78,27 +51,26 @@
             margin-bottom: 20px;
         }
         .category-btn {
-            background: rgba(13, 20, 50, 0.85);
-            border: 1px solid rgba(59, 130, 246, 0.4);
+            background: rgba(20, 50, 32, 0.85);
+            border: 1px solid #16a34a;
             color: #e5e7eb;
             padding: 18px 10px;
-            border-radius: 10px;
+            border-radius: 8px;
             font-size: 14px;
             font-weight: 700;
             cursor: pointer;
             transition: all 0.2s ease;
             text-transform: uppercase;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            letter-spacing: 0.5px;
         }
         .category-btn.active {
-            background: rgba(59, 130, 246, 0.25);
-            border-color: #3b82f6;
-            color: #3b82f6;
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+            background: rgba(34, 197, 94, 0.3);
+            border-color: #4ade80;
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
         }
 
-        /* Master Transmission Core */
+        /* Master Radio Transmission Hub */
         .voice-section {
             display: flex;
             flex-direction: column;
@@ -106,44 +78,44 @@
             margin: 25px 0;
         }
         .lex-master-btn {
-            background: rgba(10, 25, 40, 0.7);
-            border: 3px solid #10b981;
-            color: #10b981;
+            background: rgba(15, 45, 27, 0.9);
+            border: 3px solid #22c55e;
+            color: #22c55e;
             padding: 22px 45px;
             font-size: 18px;
             font-weight: 800;
             border-radius: 50px;
             cursor: pointer;
-            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
             transition: all 0.3s ease;
             text-transform: uppercase;
             letter-spacing: 1.5px;
         }
         .lex-master-btn.listening {
-            background: #ef4444;
+            background: #dc2626;
             border-color: #ef4444;
             color: white;
             box-shadow: 0 0 30px #ef4444;
             animation: pulse 1.5s infinite;
         }
 
-        /* Mission Readout Screens */
+        /* Output Core Displays */
         .display-panel {
-            background: rgba(7, 11, 30, 0.9);
-            border: 1px solid rgba(59, 130, 246, 0.3);
-            border-radius: 10px;
+            background: rgba(10, 30, 18, 0.95);
+            border: 1px solid #16a34a;
+            border-radius: 8px;
             padding: 15px;
             margin-bottom: 15px;
             box-shadow: inset 0 0 15px rgba(0,0,0,0.6);
         }
         .panel-title { 
             font-size: 11px; 
-            color: #3b82f6; 
+            color: #4ade80; 
             text-transform: uppercase; 
             margin-bottom: 8px; 
             font-weight: bold;
             letter-spacing: 1px;
-            border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+            border-bottom: 1px solid rgba(22, 163, 74, 0.3);
             padding-bottom: 3px;
         }
         .panel-text { font-size: 15px; line-height: 1.6; color: #e5e7eb; }
@@ -157,15 +129,9 @@
 </head>
 <body>
 
-    <!-- Earth Space Visual Foundations -->
-    <div class="space-bg"></div>
-    <div class="stars"></div>
-    <div class="satellite-grid"></div>
-
-    <!-- Complete Integrated Landing Page Interface -->
     <div class="app-container">
         <header>
-            <h1>LEX LANDING PAGE</h1>
+            <h1>LEX OFFICIAL INTERFACE</h1>
             <p>VIRGINIA DATABASE INTEGRATION STATUS: ACTIVE</p>
         </header>
 
@@ -177,12 +143,12 @@
             <button class="category-btn" id="btn-jdr" onclick="setCategory('jdr', '16.1')">Juvenile Dom (Title 16.1)</button>
         </div>
 
-        <!-- Master Interface Button -->
+        <!-- Master Control Button -->
         <div class="voice-section">
             <button class="lex-master-btn" id="lex-btn" onclick="toggleListening()">Talk to LEX — AI Mode</button>
         </div>
 
-        <!-- Radio Feedback Monitors -->
+        <!-- Data Feedback Monitors -->
         <div class="display-panel" style="height: 110px;">
             <div class="panel-title">Radio Traffic Spoken Input</div>
             <div class="panel-text" id="parsed-speech-box">Awaiting mic transmission...</div>
@@ -190,12 +156,11 @@
 
         <div class="display-panel" style="height: 220px; overflow-y: auto;">
             <div class="panel-title">LEX Live Database Response</div>
-            <div class="panel-text" id="lex-response-box">System secure. Earth-Space satellite tracking synchronized. Ready for field queries.</div>
+            <div class="panel-text" id="lex-response-box">System secure. Official tactical interface synchronized. Ready for field queries.</div>
         </div>
     </div>
 
     <script>
-        // Official LIS Credential Pipeline
         const LIS_API_KEY = "DD52A887-4E99-42B5-B9FA-6E9F76010272";
         let activeCategory = "";
         let activeTitle = "";
@@ -214,7 +179,7 @@
             }
         }
 
-        // Tactical Audio Interface Implementation
+        // Voice Engine 
         if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             recognition = new SpeechRecognition();
@@ -245,7 +210,7 @@
                 resetLexButton();
             };
         } else {
-            document.getElementById('parsed-speech-box').innerText = "Device browser architecture unsupported.";
+            document.getElementById('parsed-speech-box').innerText = "Device microphone engine unsupported.";
         }
 
         function toggleListening() {
@@ -279,14 +244,13 @@
             return clean.match(/[0-9]+\.?[0-9]*-[0-9]+/g) ? clean.match(/[0-9]+\.?[0-9]*-[0-9]+/)[0] : clean;
         }
 
-        // Strategic Richmond Server Query Delivery
         function processVoiceQuery(spokenText) {
             let sectionQuery = cleanStatuteNumbers(spokenText);
             
             if (activeTitle && !sectionQuery.includes('-')) {
                 sectionQuery = activeTitle + "-" + sectionQuery;
             } else if (!sectionQuery.includes('-')) {
-                sectionQuery = "18.2-" + sectionQuery; // Direct fallback to Title 18.2
+                sectionQuery = "18.2-" + sectionQuery; 
             }
 
             document.getElementById('lex-response-box').innerText = "Querying LIS Database for Section " + sectionQuery + "...";
@@ -295,7 +259,7 @@
 
             fetch(targetUrl)
                 .then(response => {
-                    if (!response.ok) throw new Error("Database rejected handshake.");
+                    if (!response.ok) throw new Error("Database transmission error.");
                     return response.json();
                 })
                 .then(data => {
@@ -307,7 +271,6 @@
                 });
         }
 
-        // Rock-Solid Text Processing Core
         function executeVoiceOutput(stateData, sectionNumber) {
             let legalText = "";
 
@@ -323,19 +286,16 @@
             }
 
             if (legalText) {
-                // Instantly strip raw database layout code tags
                 legalText = legalText.replace(/<\/?[^>]+(>|$)/g, "");
             } else {
-                // Fallback text structure
                 legalText = `Section ${sectionNumber} verification broadcasted via credential token. Database clearance confirmed. Ready for manual enforcement oversight.`;
             }
 
             document.getElementById('lex-response-box').innerText = legalText;
 
-            // iPhone Auditory Output Configuration
             const speechEngine = new SpeechSynthesisUtterance(legalText);
             speechEngine.volume = 1.0;
-            speechEngine.rate = 0.90; // Tuned specifically for clear radio transmission pacing
+            speechEngine.rate = 0.90; 
             speechEngine.pitch = 1.0;
 
             window.speechSynthesis.cancel();
