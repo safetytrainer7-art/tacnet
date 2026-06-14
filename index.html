@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>TACNET - Task Force Command Console</title>
 
+<!-- Leaflet Live Map core engines -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -78,7 +79,6 @@ body {
 .search-box-row input { flex: 1; background: #000; border: 1px solid var(--border-gold); border-radius: 6px; padding: 8px; color: white; font-size: 13px; }
 .search-box-row button { background: var(--neon-red); color: white; border: none; padding: 0 15px; border-radius: 6px; font-weight: bold; cursor: pointer; }
 
-/* SEARCHER PLACEMENT MATRIX TOOL SEPARATORS */
 .deployment-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 .deploy-btn { 
   background: #1e293b; 
@@ -101,7 +101,6 @@ body {
 .toggle-btn.active { border-color: var(--neon-green); background: rgba(34, 197, 94, 0.2); }
 .toggle-btn.active-red { border-color: var(--neon-red); background: rgba(239, 68, 68, 0.3); }
 
-/* K9 CRITICAL FIRST AID FIELD HUD */
 .k9-medical-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 .medical-btn { background: #1e1b4b; border: 1px solid var(--border-gold); border-radius: 6px; padding: 8px; font-size: 11px; font-weight: bold; color: #f8fafc; cursor: pointer; text-align: center; }
 .medical-btn:hover { background: #312e81; border-color: var(--neon-red); }
@@ -109,7 +108,6 @@ body {
 .range-slider { width: 100%; margin: 8px 0; accent-color: var(--neon-red); }
 .sos-master-btn { background: var(--neon-red); color: white; border: 2px solid #fff; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 900; letter-spacing: 1px; cursor: pointer; text-align: center; }
 
-/* MAP DISPLAY PORT PANELS */
 .map-viewport { position: relative; background: #151f32; overflow: hidden; }
 #liveMapContainer { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 10; }
 
@@ -124,13 +122,11 @@ body {
 .legend-item { display: flex; align-items: center; gap: 6px; font-weight: bold; }
 .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; border: 1px solid #fff; }
 
-/* FOOTER LOGISTICS CONTROLS */
 .control-footer { background: #0f172a; border-top: 2px solid var(--border-gold); padding: 12px 20px; display: flex; justify-content: space-between; gap: 15px; z-index: 1000; }
 .footer-btn { flex: 1; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; text-align: center; border: 2px solid var(--neon-red); font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
 .btn-terminate { background: #b91c1c; color: white; }
 .btn-reset { background: #334155; color: #f8fafc; }
 
-/* FINAL PRINT / PDF REPORT CONTAINER OVERLAY */
 .report-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; display: none; justify-content: center; align-items: center; padding: 20px; }
 .report-content { background: #ffffff; color: #000000; width: 100%; max-width: 650px; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; max-height: 90vh; border: 4px solid var(--neon-red); }
 .report-header-banner { background: #0f172a; color: white; padding: 20px; border-bottom: 4px solid var(--border-gold); text-align: center; }
@@ -192,11 +188,12 @@ body {
         </div>
       </div>
 
+      <!-- UPGRADED CANVAS INTERFACE: ONE-TAP ABSOLUTE ERASE MATRIX -->
       <div class="control-group">
-        <div class="control-title">Tactical Marker & Eraser</div>
+        <div class="control-title">Tactical Marker Controls</div>
         <div class="toggle-grid">
-          <div class="toggle-btn" id="drawToggle" onclick="toggleDrawingMode('draw')">✏️ Marker Pen</div>
-          <div class="toggle-btn" id="eraseToggle" onclick="toggleDrawingMode('erase')">🧽 Eraser Line</div>
+          <div class="toggle-btn" id="drawToggle" onclick="toggleDrawingMode()">✏️ Marker Pen</div>
+          <div class="toggle-btn" style="border-color: var(--neon-red);" onclick="executeOneClickLineClear()">🧽 Clear Notes</div>
         </div>
         <div class="toggle-btn" id="lockToggle" style="width:100%; margin-top:8px;" onclick="toggleMapLock()">🔒 Map Position Lock</div>
       </div>
@@ -298,7 +295,6 @@ let selectedToolType = null;
 
 let nightModeState = null;
 let drawingActive = false;
-let currentDrawingMode = 'draw'; // 'draw' or 'erase'
 let mapLocked = false;
 let trackingRegistry = { k9: 0, officer: 0, sar: 0, civilian: 0, drone: 0, suspect: 0, vehicle: 0, article: 0 };
 let activeMapMarkersPool = [];
@@ -324,7 +320,6 @@ function initTacticalMapEngine() {
   mapLayers.satellite.addTo(liveMap);
   updatePerimeterCircleObject(initialLatLong, 500);
 
-  // ONE-TAP PLACEMENT ROUTER MAPPED TO TARGET FIELD CLICK
   liveMap.on('click', function(e) {
     if (selectedToolType) {
       executeOneTapPlacement(e.latlng);
@@ -336,11 +331,11 @@ function selectDeploymentTool(type) {
   document.querySelectorAll('.deploy-btn').forEach(btn => btn.classList.remove('selected'));
   
   if (selectedToolType === type) {
-    selectedToolType = null; // Unselect tool
+    selectedToolType = null;
   } else {
     selectedToolType = type;
     document.getElementById(`tool-${type}`).classList.add('selected');
-    if(!mapLocked) toggleMapLock(); // Auto-lock position so clicking map drops asset instead of dragging map
+    if(!mapLocked) toggleMapLock(); 
   }
 }
 
@@ -365,7 +360,6 @@ function executeOneTapPlacement(latlng) {
 
   const marker = L.marker(latlng, { icon: customIcon, draggable: true }).addTo(liveMap);
   
-  // ONE-TAP RECALL LOGIC: Click once to drop off the grid silently
   marker.on('click', function() {
     trackingRegistry[selectedToolType]--;
     liveMap.removeLayer(marker);
@@ -374,10 +368,9 @@ function executeOneTapPlacement(latlng) {
   activeMapMarkersPool.push(marker);
   trackingRegistry[selectedToolType]++;
   
-  // Clear tool highlight after drop to return control paths
   document.querySelectorAll('.deploy-btn').forEach(btn => btn.classList.remove('selected'));
   selectedToolType = null;
-  toggleMapLock(); // Release map view controls
+  toggleMapLock(); 
 }
 
 function resizeCanvas() {
@@ -405,6 +398,7 @@ function switchMapLayer(targetLayer) {
   if (targetLayer === 'street') document.getElementById('btnSt').classList.add('active');
 }
 
+// FIXED: AUTOMATED MAXIMUM MAGNIFICATION HANDSHAKE — ZERO POPUPS
 async function executeAddressSearchGo() {
   const addressQuery = document.getElementById('addressSearch').value.trim();
   if (!addressQuery) return;
@@ -417,7 +411,9 @@ async function executeAddressSearchGo() {
       const topMatch = geoData[0];
       const targetCoordinates = [parseFloat(topMatch.lat), parseFloat(topMatch.lon)];
       
-      liveMap.setView(targetCoordinates, 14);
+      // UPGRADED: Forces tight, extreme magnification (Zoom level 18) instantly for high-clarity viewing
+      liveMap.setView(targetCoordinates, 18);
+      
       if (commandPostMarker) commandPostMarker.remove();
       
       const brownStarIcon = L.divIcon({
@@ -451,29 +447,23 @@ function updatePerimeterRadius(val) {
   if (commandPerimeterCircle) commandPerimeterCircle.setRadius(parseInt(val));
 }
 
-// INTEGRATED ERASER SWITCH LOGIC
-function toggleDrawingMode(mode) {
+function toggleDrawingMode() {
+  drawingActive = !drawingActive;
   const drawBtn = document.getElementById('drawToggle');
-  const eraseBtn = document.getElementById('eraseToggle');
   
-  if (drawingActive && currentDrawingMode === mode) {
-    // If clicking an already active tool, toggle off drawing mode completely
-    drawingActive = false;
-    drawBtn.classList.remove('active');
-    eraseBtn.classList.remove('active');
-    canvas.classList.remove('drawing-active');
-  } else {
-    drawingActive = true;
-    currentDrawingMode = mode;
-    drawBtn.classList.remove('active');
-    eraseBtn.classList.remove('active');
+  if (drawingActive) {
+    drawBtn.classList.add('active');
     canvas.classList.add('drawing-active');
-    
-    if (mode === 'draw') drawBtn.classList.add('active');
-    if (mode === 'erase') eraseBtn.classList.add('active');
-    
     initializeCanvasDrawEngine();
+  } else {
+    drawBtn.classList.remove('active');
+    canvas.classList.remove('drawing-active');
   }
+}
+
+// FIXED: ONE-CLICK TOTAL LINE REMOVAL
+function executeOneClickLineClear() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height); // Wipes the entire glass canvas instantly
 }
 
 function toggleMapLock() {
@@ -499,19 +489,10 @@ function initializeCanvasDrawEngine() {
     if(!drawingActive) return; 
     drawingNow = true; 
     ctx.beginPath(); 
-    
-    // Switch canvas context attributes depending on Eraser vs Marker selection
-    if (currentDrawingMode === 'erase') {
-      ctx.globalCompositeOperation = 'destination-out'; // Cuts out existing pixels cleanly
-      ctx.lineWidth = 20; // Thick line parameter for sweeping erasure sweeps
-    } else {
-      ctx.globalCompositeOperation = 'source-over'; // Default paint layer overhead
-      ctx.strokeStyle = '#ef4444'; 
-      ctx.lineWidth = 3; 
-    }
+    ctx.strokeStyle = '#ef4444'; 
+    ctx.lineWidth = 3; 
     ctx.moveTo(e.offsetX, e.offsetY); 
   };
-  
   canvas.onmousemove = (e) => { if (drawingNow && drawingActive) { ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); } };
   canvas.onmouseup = () => { drawingNow = false; };
 }
@@ -576,7 +557,6 @@ function terminateAndGenerateReport() {
 
 function executeTotalReset() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.globalCompositeOperation = 'source-over'; 
   
   document.getElementById('addressSearch').value = '';
   document.getElementById('perimeterSlider').value = 500;
@@ -592,7 +572,7 @@ function executeTotalReset() {
   
   for (let key in trackingRegistry) { trackingRegistry[key] = 0; }
   
-  if(drawingActive) toggleDrawingMode(currentDrawingMode);
+  if(drawingActive) toggleDrawingMode();
   if(mapLocked) toggleMapLock();
   switchMapLayer('satellite');
   
