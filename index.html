@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>TACNET — Multi-Agency Task Force Search + LIS Legal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0a0f1e;
+            overflow: hidden;
+            height: 100vh;
+            color: #00ffcc;
+        }
+        .app-container {
+            display: flex;
+            height: 100vh;
+            border: 3px solid #ff0040;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+        .map-area {
+            flex: 3;
+            position: relative;
+            background: #000;
+        }
+        #map {
+            width: 100%;
+            height: 100%;
+        }
+        .sidebar {
+            flex: 1;
+            background: rgba(10, 20, 30, 0.95);
+            backdrop-filter: blur(10px);
+            border-left: 2px solid #ffcc00;
+            padding: 16px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .panel {
+            background: rgba(0, 30, 40, 0.8);
+            border: 1px solid #00ffcc;
+            border-radius: 12px;
+            padding: 12px;
+        }
+        .panel h3 {
+            color: #ffcc00;
+            font-size: 14px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #ffcc00;
+        }
+        input, textarea, select {
+            background: #001a22;
+            border: 1px solid #00ffcc;
+            color: #00ffcc;
+            padding: 8px;
+            width: 100%;
+            margin: 4px 0;
+            border-radius: 6px;
+            font-family: monospace;
+        }
+        button {
+            background: #ffcc00;
+            color: #000;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 4px 0;
+            transition: 0.2s;
+        }
+        button:hover {
+            background: #ffaa00;
+            transform: scale(1.02);
+        }
+        .officer-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid white;
+            box-shadow: 0 0 8px currentColor;
+        }
+        .lis-result {
+            background: #00161c;
+            padding: 8px;
+            margin-top: 8px;
+            font-size: 11px;
+            max-height: 200px;
+            overflow-y: auto;
+            border-left: 3px solid #ffcc00;
+        }
+        .sos-alert {
+            animation: pulse 0.8s infinite;
+            background: #ff0040;
+            color: white;
+            font-weight: bold;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        .badge {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+    </style>
+</head>
+<body>
+<div class="app-container">
+    <div class="map-area">
+        <div id="map"></div>
+    </div>
+    <div class="sidebar">
+        <div class="panel">
+            <h3>🔐 TACNET ACTIVE OP</h3>
+            <div id="opInfo">Code: — | Units: 0</div>
+            <button id="backToLanding">← BACK TO LANDING</button>
+            <button id="terminateOp" style="background:#ff0040; color:white;">⛔ TERMINATE OPERATION</button>
+        </div>
+
+        <div class="panel">
+            <h3>📍 LIVE UNITS (GPS)</h3>
+            <div id="unitsList" style="font-size:12px;"></div>
+        </div>
+
+        <div class="panel">
+            <h3>⚖️ LIS LEGAL DATABASE (Richmond)</h3>
+            <select id="lisQueryType">
+                <option value="code">VA Code Section (e.g., 18.2-31)</option>
+                <option value="bill">Bill Number (e.g., HB1234)</option>
+                <option value="keyword">Keyword Search</option>
+            </select>
+            <input type="text" id="lisQueryInput" placeholder="Enter code/bill/keyword...">
+            <button id="searchLIS">🔍 SEARCH LIS DATABASE</button>
+            <div id="lisResults" class="lis-result">Ready to query Virginia Legislative System...</div>
+        </div>
+
+        <div class="panel">
+            <h3>📝 EVIDENCE / NOTES</h3>
+            <input type="text" id="evidenceLabel" placeholder="e.g., Blood evidence, Phone...">
+            <button id="logEvidence">📦 LOG EVIDENCE AT MY LOCATION</button>
+            <div id="evidenceList" style="font-size:11px; margin-top:8px;"></div>
+        </div>
+
+        <div class="panel">
+            <h3>🚨 EMERGENCY</h3>
+            <button id="sosButton" style="background:#ff0040; color:white; font-size:16px;">🆘 OFFICER DOWN — SOS</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ========== CONFIGURATION ==========
+    // LIS API Proxy Endpoint (will be deployed as GitHub secret function)
+    // For now, we'll use a direct proxy via your backend (set up in GitHub Actions)
+    const LIS_PROXY_URL = '/api/lis';  // Will be routed via serverless function
+    
+    // Supabase (free tier for realtime) — replace with your actual credentials after setup
+    const SUPABASE_URL = 'https://your-project.supabase.co';
+    const SUPABASE_ANON_KEY = 'your-anon-key';
+    
+    // App state
+    let currentOpCode = localStorage.getItem('tacnet_op_code') || null;
+    let currentOfficerId = localStorage.getItem('tacnet_officer_id') || null;
+    let myPosition = null;
+    let map = null;
+    let watchId = null;
+    let activeMarkers = {};
+    let evidenceList = [];
+    
+    // Role colors
+    const roleColors = {
+        law_enforcement: '#2563EB',
+        k9: '#38BDF8',
+        sar: '#EF4444',
+        civilian: '#22C55E',
+        wanted_person: '#A855F7',
+        drone: '#6B7280'
+    };
+    
+    // ========== INIT MAP ==========
+    function initMap() {
+        map = L.map('map').setView([37.5, -79.5], 9);
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Satellite | TACNET'
+        }).addTo(map);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: 'Street'
+        }).addTo(map);
+    }
+    
+    // ========== GPS TRACKING ==========
+    function startGPS() {
+        if (!navigator.geolocation) return;
+        watchId = navigator.geolocation.watchPosition(
+            (pos) => {
+                myPosition = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+                updateMyPositionOnServer(myPosition.lat, myPosition.lng);
+                if (map && !map.getCenter().equals([myPosition.lat, myPosition.lng])) {
+                    map.setView([myPosition.lat, myPosition.lng], 16);
+                }
+                document.getElementById('opInfo').innerHTML = `📍 Tracking: ${myPosition.lat.toFixed(4)}, ${myPosition.lng.toFixed(4)}`;
+            },
+            (err) => console.error('GPS error:', err),
+            { enableHighAccuracy: true, maximumAge: 5000 }
+        );
+    }
+    
+    // ========== SERVER SYNC (LocalStorage + Broadcast for demo, replace with Supabase) ==========
+    function updateMyPositionOnServer(lat, lng) {
+        if (!currentOpCode || !currentOfficerId) return;
+        let ops = JSON.parse(localStorage.getItem('tacnet_ops') || '{}');
+        let op = ops[currentOpCode];
+        if (op && op.officers && op.officers[currentOfficerId]) {
+            op.officers[currentOfficerId].lat = lat;
+            op.officers[currentOfficerId].lng = lng;
+            op.officers[currentOfficerId].lastSeen = Date.now();
+            localStorage.setItem('tacnet_ops', JSON.stringify(ops));
+            renderUnitsOnMap(op);
+            updateUnitsList(op);
+        }
+    }
+    
+    function renderUnitsOnMap(op) {
+        if (!map) return;
+        Object.values(activeMarkers).forEach(m => map.removeLayer(m));
+        activeMarkers = {};
+        Object.values(op.officers || {}).forEach(off => {
+            if (off.lat && off.lng) {
+                let icon = L.divIcon({
+                    html: `<div class="officer-dot" style="background:${off.color}; box-shadow:0 0 12px ${off.color};"></div>`,
+                    iconSize: [20, 20]
+                });
+                let marker = L.marker([off.lat, off.lng], { icon }).addTo(map);
+                marker.bindPopup(`<b>${off.name}</b><br>${off.agency}<br>Role: ${off.role}${off.sos ? '<br><span style="color:red;">⚠ SOS ACTIVE</span>' : ''}`);
+                activeMarkers[off.id] = marker;
+            }
+        });
+    }
+    
+    function updateUnitsList(op) {
+        let listDiv = document.getElementById('unitsList');
+        let officers = Object.values(op.officers || {});
+        listDiv.innerHTML = officers.map(off => `
+            <div style="margin:4px 0;">
+                <span class="badge" style="background:${off.color};"></span>
+                <strong>${off.name}</strong> (${off.agency}) 
+                ${off.sos ? '<span style="color:#ff0040;">🔴 SOS</span>' : (off.lat ? '🟢' : '⚫')}
+                ${off.id === currentOfficerId ? ' [YOU]' : ''}
+                <button onclick="removeOfficer('${off.id}')" style="background:#333; font-size:10px; padding:2px 6px;">✖</button>
+            </div>
+        `).join('');
+    }
+    
+    window.removeOfficer = function(officerId) {
+        if (!currentOpCode) return;
+        if (officerId === currentOfficerId) {
+            alert('You cannot remove yourself. Terminate operation instead.');
+            return;
+        }
+        let ops = JSON.parse(localStorage.getItem('tacnet_ops') || '{}');
+        let op = ops[currentOpCode];
+        if (op && op.officers && op.officers[officerId]) {
+            delete op.officers[officerId];
+            localStorage.setItem('tacnet_ops', JSON.stringify(ops));
+            renderUnitsOnMap(op);
+            updateUnitsList(op);
+        }
+    };
+    
+    function logEvidence(label) {
+        if (!myPosition || !currentOpCode) return;
+        let ops = JSON.parse(localStorage.getItem('tacnet_ops') || '{}');
+        let op = ops[currentOpCode];
+        if (!op) return;
+        if (!op.evidence) op.evidence = [];
+        op.evidence.push({
+            id: Date.now(),
+            label: label,
+            lat: myPosition.lat,
+            lng: myPosition.lng,
+            time: new Date().toISOString(),
+            officer: currentOfficerId
+        });
+        localStorage.setItem('tacnet_ops', JSON.stringify(ops));
+        updateEvidenceList(op);
+    }
+    
+    function updateEvidenceList(op) {
+        let evDiv = document.getElementById('evidenceList');
+        let ev = op.evidence || [];
+        evDiv.innerHTML = ev.slice(-5).reverse().map(e => `
+            <div>📌 ${e.label} — ${new Date(e.time).toLocaleTimeString()}<br><span style="font-size:9px;">${e.lat.toFixed(5)}, ${e.lng.toFixed(5)}</span></div>
+        `).join('');
+    }
+    
+    // ========== LIS DATABASE QUERY (via Proxy) ==========
+    async function queryLIS(type, query) {
+        const resultsDiv = document.getElementById('lisResults');
+        resultsDiv.innerHTML = '⏳ Querying Virginia Legislative Database...';
+        
+        try {
+            // This calls your backend proxy (deployed via GitHub Actions with API key secret)
+            const response = await fetch(`${LIS_PROXY_URL}?type=${type}&query=${encodeURIComponent(query)}`);
+            const data = await response.json();
+            
+            if (data.error) {
+                resultsDiv.innerHTML = `❌ LIS Error: ${data.error}`;
+            } else {
+                resultsDiv.innerHTML = `
+                    <strong>📜 LIS Result (Richmond)</strong><br>
+                    <pre style="white-space: pre-wrap; font-size:10px;">${JSON.stringify(data, null, 2)}</pre>
+                    <hr>
+                    <em>Source: Virginia Legislative Information System | API Key Authenticated</em>
+                `;
+            }
+        } catch (err) {
+            resultsDiv.innerHTML = `❌ Connection failed: ${err.message}<br>Make sure your backend proxy is deployed with LIS_API_KEY secret.`;
+        }
+    }
+    
+    // ========== SOS ALERT ==========
+    function triggerSOS() {
+        if (!myPosition || !currentOpCode || !currentOfficerId) return;
+        let ops = JSON.parse(localStorage.getItem('tacnet_ops') || '{}');
+        let op = ops[currentOpCode];
+        if (op && op.officers && op.officers[currentOfficerId]) {
+            op.officers[currentOfficerId].sos = true;
+            if (!op.sosEvents) op.sosEvents = [];
+            op.sosEvents.push({
+                officerId: currentOfficerId,
+                name: op.officers[currentOfficerId].name,
+                lat: myPosition.lat,
+                lng: myPosition.lng,
+                time: new Date().toISOString()
+            });
+            localStorage.setItem('tacnet_ops', JSON.stringify(ops));
+            renderUnitsOnMap(op);
+            updateUnitsList(op);
+            alert('🚨 SOS ACTIVATED — All units notified! Check map for red alert.');
+            // Visual + audio alert
+            document.body.style.animation = 'pulse 0.3s infinite';
+            setTimeout(() => document.body.style.animation = '', 3000);
+        }
+    }
+    
+    // ========== TERMINATE OPERATION ==========
+    function terminateOperation() {
+        if (confirm('TERMINATE THIS OPERATION? All data will be saved for court reports.')) {
+            if (watchId) navigator.geolocation.clearWatch(watchId);
+            localStorage.removeItem('tacnet_op_code');
+            localStorage.removeItem('tacnet_officer_id');
+            currentOpCode = null;
+            currentOfficerId = null;
+            window.location.reload();
+        }
+    }
+    
+    // ========== LANDING PAGE (Op Creation/Join) ==========
+    function showLandingPage() {
+        let html = `
+            <div style="position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:9999; display:flex; align-items:center; justify-content:center;">
+                <div style="background:#0a1a2a; padding:32px; border-radius:24px; border:2px solid #ffcc00; max-width:400px;">
+                    <h1 style="color:#ffcc00;">TACNET</h1>
+                    <p style="font-size:12px;">Multi-Agency Task Force + LIS Richmond</p>
+                    <hr>
+                    <button id="createOpBtn" style="width:100%; margin:8px 0;">➕ CREATE NEW OPERATION</button>
+                    <button id="joinOpBtn" style="width:100%; margin:8px 0;">🔗 JOIN EXISTING OP</button>
+                    <div id="joinSection" style="display:none; margin-top:12px;">
+                        <input type="text" id="joinCode" placeholder="Enter 6-char session code">
+                        <button id="doJoinBtn">JOIN</button>
+                    </div>
+                    <div id="createSection" style="display:none; margin-top:12px;">
+                        <input type="text" id="newOpName" placeholder="Operation Name">
+                        <input type="text" id="newOpLoc" placeholder="Location">
+                        <button id="doCreateBtn">DEPLOY</button>
+                    </div>
+                    <hr>
+                    <input type="text" id="officerName" placeholder="Your Full Name">
+                    <input type="text" id="officerAgency" placeholder="Agency (e.g., VSP, Sheriff)">
+                    <select id="officerRole">
+                        <option value="law_enforcement">Law Enforcement (Blue)</option>
+                        <option value="k9">K9 Unit (Light Blue)</option>
+                        <option value="sar">SAR (Red)</option>
+                        <option value="civilian">Civilian (Green)</option>
+                        <option value="wanted_person">Suspect (Purple)</option>
+                        <option value="drone">Drone (Grey)</option>
+                    </select>
+                    <button id="finalStartBtn" style="background:#00ffcc; color:#000;">START MISSION</button>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', html);
+        
+        document.getElementById('createOpBtn').onclick = () => {
+            document.getElementById('createSection').style.display = 'block';
+            document.getElementById('joinSection').style.display = 'none';
+        };
+        document.getElementById('joinOpBtn').onclick = () => {
+            document.getElementById('joinSection').style.display = 'block';
+            document.getElementById('createSection').style.display = 'none';
+        };
+        document.getElementById('doCreateBtn').onclick = () => {
+            let name = document.getElementById('newOpName').value;
+            let loc = document.getElementById('newOpLoc').value;
+            if (!name) return alert('Operation name required');
+            let code = Math.random().toString(36).substring(2,8).toUpperCase();
+            let ops = JSON.parse(localStorage.getItem('tacnet_ops') || '{}');
+            ops[code] = { code, name, location: loc, officers: {}, evidence: [], sosEvents: [], createdAt: new Date().toISOString(), status: 'active' };
+            localStorage.setItem('tacnet_ops', JSON.stringify(ops));
+            document.getElementById('joinCode').value = code;
+            alert(`Operation created! Code: ${code}`);
+            document.getElementById('joinSection').style.display = 'block';
+            document.getElementById('createSection').style.display = 'none';
+        };
+        document.getElementById('doJoinBtn').onclick = () => {
+            let code = document.getElementById('joinCode').value.toUpperCase();
+            let ops = JSON.parse(localStorage.getItem('tacnet_ops') || '{}');
+            if (!ops[code]) return alert('Invalid operation code');
+            currentOpCode = code;
+            localStorage.setItem('tacnet_op_code', code);
+            document.getElementById('finalStartBtn').onclick = () => {
+                let name = document.getElementById('officerName').value;
+                let agency = document.getElementById('officerAgency').value;
+                let role = document.getElementById('officerRole').value;
+                if (!name || !agency) return alert('Enter name and agency');
+                let officerId = 'off_' + Date.now();
+                let op = ops[currentOpCode];
+                op.officers[officerId] = {
+                    id: officerId, name, agency, role, color: roleColors[role] || '#888',
+                    lat: null, lng: null, sos: false, joinedAt: new Date().toISOString()
+                };
+                localStorage.setItem('tacnet_ops', JSON.stringify(ops));
+                currentOfficerId = officerId;
+                localStorage.setItem('tacnet_officer_id', officerId);
+                document.querySelector('[style*="z-index:9999"]').remove();
+                initMap();
+                startGPS();
+                // Refresh UI every 2 seconds
+                setInterval(() => {
+                    if (currentOpCode) {
+                        let freshOps = JSON.parse(localStorage.getItem('tacnet_ops') || '{}');
+                        let freshOp = freshOps[currentOpCode];
+                        if (freshOp) {
+                            renderUnitsOnMap(freshOp);
+                            updateUnitsList(freshOp);
+                            updateEvidenceList(freshOp);
+                        }
+                    }
+                }, 2000);
+            };
+            document.getElementById('finalStartBtn').click();
+        };
+    }
+    
+    // ========== EVENT LISTENERS ==========
+    document.getElementById('backToLanding')?.addEventListener('click', showLandingPage);
+    document.getElementById('terminateOp')?.addEventListener('click', terminateOperation);
+    document.getElementById('searchLIS')?.addEventListener('click', () => {
+        let type = document.getElementById('lisQueryType').value;
+        let query = document.getElementById('lisQueryInput').value.trim();
+        if (!query) return alert('Enter search term');
+        queryLIS(type, query);
+    });
+    document.getElementById('logEvidence')?.addEventListener('click', () => {
+        let label = document.getElementById('evidenceLabel').value.trim();
+        if (!label) return alert('Enter evidence description');
+        logEvidence(label);
+        document.getElementById('evidenceLabel').value = '';
+    });
+    document.getElementById('sosButton')?.addEventListener('click', triggerSOS);
+    
+    // Check if already in op
+    if (!currentOpCode) {
+        showLandingPage();
+    } else {
+        initMap();
+        startGPS();
+        setInterval(() => {
+            if (currentOpCode) {
+                let ops = JSON.parse(localStorage.getItem('tacnet_ops') || '{}');
+                let op = ops[currentOpCode];
+                if (op) {
+                    renderUnitsOnMap(op);
+                    updateUnitsList(op);
+                    updateEvidenceList(op);
+                }
+            }
+        }, 2000);
+    }
+</script>
+</body>
+</html>
