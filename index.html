@@ -1,23 +1,66 @@
 {
-  "project_name": "TACNET",
-  "creator": "Earl Wood, Deputy Sheriff (Ret.), Virginia",
-  "description": "Multi-Agency Task Force Search Platform",
-  "repository_structure": {
-    "backend": {
-      "server.py": "from fastapi import FastAPI, APIRouter, Depends, HTTPException, WebSocket, WebSocketDisconnect\nfrom fastapi.middleware.cors import CORSMiddleware\nfrom pydantic import BaseModel, EmailStr\nfrom typing import List, Optional, Dict, Any, Literal\nfrom datetime import datetime, timezone, timedelta\nimport uuid, secrets, jwt, bcrypt, os\nfrom motor.motor_asyncio import AsyncIOMotorClient\n\napp = FastAPI(title='TACNET API')\n\n# --- MULTI-AGENCY TACTICAL ROLE CONFIGURATION ---\nROLE_COLORS = {\n    'law_enforcement': '#0055FF', # LE Blue\n    'k9': '#00BFFF',             # K9 Light Blue\n    'sars': '#FF0000',           # SAR Red\n    'civilian': '#39FF14',       # Civilian Neon Green\n    'suspect': '#800080',        # Suspect Purple\n    'drone': '#808080',          # Drone Grey\n    'evidence': '#FFA500'        # Evidence Orange\n}\n\n# --- DATABASE & JWT AUTH LINK --- \nJWT_SECRET = os.environ.get('JWT_SECRET', 'tacnet-secure-secret-key')\nmongo_url = os.environ.get('MONGO_URL', 'mongodb://localhost:27017')\nclient = AsyncIOMotorClient(mongo_url)\ndb = client['tacnet_db']\n\nclass RegisterIn(BaseModel):\n    email: EmailStr\n    password: str\n    full_name: str\n    agency: str\n    badge_number: str\n    role: str = 'law_enforcement'\n\n@app.post('/api/auth/register')\nasync def register(body: RegisterIn):\n    existing = await db.users.find_one({'email': body.email})\n    if existing: raise HTTPException(400, 'Email already registered')\n    hashed = bcrypt.hashpw(body.password.encode(), bcrypt.gensalt()).decode()\n    user_id = str(uuid.uuid4())\n    user_doc = {\n        'id': user_id, 'email': body.email, 'password_hash': hashed,\n        'full_name': body.full_name, 'agency': body.agency,\n        'badge_number': body.badge_number, 'role': body.role,\n        'created_at': datetime.now(timezone.utc).isoformat()\n    }\n    await db.users.insert_one(user_doc)\n    token = jwt.encode({'sub': user_id}, JWT_SECRET, algorithm='HS256')\n    return {'token': token, 'user': {k: v for k, v in user_doc.items() if k not in ('password_hash', '_id')}}\n\n# --- MAP DATA REALTIME ROUTING ---\nclass WSManager:\n    def __init__(self):\n        self.rooms: Dict[str, List[WebSocket]] = {}\n    async def connect(self, sid: str, ws: WebSocket):\n        await ws.accept()\n        self.rooms.setdefault(sid, []).append(ws)\n    def disconnect(self, sid: str, ws: WebSocket):\n        if sid in self.rooms and ws in self.rooms[sid]: self.rooms[sid].remove(ws)\n    async def broadcast(self, sid: str, msg: Dict[str, Any]):\n        if sid not in self.rooms: return\n        for ws in list(self.rooms[sid]):\n            try: await ws.send_json(msg)\n            except: self.disconnect(sid, ws)\n\nws_manager = WSManager()\n\n@app.websocket('/api/ws/{sid}')\nasync def ws_endpoint(ws: WebSocket, sid: str):\n    await ws_manager.connect(sid, ws)\n    try:\n        while True: await ws.receive_text()\n    except WebSocketDisconnect:\n        ws_manager.disconnect(sid, ws)\n\napp.add_middleware(CORSMiddleware, allow_origins=['*'], allow_credentials=True, allow_methods=['*'], allow_headers=['*'])\n",
-      ".env": "MONGO_URL=\"mongodb://localhost:27017\"\nDB_NAME=\"tacnet_db\"\nJWT_SECRET=\"tacnet-prod-secret-rotate-me-please\"\n"
+  "application_metadata": {
+    "title": "TACNET Multi-Agency Tactical Search Platform",
+    "system_version": "1.0.0-PROD-2026",
+    "legal_authorization": "USA First Federal, State, and Local Multi-Agency Task Force System",
+    "permanent_attribution": "App Creator: Earl Wood, Deputy Sheriff (Ret.), Virginia"
+  },
+  "visual_theme_matrix": {
+    "background_base": "#050B14",
+    "panel_style": "Royal Blue Glass (rgba(13, 35, 74, 0.45)) with Blur (18px)",
+    "accent_borders": "Solid Red Pinstripe (rgba(255, 0, 0, 0.85))",
+    "metallic_header_gradient": {
+      "ridge_highlight": "#FFFFFF",
+      "polished_blend": "#FFF3D1",
+      "core_gold": "#E5B842",
+      "base_metal_shadow": "#9A6F1A",
+      "texture": "Cracked Raised Chrome Nickel Texture"
     },
-    "frontend": {
-      "src": {
-        "index.css": ":root {\n  --tac-blue: #0D234A;\n  --tac-blue-deep: #050B14;\n  --tac-gold-1: #FFFFFF; /* High brightness white-gold chrome ridge */\n  --tac-gold-2: #FFF3D1;\n  --tac-gold-3: #E5B842;\n  --tac-gold-4: #4A3100;\n}\n\n.tac-glass {\n  background: rgba(13, 35, 74, 0.45);\n  backdrop-filter: blur(18px);\n  border: 1.5px solid rgba(255, 0, 0, 0.85); /* Red Pinstripe */\n  box-shadow: 0 0 14px rgba(0, 85, 255, 0.45);\n}\n\n.tac-gold {\n  background: linear-gradient(180deg, var(--tac-gold-1) 0%, var(--tac-gold-2) 25%, var(--tac-gold-3) 55%, var(--tac-gold-4) 100%);\n  -webkit-background-clip: text;\n  background-clip: text;\n  -webkit-text-fill-color: transparent;\n  font-weight: 900;\n  letter-spacing: 0.07em;\n  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.95));\n}\n",
-        "components": {
-          "Shell.jsx": "import React from 'react';\n\nexport function GoldText({ children, className = '', size = 'text-3xl' }) {\n  return <span className={`tac-gold ${size} ${className}`}>{children}</span>;\n}\n\nexport function TacFooter() {\n  return (\n    <footer className='mt-14 mb-6 text-center tracking-[0.2em] uppercase'>\n      <div className='tac-gold inline-block text-sm font-bold bg-blue-900/10 px-4 py-1.5 border border-red-600/30 rounded'>\n        App Creator — Earl Wood, Deputy Sheriff (Ret.), Virginia\n      </div>\n      <div className='text-blue-200 font-semibold text-xs md:text-sm mt-3 tracking-[0.25em]'>\n        USA's First Federal · State · Local Multi-Agency Task Force Search Platform\n      </div>\n    </footer>\n  );\n}\n"
-        },
-        "pages": {
-          "Landing.jsx": "import React from 'react';\nimport { useNavigate } from 'react-router-dom';\nimport { GoldText, TacFooter } from '../components/Shell';\nimport { Lock, Radio } from 'lucide-react';\n\nexport default function Landing() {\n  const nav = useNavigate();\n  return (\n    <div className='min-h-screen w-full relative overflow-hidden bg-[#050B14] text-white p-6'>\n      <main className='max-w-7xl mx-auto pt-10'>\n        <div className='text-[11px] uppercase tracking-[0.35em] text-red-400 mb-3'>\n          Federal · State · Local · Task Force\n        </div>\n        <GoldText size='text-6xl md:text-8xl' className='block leading-none'>TACNET</GoldText>\n        \n        <div className='mt-4 text-blue-100 text-lg md:text-xl font-medium max-w-xl border-l-2 border-red-600 pl-4 py-1 bg-blue-950/20'>\n          The first multi-agency tactical search platform built by law enforcement, for law enforcement.\n          <div className='mt-2 text-xs uppercase tracking-widest text-amber-400 font-bold'>\n            App Creator: Earl Wood, Deputy Sheriff (Ret.), Virginia\n          </div>\n        </div>\n\n        <div className='mt-8 flex flex-wrap gap-4'>\n          <button onClick={() => nav('/login')} className='tac-btn px-6 py-3 bg-blue-900/50 border border-red-600 font-bold uppercase tracking-wider rounded flex items-center gap-2'>\n            <Lock size={16} /> Officer Sign-In\n          </button>\n          <button onClick={() => nav('/register')} className='tac-btn px-6 py-3 bg-transparent border border-gray-600 font-bold uppercase tracking-wider rounded'>\n            Create Agency Account\n          </button>\n        </div>\n        <TacFooter />\n      </main>\n    </div>\n  );\n}\n"
-        }
-      },
-      "package.json": "{\n  \"name\": \"tacnet-frontend\",\n  \"version\": \"1.0.0\",\n  \"dependencies\": {\n    \"react\": \"^19.0.0\",\n    \"react-dom\": \"^19.0.0\",\n    \"react-leaflet\": \"4.2.1\",\n    \"leaflet\": \"^1.9.4\",\n    \"jspdf\": \"^2.5.1\",\n    \"html2canvas\": \"^1.4.1\",\n    \"lucide-react\": \"^0.400.0\"\n  }\n}\n"
+    "court_report_print_theme": {
+      "header_banner": "#0D234A Command Blue",
+      "pinstripe": "#FF0000 Red Line",
+      "document_body": "#FFFFFF High-Contrast White Layout",
+      "typography": "#111111 Deep Charcoal Text"
+    }
+  },
+  "realtime_k9_role_dots": {
+    "law_enforcement": { "color": "#0055FF", "label": "Command / Law Enforcement Blue" },
+    "k9":              { "color": "#00BFFF", "label": "K9 Unit Light Blue (Persistent Trail)" },
+    "sars":            { "color": "#FF0000", "label": "SAR Searcher Red" },
+    "civilian":        { "color": "#39FF14", "label": "Civilian Volunteer Neon Green" },
+    "suspect":         { "color": "#800080", "label": "Suspect Purple" },
+    "drone":           { "color": "#808080", "label": "Drone Aerial Grey" },
+    "evidence":        { "color": "#FFA500", "label": "Article / Evidence Orange" }
+  },
+  "operational_modules": {
+    "screen_1_landing_page": {
+      "header": "Dynamic Local Department Name + Raised Gold Metallic TACNET Title",
+      "tagline_block": "The first multi-agency tactical search platform built by law enforcement, for law enforcement. App Creator: Earl Wood, Deputy Sheriff (Ret.), Virginia.",
+      "visuals": "Centering spinning space Earth with live orbiting TACNET-1 Satellite. Large readable high-visibility footer text."
+    },
+    "screen_2_operations_dashboard": {
+      "access_control": "Sworn Officer Security Handshake (JWT Auto-Login)",
+      "dynamic_agency_header": "Reads incoming registration profiles and stamps specific agency name dynamically onto all headers—no pre-set department overrides.",
+      "incident_launch": "Creates fresh multi-agency missions with subject descriptions, perimeter boundaries, and time-locked 12-character passcodes for mutual aid."
+    },
+    "screen_3_tactical_mapping_terminal": {
+      "interface": "Leaflet integration with Satellite, Street, Terrain, and Night Neon layers.",
+      "navigation": "Address search with instant FlyTo, flat floating North Compass tied to device orientation, and a 50m to 5000m perimeter slider.",
+      "freehand_canvas": "Freeze + Draw tool locks map scaling, changing finger/mouse inputs into synchronous freehand red marker strokes across all terminals.",
+      "officer_safety_sos": "Immediate red screen emergency flashing and multi-frequency Web Audio audio siren forced on all connected active devices."
+    },
+    "screen_4_k9_trauma_field_guide": {
+      "access": "Direct map overlay sidebar access for rapid trauma intervention.",
+      "critical_protocols": [
+        "Overheating/Heat Stroke: Cool water to belly/inner thighs. Move to vehicle AC. Stop at 103°F.",
+        "Snake Bite: Track immobilization, immediate venom boundary charting, do not apply ice/tourniquets.",
+        "Bloat/GDV, Severe Trauma Bleeding, and K-9 CPR rhythmic beats."
+      ],
+      "extraction_beacon": "Broadcast Injured K-9 Alert immediately flags handler's live coordinate coordinates with an extraction cross on the commander's terminal."
+    },
+    "screen_5_court_ready_archiver": {
+      "historical_replay_engine": "Archives all live tracking lines to persistent database collections (gps_trail and events). Provides a playback engine that reconstructs historical search team movements and sector sketches exactly over time for cross-examination.",
+      "js_pdf_compiler": "Assembles dynamic briefing variables, unit registries, time-stamped note lines, and officer signatures into an unalterable printed Court Exhibit document."
     }
   }
 }
