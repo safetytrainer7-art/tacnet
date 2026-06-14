@@ -24,12 +24,11 @@ body.night-green { filter: grayscale(1) sepia(1) hue-rotate(70deg) saturate(3); 
 
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
 
-/* FULL VISIBILITY VIEWPORT RECONSTRUCTION */
 body { 
   background: var(--bg-slate); 
   color: var(--text-main); 
   height: 100vh;
-  height: -webkit-fill-available; /* Fixed iOS Safari address bar layout constraint */
+  height: -webkit-fill-available;
   display: flex; 
   flex-direction: column; 
   overflow: hidden;
@@ -59,15 +58,13 @@ body {
 .brand-text h1 { font-size: 18px; font-weight: 800; letter-spacing: 1px; color: #ffffff; line-height: 1; }
 .brand-text p { font-size: 8px; color: var(--border-gold); letter-spacing: 0.5px; font-weight: bold; margin-top: 2px; }
 
-/* RESPONSIVE CONSOLE LAYOUT WITH SCREEN AUTO-SCALING */
 .console-grid { 
   flex: 1; 
   display: flex;
-  flex-direction: column; /* Stack vertically on small phone screens */
+  flex-direction: column; 
   overflow: hidden; 
 }
 
-/* SIDEBAR: COMPACT FLUID CONTROL MATRIX */
 .sidebar { 
   background: var(--panel-navy); 
   border-bottom: 2px solid var(--neon-red); 
@@ -76,7 +73,7 @@ body {
   flex-direction: column; 
   gap: 8px; 
   overflow-y: auto;
-  max-height: 45%; /* Retain layout constraints across phone dimensions */
+  max-height: 42%; 
 }
 
 .control-group { 
@@ -102,26 +99,21 @@ body {
   font-weight: bold; 
   cursor: pointer; 
   text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
 }
 .deploy-btn.selected { background: var(--neon-red); border-color: #fff; }
 
 .toggle-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 .toggle-btn { background: #1e293b; border: 1px solid var(--neon-red); padding: 6px; border-radius: 4px; color: white; font-size: 11px; cursor: pointer; text-align: center; font-weight: bold; }
 .toggle-btn.active { border-color: var(--neon-green); background: rgba(34, 197, 94, 0.2); }
-.toggle-btn.active-red { border-color: var(--neon-red); background: rgba(239, 68, 68, 0.3); }
 
 .k9-medical-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
 .medical-btn { background: #1e1b4b; border: 1px solid var(--border-gold); border-radius: 4px; padding: 6px; font-size: 10px; font-weight: bold; color: #f8fafc; cursor: pointer; text-align: center; }
 
 .range-slider { width: 100%; margin: 4px 0; accent-color: var(--neon-red); }
-.sos-master-btn { background: var(--neon-red); color: white; border: 1px solid #fff; padding: 8px; border-radius: 6px; font-size: 12px; font-weight: 900; letter-spacing: 0.5px; cursor: pointer; text-align: center; }
 
-/* MAP VIEWPORT LAYER - EXPANDS TO FILL REMAINING SPACE */
+/* MAP ENVIRONMENT PANELS */
 .map-viewport { position: relative; flex: 1; background: #151f32; overflow: hidden; }
 #liveMapContainer { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 10; }
-
 #mapCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 20; pointer-events: none; }
 #mapCanvas.drawing-active { pointer-events: auto; }
 
@@ -133,12 +125,27 @@ body {
 .legend-item { display: flex; align-items: center; gap: 4px; font-weight: bold; }
 .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; border: 1px solid #fff; }
 
-.control-footer { background: #0f172a; border-top: 2px solid var(--border-gold); padding: 8px 12px; display: flex; justify-content: space-between; gap: 10px; z-index: 1000; height: 50px; }
-.footer-btn { flex: 1; padding: 8px; border-radius: 4px; font-weight: bold; cursor: pointer; text-align: center; border: 1px solid var(--neon-red); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
-.btn-terminate { background: #b91c1c; color: white; }
-.btn-reset { background: #334155; color: #f8fafc; }
+/* RE-ENGINEERED 100% VISIBLE ANCHORED COMMAND BOTTOM BAR */
+.control-footer { 
+  background: #0f172a; 
+  border-top: 2px solid var(--border-gold); 
+  padding: 6px 10px; 
+  display: flex; 
+  flex-direction: row;
+  gap: 8px; 
+  z-index: 1000; 
+  height: auto;
+  align-items: center;
+}
+.footer-btn { padding: 10px 4px; border-radius: 6px; font-weight: 900; cursor: pointer; text-align: center; border: 2px solid var(--neon-red); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+.btn-sos { flex: 1.2; background: #ef4444; color: #fff; border-color: #fff; }
+.btn-sos.fired { background: #000 !important; color: #ef4444 !important; border-color: #ef4444 !important; animation: emergencyFlash 0.5s infinite alternate; }
+@keyframes emergencyFlash { 0% { background: #000; } 100% { background: #7f1d1d; } }
 
-/* DEVICE VIEWPORT ADAPTATIONS (LARGE TABLETS / DESKTOPS) */
+.btn-terminate { flex: 1.2; background: #b91c1c; color: white; }
+.btn-reset { flex: 0.8; background: #334155; color: #f8fafc; border-color: rgba(255,255,255,0.2); }
+
+/* RESPONSIVE DESKTOP ADJUSTMENT LAYOUTS */
 @media (min-width: 768px) {
   .console-grid { flex-direction: row; }
   .sidebar { max-height: 100%; width: 340px; border-bottom: none; border-right: 2px solid var(--neon-red); padding: 15px; gap: 12px; }
@@ -150,18 +157,22 @@ body {
   .layer-controls { bottom: 20px; right: 20px; padding: 6px; gap: 6px; }
   .layer-btn { padding: 6px 12px; font-size: 11px; }
   .map-legend { top: 15px; right: 15px; padding: 10px; font-size: 11px; max-width: none; }
+  .control-footer { padding: 12px 20px; gap: 15px; }
+  .footer-btn { padding: 12px; font-size: 13px; }
 }
 
-/* REPLAY & DOSSIER REPORT CONSOLES */
+/* REPORTS DOSSIER OVERLAY */
 .report-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; display: none; justify-content: center; align-items: center; padding: 10px; }
 .report-content { background: #ffffff; color: #000000; width: 100%; max-width: 600px; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; max-height: 95vh; border: 4px solid var(--neon-red); }
 .report-header-banner { background: #0f172a; color: white; padding: 15px; border-bottom: 4px solid var(--border-gold); text-align: center; }
 .report-body { padding: 15px; overflow-y: auto; font-size: 13px; line-height: 1.5; }
 .report-body h2 { border-bottom: 2px solid #0f172a; padding-bottom: 3px; margin-bottom: 10px; margin-top: 12px; font-size: 14px; color: #0f172a; text-transform: uppercase; }
-.itemized-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px dashed #ccc; }
+.itemized-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px dashed #ccc; align-items: center; }
 .report-actions { padding: 12px; background: #e2e8f0; display: flex; gap: 10px; justify-content: flex-end; }
 .print-btn { padding: 8px 16px; border-radius: 6px; border: none; font-weight: bold; cursor: pointer; background: #0f172a; color: white; }
 
+/* DYNAMIC FIELD DISPOSITION INPUT ELEMENTS */
+.field-input-box { width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; margin-top: 4px; background: #f8fafc; }
 .photo-preview-box { border: 2px dashed #cbd5e1; border-radius: 8px; padding: 10px; text-align: center; background: #f8fafc; margin-top: 10px; min-height: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
 #reportImageDisplay { max-width: 100%; max-height: 150px; border-radius: 6px; display: none; }
 </style>
@@ -239,8 +250,6 @@ body {
           <div class="toggle-btn" id="greenNeon" onclick="toggleNightVision('green')">🟢 Green</div>
         </div>
       </div>
-
-      <button class="sos-master-btn" id="sosSystemBtn" onclick="triggerEmergencySOS()">🚨 SOS OFFICER DOWN</button>
     </div>
 
     <div class="map-viewport" id="mapZone">
@@ -267,7 +276,8 @@ body {
   </div>
 
   <div class="control-footer">
-    <button class="footer-btn btn-reset" onclick="executeTotalReset()">🔄 Total Reset</button>
+    <button class="footer-btn btn-reset" onclick="executeTotalReset()">🔄 Reset</button>
+    <button class="footer-btn btn-sos" id="sosSystemBtn" onclick="executeIroncladSOSSignal()">🚨 SOS DOWN</button>
     <button class="footer-btn btn-terminate" onclick="terminateAndGenerateReport()">🛑 Terminate Search</button>
   </div>
 
@@ -275,27 +285,43 @@ body {
     <div class="report-content">
       <div class="report-header-banner">
         <h1 style="letter-spacing: 2px; font-size: 22px;">TACNET</h1>
-        <p style="font-size: 10px; color: #c5a059; font-weight: bold; margin-top: 2px;">OFFICIAL REPORT — DISPATCH CLOSURE</p>
+        <p style="font-size: 10px; color: #c5a059; font-weight: bold; margin-top: 2px;">OFFICIAL REPORT — TASK FORCE CLOSURE DATA SHEET</p>
       </div>
       <div class="report-body">
-        <h2 style="margin-top: 0;">1. Command Parameters</h2>
-        <div class="itemized-row"><span>App Creator:</span><strong>Earl Wood, Deputy Sheriff (Ret.)</strong></div>
-        <div class="itemized-row"><span>Operation Status:</span><strong style="color: #ef4444;">TERMINATED & LOCKED</strong></div>
-        <div class="itemized-row"><span>GPS Coordinate Buffer:</span><strong>Live Stream Archived</strong></div>
         
-        <h2>2. Search Statistics</h2>
+        <h2 style="margin-top: 0;">1. Operational Notes & Case Disposition</h2>
+        <div style="margin-bottom: 10px;">
+          <label style="font-size: 11px; font-weight: bold; color: #0f172a;">FIELD RECONNAISSANCE NOTES:</label>
+          <textarea class="field-input-box" id="reportNotesField" rows="3" placeholder="Enter formal task force engagement logs or final summary..."></textarea>
+        </div>
+        <div style="margin-bottom: 10px;">
+          <label style="font-size: 11px; font-weight: bold; color: #0f172a;">FINAL CASE DISPOSITION STATUS:</label>
+          <select class="field-input-box" id="reportDispositionField">
+            <option value="Target Apprehended / Secure">Target Apprehended / Secure</option>
+            <option value="Evidence Recovered / Resolved">Evidence Recovered / Resolved</option>
+            <option value="Mutual Aid Released / Clear">Mutual Aid Released / Clear</option>
+            <option value="Search Suspended / Command Review">Search Suspended / Command Review</option>
+          </select>
+        </div>
+
+        <h2>2. Command Metadata Parameters</h2>
+        <div class="itemized-row"><span>App Creator & Systems Lead:</span><strong>Earl Wood, Deputy Sheriff (Ret.)</strong></div>
+        <div class="itemized-row"><span>Operation Status:</span><strong style="color: #ef4444;" id="repStatusLabel">TERMINATED & LOCKED</strong></div>
+        <div class="itemized-row"><span>Live GPS Coordinates:</span><span id="repSOSCoords">Archived / Verified</span></div>
+        
+        <h2>3. Itemized Grid Search Statistics</h2>
         <div class="itemized-row"><span>Deployed K9 Search Elements:</span><span id="repK9">0 Deployed</span></div>
         <div class="itemized-row"><span>Active Perimeter Enforcement Officers:</span><span id="repLE">0 Deployed</span></div>
         <div class="itemized-row"><span>Search & Rescue Units (SAR):</span><span id="repSAR">0 Deployed</span></div>
         <div class="itemized-row"><span>Civilian Grid Assets Tracked:</span><span id="repCiv">0 Deployed</span></div>
         <div class="itemized-row"><span>Air Support Drones Registered:</span><span id="repDrone">0 Deployed</span></div>
 
-        <h2>3. Field Intercept Milestones</h2>
+        <h2>4. Field Intercept Milestones</h2>
         <div class="itemized-row"><span>Suspect Target Signatures Logged:</span><span id="repSusp">0 Located</span></div>
         <div class="itemized-row"><span>Suspect Vehicle Fix Points:</span><span id="repVeh">0 Logged</span></div>
         <div class="itemized-row"><span>Recovered Evidence Finds:</span><span id="repArt">0 Flagged</span></div>
 
-        <h2>4. Photo Upload Documentation</h2>
+        <h2>5. Photo Upload Documentation</h2>
         <div class="photo-preview-box">
           <input type="file" id="evidencePhotoInput" accept="image/*" onchange="processReportImageUpload(this)">
           <p id="uploadPromptText" style="font-size:11px; color:#64748b;">Attach Field Photo (Scene/Article/K9 Alert)</p>
@@ -320,6 +346,7 @@ let drawingActive = false;
 let mapLocked = false;
 let trackingRegistry = { k9: 0, officer: 0, sar: 0, civilian: 0, drone: 0, suspect: 0, vehicle: 0, article: 0 };
 let activeMapMarkersPool = [];
+let emergencyCoordsDump = "Archived / Verified";
 
 const canvas = document.getElementById('mapCanvas');
 const ctx = canvas.getContext('2d');
@@ -375,7 +402,7 @@ function executeOneTapPlacement(latlng) {
 
   const customIcon = L.divIcon({
     className: 'custom-asset-node',
-    html: `<div style="background-color: ${colorHex}; border: 1px solid #fff; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 9px; box-shadow: 0 0 4px #000;">${symbol}</div>`,
+    html: `<div style="background-color: ${colorHex}; border: 2px solid #fff; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 9px; box-shadow: 0 0 4px #000;">${symbol}</div>`,
     iconSize: [22, 22],
     iconAnchor: [11, 11]
   });
@@ -462,7 +489,6 @@ function updatePerimeterCircleObject(latLngCoords, radiusInMeters) {
   }).addTo(liveMap);
 }
 
-// FIXED PERIMETER VECTOR TRACK CLAMPING
 function updatePerimeterRadius(val) {
   if (commandPerimeterCircle) commandPerimeterCircle.setRadius(parseInt(val));
 }
@@ -491,123 +517,4 @@ function toggleMapLock() {
   if (mapLocked) {
     btn.classList.add('active-red');
     liveMap.dragging.disable();
-    liveMap.touchZoom.disable();
-    liveMap.doubleClickZoom.disable();
-    liveMap.scrollWheelZoom.disable();
-  } else {
-    btn.classList.remove('active-red');
-    liveMap.dragging.enable();
-    liveMap.touchZoom.enable();
-    liveMap.doubleClickZoom.enable();
-    liveMap.scrollWheelZoom.enable();
-  }
-}
-
-function initializeCanvasDrawEngine() {
-  canvas.onmousedown = (e) => { 
-    if(!drawingActive) return; 
-    drawingNow = true; 
-    ctx.beginPath(); 
-    ctx.strokeStyle = '#ef4444'; 
-    ctx.lineWidth = 3; 
-    ctx.moveTo(e.offsetX, e.offsetY); 
-  };
-  canvas.onmousemove = (e) => { if (drawingNow && drawingActive) { ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); } };
-  canvas.onmouseup = () => { drawingNow = false; };
-}
-
-function triggerVoiceAid(moduleName) {
-  window.speechSynthesis.cancel();
-  const instructionUtterance = new SpeechSynthesisUtterance(`TACNET First Aid initialized. Accessing hands-free tracking guidelines for ${moduleName}. Maintain control of the working dog.`);
-  instructionUtterance.rate = 0.85;
-  window.speechSynthesis.speak(instructionUtterance);
-}
-
-function toggleNightVision(mode) {
-  document.body.classList.remove('night-red', 'night-green');
-  document.getElementById('redNeon').classList.remove('active-red');
-  document.getElementById('greenNeon').classList.remove('active');
-  
-  if (nightModeState === mode) {
-    nightModeState = null;
-  } else {
-    nightModeState = mode;
-    if (mode === 'red') {
-      document.body.classList.add('night-red');
-      document.getElementById('redNeon').classList.add('active-red');
-    } else if (mode === 'green') {
-      document.body.classList.add('night-green');
-      document.getElementById('greenNeon').classList.add('active');
-    }
-  }
-}
-
-function triggerEmergencySOS() {
-  document.getElementById('sosSystemBtn').style.backgroundColor = '#000000';
-  document.getElementById('sosSystemBtn').innerText = '🚨 SOS BROADCASTED';
-}
-
-function processReportImageUpload(inputSource) {
-  const file = inputSource.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      const imgElement = document.getElementById('reportImageDisplay');
-      imgElement.src = e.target.result;
-      imgElement.style.display = 'block';
-      document.getElementById('uploadPromptText').style.display = 'none';
-    };
-    reader.readAsDataURL(file);
-  }
-}
-
-function terminateAndGenerateReport() {
-  document.getElementById('repK9').innerText = `${trackingRegistry.k9} Deployed Dog Teams`;
-  document.getElementById('repLE').innerText = `${trackingRegistry.officer} Officers Tracked`;
-  document.getElementById('repSAR').innerText = `${trackingRegistry.sar} Active Mutual Aid Fixed Points`;
-  document.getElementById('repCiv').innerText = `${trackingRegistry.civilian} Grid Personnel Logs`;
-  document.getElementById('repDrone').innerText = `${trackingRegistry.drone} Airborne Surveillance Feeds`;
-  document.getElementById('repSusp').innerText = `${trackingRegistry.suspect} Threat Targets Logged`;
-  document.getElementById('repVeh').innerText = `${trackingRegistry.vehicle} Vehicle Fix Coordinates Archived`;
-  document.getElementById('repArt').innerText = `${trackingRegistry.article} Evidence Items Registered`;
-  
-  document.getElementById('reportOverlay').style.display = 'flex';
-}
-
-function executeTotalReset() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
-  document.getElementById('addressSearch').value = '';
-  document.getElementById('perimeterSlider').value = 500;
-  document.getElementById('evidencePhotoInput').value = '';
-  document.getElementById('reportImageDisplay').src = '#';
-  document.getElementById('reportImageDisplay').style.display = 'none';
-  document.getElementById('uploadPromptText').style.display = 'block';
-  
-  activeMapMarkersPool.forEach(marker => liveMap.removeLayer(marker));
-  activeMapMarkersPool = [];
-  if (commandPostMarker) commandPostMarker.remove();
-  
-  for (let key in trackingRegistry) { trackingRegistry[key] = 0; }
-  
-  if(drawingActive) toggleDrawingMode();
-  if(mapLocked) toggleMapLock();
-  switchMapLayer('satellite');
-  
-  const originalCenter = [37.4138, -79.1422];
-  liveMap.setView(originalCenter, 13);
-  updatePerimeterCircleObject(originalCenter, 500);
-  
-  document.body.classList.remove('night-red', 'night-green');
-  document.getElementById('redNeon').classList.remove('active-red');
-  document.getElementById('greenNeon').classList.remove('active');
-  nightModeState = null;
-  selectedToolType = null;
-  document.querySelectorAll('.deploy-btn').forEach(btn => btn.classList.remove('selected'));
-  
-  document.getElementById('sosSystemBtn').style.backgroundColor = '#ef4444';
-  document.getElementById('sosSystemBtn').innerText = '🚨 SOS OFFICER DOWN';
-}
-</script>
-</body>
-</html>
+    liveMap.touchZoom
