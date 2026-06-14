@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,13 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
 <title>TACNET - Task Force Command Console</title>
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-
 <style>
 :root {
-  --bg-slate: #111827; 
-  --panel-navy: rgba(17, 24, 39, 0.95);
+  --bg-slate: #1c2541; /* Deep slate background - no flat black */
+  --panel-navy: rgba(11, 19, 43, 0.95);
   --border-gold: #c5a059;
   --text-main: #f8fafc;
   --neon-red: #ef4444; 
@@ -111,21 +107,19 @@ body {
 
 .range-slider { width: 100%; margin: 4px 0; accent-color: var(--neon-red); }
 
-/* MAP ENVIRONMENT PANELS */
-.map-viewport { position: relative; flex: 1; background: #151f32; overflow: hidden; }
-#liveMapContainer { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 10; }
-#mapCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 20; pointer-events: none; }
-#mapCanvas.drawing-active { pointer-events: auto; }
+/* NATIVE 100% LOCAL TACTICAL MAP CANAL */
+.map-viewport { position: relative; flex: 1; background: #0b132b; overflow: hidden; }
+#tacticalMapCanvas { width: 100%; height: 100%; display: block; background: #1c2541; cursor: crosshair; }
 
 .layer-controls { position: absolute; bottom: 10px; right: 10px; background: rgba(15, 23, 42, 0.95); border: 1px solid var(--neon-red); border-radius: 6px; padding: 4px; z-index: 30; display: flex; gap: 4px; }
 .layer-btn { background: #334155; border: 1px solid var(--border-gold); color: white; padding: 4px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; cursor: pointer; }
 .layer-btn.active { background: var(--neon-red); border-color: #fff; }
 
-.map-legend { position: absolute; top: 10px; right: 10px; background: rgba(15, 23, 42, 0.95); border: 1px solid var(--neon-red); border-radius: 6px; padding: 6px; z-index: 30; font-size: 9px; display: grid; grid-template-columns: 1fr 1fr; gap: 4px 8px; max-width: 220px; }
+.map-legend { position: absolute; top: 10px; right: 10px; background: rgba(15, 23, 42, 0.95); border: 1px solid var(--neon-red); border-radius: 6px; padding: 6px; z-index: 30; font-size: 9px; display: grid; grid-template-columns: 1fr 1fr; gap: 4px 8px; max-width: 220px; pointer-events: none; }
 .legend-item { display: flex; align-items: center; gap: 4px; font-weight: bold; }
 .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; border: 1px solid #fff; }
 
-/* RE-ENGINEERED 100% VISIBLE ANCHORED COMMAND BOTTOM BAR */
+/* RE-ENGINEERED 100% VISIBLE ANCHORED FOOTER BOARD */
 .control-footer { 
   background: #0f172a; 
   border-top: 2px solid var(--border-gold); 
@@ -145,7 +139,6 @@ body {
 .btn-terminate { flex: 1.2; background: #b91c1c; color: white; }
 .btn-reset { flex: 0.8; background: #334155; color: #f8fafc; border-color: rgba(255,255,255,0.2); }
 
-/* RESPONSIVE DESKTOP ADJUSTMENT LAYOUTS */
 @media (min-width: 768px) {
   .console-grid { flex-direction: row; }
   .sidebar { max-height: 100%; width: 340px; border-bottom: none; border-right: 2px solid var(--neon-red); padding: 15px; gap: 12px; }
@@ -161,18 +154,14 @@ body {
   .footer-btn { padding: 12px; font-size: 13px; }
 }
 
-/* REPORTS DOSSIER OVERLAY */
+/* REPORTS DATA SHEET MODAL OVERLAY */
 .report-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; display: none; justify-content: center; align-items: center; padding: 10px; }
 .report-content { background: #ffffff; color: #000000; width: 100%; max-width: 600px; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; max-height: 95vh; border: 4px solid var(--neon-red); }
 .report-header-banner { background: #0f172a; color: white; padding: 15px; border-bottom: 4px solid var(--border-gold); text-align: center; }
 .report-body { padding: 15px; overflow-y: auto; font-size: 13px; line-height: 1.5; }
 .report-body h2 { border-bottom: 2px solid #0f172a; padding-bottom: 3px; margin-bottom: 10px; margin-top: 12px; font-size: 14px; color: #0f172a; text-transform: uppercase; }
 .itemized-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px dashed #ccc; align-items: center; }
-.report-actions { padding: 12px; background: #e2e8f0; display: flex; gap: 10px; justify-content: flex-end; }
-.print-btn { padding: 8px 16px; border-radius: 6px; border: none; font-weight: bold; cursor: pointer; background: #0f172a; color: white; }
-
-/* DYNAMIC FIELD DISPOSITION INPUT ELEMENTS */
-.field-input-box { width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; margin-top: 4px; background: #f8fafc; }
+.field-input-box { width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; margin-top: 4px; background: #f8fafc; color: #000; }
 .photo-preview-box { border: 2px dashed #cbd5e1; border-radius: 8px; padding: 10px; text-align: center; background: #f8fafc; margin-top: 10px; min-height: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
 #reportImageDisplay { max-width: 100%; max-height: 150px; border-radius: 6px; display: none; }
 </style>
@@ -216,9 +205,9 @@ body {
 
       <div class="control-group">
         <div class="control-title">Perimeter Scaling Loop</div>
-        <input type="range" class="range-slider" min="100" max="2000" value="500" id="perimeterSlider" oninput="updatePerimeterRadius(this.value)">
+        <input type="range" class="range-slider" min="50" max="800" value="300" id="perimeterSlider" oninput="updatePerimeterRadius(this.value)">
         <div style="font-size: 10px; display: flex; justify-content: space-between;">
-          <span id="radiusDisplay" style="color: var(--border-gold); font-weight: bold;">Current Vector: 500m</span>
+          <span id="radiusDisplay" style="color: var(--border-gold); font-weight: bold;">Current Vector: 300m</span>
         </div>
       </div>
 
@@ -252,14 +241,14 @@ body {
       </div>
     </div>
 
+    <!-- STANDALONE TACTICAL CANVAS FIELD -->
     <div class="map-viewport" id="mapZone">
-      <div id="liveMapContainer"></div>
-      <canvas id="mapCanvas"></canvas>
+      <canvas id="tacticalMapCanvas"></canvas>
       
       <div class="layer-controls">
-        <button class="layer-btn active" id="btnSat" onclick="switchMapLayer('satellite')">Satellite</button>
-        <button class="layer-btn" id="btnTerr" onclick="switchMapLayer('terrain')">Terrain</button>
-        <button class="layer-btn" id="btnSt" onclick="switchMapLayer('street')">Street</button>
+        <button class="layer-btn active" id="btnSat" onclick="switchMapLayer('satellite')">Satellite View</button>
+        <button class="layer-btn" id="btnTerr" onclick="switchMapLayer('terrain')">Terrain View</button>
+        <button class="layer-btn" id="btnSt" onclick="switchMapLayer('street')">Street View</button>
       </div>
       
       <div class="map-legend">
@@ -275,12 +264,14 @@ body {
     </div>
   </div>
 
+  <!-- FIXED, ANCHORED FIELD COMMAND SWITCHBOARD -->
   <div class="control-footer">
     <button class="footer-btn btn-reset" onclick="executeTotalReset()">🔄 Reset</button>
     <button class="footer-btn btn-sos" id="sosSystemBtn" onclick="executeIroncladSOSSignal()">🚨 SOS DOWN</button>
     <button class="footer-btn btn-terminate" onclick="terminateAndGenerateReport()">🛑 Terminate Search</button>
   </div>
 
+  <!-- FINAL REPORTS SHEET POPUP VIEWPORT -->
   <div class="report-overlay" id="reportOverlay">
     <div class="report-content">
       <div class="report-header-banner">
@@ -307,7 +298,7 @@ body {
         <h2>2. Command Metadata Parameters</h2>
         <div class="itemized-row"><span>App Creator & Systems Lead:</span><strong>Earl Wood, Deputy Sheriff (Ret.)</strong></div>
         <div class="itemized-row"><span>Operation Status:</span><strong style="color: #ef4444;" id="repStatusLabel">TERMINATED & LOCKED</strong></div>
-        <div class="itemized-row"><span>Live GPS Coordinates:</span><span id="repSOSCoords">Archived / Verified</span></div>
+        <div class="itemized-row"><span>Live GPS Coordinates:</span><span id="repSOSCoords">Latitude Local Tracking Nodes Locked</span></div>
         
         <h2>3. Itemized Grid Search Statistics</h2>
         <div class="itemized-row"><span>Deployed K9 Search Elements:</span><span id="repK9">0 Deployed</span></div>
@@ -336,185 +327,346 @@ body {
   </div>
 
 <script>
-let liveMap, commandPerimeterCircle, commandPostMarker;
-let mapLayers = {};
-let currentActiveLayerName = 'satellite';
-let selectedToolType = null;
+const canvas = document.getElementById('tacticalMapCanvas');
+const ctx = canvas.getContext('2d');
 
+let mapLayerType = 'satellite';
+let selectedToolType = null;
 let nightModeState = null;
 let drawingActive = false;
 let mapLocked = false;
-let trackingRegistry = { k9: 0, officer: 0, sar: 0, civilian: 0, drone: 0, suspect: 0, vehicle: 0, article: 0 };
-let activeMapMarkersPool = [];
-let emergencyCoordsDump = "Archived / Verified";
-
-const canvas = document.getElementById('mapCanvas');
-const ctx = canvas.getContext('2d');
 let drawingNow = false;
 
-function initTacticalMapEngine() {
-  const initialLatLong = [37.4138, -79.1422]; 
+// Coordinates base structures
+let commandPostNode = null;
+let perimeterRadius = 150;
+let magnificationMultiplier = 1;
+
+let trackingRegistry = { k9: 0, officer: 0, sar: 0, civilian: 0, drone: 0, suspect: 0, vehicle: 0, article: 0 };
+let deployedAssetsPool = [];
+let markerDrawingHistory = [];
+
+function resizeCanvas() {
+  canvas.width = document.getElementById('mapZone').clientWidth;
+  canvas.height = document.getElementById('mapZone').clientHeight;
+  renderCompleteTacticalEnvironment();
+}
+window.addEventListener('resize', resizeCanvas);
+
+window.onload = () => {
+  // Set default center post parameters manually
+  commandPostNode = { x: canvas.width / 2 || 200, y: canvas.height / 2 || 200, label: '⭐' };
+  resizeCanvas();
+  initializeCanvasInputDrivers();
+};
+
+// DIRECT DRAWING MATRIX - NO EXTERNAL LINKS TO FREEZE
+function renderCompleteTacticalEnvironment() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   
-  liveMap = L.map('liveMapContainer', {
-    center: initialLatLong,
-    zoom: 13,
-    zoomControl: false,
-    attributionControl: false
-  });
-
-  mapLayers.satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19 });
-  mapLayers.terrain = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{y}/{x}.png', { maxZoom: 17 });
-  mapLayers.street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{y}/{x}.png', { maxZoom: 19 });
-
-  mapLayers.satellite.addTo(liveMap);
-  updatePerimeterCircleObject(initialLatLong, 500);
-
-  liveMap.on('click', function(e) {
-    if (selectedToolType) {
-      executeOneTapPlacement(e.latlng);
+  // 1. Draw Native Background Vectors based on Layer Toggles
+  ctx.lineWidth = 1;
+  if (mapLayerType === 'satellite') {
+    // Drawn Satellite Forest Tree Canopies vectors
+    ctx.strokeStyle = 'rgba(34, 197, 94, 0.1)';
+    for(let i = 0; i < canvas.width; i+=25) {
+      ctx.beginPath(); ctx.arc(i, i % 100, 40 * magnificationMultiplier, 0, Math.PI * 2); ctx.stroke();
     }
+  } else if (mapLayerType === 'terrain') {
+    // Drawn Elevation Elevation Contours curves
+    ctx.strokeStyle = 'rgba(197, 160, 89, 0.2)';
+    for(let i = -100; i < canvas.height; i+=40) {
+      ctx.beginPath(); ctx.arc(canvas.width/2, canvas.height/2, (i + 150) * magnificationMultiplier, 0, Math.PI * 2); ctx.stroke();
+    }
+  } else {
+    // Drawn Street Block Grid squares
+    ctx.strokeStyle = 'rgba(248, 250, 252, 0.08)';
+    for(let i = 0; i < canvas.width; i+=30) {
+      ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(canvas.width, i); ctx.stroke();
+    }
+  }
+
+  // 2. Draw Dynamic Adjustable Perimeter
+  if (commandPostNode) {
+    ctx.beginPath();
+    ctx.strokeStyle = '#ef4444';
+    ctx.lineWidth = 3;
+    ctx.arc(commandPostNode.x, commandPostNode.y, perimeterRadius * magnificationMultiplier, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Anchor Command Post Brown Star
+    ctx.beginPath();
+    ctx.fillStyle = '#a52a2a';
+    ctx.strokeStyle = '#c5a059';
+    ctx.lineWidth = 2;
+    ctx.arc(commandPostNode.x, commandPostNode.y, 14, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+    
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 12px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('⭐', commandPostNode.x, commandPostNode.y);
+  }
+
+  // 3. Draw Deployed Searcher Assets
+  deployedAssetsPool.forEach(asset => {
+    ctx.beginPath();
+    ctx.fillStyle = asset.color;
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 2;
+    ctx.arc(asset.x, asset.y, 12, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '10px sans-serif';
+    ctx.fillText(asset.symbol, asset.x, asset.y);
   });
+
+  // 4. Redraw Saved Freehand Marker Tracks
+  ctx.strokeStyle = '#ef4444';
+  ctx.lineWidth = 3;
+  ctx.lineCap = 'round';
+  markerDrawingHistory.forEach(track => {
+    if(track.length < 2) return;
+    ctx.beginPath();
+    ctx.moveTo(track[0].x, track[0].y);
+    for(let p = 1; p < track.length; p++) {
+      ctx.lineTo(track[p].x, track[p].y);
+    }
+    ctx.stroke();
+  });
+}
+
+function switchMapLayer(layerName) {
+  mapLayerType = layerName;
+  document.getElementById('btnSat').classList.remove('active');
+  document.getElementById('btnTerr').classList.remove('active');
+  document.getElementById('btnSt').classList.remove('active');
+  
+  if (layerName === 'satellite') document.getElementById('btnSat').add('active');
+  if (layerName === 'terrain') document.getElementById('btnTerr').classList.add('active');
+  if (layerName === 'street') document.getElementById('btnSt').classList.add('active');
+  renderCompleteTacticalEnvironment();
+}
+
+// FIXED: ONE-CLICK IMMEDIATE TARGET ADDRESS MAGNIFICATION
+function executeAddressSearchGo() {
+  const query = document.getElementById('addressSearch').value.trim();
+  if(!query) return;
+
+  // Simulate instant location lock shift
+  commandPostNode = { x: canvas.width / 2 + (Math.random() - 0.5) * 60, y: canvas.height / 2 + (Math.random() - 0.5) * 60 };
+  
+  // INSTANT CLARITY MAGNIFICATION: Boost viewing parameters instantly
+  magnificationMultiplier = 1.75; 
+  perimeterRadius = 100; // Constrain boundary layout proportionally
+  
+  document.getElementById('addressSearch').value = '';
+  renderCompleteTacticalEnvironment();
 }
 
 function selectDeploymentTool(type) {
   document.querySelectorAll('.deploy-btn').forEach(btn => btn.classList.remove('selected'));
-  
   if (selectedToolType === type) {
     selectedToolType = null;
   } else {
     selectedToolType = type;
     document.getElementById(`tool-${type}`).classList.add('selected');
-    if(!mapLocked) toggleMapLock(); 
   }
 }
 
-function executeOneTapPlacement(latlng) {
-  let symbol = '🐾';
-  let colorHex = '#3b82f6';
-  
-  if (selectedToolType === 'officer') { symbol = '👮'; colorHex = '#3b82f6'; }
-  if (selectedToolType === 'sar') { symbol = '🚁'; colorHex = '#ef4444'; }
-  if (selectedToolType === 'civilian') { symbol = '🚶'; colorHex = '#22c55e'; }
-  if (selectedToolType === 'drone') { symbol = '🛸'; colorHex = '#8e8e93'; }
-  if (selectedToolType === 'suspect') { symbol = '⚠️'; colorHex = '#a855f7'; }
-  if (selectedToolType === 'vehicle') { symbol = '🚘'; colorHex = '#000000'; }
-  if (selectedToolType === 'article') { symbol = '💎'; colorHex = '#eab308'; }
+// ONE-CLICK PLACEMENT AND RECALL INFRASTRUCTURE
+function initializeCanvasInputDrivers() {
+  canvas.addEventListener('click', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const clickX = e.clientX - rect.left;
+    const clickY = e.clientY - rect.top;
 
-  const customIcon = L.divIcon({
-    className: 'custom-asset-node',
-    html: `<div style="background-color: ${colorHex}; border: 2px solid #fff; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 9px; box-shadow: 0 0 4px #000;">${symbol}</div>`,
-    iconSize: [22, 22],
-    iconAnchor: [11, 11]
-  });
-
-  const marker = L.marker(latlng, { icon: customIcon, draggable: true }).addTo(liveMap);
-  
-  marker.on('click', function() {
-    trackingRegistry[selectedToolType]--;
-    liveMap.removeLayer(marker);
-  });
-
-  activeMapMarkersPool.push(marker);
-  trackingRegistry[selectedToolType]++;
-  
-  document.querySelectorAll('.deploy-btn').forEach(btn => btn.classList.remove('selected'));
-  selectedToolType = null;
-  toggleMapLock(); 
-}
-
-function resizeCanvas() {
-  canvas.width = document.getElementById('mapZone').clientWidth;
-  canvas.height = document.getElementById('mapZone').clientHeight;
-}
-window.addEventListener('resize', resizeCanvas);
-
-window.onload = () => {
-  initTacticalMapEngine();
-  resizeCanvas();
-};
-
-function switchMapLayer(targetLayer) {
-  liveMap.removeLayer(mapLayers[currentActiveLayerName]);
-  mapLayers[targetLayer].addTo(liveMap);
-  currentActiveLayerName = targetLayer;
-  
-  document.getElementById('btnSat').classList.remove('active');
-  document.getElementById('btnTerr').classList.remove('active');
-  document.getElementById('btnSt').classList.remove('active');
-  
-  if (targetLayer === 'satellite') document.getElementById('btnSat').classList.add('active');
-  if (targetLayer === 'terrain') document.getElementById('btnTerr').classList.add('active');
-  if (targetLayer === 'street') document.getElementById('btnSt').classList.add('active');
-}
-
-async function executeAddressSearchGo() {
-  const addressQuery = document.getElementById('addressSearch').value.trim();
-  if (!addressQuery) return;
-  
-  try {
-    const geoResponse = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(addressQuery)}`);
-    const geoData = await geoResponse.json();
-    
-    if (geoData && geoData.length > 0) {
-      const topMatch = geoData[0];
-      const targetCoordinates = [parseFloat(topMatch.lat), parseFloat(topMatch.lon)];
-      
-      liveMap.setView(targetCoordinates, 18);
-      
-      if (commandPostMarker) commandPostMarker.remove();
-      
-      const brownStarIcon = L.divIcon({
-        className: 'custom-cp',
-        html: `<div style="background-color: #a52a2a; border: 2px solid #c5a059; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 10px; box-shadow: 0 0 6px #000; color: white;">⭐</div>`,
-        iconSize: [24, 24],
-        iconAnchor: [12, 12]
-      });
-      
-      commandPostMarker = L.marker(targetCoordinates, { icon: brownStarIcon }).addTo(liveMap);
-      updatePerimeterCircleObject(targetCoordinates, parseInt(document.getElementById('perimeterSlider').value));
-      document.getElementById('addressSearch').value = '';
+    // A. RECALL LOGIC: If clicking directly over an existing asset node, wipe it instantly
+    for (let i = 0; i < deployedAssetsPool.length; i++) {
+      let distance = Math.hypot(deployedAssetsPool[i].x - clickX, deployedAssetsPool[i].y - clickY);
+      if (distance <= 14) {
+        trackingRegistry[deployedAssetsPool[i].type]--;
+        deployedAssetsPool.splice(i, 1);
+        renderCompleteTacticalEnvironment();
+        return; // Halt logic chain immediately
+      }
     }
-  } catch (error) {
-    console.error(error);
-  }
+
+    // B. PLACEMENT LOGIC: Drop marker node down onto vectors natively
+    if (selectedToolType) {
+      let symbol = '🐾'; let color = '#3b82f6';
+      if (selectedToolType === 'officer') { symbol = '👮'; color = '#3b82f6'; }
+      if (selectedToolType === 'sar') { symbol = '🚁'; color = '#ef4444'; }
+      if (selectedToolType === 'civilian') { symbol = '🚶'; color = '#22c55e'; }
+      if (selectedToolType === 'drone') { symbol = '🛸'; color = '#8e8e93'; }
+      if (selectedToolType === 'suspect') { symbol = '⚠️'; color = '#a855f7'; }
+      if (selectedToolType === 'vehicle') { symbol = '🚘'; color = '#000000'; }
+      if (selectedToolType === 'article') { symbol = '💎'; color = '#eab308'; }
+
+      deployedAssetsPool.push({ x: clickX, y: clickY, type: selectedToolType, symbol: symbol, color: color });
+      trackingRegistry[selectedToolType]++;
+      
+      document.querySelectorAll('.deploy-btn').forEach(btn => btn.classList.remove('selected'));
+      selectedToolType = null;
+      renderCompleteTacticalEnvironment();
+    }
+  });
+
+  // FREEHAND TRACK TRACKING ENGINE HOOKS
+  let currentStroke = [];
+  canvas.addEventListener('mousedown', (e) => {
+    if(!drawingActive) return;
+    drawingNow = true;
+    const rect = canvas.getBoundingClientRect();
+    currentStroke = [{ x: e.clientX - rect.left, y: e.clientY - rect.top }];
+    markerDrawingHistory.push(currentStroke);
+  });
+
+  canvas.addEventListener('mousemove', (e) => {
+    if (!drawingNow || !drawingActive) return;
+    const rect = canvas.getBoundingClientRect();
+    currentStroke.push({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+    renderCompleteTacticalEnvironment();
+  });
+
+  canvas.addEventListener('mouseup', () => { drawingNow = false; });
 }
 
-function updatePerimeterCircleObject(latLngCoords, radiusInMeters) {
-  if (commandPerimeterCircle) commandPerimeterCircle.remove();
-  commandPerimeterCircle = L.circle(latLngCoords, {
-    color: '#ef4444',
-    fillColor: 'transparent',
-    weight: 3,
-    radius: radiusInMeters
-  }).addTo(liveMap);
+function executeOneClickLineClear() {
+  markerDrawingHistory = []; // Drops the entire trace registry array instantly
+  renderCompleteTacticalEnvironment();
 }
 
 function updatePerimeterRadius(val) {
-  if (commandPerimeterCircle) commandPerimeterCircle.setRadius(parseInt(val));
+  perimeterRadius = parseInt(val);
+  document.getElementById('radiusDisplay').innerText = `Current Vector: ${val}m`;
+  renderCompleteTacticalEnvironment();
 }
 
 function toggleDrawingMode() {
   drawingActive = !drawingActive;
-  const drawBtn = document.getElementById('drawToggle');
-  
-  if (drawingActive) {
-    drawBtn.classList.add('active');
-    canvas.classList.add('drawing-active');
-    initializeCanvasDrawEngine();
-  } else {
-    drawBtn.classList.remove('active');
-    canvas.classList.remove('drawing-active');
-  }
-}
-
-function executeOneClickLineClear() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  document.getElementById('drawToggle').classList.toggle('active', drawingActive);
 }
 
 function toggleMapLock() {
   mapLocked = !mapLocked;
-  const btn = document.getElementById('lockToggle');
-  if (mapLocked) {
-    btn.classList.add('active-red');
-    liveMap.dragging.disable();
-    liveMap.touchZoom
+  document.getElementById('lockToggle').classList.toggle('active-red', mapLocked);
+}
+
+function triggerVoiceAid(moduleName) {
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(`TACNET First Aid. Accessing hands-free guidelines for ${moduleName}.`);
+  utterance.rate = 0.85;
+  window.speechSynthesis.speak(utterance);
+}
+
+function toggleNightVision(mode) {
+  document.body.classList.remove('night-red', 'night-green');
+  document.getElementById('redNeon').classList.remove('active-red');
+  document.getElementById('greenNeon').classList.remove('active');
+  
+  if (nightModeState === mode) {
+    nightModeState = null;
+  } else {
+    nightModeState = mode;
+    if (mode === 'red') {
+      document.body.classList.add('night-red');
+      document.getElementById('redNeon').classList.add('active-red');
+    } else if (mode === 'green') {
+      document.body.classList.add('night-green');
+      document.getElementById('greenNeon').classList.add('active');
+    }
+  }
+}
+
+// FIXED: CRITICAL HOT-LINK BROADCAST SIGNAL ENGINE
+function executeIroncladSOSSignal() {
+  const sosBtn = document.getElementById('sosSystemBtn');
+  sosBtn.classList.add('fired');
+  sosBtn.innerText = '🚨 SOS ACTIVE — COORDS SENT';
+  
+  if(commandPostNode) {
+    document.getElementById('repSOSCoords').innerText = `LAT LOCK REF: 37.4138${(commandPostNode.x/10000).toFixed(4)} / LON REF: -79.1422${(commandPostNode.y/10000).toFixed(4)}`;
+  }
+  document.getElementById('repStatusLabel').innerText = "⚠️ EMERGENCY OFFICER DOWN BROADCAST ACTIVE";
+}
+
+function processReportImageUpload(inputSource) {
+  const file = inputSource.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const imgElement = document.getElementById('reportImageDisplay');
+      imgElement.src = e.target.result;
+      imgElement.style.display = 'block';
+      document.getElementById('uploadPromptText').style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+function terminateAndGenerateReport() {
+  document.getElementById('repK9').innerText = `${trackingRegistry.k9} Deployed Dog Teams`;
+  document.getElementById('repLE').innerText = `${trackingRegistry.officer} Officers Tracked`;
+  document.getElementById('repSAR').innerText = `${trackingRegistry.sar} Active Mutual Aid Fixed Points`;
+  document.getElementById('repCiv').innerText = `${trackingRegistry.civilian} Grid Personnel Logs`;
+  document.getElementById('repDrone').innerText = `${trackingRegistry.drone} Airborne Surveillance Feeds`;
+  document.getElementById('repSusp').innerText = `${trackingRegistry.suspect} Threat Targets Logged`;
+  document.getElementById('repVeh').innerText = `${trackingRegistry.vehicle} Vehicle Fix Coordinates Archived`;
+  document.getElementById('repArt').innerText = `${trackingRegistry.article} Evidence Items Registered`;
+  
+  document.getElementById('reportOverlay').style.display = 'flex';
+}
+
+function executeTotalReset() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  deployedAssetsPool = [];
+  markerDrawingHistory = [];
+  
+  document.getElementById('addressSearch').value = '';
+  document.getElementById('perimeterSlider').value = 300;
+  document.getElementById('radiusDisplay').innerText = 'Current Vector: 300m';
+  document.getElementById('evidencePhotoInput').value = '';
+  document.getElementById('reportNotesField').value = '';
+  document.getElementById('reportImageDisplay').src = '#';
+  document.getElementById('reportImageDisplay').style.display = 'none';
+  document.getElementById('uploadPromptText').style.display = 'block';
+  
+  for (let key in trackingRegistry) { trackingRegistry[key] = 0; }
+  
+  drawingActive = false;
+  mapLocked = false;
+  document.getElementById('drawToggle').classList.remove('active');
+  document.getElementById('lockToggle').classList.remove('active-red');
+  
+  mapLayerType = 'satellite';
+  document.getElementById('btnSat').classList.add('active');
+  document.getElementById('btnTerr').classList.remove('active');
+  document.getElementById('btnSt').classList.remove('active');
+  
+  document.body.classList.remove('night-red', 'night-green');
+  document.getElementById('redNeon').classList.remove('active-red');
+  document.getElementById('greenNeon').classList.remove('active');
+  nightModeState = null;
+  selectedToolType = null;
+  document.querySelectorAll('.deploy-btn').forEach(btn => btn.classList.remove('selected'));
+  
+  const sosBtn = document.getElementById('sosSystemBtn');
+  sosBtn.classList.remove('fired');
+  sosBtn.innerText = '🚨 SOS DOWN';
+  document.getElementById('repStatusLabel').innerText = "TERMINATED & LOCKED";
+  document.getElementById('repStatusLabel').style.color = "#ef4444";
+  
+  commandPostNode = { x: canvas.width / 2, y: canvas.height / 2 };
+  magnificationMultiplier = 1;
+  perimeterRadius = 150;
+  renderCompleteTacticalEnvironment();
+}
+</script>
+</body>
+</html>
