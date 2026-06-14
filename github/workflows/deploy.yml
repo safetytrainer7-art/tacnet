@@ -1,0 +1,35 @@
+name: Deploy TACNET with LIS Integration
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-js: '20'
+          
+      - name: Install Vercel CLI (for serverless)
+        run: npm install -g vercel
+        
+      - name: Deploy to GitHub Pages (frontend)
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
+          publish_branch: gh-pages
+          
+      - name: Deploy API as Serverless Function
+        env:
+          LIS_API_KEY: ${{ secrets.LIS_API_KEY }}
+        run: |
+          # Deploy to Vercel (free tier) or use GitHub Actions to host the function
+          echo "LIS_API_KEY=${LIS_API_KEY}" > .env
+          npx vercel --prod --token ${{ secrets.VERCEL_TOKEN }} --yes
