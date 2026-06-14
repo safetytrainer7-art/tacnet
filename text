@@ -1,0 +1,11 @@
+tacnet-lis/
+├── index.html              # Main frontend (TACNET dashboard)
+├── backend/
+│   ├── lis-proxy.js        # LIS API proxy (serverless/edge function)
+│   └── package.json
+├── supabase/
+│   └── schema.sql          # Database tables for realtime ops
+├── .github/
+│   └── workflows/
+│       └── deploy.yml      # Auto-deploy to GitHub Pages
+└── README.md
