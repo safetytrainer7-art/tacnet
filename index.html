@@ -24,7 +24,6 @@ body.night-green { filter: grayscale(1) sepia(1) hue-rotate(70deg) saturate(3); 
 
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
 
-/* PHONE RIMS LOCKOUT INFRASTRUCTURE */
 body { 
   background: #000000;
   color: var(--text-main); 
@@ -59,7 +58,6 @@ body {
 .brand-text h1 { font-size: 16px; font-weight: 900; letter-spacing: 1px; color: #ffffff; line-height: 1; }
 .brand-text p { font-size: 7px; color: var(--border-gold); font-weight: bold; margin-top: 1px; }
 
-/* PHONE GRID STACK - VERTICAL RE-ENGINEERING */
 .console-grid { 
   flex: 1; 
   display: flex;
@@ -68,21 +66,24 @@ body {
   overflow: hidden; 
 }
 
-/* FLOATING TOP DRAWER INTERFACE PANEL */
+/* FIXED MOBILE TRACKING SCROLL DRAWER */
 .sidebar { 
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  max-height: 38vh; /* Confines panel tightly to top part of phone screen */
-  background: rgba(11, 31, 82, 0.96);
+  max-height: 40vh; 
+  background: rgba(11, 31, 82, 0.98);
   border-bottom: 3px solid var(--neon-red); 
   padding: 8px; 
   display: flex; 
   flex-direction: column; 
   gap: 8px; 
-  overflow-y: auto; 
-  z-index: 500; /* Floats safely over map tiles */
+  
+  /* CRITICAL SCROLL DRIVER REPAIRS */
+  overflow-y: scroll !important; 
+  -webkit-overflow-scrolling: touch !important; 
+  z-index: 500; 
   box-shadow: 0 4px 15px rgba(0,0,0,0.6);
 }
 
@@ -144,13 +145,13 @@ body {
 .btn-sidebar-terminate { background: #b91c1c; grid-column: span 2; font-size: 10px; padding: 10px; }
 .btn-sidebar-reset { background: #1e293b; color: #94a3b8; border-color: rgba(255,255,255,0.15); grid-column: span 2; }
 
-/* MAP VIEWPORT CHASSIS: ACCEPTS 100% VERTICAL real-estate */
+/* MAP VIEWPORT AREA */
 .map-viewport { position: relative; width: 100%; height: 100%; flex: 1; background: #101726; z-index: 10; }
 #liveMapContainer { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 15; }
 #mapCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 25; pointer-events: none; }
 #mapCanvas.drawing-active { pointer-events: auto; }
 
-/* ACCESSIBLE BOTTOM SCREEN CONTROLS LAYER HOOKS */
+/* DUAL ADJUSTMENT LAYER PLACEMENT MAP SECTORS */
 .layer-controls { position: absolute; bottom: 15px; left: 15px; background: rgba(15, 23, 42, 0.95); border: 1.5px solid var(--neon-red); border-radius: 6px; padding: 4px; z-index: 40; display: flex; gap: 4px; }
 .layer-btn { background: #334155; border: 1px solid var(--border-gold); color: white; padding: 4px 8px; border-radius: 4px; font-size: 9px; font-weight: bold; cursor: pointer; }
 .layer-btn.active { background: var(--neon-red); border-color: #fff; }
@@ -168,7 +169,7 @@ body {
 }
 .sos-hurt-flasher { animation: pulseTargetSOS 0.6s infinite alternate !important; border: 2px solid #fff !important; }
 
-/* HIGHLY PRESENTABLE DOSSIER ACCENTS SHEET */
+/* RE-STYLED REPORT LAYOUT SHEET DOSSIER */
 .report-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 2000; display: none; justify-content: center; align-items: center; padding: 10px; }
 .report-content { background: #f8fafc; color: #0f172a; width: 100%; max-width: 550px; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; max-height: 95vh; border: 3px solid var(--border-gold); }
 .report-header-banner { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: #ffffff; padding: 15px; border-bottom: 3px solid var(--border-gold); text-align: center; }
@@ -180,10 +181,9 @@ body {
 .report-actions { padding: 10px; background: #e2e8f0; display: flex; gap: 8px; justify-content: flex-end; }
 .print-btn { padding: 8px 16px; border-radius: 4px; border: none; font-weight: bold; cursor: pointer; background: #0b3c95; color: white; text-transform: uppercase; font-size: 11px; }
 
-/* RESPONSIVE LAYOUT MATRIX SPECIFICALLY FOR PC / TABLETS MONITOR */
 @media (min-width: 768px) {
   .console-grid { display: grid; grid-template-columns: 360px 1fr; }
-  .sidebar { position: relative; max-height: 100%; width: 100%; border-bottom: none; border-right: 2px solid var(--neon-red); padding: 12px; gap: 10px; }
+  .sidebar { position: relative; max-height: 100%; width: 100%; border-bottom: none; border-right: 2px solid var(--neon-red); padding: 12px; gap: 10px; overflow-y: auto !important; }
   .creator-credits-box { padding: 10px; }
   .creator-name { font-size: 20px; }
   .creator-rank { font-size: 11px; }
@@ -201,7 +201,6 @@ body {
 </head>
 <body>
 
-  <!-- TACNET MASTER BRANDING HEADER -->
   <div class="tacnet-header">
     <div class="brand-block">
       <div class="logo-icon">T</div>
@@ -213,8 +212,6 @@ body {
   </div>
 
   <div class="console-grid">
-    
-    <!-- MOBILE TOP-SCROLL DRAWER ACCENT SIDEBAR -->
     <div class="sidebar">
       
       <div class="creator-credits-box">
@@ -295,14 +292,12 @@ body {
 
     </div>
 
-    <!-- FULL SCREEN PHONE REAL ESTATE WORKSPACE MAP MAP -->
     <div class="map-viewport" id="mapZone">
       <div id="liveMapContainer"></div>
       <canvas id="mapCanvas"></canvas>
       
-      <!-- ON-SCREEN MONITOR -->
       <div class="vcr-playback-panel" id="vcrMonitor">
-        <div class="vcr-title">📼 MISSION SEQUENCE CONTROLLER</div>
+        <div class="vcr-title">%;">📼 MISSION SEQUENCE CONTROLLER</div>
         <input type="range" class="vcr-timeline" min="0" max="100" value="0" id="vcrTrack" oninput="simulateTimelineTrace(this.value)">
         <div class="vcr-controls">
           <button class="vcr-btn" onclick="alert('Playback Paused.')">⏸️ PAUSE</button>
@@ -311,7 +306,7 @@ body {
         </div>
       </div>
 
-      <!-- BOTTOM-LEFT ANCHORED STABLE HIGH-PERFORMANCE GPS LAYER MATRIX -->
+      <!-- BULLETPROOF GEOGRAPHIC SERVER CHANNELS -->
       <div class="layer-controls">
         <button class="layer-btn active" id="btnSat" onclick="switchMapLayer('satellite')">Satellite View</button>
         <button class="layer-btn" id="btnTerr" onclick="switchMapLayer('terrain')">Terrain View</button>
@@ -320,7 +315,6 @@ body {
     </div>
   </div>
 
-  <!-- DOSSIER CLOSURE DOSSIER SHEET Overlay -->
   <div class="report-overlay" id="reportOverlay">
     <div class="report-content">
       <div class="report-header-banner">
@@ -394,7 +388,6 @@ let drawingNow = false;
 const firstAidProceduresDatabase = {
   cpr: [
     "Step one. Verify the canine is unconscious and not breathing.",
-    "Step two. Clear the airway of debris. Pull the tongue forward out of the mouth.",
     "Step three. Close the dog's mouth and exhale directly into the nose twice.",
     "Step four. Place your hands over the widest section of the rib cage.",
     "Step five. Compress the chest matching a cadence of one hundred compressions per minute.",
@@ -422,7 +415,7 @@ const firstAidProceduresDatabase = {
     "Step three. Secure the pack layer tightly using a tactical pressure bandage line.",
     "Step four. Monitor the gums for paleness indicating dangerous shock levels.",
     "Step five. Keep the working dog wrapped inside a blanket to preserve body core heat.",
-    "Step six. Coordinate immediate transport to surgical support grids."
+    "Step Line. Coordinate immediate transport to surgical support grids."
   ],
   bleed: [
     "Step one. Place heavy gauze pads directly over the vascular breach point.",
@@ -446,17 +439,15 @@ function initTacticalMapEngine() {
   const initialLatLong = [37.4138, -79.1422]; 
   liveMap = L.map('liveMapContainer', { center: initialLatLong, zoom: 13, zoomControl: false, attributionControl: false });
 
-  // LIVE SERVERS INTEGRATION FIXING CORES
+  // FIXED SECURE MOBILE SERVER HOOKS FOR TERRAIN & STREET LAYERS
   mapLayers.satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19 });
-  mapLayers.terrain = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{y}/{x}.png', { maxZoom: 19 }); 
+  mapLayers.terrain = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{y}/{x}.png', { maxZoom: 20 }); 
   mapLayers.street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{y}/{x}.png', { maxZoom: 19 });
 
   mapLayers.satellite.addTo(liveMap);
   updatePerimeterCircleObject(initialLatLong, 160);
 
   liveMap.on('click', function(e) { if (selectedToolType) executeOneTapPlacement(e.latlng); });
-  
-  // Mobile layout synchronization delay
   setTimeout(() => { liveMap.invalidateSize(); }, 300);
 }
 
@@ -497,7 +488,6 @@ function resizeCanvas() {
   canvas.height = document.getElementById('mapZone').clientHeight;
 }
 window.addEventListener('resize', resizeCanvas);
-window.onload = () => { initTacticalMapEngine(); resizeCanvas(); };
 
 function switchMapLayer(targetLayer) {
   liveMap.removeLayer(mapLayers[currentActiveLayerName]);
@@ -565,7 +555,10 @@ function toggleMapLock() {
 }
 
 function initializeCanvasDrawEngine() {
-  canvas.onmousedown = (e) => { if(!drawingActive) return; drawingNow = true; ctx.beginPath(); ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 3; ctx.moveTo(e.offsetX, e.offsetY); };
+  canvas.onmousedown = (e) => { 
+    if(!drawingActive) return; 
+    drawingNow = true; ctx.beginPath(); ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 3; ctx.moveTo(e.offsetX, e.offsetY); 
+  };
   canvas.onmousemove = (e) => { if (drawingNow && drawingActive) { ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); } };
   canvas.onmouseup = () => { drawingNow = false; };
 }
@@ -657,6 +650,7 @@ function executeTotalReset() {
   document.getElementById('reportImageDisplay').src = '#';
   document.getElementById('reportImageDisplay').style.display = 'none';
   document.getElementById('uploadPromptText').style.display = 'block';
+  if(document.getElementById('vcrTrack')) document.getElementById('vcrTrack').value = 0;
   
   activeMapMarkersPool.forEach(marker => {
     if(marker && marker._icon) {
