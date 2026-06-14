@@ -5,9 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>TACNET - Task Force Command Console</title>
 
-<!-- Leaflet Live Tracking Engine Infrastructure -->
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <style>
 :root {
@@ -55,9 +54,6 @@ body {
 .brand-text h1 { font-size: 24px; font-weight: 800; letter-spacing: 2px; color: #ffffff; }
 .brand-text p { font-size: 10px; color: var(--border-gold); letter-spacing: 1px; font-weight: bold; }
 
-.nav-arrows { display: flex; gap: 15px; }
-.arrow-btn { background: none; border: 1px solid var(--neon-red); padding: 5px 12px; border-radius: 4px; color: white; cursor: pointer; font-size: 12px; font-weight: bold; }
-
 .console-grid { flex: 1; display: grid; grid-template-columns: 340px 1fr; overflow: hidden; }
 
 .sidebar { 
@@ -82,33 +78,41 @@ body {
 .search-box-row input { flex: 1; background: #000; border: 1px solid var(--border-gold); border-radius: 6px; padding: 8px; color: white; font-size: 13px; }
 .search-box-row button { background: var(--neon-red); color: white; border: none; padding: 0 15px; border-radius: 6px; font-weight: bold; cursor: pointer; }
 
+/* SEARCHER PLACEMENT MATRIX TOOL SEPARATORS */
 .deployment-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 .deploy-btn { 
   background: #1e293b; 
   border: 1px solid var(--neon-red); 
-  padding: 6px; 
+  padding: 8px 6px; 
   border-radius: 4px; 
   color: #fff; 
-  font-size: 11px; 
+  font-size: 12px; 
   font-weight: bold; 
   cursor: pointer; 
+  text-align: center;
 }
-.deploy-btn:hover { background: #334155; }
+.deploy-btn.selected {
+  background: var(--neon-red);
+  border-color: #fff;
+}
 
 .toggle-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .toggle-btn { background: #1e293b; border: 1px solid var(--neon-red); padding: 8px; border-radius: 6px; color: white; font-size: 12px; cursor: pointer; text-align: center; font-weight: bold; }
 .toggle-btn.active { border-color: var(--neon-green); background: rgba(34, 197, 94, 0.2); }
 .toggle-btn.active-red { border-color: var(--neon-red); background: rgba(239, 68, 68, 0.3); }
 
-.range-slider { width: 100%; margin: 8px 0; accent-color: var(--neon-red); }
+/* K9 CRITICAL FIRST AID FIELD HUD */
+.k9-medical-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.medical-btn { background: #1e1b4b; border: 1px solid var(--border-gold); border-radius: 6px; padding: 8px; font-size: 11px; font-weight: bold; color: #f8fafc; cursor: pointer; text-align: center; }
+.medical-btn:hover { background: #312e81; border-color: var(--neon-red); }
 
+.range-slider { width: 100%; margin: 8px 0; accent-color: var(--neon-red); }
 .sos-master-btn { background: var(--neon-red); color: white; border: 2px solid #fff; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 900; letter-spacing: 1px; cursor: pointer; text-align: center; }
 
-/* MAP VIEWPORT LAYER */
+/* MAP DISPLAY PORT PANELS */
 .map-viewport { position: relative; background: #151f32; overflow: hidden; }
 #liveMapContainer { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 10; }
 
-/* CANVAS OVERLAY FOR TACTICAL RED MARKER NOTES */
 #mapCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 20; pointer-events: none; }
 #mapCanvas.drawing-active { pointer-events: auto; }
 
@@ -120,11 +124,13 @@ body {
 .legend-item { display: flex; align-items: center; gap: 6px; font-weight: bold; }
 .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; border: 1px solid #fff; }
 
+/* FOOTER LOGISTICS CONTROLS */
 .control-footer { background: #0f172a; border-top: 2px solid var(--border-gold); padding: 12px 20px; display: flex; justify-content: space-between; gap: 15px; z-index: 1000; }
 .footer-btn { flex: 1; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; text-align: center; border: 2px solid var(--neon-red); font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
 .btn-terminate { background: #b91c1c; color: white; }
 .btn-reset { background: #334155; color: #f8fafc; }
 
+/* FINAL PRINT / PDF REPORT CONTAINER OVERLAY */
 .report-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; display: none; justify-content: center; align-items: center; padding: 20px; }
 .report-content { background: #ffffff; color: #000000; width: 100%; max-width: 650px; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; max-height: 90vh; border: 4px solid var(--neon-red); }
 .report-header-banner { background: #0f172a; color: white; padding: 20px; border-bottom: 4px solid var(--border-gold); text-align: center; }
@@ -133,6 +139,9 @@ body {
 .itemized-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed #ccc; }
 .report-actions { padding: 15px; background: #e2e8f0; display: flex; gap: 10px; justify-content: flex-end; }
 .print-btn { padding: 8px 20px; border-radius: 6px; border: none; font-weight: bold; cursor: pointer; background: #0f172a; color: white; }
+
+.photo-preview-box { border: 2px dashed #cbd5e1; border-radius: 8px; padding: 15px; text-align: center; background: #f8fafc; margin-top: 10px; min-height: 100px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
+#reportImageDisplay { max-width: 100%; max-height: 180px; border-radius: 6px; display: none; }
 </style>
 </head>
 <body>
@@ -145,37 +154,31 @@ body {
         <p>MULTI-AGENCY TASK FORCE SEARCH APP</p>
       </div>
     </div>
-    <div class="nav-arrows">
-      <button class="arrow-btn" onclick="window.location.reload();">⬅ Return Arrow</button>
-      <button class="arrow-btn" onclick="window.location.reload();">📁 System Back</button>
-    </div>
   </div>
 
   <div class="console-grid">
-    
     <div class="sidebar">
       
-      <!-- BULLETPROOF ADDRESS INBOUND ENTRY -->
       <div class="control-group">
         <div class="control-title">Address Target Entry</div>
         <div class="search-box-row">
-          <input type="text" id="addressSearch" placeholder="Type target tracking address (e.g. Lynchburg, VA)...">
+          <input type="text" id="addressSearch" placeholder="Type tracking target address...">
           <button onclick="executeAddressSearchGo()">GO</button>
         </div>
       </div>
 
-      <!-- SEARCH ASSET DISPATCH TRIGGER MATRIX -->
       <div class="control-group">
-        <div class="control-title">Perimeter Deployment Hub</div>
+        <div class="control-title">Active Deployment Hub</div>
+        <div style="font-size: 10px; color:#cbd5e1; margin-bottom: 8px;">Tap an asset type, then click directly on the map space to place them. Click a deployed icon once to recall it.</div>
         <div class="deployment-grid">
-          <button class="deploy-btn" onclick="addSearcherToMap('k9', '🐾 Link')">➕ K9 Team</button>
-          <button class="deploy-btn" onclick="addSearcherToMap('officer', '👮 LE')">➕ LE Officer</button>
-          <button class="deploy-btn" onclick="addSearcherToMap('sar', '🚁 SAR')">➕ SAR Unit</button>
-          <button class="deploy-btn" onclick="addSearcherToMap('civilian', '🚶 Vol')">➕ Civilian</button>
-          <button class="deploy-btn" onclick="addSearcherToMap('drone', '🛸 Air')">➕ Drone</button>
-          <button class="deploy-btn" onclick="addSearcherToMap('suspect', '⚠️ Susp')">➕ Suspect</button>
-          <button class="deploy-btn" onclick="addSearcherToMap('vehicle', '🚘 Car')">➕ Vehicle</button>
-          <button class="deploy-btn" onclick="addSearcherToMap('article', '💎 Find')">➕ Article</button>
+          <button class="deploy-btn" id="tool-k9" onclick="selectDeploymentTool('k9')">🐾 K9 Team</button>
+          <button class="deploy-btn" id="tool-officer" onclick="selectDeploymentTool('officer')">👮 Officer</button>
+          <button class="deploy-btn" id="tool-sar" onclick="selectDeploymentTool('sar')">🚁 SAR Unit</button>
+          <button class="deploy-btn" id="tool-civilian" onclick="selectDeploymentTool('civilian')">🚶 Civilian</button>
+          <button class="deploy-btn" id="tool-drone" onclick="selectDeploymentTool('drone')">🛸 Drone</button>
+          <button class="deploy-btn" id="tool-suspect" onclick="selectDeploymentTool('suspect')">⚠️ Suspect</button>
+          <button class="deploy-btn" id="tool-vehicle" onclick="selectDeploymentTool('vehicle')">🚘 Vehicle</button>
+          <button class="deploy-btn" id="tool-article" onclick="selectDeploymentTool('article')">💎 Article</button>
         </div>
       </div>
 
@@ -190,10 +193,23 @@ body {
       </div>
 
       <div class="control-group">
-        <div class="control-title">Tactical Red Freehand Marker</div>
+        <div class="control-title">Tactical Marker & Eraser</div>
         <div class="toggle-grid">
-          <div class="toggle-btn" id="drawToggle" onclick="toggleDrawingMode()">✏️ Draw Notes</div>
-          <div class="toggle-btn" id="lockToggle" onclick="toggleMapLock()">🔒 Map Lock</div>
+          <div class="toggle-btn" id="drawToggle" onclick="toggleDrawingMode('draw')">✏️ Marker Pen</div>
+          <div class="toggle-btn" id="eraseToggle" onclick="toggleDrawingMode('erase')">🧽 Eraser Line</div>
+        </div>
+        <div class="toggle-btn" id="lockToggle" style="width:100%; margin-top:8px;" onclick="toggleMapLock()">🔒 Map Position Lock</div>
+      </div>
+
+      <div class="control-group">
+        <div class="control-title">K9 Tactical First Aid Module</div>
+        <div class="k9-medical-grid">
+          <button class="medical-btn" onclick="triggerVoiceAid('CPR Guidance')">💓 CPR</button>
+          <button class="medical-btn" onclick="triggerVoiceAid('Snake Bite Treatment')">🐍 Snake Bites</button>
+          <button class="medical-btn" onclick="triggerVoiceAid('Eye Injury Protocol')">👁️ Eye Injuries</button>
+          <button class="medical-btn" onclick="triggerVoiceAid('Gunshot Care')">💥 Gunshot</button>
+          <button class="medical-btn" onclick="triggerVoiceAid('Excessive Bleeding Control')">🩸 Bleeding</button>
+          <button class="medical-btn" onclick="triggerVoiceAid('Broken Bones Splinting')">🦴 Broken Bones</button>
         </div>
       </div>
 
@@ -205,28 +221,21 @@ body {
         </div>
       </div>
 
-      <div class="control-group">
-        <div class="control-title">Incident Recorder Archive</div>
-        <button class="toggle-btn" style="width: 100%;" id="replayBtn" onclick="toggleReplayEngine()">▶️ Replay Mission Sequence</button>
-      </div>
-
       <button class="sos-master-btn" id="sosSystemBtn" onclick="triggerEmergencySOS()">🚨 SOS OFFICER DOWN</button>
     </div>
 
-    <!-- LIVE LEAFLET GPS INTEGRATION PORT VIEW -->
     <div class="map-viewport" id="mapZone">
       <div id="liveMapContainer"></div>
       <canvas id="mapCanvas"></canvas>
       
-      <!-- SEPARATE INDEPENDENT GPS MAP LAYER INTERFACE TOGGLES -->
       <div class="layer-controls">
-        <button class="layer-btn active" id="btnSat" onclick="switchMapLayer('satellite')">Satellite</button>
-        <button class="layer-btn" id="btnTerr" onclick="switchMapLayer('terrain')">Terrain</button>
-        <button class="layer-btn" id="btnSt" onclick="switchMapLayer('street')">Street</button>
+        <button class="layer-btn active" id="btnSat" onclick="switchMapLayer('satellite')">Satellite View</button>
+        <button class="layer-btn" id="btnTerr" onclick="switchMapLayer('terrain')">Terrain View</button>
+        <button class="layer-btn" id="btnSt" onclick="switchMapLayer('street')">Street View</button>
       </div>
       
       <div class="map-legend">
-        <div class="legend-item"><span class="dot" style="background:#3b82f6;"></span> K9 / L.E. (Blue)</div>
+        <div class="legend-item"><span class="dot" style="background:#3b82f6;"></span> LE / K9 (Blue)</div>
         <div class="legend-item"><span class="dot" style="background:#ef4444;"></span> SAR Team (Red)</div>
         <div class="legend-item"><span class="dot" style="background:#22c55e;"></span> Civilian (Green)</div>
         <div class="legend-item"><span class="dot" style="background:#8e8e93;"></span> Drone (Gray)</div>
@@ -236,7 +245,6 @@ body {
         <div class="legend-item"><span class="dot" style="background:#a52a2a;"></span> Command Post ⭐</div>
       </div>
     </div>
-
   </div>
 
   <div class="control-footer">
@@ -267,6 +275,13 @@ body {
         <div class="itemized-row"><span>Suspect Target Signatures Logged:</span><span id="repSusp">0 Located</span></div>
         <div class="itemized-row"><span>Suspect Vehicle Fix Points:</span><span id="repVeh">0 Logged</span></div>
         <div class="itemized-row"><span>Recovered Article Evidence Finds:</span><span id="repArt">0 Flagged</span></div>
+
+        <h2>4. Evidence Photo Upload Documentation</h2>
+        <div class="photo-preview-box">
+          <input type="file" id="evidencePhotoInput" accept="image/*" onchange="processReportImageUpload(this)">
+          <p id="uploadPromptText" style="font-size:12px; color:#64748b;">Attach Field Photo Attachment (Scene/Article/K9 Alert)</p>
+          <img id="reportImageDisplay" src="#" alt="Field Attachment" />
+        </div>
       </div>
       <div class="report-actions">
         <button class="print-btn" style="background: #4b5563;" onclick="document.getElementById('reportOverlay').style.display='none'">Return To Workspace</button>
@@ -279,9 +294,11 @@ body {
 let liveMap, commandPerimeterCircle, commandPostMarker;
 let mapLayers = {};
 let currentActiveLayerName = 'satellite';
+let selectedToolType = null;
 
 let nightModeState = null;
 let drawingActive = false;
+let currentDrawingMode = 'draw'; // 'draw' or 'erase'
 let mapLocked = false;
 let trackingRegistry = { k9: 0, officer: 0, sar: 0, civilian: 0, drone: 0, suspect: 0, vehicle: 0, article: 0 };
 let activeMapMarkersPool = [];
@@ -290,9 +307,7 @@ const canvas = document.getElementById('mapCanvas');
 const ctx = canvas.getContext('2d');
 let drawingNow = false;
 
-// INITIALIZE GEOGRAPHIC SYSTEM ENGINE MAP CODES
 function initTacticalMapEngine() {
-  // Default map lock position centered generally over the heart of Virginia tracking terrain
   const initialLatLong = [37.4138, -79.1422]; 
   
   liveMap = L.map('liveMapContainer', {
@@ -302,24 +317,67 @@ function initTacticalMapEngine() {
     attributionControl: false
   });
 
-  // 1. Establish Separate Independent View Databases
-  mapLayers.satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-    maxZoom: 19
+  mapLayers.satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19 });
+  mapLayers.terrain = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{y}/{x}.png', { maxZoom: 17 });
+  mapLayers.street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{y}/{x}.png', { maxZoom: 19 });
+
+  mapLayers.satellite.addTo(liveMap);
+  updatePerimeterCircleObject(initialLatLong, 500);
+
+  // ONE-TAP PLACEMENT ROUTER MAPPED TO TARGET FIELD CLICK
+  liveMap.on('click', function(e) {
+    if (selectedToolType) {
+      executeOneTapPlacement(e.latlng);
+    }
   });
+}
+
+function selectDeploymentTool(type) {
+  document.querySelectorAll('.deploy-btn').forEach(btn => btn.classList.remove('selected'));
   
-  mapLayers.terrain = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{y}/{x}.png', {
-    maxZoom: 17
-  });
+  if (selectedToolType === type) {
+    selectedToolType = null; // Unselect tool
+  } else {
+    selectedToolType = type;
+    document.getElementById(`tool-${type}`).classList.add('selected');
+    if(!mapLocked) toggleMapLock(); // Auto-lock position so clicking map drops asset instead of dragging map
+  }
+}
+
+function executeOneTapPlacement(latlng) {
+  let symbol = '🐾';
+  let colorHex = '#3b82f6';
   
-  mapLayers.street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{y}/{x}.png', {
-    maxZoom: 19
+  if (selectedToolType === 'officer') { symbol = '👮'; colorHex = '#3b82f6'; }
+  if (selectedToolType === 'sar') { symbol = '🚁'; colorHex = '#ef4444'; }
+  if (selectedToolType === 'civilian') { symbol = '🚶'; colorHex = '#22c55e'; }
+  if (selectedToolType === 'drone') { symbol = '🛸'; colorHex = '#8e8e93'; }
+  if (selectedToolType === 'suspect') { symbol = '⚠️'; colorHex = '#a855f7'; }
+  if (selectedToolType === 'vehicle') { symbol = '🚘'; colorHex = '#000000'; }
+  if (selectedToolType === 'article') { symbol = '💎'; colorHex = '#eab308'; }
+
+  const customIcon = L.divIcon({
+    className: 'custom-asset-node',
+    html: `<div style="background-color: ${colorHex}; border: 2px solid #fff; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 10px; box-shadow: 0 0 6px #000;">${symbol}</div>`,
+    iconSize: [24, 24],
+    iconAnchor: [12, 12]
   });
 
-  // Arm initial Satellite layout
-  mapLayers.satellite.addTo(liveMap);
+  const marker = L.marker(latlng, { icon: customIcon, draggable: true }).addTo(liveMap);
   
-  // Instantly anchor adjustable perimeter boundary natively
-  updatePerimeterCircleObject(initialLatLong, 500);
+  // ONE-TAP RECALL LOGIC: Click once to drop off the grid silently
+  marker.on('click', function() {
+    trackingRegistry[selectedToolType]--;
+    liveMap.removeLayer(marker);
+  });
+
+  activeMapMarkersPool.push(marker);
+  trackingRegistry[selectedToolType]++;
+  
+  // Clear tool highlight after drop to return control paths
+  document.querySelectorAll('.deploy-btn').forEach(btn => btn.classList.remove('selected'));
+  selectedToolType = null;
+  toggleMapLock(); // Release map view controls
 }
 
 function resizeCanvas() {
@@ -328,13 +386,11 @@ function resizeCanvas() {
 }
 window.addEventListener('resize', resizeCanvas);
 
-// RUN ENGINE AT LAUNCH WINDOW
 window.onload = () => {
   initTacticalMapEngine();
   resizeCanvas();
 };
 
-// MULTI-WAY MAP VIEW HOT SWAPPING PACKETS
 function switchMapLayer(targetLayer) {
   liveMap.removeLayer(mapLayers[currentActiveLayerName]);
   mapLayers[targetLayer].addTo(liveMap);
@@ -349,13 +405,11 @@ function switchMapLayer(targetLayer) {
   if (targetLayer === 'street') document.getElementById('btnSt').classList.add('active');
 }
 
-// BULLETPROOF LIVE ADDRESS GEOLOCATION MATRIX
 async function executeAddressSearchGo() {
   const addressQuery = document.getElementById('addressSearch').value.trim();
-  if (!addressQuery) return; // Silent execution guard
+  if (!addressQuery) return;
   
   try {
-    // Queries secure open street intelligence server natively for absolute coordinate values
     const geoResponse = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(addressQuery)}`);
     const geoData = await geoResponse.json();
     
@@ -363,35 +417,27 @@ async function executeAddressSearchGo() {
       const topMatch = geoData[0];
       const targetCoordinates = [parseFloat(topMatch.lat), parseFloat(topMatch.lon)];
       
-      // Auto centers GPS map view smoothly with zero alert popups
       liveMap.setView(targetCoordinates, 14);
-      
-      // Relocate Command Post Star marker silently
       if (commandPostMarker) commandPostMarker.remove();
       
       const brownStarIcon = L.divIcon({
-        className: 'custom-leaflet-marker',
+        className: 'custom-cp',
         html: `<div style="background-color: #a52a2a; border: 2px solid #c5a059; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; font-size: 11px; box-shadow: 0 0 8px #000; color: white;">⭐</div>`,
         iconSize: [26, 26],
         iconAnchor: [13, 13]
       });
       
       commandPostMarker = L.marker(targetCoordinates, { icon: brownStarIcon }).addTo(liveMap);
-      
-      // Re-anchor perimeter bounding lines instantly to the target address spot
-      const currentRadiusConfig = parseInt(document.getElementById('perimeterSlider').value);
-      updatePerimeterCircleObject(targetCoordinates, currentRadiusConfig);
-      
+      updatePerimeterCircleObject(targetCoordinates, parseInt(document.getElementById('perimeterSlider').value));
       document.getElementById('addressSearch').value = '';
     }
   } catch (error) {
-    console.error("Address geolocation system pipeline timeout:", error);
+    console.error(error);
   }
 }
 
 function updatePerimeterCircleObject(latLngCoords, radiusInMeters) {
   if (commandPerimeterCircle) commandPerimeterCircle.remove();
-  
   commandPerimeterCircle = L.circle(latLngCoords, {
     color: '#ef4444',
     fillColor: 'transparent',
@@ -402,75 +448,31 @@ function updatePerimeterCircleObject(latLngCoords, radiusInMeters) {
 
 function updatePerimeterRadius(val) {
   document.getElementById('radiusDisplay').innerText = `Current: ${val}m`;
-  if (commandPerimeterCircle) {
-    commandPerimeterCircle.setRadius(parseInt(val));
-  }
+  if (commandPerimeterCircle) commandPerimeterCircle.setRadius(parseInt(val));
 }
 
-// PLACING SEARCHERS IN AND OUT OF THE LIVE PERIMETER VIA MAP CORE COORDINATES
-function addSearcherToMap(type, iconSymbol) {
-  // Dispatches team marker adjacent to current map tracking viewport focus
-  const currentMapCenter = liveMap.getCenter();
-  const slightDisplacementLat = currentMapCenter.lat + (Math.random() - 0.5) * 0.01;
-  const slightDisplacementLon = currentMapCenter.lng + (Math.random() - 0.5) * 0.01;
-  const deployedLocation = [slightDisplacementLat, slightDisplacementLon];
-
-  let colorHex = '#3b82f6';
-  if (type === 'sar') colorHex = '#ef4444';
-  if (type === 'civilian') colorHex = '#22c55e';
-  if (type === 'drone') colorHex = '#8e8e93';
-  if (type === 'suspect') colorHex = '#a855f7';
-  if (type === 'vehicle') colorHex = '#000000';
-  if (type === 'article') colorHex = '#eab308';
-
-  const tacticalDivIcon = L.divIcon({
-    className: 'custom-field-asset-node',
-    html: `<div style="background-color: ${colorHex}; border: 2px solid #ffffff; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; color: white; box-shadow: 0 0 6px #000;">${iconSymbol.split(' ')[0]}</div>`,
-    iconSize: [24, 24],
-    iconAnchor: [12, 12]
-  });
-
-  const assetMarkerObject = L.marker(deployedLocation, { icon: tacticalDivIcon, draggable: true }).addTo(liveMap);
+// INTEGRATED ERASER SWITCH LOGIC
+function toggleDrawingMode(mode) {
+  const drawBtn = document.getElementById('drawToggle');
+  const eraseBtn = document.getElementById('eraseToggle');
   
-  // SILENT RECALL: Tapping the active live marker instantly pulls them out of the grid silently
-  assetMarkerObject.on('click', () => {
-    trackingRegistry[type]--;
-    liveMap.removeLayer(assetMarkerObject);
-  });
-
-  activeMapMarkersPool.push(assetMarkerObject);
-  trackingRegistry[type]++;
-}
-
-function toggleNightVision(mode) {
-  document.body.classList.remove('night-red', 'night-green');
-  document.getElementById('redNeon').classList.remove('active-red');
-  document.getElementById('greenNeon').classList.remove('active');
-  
-  if (nightModeState === mode) {
-    nightModeState = null;
-  } else {
-    nightModeState = mode;
-    if (mode === 'red') {
-      document.body.classList.add('night-red');
-      document.getElementById('redNeon').classList.add('active-red');
-    } else if (mode === 'green') {
-      document.body.classList.add('night-green');
-      document.getElementById('greenNeon').classList.add('active');
-    }
-  }
-}
-
-function toggleDrawingMode() {
-  drawingActive = !drawingActive;
-  const btn = document.getElementById('drawToggle');
-  if (drawingActive) {
-    btn.classList.add('active');
-    canvas.classList.add('drawing-active');
-    initializeCanvasDrawEngine();
-  } else {
-    btn.classList.remove('active');
+  if (drawingActive && currentDrawingMode === mode) {
+    // If clicking an already active tool, toggle off drawing mode completely
+    drawingActive = false;
+    drawBtn.classList.remove('active');
+    eraseBtn.classList.remove('active');
     canvas.classList.remove('drawing-active');
+  } else {
+    drawingActive = true;
+    currentDrawingMode = mode;
+    drawBtn.classList.remove('active');
+    eraseBtn.classList.remove('active');
+    canvas.classList.add('drawing-active');
+    
+    if (mode === 'draw') drawBtn.classList.add('active');
+    if (mode === 'erase') eraseBtn.classList.add('active');
+    
+    initializeCanvasDrawEngine();
   }
 }
 
@@ -493,9 +495,51 @@ function toggleMapLock() {
 }
 
 function initializeCanvasDrawEngine() {
-  canvas.onmousedown = (e) => { if(!drawingActive) return; drawingNow = true; ctx.beginPath(); ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 3; ctx.moveTo(e.offsetX, e.offsetY); };
+  canvas.onmousedown = (e) => { 
+    if(!drawingActive) return; 
+    drawingNow = true; 
+    ctx.beginPath(); 
+    
+    // Switch canvas context attributes depending on Eraser vs Marker selection
+    if (currentDrawingMode === 'erase') {
+      ctx.globalCompositeOperation = 'destination-out'; // Cuts out existing pixels cleanly
+      ctx.lineWidth = 20; // Thick line parameter for sweeping erasure sweeps
+    } else {
+      ctx.globalCompositeOperation = 'source-over'; // Default paint layer overhead
+      ctx.strokeStyle = '#ef4444'; 
+      ctx.lineWidth = 3; 
+    }
+    ctx.moveTo(e.offsetX, e.offsetY); 
+  };
+  
   canvas.onmousemove = (e) => { if (drawingNow && drawingActive) { ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); } };
   canvas.onmouseup = () => { drawingNow = false; };
+}
+
+function triggerVoiceAid(moduleName) {
+  window.speechSynthesis.cancel();
+  const instructionUtterance = new SpeechSynthesisUtterance(`TACNET First Aid initialized. Accessing hands-free tracking guidelines for ${moduleName}. Maintain control of the working dog.`);
+  instructionUtterance.rate = 0.85;
+  window.speechSynthesis.speak(instructionUtterance);
+}
+
+function toggleNightVision(mode) {
+  document.body.classList.remove('night-red', 'night-green');
+  document.getElementById('redNeon').classList.remove('active-red');
+  document.getElementById('greenNeon').classList.remove('active');
+  
+  if (nightModeState === mode) {
+    nightModeState = null;
+  } else {
+    nightModeState = mode;
+    if (mode === 'red') {
+      document.body.classList.add('night-red');
+      document.getElementById('redNeon').classList.add('active-red');
+    } else if (mode === 'green') {
+      document.body.classList.add('night-green');
+      document.getElementById('greenNeon').classList.add('active');
+    }
+  }
 }
 
 function triggerEmergencySOS() {
@@ -503,8 +547,18 @@ function triggerEmergencySOS() {
   document.getElementById('sosSystemBtn').innerText = '🚨 SOS BROADCASTED';
 }
 
-function toggleReplayEngine() {
-  document.getElementById('replayBtn').innerText = '🔄 REPLAY RUNNING';
+function processReportImageUpload(inputSource) {
+  const file = inputSource.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const imgElement = document.getElementById('reportImageDisplay');
+      imgElement.src = e.target.result;
+      imgElement.style.display = 'block';
+      document.getElementById('uploadPromptText').style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  }
 }
 
 function terminateAndGenerateReport() {
@@ -522,9 +576,15 @@ function terminateAndGenerateReport() {
 
 function executeTotalReset() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.globalCompositeOperation = 'source-over'; 
+  
   document.getElementById('addressSearch').value = '';
   document.getElementById('perimeterSlider').value = 500;
   document.getElementById('radiusDisplay').innerText = 'Current: 500m';
+  document.getElementById('evidencePhotoInput').value = '';
+  document.getElementById('reportImageDisplay').src = '#';
+  document.getElementById('reportImageDisplay').style.display = 'none';
+  document.getElementById('uploadPromptText').style.display = 'block';
   
   activeMapMarkersPool.forEach(marker => liveMap.removeLayer(marker));
   activeMapMarkersPool = [];
@@ -532,7 +592,7 @@ function executeTotalReset() {
   
   for (let key in trackingRegistry) { trackingRegistry[key] = 0; }
   
-  if(drawingActive) toggleDrawingMode();
+  if(drawingActive) toggleDrawingMode(currentDrawingMode);
   if(mapLocked) toggleMapLock();
   switchMapLayer('satellite');
   
@@ -544,10 +604,11 @@ function executeTotalReset() {
   document.getElementById('redNeon').classList.remove('active-red');
   document.getElementById('greenNeon').classList.remove('active');
   nightModeState = null;
+  selectedToolType = null;
+  document.querySelectorAll('.deploy-btn').forEach(btn => btn.classList.remove('selected'));
   
   document.getElementById('sosSystemBtn').style.backgroundColor = '#ef4444';
   document.getElementById('sosSystemBtn').innerText = '🚨 SOS OFFICER DOWN';
-  document.getElementById('replayBtn').innerText = '▶️ Replay Mission Sequence';
 }
 </script>
 </body>
