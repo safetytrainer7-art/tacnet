@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>TACNET - Task Force Command Console</title>
+
+<!-- Leaflet Live Tracking Engine Infrastructure -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
 <style>
 :root {
   --bg-slate: #111827; 
@@ -12,8 +17,6 @@
   --text-main: #f8fafc;
   --neon-red: #ef4444; 
   --neon-green: #22c55e;
-  --map-blue: #3b82f6;
-  --suspect-purple: #a855f7;
 }
 
 body.night-red { filter: grayscale(1) sepia(1) hue-rotate(-50deg) saturate(3); }
@@ -38,6 +41,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  z-index: 1000;
 }
 .brand-block { display: flex; align-items: center; gap: 12px; }
 .logo-icon { 
@@ -88,7 +92,6 @@ body {
   font-size: 11px; 
   font-weight: bold; 
   cursor: pointer; 
-  text-align: left; 
 }
 .deploy-btn:hover { background: #334155; }
 
@@ -101,34 +104,28 @@ body {
 
 .sos-master-btn { background: var(--neon-red); color: white; border: 2px solid #fff; padding: 12px; border-radius: 8px; font-size: 14px; font-weight: 900; letter-spacing: 1px; cursor: pointer; text-align: center; }
 
-.map-viewport { position: relative; background: #1e293b; display: flex; justify-content: center; align-items: center; overflow: hidden; }
+/* MAP VIEWPORT LAYER */
+.map-viewport { position: relative; background: #151f32; overflow: hidden; }
+#liveMapContainer { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 10; }
 
-/* THREE INDEPENDENT VIEWS SIMULATOR */
-.map-bg-layer { position: absolute; width: 100%; height: 100%; background-size: cover; background-position: center; transition: all 0.2s; opacity: 0.6; }
-.layer-satellite { background-image: radial-gradient(circle, transparent 10%, #0f172a 85%), url('https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&w=1200&q=80'); }
-.layer-terrain { background-image: radial-gradient(circle, transparent 10%, #0f172a 85%), url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80'); }
-.layer-street { background-image: radial-gradient(circle, transparent 10%, #0f172a 85%), url('https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?auto=format&fit=crop&w=1200&q=80'); }
-
-#mapCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; pointer-events: none; }
+/* CANVAS OVERLAY FOR TACTICAL RED MARKER NOTES */
+#mapCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 20; pointer-events: none; }
 #mapCanvas.drawing-active { pointer-events: auto; }
 
-.layer-controls { position: absolute; bottom: 20px; right: 20px; background: rgba(15, 23, 42, 0.95); border: 2px solid var(--neon-red); border-radius: 8px; padding: 6px; z-index: 20; display: flex; gap: 6px; }
+.layer-controls { position: absolute; bottom: 20px; right: 20px; background: rgba(15, 23, 42, 0.95); border: 2px solid var(--neon-red); border-radius: 8px; padding: 6px; z-index: 30; display: flex; gap: 6px; }
 .layer-btn { background: #334155; border: 1px solid var(--border-gold); color: white; padding: 6px 12px; border-radius: 4px; font-size: 11px; font-weight: bold; cursor: pointer; }
 .layer-btn.active { background: var(--neon-red); border-color: #fff; }
 
-.map-legend { position: absolute; top: 15px; right: 15px; background: rgba(15, 23, 42, 0.95); border: 2px solid var(--neon-red); border-radius: 8px; padding: 10px; z-index: 20; font-size: 11px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; }
+.map-legend { position: absolute; top: 15px; right: 15px; background: rgba(15, 23, 42, 0.95); border: 2px solid var(--neon-red); border-radius: 8px; padding: 10px; z-index: 30; font-size: 11px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; }
 .legend-item { display: flex; align-items: center; gap: 6px; font-weight: bold; }
 .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; border: 1px solid #fff; }
 
-#visualMarkerLayer { position: absolute; width: 100%; height: 100%; top: 0; left: 0; z-index: 15; pointer-events: auto; }
-.field-marker { position: absolute; width: 24px; height: 24px; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 8px rgba(0,0,0,0.8); cursor: pointer; transform: translate(-50%, -50%); display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: bold; color: white; }
-
-.control-footer { background: #0f172a; border-top: 2px solid var(--border-gold); padding: 12px 20px; display: flex; justify-content: space-between; gap: 15px; }
+.control-footer { background: #0f172a; border-top: 2px solid var(--border-gold); padding: 12px 20px; display: flex; justify-content: space-between; gap: 15px; z-index: 1000; }
 .footer-btn { flex: 1; padding: 12px; border-radius: 6px; font-weight: bold; cursor: pointer; text-align: center; border: 2px solid var(--neon-red); font-size: 14px; text-transform: uppercase; letter-spacing: 1px; }
 .btn-terminate { background: #b91c1c; color: white; }
 .btn-reset { background: #334155; color: #f8fafc; }
 
-.report-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 100; display: none; justify-content: center; align-items: center; padding: 20px; }
+.report-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 2000; display: none; justify-content: center; align-items: center; padding: 20px; }
 .report-content { background: #ffffff; color: #000000; width: 100%; max-width: 650px; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; max-height: 90vh; border: 4px solid var(--neon-red); }
 .report-header-banner { background: #0f172a; color: white; padding: 20px; border-bottom: 4px solid var(--border-gold); text-align: center; }
 .report-body { padding: 25px; overflow-y: auto; font-size: 14px; line-height: 1.6; }
@@ -149,8 +146,8 @@ body {
       </div>
     </div>
     <div class="nav-arrows">
-      <button class="arrow-btn" onclick="returnToGatekeeper()">⬅ Return Arrow</button>
-      <button class="arrow-btn" onclick="executeLocalBack()">📁 System Back</button>
+      <button class="arrow-btn" onclick="window.location.reload();">⬅ Return Arrow</button>
+      <button class="arrow-btn" onclick="window.location.reload();">📁 System Back</button>
     </div>
   </div>
 
@@ -158,26 +155,27 @@ body {
     
     <div class="sidebar">
       
-      <!-- AUTOMATED ZERO-BOX ADDRESS HUB -->
+      <!-- BULLETPROOF ADDRESS INBOUND ENTRY -->
       <div class="control-group">
         <div class="control-title">Address Target Entry</div>
         <div class="search-box-row">
-          <input type="text" id="addressSearch" placeholder="Type target tracking address...">
+          <input type="text" id="addressSearch" placeholder="Type target tracking address (e.g. Lynchburg, VA)...">
           <button onclick="executeAddressSearchGo()">GO</button>
         </div>
       </div>
 
+      <!-- SEARCH ASSET DISPATCH TRIGGER MATRIX -->
       <div class="control-group">
         <div class="control-title">Perimeter Deployment Hub</div>
         <div class="deployment-grid">
-          <button class="deploy-btn" onclick="addSearcherToMap('k9', '🐾 Link')">➕ K9 Team (Blue)</button>
-          <button class="deploy-btn" onclick="addSearcherToMap('officer', '👮 Officer')">➕ LE Officer (Blue)</button>
-          <button class="deploy-btn" onclick="addSearcherToMap('sar', '🚁 SAR')">➕ SAR Unit (Red)</button>
-          <button class="deploy-btn" onclick="addSearcherToMap('civilian', '🚶 Vol')">➕ Civilian (Green)</button>
-          <button class="deploy-btn" onclick="addSearcherToMap('drone', '🛸 Air')">➕ Drone (Gray)</button>
-          <button class="deploy-btn" onclick="addSearcherToMap('suspect', '⚠️ Susp')">➕ Suspect (Purple)</button>
-          <button class="deploy-btn" onclick="addSearcherToMap('vehicle', '🚘 Car')">➕ Suspect Vehicle</button>
-          <button class="deploy-btn" onclick="addSearcherToMap('article', '💎 Find')">➕ Article (Yellow)</button>
+          <button class="deploy-btn" onclick="addSearcherToMap('k9', '🐾 Link')">➕ K9 Team</button>
+          <button class="deploy-btn" onclick="addSearcherToMap('officer', '👮 LE')">➕ LE Officer</button>
+          <button class="deploy-btn" onclick="addSearcherToMap('sar', '🚁 SAR')">➕ SAR Unit</button>
+          <button class="deploy-btn" onclick="addSearcherToMap('civilian', '🚶 Vol')">➕ Civilian</button>
+          <button class="deploy-btn" onclick="addSearcherToMap('drone', '🛸 Air')">➕ Drone</button>
+          <button class="deploy-btn" onclick="addSearcherToMap('suspect', '⚠️ Susp')">➕ Suspect</button>
+          <button class="deploy-btn" onclick="addSearcherToMap('vehicle', '🚘 Car')">➕ Vehicle</button>
+          <button class="deploy-btn" onclick="addSearcherToMap('article', '💎 Find')">➕ Article</button>
         </div>
       </div>
 
@@ -215,14 +213,12 @@ body {
       <button class="sos-master-btn" id="sosSystemBtn" onclick="triggerEmergencySOS()">🚨 SOS OFFICER DOWN</button>
     </div>
 
+    <!-- LIVE LEAFLET GPS INTEGRATION PORT VIEW -->
     <div class="map-viewport" id="mapZone">
-      <div class="map-bg-layer layer-satellite" id="viewSatellite"></div>
-      <div class="map-bg-layer layer-terrain" id="viewTerrain" style="display: none;"></div>
-      <div class="map-bg-layer layer-street" id="viewStreet" style="display: none;"></div>
-
-      <div id="visualMarkerLayer"></div>
+      <div id="liveMapContainer"></div>
       <canvas id="mapCanvas"></canvas>
       
+      <!-- SEPARATE INDEPENDENT GPS MAP LAYER INTERFACE TOGGLES -->
       <div class="layer-controls">
         <button class="layer-btn active" id="btnSat" onclick="switchMapLayer('satellite')">Satellite</button>
         <button class="layer-btn" id="btnTerr" onclick="switchMapLayer('terrain')">Terrain</button>
@@ -280,75 +276,145 @@ body {
   </div>
 
 <script>
+let liveMap, commandPerimeterCircle, commandPostMarker;
+let mapLayers = {};
+let currentActiveLayerName = 'satellite';
+
 let nightModeState = null;
 let drawingActive = false;
 let mapLocked = false;
 let trackingRegistry = { k9: 0, officer: 0, sar: 0, civilian: 0, drone: 0, suspect: 0, vehicle: 0, article: 0 };
+let activeMapMarkersPool = [];
 
 const canvas = document.getElementById('mapCanvas');
 const ctx = canvas.getContext('2d');
 let drawingNow = false;
+
+// INITIALIZE GEOGRAPHIC SYSTEM ENGINE MAP CODES
+function initTacticalMapEngine() {
+  // Default map lock position centered generally over the heart of Virginia tracking terrain
+  const initialLatLong = [37.4138, -79.1422]; 
+  
+  liveMap = L.map('liveMapContainer', {
+    center: initialLatLong,
+    zoom: 13,
+    zoomControl: false,
+    attributionControl: false
+  });
+
+  // 1. Establish Separate Independent View Databases
+  mapLayers.satellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    maxZoom: 19
+  });
+  
+  mapLayers.terrain = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{y}/{x}.png', {
+    maxZoom: 17
+  });
+  
+  mapLayers.street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{y}/{x}.png', {
+    maxZoom: 19
+  });
+
+  // Arm initial Satellite layout
+  mapLayers.satellite.addTo(liveMap);
+  
+  // Instantly anchor adjustable perimeter boundary natively
+  updatePerimeterCircleObject(initialLatLong, 500);
+}
 
 function resizeCanvas() {
   canvas.width = document.getElementById('mapZone').clientWidth;
   canvas.height = document.getElementById('mapZone').clientHeight;
 }
 window.addEventListener('resize', resizeCanvas);
-setTimeout(resizeCanvas, 200);
 
+// RUN ENGINE AT LAUNCH WINDOW
+window.onload = () => {
+  initTacticalMapEngine();
+  resizeCanvas();
+};
+
+// MULTI-WAY MAP VIEW HOT SWAPPING PACKETS
 function switchMapLayer(targetLayer) {
-  document.getElementById('viewSatellite').style.display = 'none';
-  document.getElementById('viewTerrain').style.display = 'none';
-  document.getElementById('viewStreet').style.display = 'none';
+  liveMap.removeLayer(mapLayers[currentActiveLayerName]);
+  mapLayers[targetLayer].addTo(liveMap);
+  currentActiveLayerName = targetLayer;
+  
   document.getElementById('btnSat').classList.remove('active');
   document.getElementById('btnTerr').classList.remove('active');
   document.getElementById('btnSt').classList.remove('active');
   
-  if (targetLayer === 'satellite') {
-    document.getElementById('viewSatellite').style.display = 'block';
-    document.getElementById('btnSat').classList.add('active');
-  } else if (targetLayer === 'terrain') {
-    document.getElementById('viewTerrain').style.display = 'block';
-    document.getElementById('btnTerr').classList.add('active');
-  } else if (targetLayer === 'street') {
-    document.getElementById('viewStreet').style.display = 'block';
-    document.getElementById('btnSt').classList.add('active');
+  if (targetLayer === 'satellite') document.getElementById('btnSat').classList.add('active');
+  if (targetLayer === 'terrain') document.getElementById('btnTerr').classList.add('active');
+  if (targetLayer === 'street') document.getElementById('btnSt').classList.add('active');
+}
+
+// BULLETPROOF LIVE ADDRESS GEOLOCATION MATRIX
+async function executeAddressSearchGo() {
+  const addressQuery = document.getElementById('addressSearch').value.trim();
+  if (!addressQuery) return; // Silent execution guard
+  
+  try {
+    // Queries secure open street intelligence server natively for absolute coordinate values
+    const geoResponse = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(addressQuery)}`);
+    const geoData = await geoResponse.json();
+    
+    if (geoData && geoData.length > 0) {
+      const topMatch = geoData[0];
+      const targetCoordinates = [parseFloat(topMatch.lat), parseFloat(topMatch.lon)];
+      
+      // Auto centers GPS map view smoothly with zero alert popups
+      liveMap.setView(targetCoordinates, 14);
+      
+      // Relocate Command Post Star marker silently
+      if (commandPostMarker) commandPostMarker.remove();
+      
+      const brownStarIcon = L.divIcon({
+        className: 'custom-leaflet-marker',
+        html: `<div style="background-color: #a52a2a; border: 2px solid #c5a059; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; font-size: 11px; box-shadow: 0 0 8px #000; color: white;">⭐</div>`,
+        iconSize: [26, 26],
+        iconAnchor: [13, 13]
+      });
+      
+      commandPostMarker = L.marker(targetCoordinates, { icon: brownStarIcon }).addTo(liveMap);
+      
+      // Re-anchor perimeter bounding lines instantly to the target address spot
+      const currentRadiusConfig = parseInt(document.getElementById('perimeterSlider').value);
+      updatePerimeterCircleObject(targetCoordinates, currentRadiusConfig);
+      
+      document.getElementById('addressSearch').value = '';
+    }
+  } catch (error) {
+    console.error("Address geolocation system pipeline timeout:", error);
   }
 }
 
-// FIXED: AUTOMATED ADDRESS ROUTING — NO POPUP BOXES WHATSOEVER
-function executeAddressSearchGo() {
-  const addressQuery = document.getElementById('addressSearch').value.trim();
-  if (!addressQuery) return; // Silent safeguard if button is tapped blank
+function updatePerimeterCircleObject(latLngCoords, radiusInMeters) {
+  if (commandPerimeterCircle) commandPerimeterCircle.remove();
   
-  const existingCP = document.getElementById('commandPostMarker');
-  if(existingCP) existingCP.remove();
-  
-  // Instantly anchor the Brown Star Command Post to screen center silently
-  const container = document.getElementById('visualMarkerLayer');
-  const cpMarker = document.createElement('div');
-  cpMarker.id = 'commandPostMarker';
-  cpMarker.className = 'field-marker';
-  cpMarker.style.backgroundColor = '#a52a2a';
-  cpMarker.style.borderColor = '#c5a059';
-  cpMarker.style.left = '50%';
-  cpMarker.style.top = '50%';
-  cpMarker.innerHTML = '⭐';
-  
-  // Silent removal — no popups allowed
-  cpMarker.onclick = () => cpMarker.remove();
-  container.appendChild(cpMarker);
-  
-  // Clear the search field for the next address target automatically
-  document.getElementById('addressSearch').value = '';
+  commandPerimeterCircle = L.circle(latLngCoords, {
+    color: '#ef4444',
+    fillColor: 'transparent',
+    weight: 3,
+    radius: radiusInMeters
+  }).addTo(liveMap);
 }
 
-// FIXED: AUTOMATED SILENT PLACEMENT/RECALL
-function addSearcherToMap(type, labelText) {
-  const container = document.getElementById('visualMarkerLayer');
-  const marker = document.createElement('div');
-  marker.className = 'field-marker';
-  
+function updatePerimeterRadius(val) {
+  document.getElementById('radiusDisplay').innerText = `Current: ${val}m`;
+  if (commandPerimeterCircle) {
+    commandPerimeterCircle.setRadius(parseInt(val));
+  }
+}
+
+// PLACING SEARCHERS IN AND OUT OF THE LIVE PERIMETER VIA MAP CORE COORDINATES
+function addSearcherToMap(type, iconSymbol) {
+  // Dispatches team marker adjacent to current map tracking viewport focus
+  const currentMapCenter = liveMap.getCenter();
+  const slightDisplacementLat = currentMapCenter.lat + (Math.random() - 0.5) * 0.01;
+  const slightDisplacementLon = currentMapCenter.lng + (Math.random() - 0.5) * 0.01;
+  const deployedLocation = [slightDisplacementLat, slightDisplacementLon];
+
   let colorHex = '#3b82f6';
   if (type === 'sar') colorHex = '#ef4444';
   if (type === 'civilian') colorHex = '#22c55e';
@@ -356,23 +422,23 @@ function addSearcherToMap(type, labelText) {
   if (type === 'suspect') colorHex = '#a855f7';
   if (type === 'vehicle') colorHex = '#000000';
   if (type === 'article') colorHex = '#eab308';
+
+  const tacticalDivIcon = L.divIcon({
+    className: 'custom-field-asset-node',
+    html: `<div style="background-color: ${colorHex}; border: 2px solid #ffffff; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; color: white; box-shadow: 0 0 6px #000;">${iconSymbol.split(' ')[0]}</div>`,
+    iconSize: [24, 24],
+    iconAnchor: [12, 12]
+  });
+
+  const assetMarkerObject = L.marker(deployedLocation, { icon: tacticalDivIcon, draggable: true }).addTo(liveMap);
   
-  marker.style.backgroundColor = colorHex;
-  
-  let horizontalRandom = Math.floor(Math.random() * 40) + 30; 
-  let verticalRandom = Math.floor(Math.random() * 40) + 30;   
-  
-  marker.style.left = `${horizontalRandom}%`;
-  marker.style.top = `${verticalRandom}%`;
-  marker.innerHTML = labelText.split(' ')[0]; 
-  
-  // RECALL LOGIC: Tapping an active marker instantly pulls them off silently
-  marker.onclick = () => {
+  // SILENT RECALL: Tapping the active live marker instantly pulls them out of the grid silently
+  assetMarkerObject.on('click', () => {
     trackingRegistry[type]--;
-    marker.remove();
-  };
-  
-  container.appendChild(marker);
+    liveMap.removeLayer(assetMarkerObject);
+  });
+
+  activeMapMarkersPool.push(assetMarkerObject);
   trackingRegistry[type]++;
 }
 
@@ -395,10 +461,6 @@ function toggleNightVision(mode) {
   }
 }
 
-function updatePerimeterRadius(val) {
-  document.getElementById('radiusDisplay').innerText = `Current: ${val}m`;
-}
-
 function toggleDrawingMode() {
   drawingActive = !drawingActive;
   const btn = document.getElementById('drawToggle');
@@ -417,8 +479,16 @@ function toggleMapLock() {
   const btn = document.getElementById('lockToggle');
   if (mapLocked) {
     btn.classList.add('active-red');
+    liveMap.dragging.disable();
+    liveMap.touchZoom.disable();
+    liveMap.doubleClickZoom.disable();
+    liveMap.scrollWheelZoom.disable();
   } else {
     btn.classList.remove('active-red');
+    liveMap.dragging.enable();
+    liveMap.touchZoom.enable();
+    liveMap.doubleClickZoom.enable();
+    liveMap.scrollWheelZoom.enable();
   }
 }
 
@@ -428,7 +498,6 @@ function initializeCanvasDrawEngine() {
   canvas.onmouseup = () => { drawingNow = false; };
 }
 
-// SILENT FIELD UTILITIES
 function triggerEmergencySOS() {
   document.getElementById('sosSystemBtn').style.backgroundColor = '#000000';
   document.getElementById('sosSystemBtn').innerText = '🚨 SOS BROADCASTED';
@@ -436,14 +505,6 @@ function triggerEmergencySOS() {
 
 function toggleReplayEngine() {
   document.getElementById('replayBtn').innerText = '🔄 REPLAY RUNNING';
-}
-
-function returnToGatekeeper() {
-  window.location.reload();
-}
-
-function executeLocalBack() {
-  window.location.reload();
 }
 
 function terminateAndGenerateReport() {
@@ -459,19 +520,25 @@ function terminateAndGenerateReport() {
   document.getElementById('reportOverlay').style.display = 'flex';
 }
 
-// SILENT RESET
 function executeTotalReset() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   document.getElementById('addressSearch').value = '';
   document.getElementById('perimeterSlider').value = 500;
   document.getElementById('radiusDisplay').innerText = 'Current: 500m';
-  document.getElementById('visualMarkerLayer').innerHTML = '';
+  
+  activeMapMarkersPool.forEach(marker => liveMap.removeLayer(marker));
+  activeMapMarkersPool = [];
+  if (commandPostMarker) commandPostMarker.remove();
   
   for (let key in trackingRegistry) { trackingRegistry[key] = 0; }
   
   if(drawingActive) toggleDrawingMode();
   if(mapLocked) toggleMapLock();
   switchMapLayer('satellite');
+  
+  const originalCenter = [37.4138, -79.1422];
+  liveMap.setView(originalCenter, 13);
+  updatePerimeterCircleObject(originalCenter, 500);
   
   document.body.classList.remove('night-red', 'night-green');
   document.getElementById('redNeon').classList.remove('active-red');
