@@ -438,4 +438,176 @@ async function executeAddressSearchGo() {
       
       const brownStarIcon = L.divIcon({
         className: 'custom-cp',
-        html: `<div style="background-color: #a52a2a; border: 2
+        html: `<div style="background-color: #a52a2a; border: 2px solid #c5a059; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 10px; box-shadow: 0 0 6px #000; color: white;">⭐</div>`,
+        iconSize: [24, 24],
+        iconAnchor: [12, 12]
+      });
+      
+      commandPostMarker = L.marker(targetCoordinates, { icon: brownStarIcon }).addTo(liveMap);
+      updatePerimeterCircleObject(targetCoordinates, parseInt(document.getElementById('perimeterSlider').value));
+      document.getElementById('addressSearch').value = '';
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+function updatePerimeterCircleObject(latLngCoords, radiusInMeters) {
+  if (commandPerimeterCircle) commandPerimeterCircle.remove();
+  commandPerimeterCircle = L.circle(latLngCoords, {
+    color: '#ef4444',
+    fillColor: 'transparent',
+    weight: 3,
+    radius: radiusInMeters
+  }).addTo(liveMap);
+}
+
+// FIXED PERIMETER VECTOR TRACK CLAMPING
+function updatePerimeterRadius(val) {
+  if (commandPerimeterCircle) commandPerimeterCircle.setRadius(parseInt(val));
+}
+
+function toggleDrawingMode() {
+  drawingActive = !drawingActive;
+  const drawBtn = document.getElementById('drawToggle');
+  
+  if (drawingActive) {
+    drawBtn.classList.add('active');
+    canvas.classList.add('drawing-active');
+    initializeCanvasDrawEngine();
+  } else {
+    drawBtn.classList.remove('active');
+    canvas.classList.remove('drawing-active');
+  }
+}
+
+function executeOneClickLineClear() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+function toggleMapLock() {
+  mapLocked = !mapLocked;
+  const btn = document.getElementById('lockToggle');
+  if (mapLocked) {
+    btn.classList.add('active-red');
+    liveMap.dragging.disable();
+    liveMap.touchZoom.disable();
+    liveMap.doubleClickZoom.disable();
+    liveMap.scrollWheelZoom.disable();
+  } else {
+    btn.classList.remove('active-red');
+    liveMap.dragging.enable();
+    liveMap.touchZoom.enable();
+    liveMap.doubleClickZoom.enable();
+    liveMap.scrollWheelZoom.enable();
+  }
+}
+
+function initializeCanvasDrawEngine() {
+  canvas.onmousedown = (e) => { 
+    if(!drawingActive) return; 
+    drawingNow = true; 
+    ctx.beginPath(); 
+    ctx.strokeStyle = '#ef4444'; 
+    ctx.lineWidth = 3; 
+    ctx.moveTo(e.offsetX, e.offsetY); 
+  };
+  canvas.onmousemove = (e) => { if (drawingNow && drawingActive) { ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); } };
+  canvas.onmouseup = () => { drawingNow = false; };
+}
+
+function triggerVoiceAid(moduleName) {
+  window.speechSynthesis.cancel();
+  const instructionUtterance = new SpeechSynthesisUtterance(`TACNET First Aid initialized. Accessing hands-free tracking guidelines for ${moduleName}. Maintain control of the working dog.`);
+  instructionUtterance.rate = 0.85;
+  window.speechSynthesis.speak(instructionUtterance);
+}
+
+function toggleNightVision(mode) {
+  document.body.classList.remove('night-red', 'night-green');
+  document.getElementById('redNeon').classList.remove('active-red');
+  document.getElementById('greenNeon').classList.remove('active');
+  
+  if (nightModeState === mode) {
+    nightModeState = null;
+  } else {
+    nightModeState = mode;
+    if (mode === 'red') {
+      document.body.classList.add('night-red');
+      document.getElementById('redNeon').classList.add('active-red');
+    } else if (mode === 'green') {
+      document.body.classList.add('night-green');
+      document.getElementById('greenNeon').classList.add('active');
+    }
+  }
+}
+
+function triggerEmergencySOS() {
+  document.getElementById('sosSystemBtn').style.backgroundColor = '#000000';
+  document.getElementById('sosSystemBtn').innerText = '🚨 SOS BROADCASTED';
+}
+
+function processReportImageUpload(inputSource) {
+  const file = inputSource.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const imgElement = document.getElementById('reportImageDisplay');
+      imgElement.src = e.target.result;
+      imgElement.style.display = 'block';
+      document.getElementById('uploadPromptText').style.display = 'none';
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+function terminateAndGenerateReport() {
+  document.getElementById('repK9').innerText = `${trackingRegistry.k9} Deployed Dog Teams`;
+  document.getElementById('repLE').innerText = `${trackingRegistry.officer} Officers Tracked`;
+  document.getElementById('repSAR').innerText = `${trackingRegistry.sar} Active Mutual Aid Fixed Points`;
+  document.getElementById('repCiv').innerText = `${trackingRegistry.civilian} Grid Personnel Logs`;
+  document.getElementById('repDrone').innerText = `${trackingRegistry.drone} Airborne Surveillance Feeds`;
+  document.getElementById('repSusp').innerText = `${trackingRegistry.suspect} Threat Targets Logged`;
+  document.getElementById('repVeh').innerText = `${trackingRegistry.vehicle} Vehicle Fix Coordinates Archived`;
+  document.getElementById('repArt').innerText = `${trackingRegistry.article} Evidence Items Registered`;
+  
+  document.getElementById('reportOverlay').style.display = 'flex';
+}
+
+function executeTotalReset() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  document.getElementById('addressSearch').value = '';
+  document.getElementById('perimeterSlider').value = 500;
+  document.getElementById('evidencePhotoInput').value = '';
+  document.getElementById('reportImageDisplay').src = '#';
+  document.getElementById('reportImageDisplay').style.display = 'none';
+  document.getElementById('uploadPromptText').style.display = 'block';
+  
+  activeMapMarkersPool.forEach(marker => liveMap.removeLayer(marker));
+  activeMapMarkersPool = [];
+  if (commandPostMarker) commandPostMarker.remove();
+  
+  for (let key in trackingRegistry) { trackingRegistry[key] = 0; }
+  
+  if(drawingActive) toggleDrawingMode();
+  if(mapLocked) toggleMapLock();
+  switchMapLayer('satellite');
+  
+  const originalCenter = [37.4138, -79.1422];
+  liveMap.setView(originalCenter, 13);
+  updatePerimeterCircleObject(originalCenter, 500);
+  
+  document.body.classList.remove('night-red', 'night-green');
+  document.getElementById('redNeon').classList.remove('active-red');
+  document.getElementById('greenNeon').classList.remove('active');
+  nightModeState = null;
+  selectedToolType = null;
+  document.querySelectorAll('.deploy-btn').forEach(btn => btn.classList.remove('selected'));
+  
+  document.getElementById('sosSystemBtn').style.backgroundColor = '#ef4444';
+  document.getElementById('sosSystemBtn').innerText = '🚨 SOS OFFICER DOWN';
+}
+</script>
+</body>
+</html>
