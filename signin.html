@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TACNET Sign In</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+  html, body    margin: 0; padding: 0;
+    height: 100vh;
+    font-family: 'Bebas Neue', cursive, sans-serif;
+    background: url('IMAGE FOR TAC.png') no-repeat center center fixed;
+    background-size: contain;
+    overflow: hidden;
+    color: #d9b94e;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 10px; bottom: 10px;
+    left: 10px; right: 10px;
+    pointer-events: none;
+    border: 3px solid #FF3131;
+    box-shadow:
+      0 0 15px #FF3131,
+      0 0 25px #FF3131,
+      inset 0 0 15px #FF3131;
+    border-radius: 6px;
+    z-index: 9999;
+  }
+
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 2rem;
+    text-shadow: 1px 1px 3px rgba(156 126, 26, 0.4);
+  }
+
+  /* Placeholder container for sign-in and token buttons */
+  .btn-container {
+    display: flex;
+    gap: 3rem;
+  }
+
+  button {
+    padding: 1rem 3rem;
+    font-size: 1.5rem;
+    background: rgba(9, 26, 70, 0.85);
+    border: 3px solid #FF3131;
+    border-radius: 10px;
+    color: #e4c963;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    cursor: pointer;
+    box-shadow:
+      0 0 12px #002366,
+      0 0 24px #0044cc;
+    transition: all 0.3s ease;
+    user-select: none;
+  }
+
+  button:hover,
+  button:focus {
+    background: rgba(12, 38, 105, 1);
+    box-shadow:
+      0 0 20px #ff3a3a,
+      0 0 30px #ff5151;
+    color: #fff4a3;
+    outline: none;
+  }
+
+  @media (max-width: 600px) {
+    h1 {
+      font-size: 2rem;
+    }
+    .btn-container {
+      flex-direction: column;
+      gap: 1.5;
+    }
+    button {
+      font-size: 1.2rem;
+      padding: 0.8rem 2rem;
+      width: 200px;
+    }
+  }
+</style>
+</head>
+<body>
+
+  <h1>TACNET Sign In</h1>
+
+  <div class="btn-container" role="main" aria-label="Sign In Actions">
+    <button type="button" aria-label="Start Search">Start Search</button>
+    <button type="button" aria-label="Access Token Login">Access Token Login</button>
+  </div>
+
+body>
+</html>
