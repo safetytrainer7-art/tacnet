@@ -21,16 +21,6 @@
     position: relative;
   }
 
-  /* Light royal blue overlay to lighten backdrop */
-  body::after {
-    content: '';
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0, 57, 153, 0.35); /* royal blue 35% transparent */
-    pointer-events: none;
-    z-index: 0;
-  }
-
   /* Red neon border perimeter */
   body::before {
     content: '';
@@ -67,15 +57,13 @@
     z-index: 1;
   }
 
-  /* Gold cracked nickel raised text effect */
+  /* Gold cracked nickel raised text effect with softened shadow */
   h1 {
     font-size: 4rem;
     margin: 0;
     color: #d9b94e;
-    text-shadow:
-      1px 1px 0 #9c7e1a,
-      2px 2px 2px #6e5910,
-      3px 3px 5px #3c2f06;
+    /* softened text shadow for brightness */
+    text-shadow: 1px 1px 3px rgba(156, 126, 26, 0.4);
     letter-spacing: 0.15em;
   }
 
@@ -85,7 +73,8 @@
     letter-spacing: 0.1em;
     margin: 0.5rem 0 1rem 0;
     text-transform: uppercase;
-    opacity: 0.8;
+    opacity: 0.85;
+    text-shadow: none;
   }
 
   p.tagline {
@@ -93,6 +82,7 @@
     margin: 0;
     font-weight: 600;
     letter-spacing: 0.08em;
+    text-shadow: none;
   }
 
   .creator-credit {
@@ -100,6 +90,7 @@
     margin-top: 2rem;
     font-weight: 600;
     opacity: 0.75;
+    text-shadow: none;
   }
 
   /* Buttons with red neon border and royal blue glow */
