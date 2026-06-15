@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,12 +20,12 @@
     overflow: hidden;
   }
 
-  /* Container with background image and red border */
+  /* Container with background image and red border in portrait ratio */
   .image-container {
     position: relative;
     width: 90vw;
-    max-width: 720px;
-    aspect-ratio: 16 / 9; /* adjust to your image ratio */
+    max-width: 420px; /* typical portrait phone width */
+    aspect-ratio: 9 / 16; /* portrait ratio */
     background: url('IMAGE FOR TAC.png') no-repeat center center;
     background-size: contain;
     border: 3px solid #FF3131;
@@ -73,7 +74,8 @@
   @media (max-width: 600px) {
     .image-container {
       width: 95vw;
-      aspect-ratio: 16 / 9;
+      max-width: none;
+      aspect-ratio: 9 / 16;
     }
     .arrow-btn {
       width: 40px;
