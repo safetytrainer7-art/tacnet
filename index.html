@@ -8,51 +8,52 @@
   @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 
   html, body {
+    height: 100vh;
     margin: 0; 
     padding: 0;
-    height: 100vh;
     font-family: 'Bebas Neue', cursive, sans-serif;
-    background: url('IMAGE FOR TAC.png') no-repeat center center fixed;
-    background-size: contain;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #000; /* fallback */
     overflow: hidden;
-    position: relative;
   }
 
-  /* Neon red border */
-  body::before {
-    content: '';
-    position: fixed;
-    top: 10px; bottom: 10px;
-    left: 10px; right: 10px;
-    pointer-events: none;
+  /* Container with background image and red border */
+  .image-container {
+    position: relative;
+    width: 90vw;
+    max-width: 720px;
+    aspect-ratio: 16 / 9; /* adjust to your image ratio */
+    background: url('IMAGE FOR TAC.png') no-repeat center center;
+    background-size: contain;
     border: 3px solid #FF3131;
     box-shadow:
       0 0 15px #FF3131,
       0 0 25px #FF3131,
       inset 0 0 15px #FF3131;
     border-radius: 6px;
-    z-index: 9999;
   }
 
-  /* Arrow button flush bottom right, no margin */
+  /* Arrow button attached bottom-right of container */
   .arrow-btn {
-    position: fixed;
+    position: absolute;
     bottom: 0;
     right: 0;
-    width: 60px;
-    height: 60px;
-    cursor: pointer;
+    width: 50px;
+    height: 50px;
     background: rgba(9, 26, 70, 0.85);
     border: 3px solid #FF3131;
     border-radius: 10px 0 0 0;
     box-shadow:
       0 0 15px #FF3131,
       0 0 30px #FF3131;
+    cursor: pointer;
     display: flex;
     justify-content: center;
     align-items: center;
     transition: background 0.3s;
-    z-index: 10000;
+    z-index: 10;
   }
 
   .arrow-btn:hover {
@@ -63,20 +64,38 @@
     border: solid #e4c963;
     border-width: 0 4px 4px 0;
     display: inline-block;
-    padding: 12px;
+    padding: 10px;
     transform: rotate(45deg); /* arrow pointing down-right */
     -webkit-transform: rotate(45deg);
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 600px) {
+    .image-container {
+      width: 95vw;
+      aspect-ratio: 16 / 9;
+    }
+    .arrow-btn {
+      width: 40px;
+      height: 40px;
+    }
+    .arrow-icon {
+      padding: 8px;
+    }
   }
 </style>
 </head>
 <body>
 
-  <button class="arrow-btn" aria-label="Proceed" onclick="location.href='signin.html'">
-    <i class="arrow-icon"></i>
-  </button>
+  <div class="image-container">
+    <button class="arrow-btn" aria-label="Proceed" onclick="location.href='signin.html'">
+      <i class="arrow-icon"></i>
+    </button>
+  </div>
 
 </body>
 </html>
+
 
 
 
