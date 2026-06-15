@@ -5,10 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>TACNET Landing</title>
 <style>
-  @import url('https://fonts.com/css2?family=Bebas+Neue&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 
   html, body {
-    margin: 0; padding: 0;
+    margin: 0; 
+    padding: 0;
     height: 100vh;
     font-family: 'Bebas Neue', cursive, sans-serif;
     background: url('IMAGE FOR TAC.png') no-repeat center center fixed;
@@ -33,17 +34,17 @@
     z-index: 9999;
   }
 
-  /* Arrow button fixed bottom right */
+  /* Arrow button flush bottom right, no margin */
   .arrow-btn {
     position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 50px;
-    height: 50px;
+    bottom: 0;
+    right: 0;
+    width: 60px;
+    height: 60px;
     cursor: pointer;
     background: rgba(9, 26, 70, 0.85);
     border: 3px solid #FF3131;
-    border-radius: 50%;
+    border-radius: 10px 0 0 0;
     box-shadow:
       0 0 15px #FF3131,
       0 0 30px #FF3131;
@@ -51,19 +52,19 @@
     justify-content: center;
     align-items: center;
     transition: background 0.3s;
+    z-index: 10000;
   }
 
   .arrow-btn:hover {
     background: rgba(12, 38, 105, 1);
   }
 
-  /* Simple arrow icon, rotated down */
   .arrow-icon {
     border: solid #e4c963;
     border-width: 0 4px 4px 0;
     display: inline-block;
-    padding: 10px;
-    transform: rotate(45deg); /* pointing down-right */
+    padding: 12px;
+    transform: rotate(45deg); /* arrow pointing down-right */
     -webkit-transform: rotate(45deg);
   }
 </style>
