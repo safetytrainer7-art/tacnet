@@ -18,6 +18,17 @@
     -webkit-background-size: contain;
     -moz-background-size: contain;
     -o-background-size: contain;
+    position: relative;
+  }
+
+  /* Light royal blue overlay to lighten backdrop */
+  body::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 57, 153, 0.35); /* royal blue 35% transparent */
+    pointer-events: none;
+    z-index: 0;
   }
 
   /* Red neon border perimeter */
@@ -53,6 +64,7 @@
     text-align: center;
     color: #e4c963;
     user-select: none;
+    z-index: 1;
   }
 
   /* Gold cracked nickel raised text effect */
@@ -158,5 +170,6 @@
 
 </body>
 </html>
+
 
 
