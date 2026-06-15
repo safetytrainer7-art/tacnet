@@ -2,25 +2,22 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<title>TACNET - Landing Page</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>TACNET Landing</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+  @import url('https://fonts.com/css2?family=Bebas+Neue&display=swap');
 
   html, body {
     margin: 0; padding: 0;
     height: 100vh;
-    overflow: hidden;
     font-family: 'Bebas Neue', cursive, sans-serif;
-    background: #000000 url('IMAGE FOR TAC.png') no-repeat center center fixed;
+    background: url('IMAGE FOR TAC.png') no-repeat center center fixed;
     background-size: contain;
-    -webkit-background-size: contain;
-    -moz-background-size: contain;
-    -o-background-size: contain;
+    overflow: hidden;
     position: relative;
   }
 
-  /* Red neon border perimeter */
+  /* Neon red border */
   body::before {
     content: '';
     position: fixed;
@@ -36,63 +33,50 @@
     z-index: 9999;
   }
 
-  /* Smaller repositioned buttons bottom center */
-  .btn-container {
-    position: absolute;
-    bottom: 5%;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 1rem;
-  }
-
-  .btn {
-    padding: 0.6rem 1.5rem;
-    font-size: 1rem;
-    color: #e4c963;
-    background: rgba(9, 26, 70, 0.75);
-    border: 2px solid #FF3131;
-    border-radius: 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
+  /* Arrow button fixed bottom right */
+  .arrow-btn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
     cursor: pointer;
+    background: rgba(9, 26, 70, 0.85);
+    border: 3px solid #FF3131;
+    border-radius: 50%;
     box-shadow:
-      0 0 8px #002366,
-      0 0 15px #0044cc;
-    transition: all 0.3s ease;
-    user-select: none;
+      0 0 15px #FF3131,
+      0 0 30px #FF3131;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background 0.3s;
   }
 
-  .btn:hover,
-  .btn:focus {
+  .arrow-btn:hover {
     background: rgba(12, 38, 105, 1);
-    box-shadow:
-      0 0 15px #ff3a3a,
-      0 0 25px #ff5151;
-    color: #fff4a3;
-    outline: none;
   }
 
-  @media (max-width: 600px) {
-    .btn {
-      font-size: 0.85rem;
-      padding: 0.5rem 1.2rem;
-    }
-    .btn-container {
-      bottom: 6%;
-    }
+  /* Simple arrow icon, rotated down */
+  .arrow-icon {
+    border: solid #e4c963;
+    border-width: 0 4px 4px 0;
+    display: inline-block;
+    padding: 10px;
+    transform: rotate(45deg); /* pointing down-right */
+    -webkit-transform: rotate(45deg);
   }
 </style>
 </head>
 <body>
 
-  <div class="btn-container">
-    <button class="btn" type="button" aria-label="Start Search">Start Search</button>
-    <button class="btn" type="button" aria-label="Access Token Login">Access Token Login</button>
-  </div>
+  <button class="arrow-btn" aria-label="Proceed" onclick="location.href='signin.html'">
+    <i class="arrow-icon"></i>
+  </button>
 
 </body>
 </html>
+
 
 
 
