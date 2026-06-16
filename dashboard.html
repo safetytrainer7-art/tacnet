@@ -1,44 +1,54 @@
-// 1. Satellite Map Base
-const map = L.map('map').setView([37.5, -79.2], 12);
-L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}').addTo(map);
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        body { margin: 0; display: grid; grid-template-columns: 300px 1fr; height: 100vh; background: #0a1a2f; color: #fff; font-family: sans-serif; }
+        .sidebar { background: #1a4d2e; padding: 20px; border-right: 3px solid #d4b04a; }
+        #map { height: 100vh; cursor: crosshair; }
+        .ledger-btn { background: #d4b04a; color: #0a1a2f; border: none; padding: 5px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2 style="color:#d4b04a">TACNET MISSION</h2>
+        <div id="ledger"></div>
+        <button onclick="window.location.href='index.html'" style="margin-top:20px; width:100%; padding:10px;">TERMINATE MISSION</button>
+    </div>
+    <div id="map"></div>
 
-// 2. High-Performance Red Pen
-let isDrawing = false;
-let currentPath = null;
-map.on('mousedown', (e) => {
-    isDrawing = true;
-    map.dragging.disable(); // Locks map while drawing
-    currentPath = L.polyline([], {color: 'red', weight: 4}).addTo(map);
-});
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // 1. Map Setup
+        const map = L.map('map').setView([37.5, -79.2], 12);
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}').addTo(map);
 
-map.on('mousemove', (e) => {
-    if (isDrawing) currentPath.addLatLng(e.latlng);
-});
+        // 2. Red Pen Tool
+        let isDrawing = false;
+        let currentPath = null;
+        map.on('mousedown', (e) => {
+            isDrawing = true;
+            map.dragging.disable();
+            currentPath = L.polyline([], {color: 'red', weight: 4}).addTo(map);
+        });
+        map.on('mousemove', (e) => { if (isDrawing) currentPath.addLatLng(e.latlng); });
+        map.on('mouseup', () => { isDrawing = false; map.dragging.enable(); });
 
-map.on('mouseup', () => {
-    isDrawing = false;
-    map.dragging.enable(); // Unlocks map
-});
-
-// 3. Precision Placement System
-let selectedUnit = null;
-function setUnit(name, color) {
-    selectedUnit = {name, color};
-    map.getContainer().style.cursor = 'crosshair';
-}
-
-map.on('click', (e) => {
-    if (selectedUnit) {
-        const marker = L.circleMarker(e.latlng, {
-            fillColor: selectedUnit.color,
-            fillOpacity: 1,
-            color: '#fff',
-            radius: 8
-        }).addTo(map);
+        // 3. Ledger & Marker Logic
+        let selectedUnit = null;
+        const units = [{n:"Supervisor",c:"#FFF"},{n:"K9",c:"#87CEFA"},{n:"LE",c:"#00F"},{n:"SAR",c:"#F00"},{n:"Civ",c:"#0F0"},{n:"Suspect",c:"#800"},{n:"Vehicle",c:"#000"},{n:"Article",c:"#F80"},{n:"CMD",c:"#FF0"},{n:"Drone",c:"#888"}];
         
-        // Right-click to remove
-        marker.on('contextmenu', () => map.removeLayer(marker));
-        selectedUnit = null;
-        map.getContainer().style.cursor = '';
-    }
-});
+        units.forEach(u => {
+            document.getElementById('ledger').innerHTML += `<div style="padding:8px 0; border-bottom:1px solid #d4b04a;">${u.n} <button class="ledger-btn" onclick="selectedUnit={c:'${u.c}'}">PLACE</button></div>`;
+        });
+
+        map.on('click', (e) => {
+            if (selectedUnit) {
+                const m = L.circleMarker(e.latlng, {fillColor: selectedUnit.c, fillOpacity: 1, color: '#fff', radius: 8}).addTo(map);
+                m.on('contextmenu', () => map.removeLayer(m)); // Right-click to remove
+                selectedUnit = null;
+            }
+        });
+    </script>
+</body>
+</html>
