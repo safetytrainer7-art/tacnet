@@ -1,5 +1,0 @@
-[
-  { "id": "unit-01", "name": "K9 Handler - Wood", "lat": 37.5, "lng": -79.2, "status": "active" },
-  { "id": "unit-02", "name": "SAR Team - Alpha", "lat": null, "lng": null, "status": "available" },
-  { "id": "unit-03", "name": "Drone Operator - Beta", "lat": null, "lng": null, "status": "available" }
-]
