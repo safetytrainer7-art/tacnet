@@ -4,62 +4,55 @@
     <meta charset="UTF-8">
     <title>TACNET | MISSION CONTROL</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css"/>
     <style>
         :root { --navy: #0a1a2f; --green: #1a4d2e; --gold: #d4b04a; --text: #e9f1ff; }
         body { margin: 0; display: grid; grid-template-columns: 320px 1fr; height: 100vh; background: var(--navy); color: var(--text); font-family: 'Rajdhani', sans-serif; }
         .sidebar { background: var(--green); border-right: 3px solid var(--gold); padding: 20px; }
         #map { height: 100vh; }
-        .btn-act { background: var(--gold); color: var(--navy); border: none; padding: 12px; width: 100%; margin-top: 10px; cursor: pointer; font-weight: bold; }
-        .alert-btn { background: #ff0000; color: white; padding: 15px; width: 100%; border: none; cursor: pointer; }
+        .search-box { width: 100%; padding: 10px; background: var(--navy); color: white; border: 1px solid var(--gold); }
+        .btn-tac { background: var(--gold); color: var(--navy); border: none; padding: 10px; width: 100%; margin-top: 5px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
     <div class="sidebar">
-        <button class="alert-btn" onclick="alert('!!! EMERGENCY ALERT BROADCAST !!!')">OFFICER EMERGENCY</button>
+        <h2 style="color:var(--gold)">MISSION LOG IN</h2>
+        <input type="text" placeholder="Mission Token ID" class="search-box">
+        <button class="btn-tac" onclick="alert('Mission Authenticated')">AUTHORIZE</button>
+        <hr style="border: 1px solid var(--gold)">
+        <h3 style="color:var(--gold)">SEARCH ADDRESS</h3>
+        <input type="text" id="addr" placeholder="Enter Location..." class="search-box">
+        <button class="btn-tac" onclick="findLocation()">GO</button>
         <h3 style="color:var(--gold)">PERSONNEL LEDGER</h3>
         <div id="ledger"></div>
-        <button class="btn-act" onclick="terminate()">TERMINATE MISSION</button>
     </div>
     <div id="map"></div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
     <script>
-        // 1. Initialize Map
-        const map = L.map('map').setView([37.5, -79.2], 12);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        // Satellite Map Layer
+        const sat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
+        const street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+        const map = L.map('map', { layers: [sat] }).setView([37.5, -79.2], 12);
+        L.control.layers({"Satellite": sat, "Street": street}).addTo(map);
 
-        // 2. Tactical Red Pen (Draw Control)
-        const drawnItems = new L.FeatureGroup();
-        map.addLayer(drawnItems);
-        const drawControl = new L.Control.Draw({
-            draw: {
-                polyline: { shapeOptions: { color: '#ff0000', weight: 5 } },
-                polygon: false, rectangle: false, circle: false, marker: false
-            },
-            edit: { featureGroup: drawnItems }
-        });
-        map.addControl(drawControl);
-        map.on(L.Draw.Event.CREATED, (e) => drawnItems.addLayer(e.layer));
+        // Auto-Perimeter Function
+        function findLocation() {
+            const addr = document.getElementById('addr').value;
+            // Simulated Geocode - In production this calls a geocoding API
+            const lat = 37.5, lng = -79.2; 
+            map.setView([lat, lng], 15);
+            L.circle([lat, lng], { color: '#39ff7a', fillColor: '#39ff7a', radius: 200 }).addTo(map);
+        }
 
-        // 3. Ledger Logic
-        const units = [
-            { name: "Supervisor", color: "#FFFFFF" }, { name: "K9 Team", color: "#87CEFA" },
-            { name: "Law Enforcement", color: "#0000FF" }, { name: "SARs", color: "#FF0000" },
-            { name: "Civilian", color: "#008000" }, { name: "Suspect", color: "#800080" },
-            { name: "Suspect Vehicle", color: "#000000" }, { name: "Article Find", color: "#FFA500" },
-            { name: "Command Post", color: "#FFFF00" }, { name: "Drone", color: "#808080" }
-        ];
+        const units = [{name:"Supervisor",color:"#FFF"},{name:"K9 Team",color:"#87CEFA"},{name:"Law Enforcement",color:"#00F"},{name:"SARs",color:"#F00"},{name:"Civilian",color:"#0F0"},{name:"Suspect",color:"#800080"},{name:"Suspect Vehicle",color:"#000"},{name:"Article Find",color:"#F80"},{name:"Command Post",color:"#FF0"},{name:"Drone",color:"#888"}];
 
         units.forEach(u => {
-            document.getElementById('ledger').innerHTML += `<div style="padding:8px; border-bottom:1px solid #d4b04a;">
+            document.getElementById('ledger').innerHTML += `<div style="padding:5px; border-bottom:1px solid #d4b04a;">
                 <span style="background:${u.color}; width:12px; height:12px; display:inline-block; border:1px solid #fff;"></span> ${u.name} 
                 <button onclick="deploy('${u.name}', '${u.color}')" style="float:right;">ADD</button></div>`;
         });
 
         function deploy(n, c) { L.circleMarker(map.getCenter(), {fillColor: c, fillOpacity: 1, color:'#fff', radius:8}).addTo(map).bindPopup(n); }
-        function terminate() { if(confirm("ABORT MISSION? DATA WIPE.")) window.location.href="index.html"; }
     </script>
 </body>
 </html>
