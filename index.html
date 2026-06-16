@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TACNET | Tactical Search Operations</title>
+    <style>
+        /* TACNET Tactical Design System */
+        :root {
+            --navy-900: #0a1a2f;
+            --hunter-green: #1a4d2e;
+            --gold: #d4b04a;
+            --neon-green: #39ff7a;
+            --text-main: #e9f1ff;
+        }
+
+        body {
+            background-color: var(--navy-900);
+            color: var(--text-main);
+            font-family: 'Rajdhani', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background-color: var(--hunter-green);
+            border-bottom: 3px solid var(--gold);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: var(--gold);
+            font-size: 2.5rem;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .main-container {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .tactical-panel {
+            background-color: rgba(26, 77, 46, 0.2);
+            border: 1px solid var(--gold);
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .btn-action {
+            background-color: var(--gold);
+            color: var(--navy-900);
+            padding: 10px 20px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>TACNET</h1>
+        <p>Tactical Search Operations · Earl Wood, VA</p>
+    </header>
+
+    <main class="main-container">
+        <div class="tactical-panel">
+            <h2>Operations Console</h2>
+            <p>System status: Active. Ready for tactical deployment.</p>
+            <button class="btn-action">Deploy Unit</button>
+        </div>
+    </main>
+</body>
+</html>
