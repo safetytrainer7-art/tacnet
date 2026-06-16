@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TACNET | Tactical Search Operations</title>
-    <!-- Leaflet CSS for the map -->
+    <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         :root {
@@ -16,9 +16,10 @@
         body { background-color: var(--navy-900); color: var(--text-main); font-family: 'Rajdhani', sans-serif; margin: 0; }
         .view { display: none; padding: 20px; }
         .active { display: block; }
-        .panel { border: 2px solid var(--gold); background: var(--hunter-green); padding: 20px; border-radius: 8px; }
+        .panel { border: 2px solid var(--gold); background: var(--hunter-green); padding: 20px; border-radius: 8px; margin-bottom: 20px; }
         button { background: var(--gold); color: var(--navy-900); padding: 10px 20px; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase; }
-        #map { height: 400px; width: 100%; margin: 20px 0; border: 2px solid var(--gold); }
+        /* Map needs a set height to appear */
+        #map { height: 500px; width: 100%; border: 2px solid var(--gold); }
     </style>
 </head>
 <body>
@@ -28,9 +29,9 @@
         <div class="panel" style="max-width: 400px; margin: 50px auto; text-align: center;">
             <h1>TACNET</h1>
             <p>TACTICAL SIGN-IN</p>
-            <input type="email" placeholder="Email" style="width: 90%; padding: 10px; margin: 10px 0;"><br>
-            <input type="password" placeholder="Password" style="width: 90%; padding: 10px; margin: 10px 0;"><br>
-            <button onclick="initMap(); document.getElementById('login-view').classList.remove('active'); document.getElementById('dashboard-view').classList.add('active');">SIGN IN</button>
+            <input type="email" id="email" placeholder="Email" style="width: 90%; padding: 10px; margin: 10px 0;"><br>
+            <input type="password" id="password" placeholder="Password" style="width: 90%; padding: 10px; margin: 10px 0;"><br>
+            <button onclick="handleLogin()">SIGN IN</button>
         </div>
     </div>
 
@@ -43,27 +44,24 @@
         <div class="panel" style="margin-top: 20px;">
             <h2>Live Tactical Map</h2>
             <div id="map"></div>
-            <button onclick="alert('Unit Deployed')">DEPLOY UNIT</button>
+            <button style="margin-top: 15px;" onclick="alert('Unit Deployed')">DEPLOY UNIT</button>
         </div>
     </div>
 
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        function initMap() {
-            // Initialize map centered on Virginia
-            const map = L.map('map').setView([37.5, -79.2], 10);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-
-            // Load searchers from your GitHub data file
-            fetch('data/searchers.json')
-                .then(response => response.json())
-                .then(data => {
-                    data.forEach(unit => {
-                        L.marker([unit.lat, unit.lng]).addTo(map).bindPopup(unit.name);
-                    });
-                })
-                .catch(err => console.log("Data file not found yet - create data/searchers.json"));
+        function handleLogin() {
+            // Simple check for login
+            document.getElementById('login-view').classList.remove('active');
+            document.getElementById('dashboard-view').classList.add('active');
+            
+            // Initialize map after view is visible
+            setTimeout(function() {
+                const map = L.map('map').setView([37.5, -79.2], 10);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+                map.invalidateSize(); // Crucial: Fixes the tiny square issue
+            }, 100);
         }
     </script>
 </body>
