@@ -1,0 +1,28 @@
+// Add this configuration to the <script> section of your dashboard.html
+const UNIT_CONFIG = {
+    1: { name: "Supervisor", color: "#FFFFFF" },
+    2: { name: "K9 Team", color: "#ADD8E6" },
+    3: { name: "Law Enforcement", color: "#0000FF" },
+    4: { name: "SARs", color: "#FF0000" },
+    5: { name: "Civilian", color: "#008000" },
+    6: { name: "Suspect", color: "#800080" },
+    7: { name: "Suspect Vehicle", color: "#000000" },
+    8: { name: "Article Find", color: "#FFA500" },
+    9: { name: "Command Post", color: "#FFFF00" }, // Red Star will be an icon override
+    10: { name: "Drone", color: "#808080" }
+};
+
+function deployUnit(id) {
+    const unit = UNIT_CONFIG[id];
+    const center = map.getCenter();
+    
+    // Create custom marker with your specific color
+    const marker = L.circleMarker([center.lat, center.lng], {
+        color: '#000',
+        fillColor: unit.color,
+        fillOpacity: 1,
+        radius: 8
+    }).addTo(map);
+    
+    marker.bindPopup(unit.name).openPopup();
+}
