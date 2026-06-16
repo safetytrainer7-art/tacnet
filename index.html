@@ -2,64 +2,62 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TACNET | Tactical Search Operations</title>
+    <title>TACNET | Operational Command</title>
+    <!-- Map Engine -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
-        :root {
-            --navy-900: #0a1a2f;
-            --hunter-green: #1a4d2e;
-            --gold: #d4b04a;
-            --text-main: #e9f1ff;
-        }
-        body { background-color: var(--navy-900); color: var(--text-main); font-family: sans-serif; margin: 0; }
-        .view { display: none; padding: 20px; }
-        .active { display: block; }
-        .panel { border: 2px solid var(--gold); background: var(--hunter-green); padding: 20px; border-radius: 8px; }
-        button { background: var(--gold); color: var(--navy-900); padding: 10px 20px; border: none; cursor: pointer; font-weight: bold; margin-top: 10px; }
-        #map { height: 500px; width: 100%; border: 2px solid var(--gold); }
+        :root { --navy: #0a1a2f; --green: #1a4d2e; --gold: #d4b04a; --text: #e9f1ff; }
+        body { margin: 0; display: flex; height: 100vh; font-family: sans-serif; background: var(--navy); color: var(--text); }
+        .sidebar { width: 320px; background: var(--green); border-right: 3px solid var(--gold); padding: 20px; }
+        .ledger-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--gold); }
+        .dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; margin-right: 10px; border: 1px solid #fff; }
+        .main { flex: 1; padding: 20px; display: flex; flex-direction: column; }
+        #map { flex: 1; border: 3px solid var(--gold); background: #000; }
+        button { background: var(--gold); color: var(--navy); border: none; padding: 8px 15px; cursor: pointer; font-weight: bold; border-radius: 4px; }
     </style>
 </head>
 <body>
-
-    <div id="login-view" class="view active">
-        <div class="panel" style="max-width: 400px; margin: 50px auto; text-align: center;">
-            <h1>TACNET</h1>
-            <input type="email" id="email" placeholder="Email" style="width: 90%; padding: 10px; margin: 10px 0;"><br>
-            <input type="password" id="password" placeholder="Password" style="width: 90%; padding: 10px; margin: 10px 0;"><br>
-            <button onclick="handleLogin()">SIGN IN</button>
-        </div>
+    <div class="sidebar">
+        <h2 style="color:var(--gold)">PERSONNEL LEDGER</h2>
+        <div id="ledger"></div>
     </div>
-
-    <div id="dashboard-view" class="view">
-        <header style="border-bottom: 3px solid var(--gold); padding: 10px;">
-            <h1>TACNET OPERATIONS</h1>
-        </header>
-        <div class="panel" style="margin-top: 20px;">
-            <h2>Live Tactical Map</h2>
-            <div id="map"></div>
-            <button onclick="deployUnit()">DEPLOY UNIT</button>
-        </div>
+    <div class="main">
+        <header><h1>TACNET OPERATIONS</h1></header>
+        <div id="map"></div>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        let map;
-        function handleLogin() {
-            document.getElementById('login-view').classList.remove('active');
-            document.getElementById('dashboard-view').classList.add('active');
-            
-            setTimeout(() => {
-                map = L.map('map').setView([37.5, -79.2], 10);
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-                map.invalidateSize();
-            }, 100);
-        }
+        const map = L.map('map').setView([37.5, -79.2], 10);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
-        function deployUnit() {
-            // Drops a marker at the center of the map
+        const units = [
+            { name: "Supervisor", color: "#FFFFFF" },
+            { name: "K9 Team", color: "#87CEFA" },
+            { name: "Law Enforcement", color: "#0000FF" },
+            { name: "SARs", color: "#FF0000" },
+            { name: "Civilian", color: "#008000" },
+            { name: "Suspect", color: "#800080" },
+            { name: "Suspect Vehicle", color: "#000000" },
+            { name: "Article Find", color: "#FFA500" },
+            { name: "Command Post", color: "#FFFF00" },
+            { name: "Drone", color: "#808080" }
+        ];
+
+        units.forEach(unit => {
+            document.getElementById('ledger').innerHTML += `
+                <div class="ledger-item">
+                    <span><span class="dot" style="background:${unit.color}"></span> ${unit.name}</span>
+                    <button onclick="deploy('${unit.name}', '${unit.color}')">DEPLOY</button>
+                </div>
+            `;
+        });
+
+        function deploy(name, color) {
             const center = map.getCenter();
-            L.marker([center.lat, center.lng]).addTo(map).bindPopup("Unit Deployed").openPopup();
+            L.circleMarker([center.lat, center.lng], {
+                color: '#fff', fillColor: color, fillOpacity: 1, radius: 10
+            }).addTo(map).bindPopup(name).openPopup();
         }
     </script>
 </body>
