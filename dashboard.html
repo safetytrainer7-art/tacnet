@@ -2,42 +2,43 @@
 <html>
 <head>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css"/>
     <style>
-        body { margin:0; display:grid; grid-template-columns: 300px 1fr; height:100vh; font-family:sans-serif; background:#0a1a2f; }
-        #map { height:100vh; }
-        .sidebar { background:#1a4d2e; color:#fff; padding:15px; }
+        body { margin:0; display:grid; grid-template-columns: 300px 1fr; height:100vh; background:#0a1a2f; font-family:sans-serif; }
+        .sidebar { background:#1a4d2e; color:#fff; padding:20px; border-right:3px solid #d4b04a; }
+        #map { height:100vh; cursor: crosshair; }
+        .ledger-btn { background:#d4b04a; color:#0a1a2f; border:none; padding:5px; font-weight:bold; cursor:pointer; }
     </style>
 </head>
 <body>
     <div class="sidebar">
-        <h3>PERSONNEL</h3>
+        <h2 style="color:#d4b04a">TACNET COMMAND</h2>
+        <input type="text" id="addr" placeholder="Enter Address..." style="width:100%; padding:8px; margin-bottom:5px;">
+        <button onclick="go()" style="width:100%; padding:8px;">GO</button>
+        <hr style="border:1px solid #d4b04a">
         <div id="ledger"></div>
-        <button onclick="window.location.href='index.html'" style="margin-top:20px; width:100%;">TERMINATE</button>
+        <button onclick="window.location.href='index.html'" style="width:100%; padding:15px; margin-top:20px; background:#800; color:white; border:none;">TERMINATE MISSION</button>
     </div>
     <div id="map"></div>
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
     <script>
-        const sat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
-        const map = L.map('map', {layers:[sat]}).setView([37.5, -79.2], 12);
-        
-        // Red Pen Tool
-        const drawItems = new L.FeatureGroup();
-        map.addLayer(drawItems);
-        new L.Control.Draw({
-            draw: { polyline: {shapeOptions:{color:'red', weight:5}}, polygon:false, rectangle:false, circle:false, marker:false },
-            edit: { featureGroup: drawItems }
-        }).addTo(map);
-        map.on('draw:created', e => drawItems.addLayer(e.layer));
+        // Satellite Map
+        const map = L.map('map').setView([37.5, -79.2], 12);
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}').addTo(map);
 
+        // Precision Red Pen (Custom Drawing Logic)
+        let isDrawing = false;
+        let polyline = null;
+        map.on('mousedown', e => { isDrawing = true; polyline = L.polyline([], {color: 'red', weight: 5}).addTo(map); });
+        map.on('mousemove', e => { if(isDrawing) polyline.addLatLng(e.latlng); });
+        map.on('mouseup', e => { isDrawing = false; });
+
+        // Placement Logic
+        let mode = null;
         const units = [{n:"Supervisor",c:"#FFF"},{n:"K9",c:"#87CEFA"},{n:"LE",c:"#00F"},{n:"SAR",c:"#F00"},{n:"Civ",c:"#0F0"},{n:"Suspect",c:"#800"},{n:"Vehicle",c:"#000"},{n:"Article",c:"#F80"},{n:"CMD",c:"#FF0"},{n:"Drone",c:"#888"}];
         units.forEach(u => {
-            document.getElementById('ledger').innerHTML += `<div style="padding:5px; border-bottom:1px solid #d4b04a;">${u.n} <button onclick="setMode('${u.n}','${u.c}')">PLACE</button></div>`;
+            document.getElementById('ledger').innerHTML += `<div style="padding:8px 0; border-bottom:1px solid #d4b04a;">${u.n} <button class="ledger-btn" onclick="mode={n:'${u.n}',c:'${u.c}'}">PLACE</button></div>`;
         });
 
-        let mode = null;
-        function setMode(n, c) { mode = {n, c}; }
         map.on('click', e => {
             if(mode) {
                 const m = L.circleMarker(e.latlng, {fillColor:mode.c, fillOpacity:1, color:'#fff', radius:8}).addTo(map);
@@ -45,6 +46,12 @@
                 mode = null;
             }
         });
+
+        async function go() {
+            const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${document.getElementById('addr').value}`);
+            const data = await res.json();
+            if(data.length) map.setView([data[0].lat, data[0].lon], 16);
+        }
     </script>
 </body>
 </html>
