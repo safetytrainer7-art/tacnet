@@ -2,42 +2,57 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>TACNET | Ops Command</title>
+    <title>TACNET | COMMAND CONTROL</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css"/>
     <style>
-        body { margin: 0; display: grid; grid-template-columns: 300px 1fr; height: 100vh; background: #0a1a2f; color: #fff; font-family: sans-serif; }
-        #map { height: 100vh; position: relative; }
-        .controls { background: #1a4d2e; padding: 20px; border-right: 3px solid #d4b04a; }
-        .emergency-btn { background: #ff0000; color: white; padding: 20px; width: 100%; border: none; font-weight: bold; cursor: pointer; margin-bottom: 20px; }
-        .tools { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .tool-btn { background: #d4b04a; color: #0a1a2f; border: none; padding: 10px; cursor: pointer; font-weight: bold; }
+        :root { --navy: #0a1a2f; --green: #1a4d2e; --gold: #d4b04a; --text: #e9f1ff; }
+        body { margin: 0; display: grid; grid-template-columns: 320px 1fr; height: 100vh; background: var(--navy); color: var(--text); font-family: 'Rajdhani', sans-serif; }
+        .sidebar { background: var(--green); border-right: 3px solid var(--gold); padding: 20px; overflow-y: auto; }
+        .map-container { position: relative; }
+        #map { height: 100vh; }
+        .alert-btn { background: #ff0000; color: white; padding: 15px; width: 100%; border: none; font-weight: bold; cursor: pointer; }
+        .btn-tac { background: var(--gold); color: var(--navy); border: none; padding: 10px; width: 100%; margin-top: 10px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
-    <div class="controls">
-        <button class="emergency-btn" onclick="triggerAlert()">OFFICER EMERGENCY</button>
-        <input type="text" placeholder="Address Search..." style="width: 100%; padding: 10px;">
-        <button class="tool-btn" style="width:100%; margin-top:5px;">GO</button>
+    <div class="sidebar">
+        <button class="alert-btn" onclick="alert('!!! EMERGENCY SIGNAL BROADCAST !!!')">OFFICER DOWN / EMERGENCY</button>
+        <h3 style="color:var(--gold)">PERSONNEL LEDGER</h3>
+        <div id="ledger"></div>
         <hr>
-        <div class="tools">
-            <button class="tool-btn">PEN TOOL</button>
-            <button class="tool-btn">LOCK MAP</button>
-            <button class="tool-btn">RECORD</button>
-            <button class="tool-btn">REPORT</button>
-        </div>
-        <button onclick="terminateMission()" style="background:#444; color:white; width:100%; margin-top:20px;">TERMINATE SEARCH</button>
+        <button class="btn-tac" onclick="terminate()">TERMINATE MISSION</button>
     </div>
-    <div id="map"></div>
+    <div class="map-container"><div id="map"></div></div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
     <script>
-        const map = L.map('map').setView([37.5, -79.2], 10);
+        const map = L.map('map').setView([37.5, -79.2], 12);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        
+        // Drawing Layer
+        const drawnItems = new L.FeatureGroup();
+        map.addLayer(drawnItems);
+        const drawControl = new L.Control.Draw({ edit: { featureGroup: drawnItems }, draw: { polygon: false, circle: true, marker: true } });
+        map.addControl(drawControl);
 
-        function triggerAlert() { alert("!!! EMERGENCY BROADCAST SENT !!!"); }
-        function terminateMission() { 
-            if(confirm("TERMINATE ALL OPERATIONS?")) { window.location.href = 'index.html'; } 
-        }
+        const units = [
+            { name: "Supervisor", color: "#FFFFFF" }, { name: "K9 Team", color: "#87CEFA" },
+            { name: "Law Enforcement", color: "#0000FF" }, { name: "SARs", color: "#FF0000" },
+            { name: "Civilian", color: "#008000" }, { name: "Suspect", color: "#800080" },
+            { name: "Suspect Vehicle", color: "#000000" }, { name: "Article Find", color: "#FFA500" },
+            { name: "Command Post", color: "#FFFF00" }, { name: "Drone", color: "#808080" }
+        ];
+
+        units.forEach(u => {
+            document.getElementById('ledger').innerHTML += `<div style="padding:5px; border-bottom:1px solid #d4b04a;">
+                <span style="background:${u.color}; width:10px; height:10px; display:inline-block; border:1px solid #fff;"></span> ${u.name} 
+                <button onclick="deploy('${u.name}', '${u.color}')" style="float:right;">+</button></div>`;
+        });
+
+        function deploy(n, c) { L.circleMarker(map.getCenter(), {fillColor: c, fillOpacity: 1, color:'#fff', radius:8}).addTo(map).bindPopup(n); }
+        function terminate() { if(confirm("ABORT MISSION? ALL DATA WILL WIPE.")) window.location.href="index.html"; }
     </script>
 </body>
 </html>
