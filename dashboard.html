@@ -3,55 +3,52 @@
 <head>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
-        body { margin:0; display:grid; grid-template-columns: 300px 1fr; height:100vh; background:#0a1a2f; color:#fff; font-family:sans-serif; }
-        .sidebar { background:#1a4d2e; padding:20px; border-right:3px solid #d4b04a; }
-        #map { height:100vh; cursor:crosshair; }
-        .btn { background:#d4b04a; color:#0a1a2f; border:none; padding:10px; width:100%; margin-top:5px; font-weight:bold; cursor:pointer; }
+        body { margin:0; display:flex; height:100vh; background:#0a1a2f; color:#fff; font-family:sans-serif; }
+        #sidebar { width:300px; background:#1a4d2e; padding:15px; }
+        #map { flex:1; cursor:crosshair; }
     </style>
 </head>
 <body>
-    <div class="sidebar">
-        <h2>MISSION COMMAND</h2>
-        <input type="text" id="addr" placeholder="Enter Address..." style="width:100%; padding:8px;">
-        <button class="btn" onclick="go()">GO TO ADDRESS</button>
+    <div id="sidebar">
+        <h3>MISSION CONTROL</h3>
+        <input type="text" id="addr" placeholder="Address..." style="width:100%">
+        <button onclick="go()" style="width:100%">GO TO ADDRESS</button>
         <hr>
-        <button class="btn" onclick="startDraw()">ACTIVATE RED PEN</button>
-        <div id="ledger" style="margin-top:20px;"></div>
-        <button class="btn" style="background:#800; color:white; margin-top:20px;" onclick="location.reload()">CLEAR MAP</button>
+        <button onclick="pen=true" style="width:100%; background:red; color:white;">ACTIVATE RED PEN</button>
+        <div id="ledger"></div>
     </div>
     <div id="map"></div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // 1. Force Satellite View
         const map = L.map('map').setView([37.5, -79.2], 12);
         L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}').addTo(map);
 
-        // 2. High-Precision Red Pen
-        let drawing = false;
-        let poly = null;
-        function startDraw() { alert("Drawing Enabled. Click & Drag to draw."); map.on('mousedown', e => { drawing=true; poly=L.polyline([], {color:'red', weight:6}).addTo(map); }); }
-        map.on('mousemove', e => { if(drawing) poly.addLatLng(e.latlng); });
-        map.on('mouseup', e => { drawing=false; });
+        let pen = false, mode = null;
+        
+        // Drawing Pen
+        let drawLine = null;
+        map.on('mousedown', e => { if(pen) drawLine = L.polyline([], {color:'red', weight:5}).addTo(map); });
+        map.on('mousemove', e => { if(pen && drawLine) drawLine.addLatLng(e.latlng); });
+        map.on('mouseup', e => { drawLine = null; });
 
-        // 3. Precision Placement
-        let mode = null;
-        function place(c) { mode = c; }
+        // Placement
         map.on('click', e => {
             if(mode) {
                 const m = L.circleMarker(e.latlng, {fillColor:mode, fillOpacity:1, color:'#fff', radius:8}).addTo(map);
-                m.on('contextmenu', () => map.removeLayer(m)); // Right-click to delete
+                m.on('contextmenu', () => map.removeLayer(m));
                 mode = null;
             }
         });
 
+        // Ledger
         const units = [{n:"Supervisor",c:"#FFF"},{n:"K9",c:"#87CEFA"},{n:"LE",c:"#00F"},{n:"SAR",c:"#F00"},{n:"Civ",c:"#0F0"},{n:"Suspect",c:"#800"},{n:"Vehicle",c:"#000"},{n:"Article",c:"#F80"},{n:"CMD",c:"#FF0"},{n:"Drone",c:"#888"}];
         units.forEach(u => {
-            document.getElementById('ledger').innerHTML += `<div style="padding:5px;">${u.n} <button onclick="place('${u.c}')">PLACE</button></div>`;
+            document.getElementById('ledger').innerHTML += `<div style="padding:5px">${u.n} <button onclick="mode='${u.c}'">PLACE</button></div>`;
         });
 
         async function go() {
-            const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${document.getElementById('addr').value}`);
+            const res = await fetch('https://nominatim.openstreetmap.org/search?format=json&q='+document.getElementById('addr').value);
             const data = await res.json();
             if(data.length) map.setView([data[0].lat, data[0].lon], 16);
         }
