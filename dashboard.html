@@ -1,28 +1,73 @@
-// Add this configuration to the <script> section of your dashboard.html
-const UNIT_CONFIG = {
-    1: { name: "Supervisor", color: "#FFFFFF" },
-    2: { name: "K9 Team", color: "#ADD8E6" },
-    3: { name: "Law Enforcement", color: "#0000FF" },
-    4: { name: "SARs", color: "#FF0000" },
-    5: { name: "Civilian", color: "#008000" },
-    6: { name: "Suspect", color: "#800080" },
-    7: { name: "Suspect Vehicle", color: "#000000" },
-    8: { name: "Article Find", color: "#FFA500" },
-    9: { name: "Command Post", color: "#FFFF00" }, // Red Star will be an icon override
-    10: { name: "Drone", color: "#808080" }
-};
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TACNET | Operations Dashboard</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        :root {
+            --navy-900: #0a1a2f;
+            --hunter-green: #1a4d2e;
+            --gold: #d4b04a;
+            --text-main: #e9f1ff;
+        }
+        body { background-color: var(--navy-900); color: var(--text-main); font-family: 'Rajdhani', sans-serif; margin: 0; display: grid; grid-template-columns: 320px 1fr; height: 100vh; }
+        
+        .sidebar { background: var(--hunter-green); border-right: 3px solid var(--gold); padding: 20px; overflow-y: auto; }
+        .main-view { padding: 20px; }
+        #map { height: 80vh; width: 100%; border: 3px solid var(--gold); background: #000; }
+        
+        .ledger-item { padding: 10px; border-bottom: 1px solid var(--gold); display: flex; justify-content: space-between; align-items: center; }
+        .dot { width: 15px; height: 15px; border-radius: 50%; display: inline-block; border: 1px solid white; }
+        .deploy-btn { background: var(--gold); color: var(--navy-900); border: none; padding: 5px 10px; cursor: pointer; font-weight: bold; }
+    </style>
+</head>
+<body>
 
-function deployUnit(id) {
-    const unit = UNIT_CONFIG[id];
-    const center = map.getCenter();
-    
-    // Create custom marker with your specific color
-    const marker = L.circleMarker([center.lat, center.lng], {
-        color: '#000',
-        fillColor: unit.color,
-        fillOpacity: 1,
-        radius: 8
-    }).addTo(map);
-    
-    marker.bindPopup(unit.name).openPopup();
-}
+    <div class="sidebar">
+        <h2 style="color: var(--gold);">PERSONNEL LEDGER</h2>
+        <div id="ledger"></div>
+    </div>
+
+    <div class="main-view">
+        <header><h1>TACNET OPERATIONS</h1></header>
+        <div id="map"></div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        const map = L.map('map').setView([37.5, -79.2], 10);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+        const units = [
+            { id: 1, name: "Supervisor", color: "#FFFFFF" },
+            { id: 2, name: "K9 Team", color: "#ADD8E6" },
+            { id: 3, name: "Law Enforcement", color: "#0000FF" },
+            { id: 4, name: "SARs", color: "#FF0000" },
+            { id: 5, name: "Civilian", color: "#008000" },
+            { id: 6, name: "Suspect", color: "#800080" },
+            { id: 7, name: "Suspect Vehicle", color: "#000000" },
+            { id: 8, name: "Article Find", color: "#FFA500" },
+            { id: 9, name: "Command Post", color: "#FFFF00" },
+            { id: 10, name: "Drone", color: "#808080" }
+        ];
+
+        const ledgerDiv = document.getElementById('ledger');
+        units.forEach(unit => {
+            ledgerDiv.innerHTML += `
+                <div class="ledger-item">
+                    <span><span class="dot" style="background:${unit.color}"></span> ${unit.name}</span>
+                    <button class="deploy-btn" onclick="deploy(${unit.id}, '${unit.name}', '${unit.color}')">DEPLOY</button>
+                </div>
+            `;
+        });
+
+        function deploy(id, name, color) {
+            const center = map.getCenter();
+            L.circleMarker([center.lat, center.lng], {
+                color: '#fff', fillColor: color, fillOpacity: 1, radius: 10
+            }).addTo(map).bindPopup(name).openPopup();
+        }
+    </script>
+</body>
+</html>
