@@ -1,66 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>TACNET | MISSION COMMAND</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.css"/>
     <style>
-        :root { --navy: #0a1a2f; --green: #1a4d2e; --gold: #d4b04a; }
-        body { margin: 0; display: grid; grid-template-columns: 320px 1fr; height: 100vh; background: var(--navy); color: #fff; font-family: sans-serif; }
-        .sidebar { background: var(--green); padding: 20px; border-right: 3px solid var(--gold); }
-        #map { height: 100vh; cursor: crosshair; }
-        .btn-tac { background: var(--gold); color: var(--navy); border: none; padding: 10px; width: 100%; margin-top: 5px; cursor: pointer; }
+        body { margin:0; display:grid; grid-template-columns: 300px 1fr; height:100vh; font-family:sans-serif; background:#0a1a2f; }
+        #map { height:100vh; }
+        .sidebar { background:#1a4d2e; color:#fff; padding:15px; }
     </style>
 </head>
 <body>
     <div class="sidebar">
-        <h2>MISSION CONTROL</h2>
-        <input type="text" id="addr" placeholder="Enter Address..." style="width:100%; padding:8px;">
-        <button class="btn-tac" onclick="searchAddress()">GO TO ADDRESS</button>
-        <hr>
+        <h3>PERSONNEL</h3>
         <div id="ledger"></div>
+        <button onclick="window.location.href='index.html'" style="margin-top:20px; width:100%;">TERMINATE</button>
     </div>
     <div id="map"></div>
-
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
     <script>
-        const map = L.map('map').setView([37.5, -79.2], 12);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        const sat = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}');
+        const map = L.map('map', {layers:[sat]}).setView([37.5, -79.2], 12);
+        
+        // Red Pen Tool
+        const drawItems = new L.FeatureGroup();
+        map.addLayer(drawItems);
+        new L.Control.Draw({
+            draw: { polyline: {shapeOptions:{color:'red', weight:5}}, polygon:false, rectangle:false, circle:false, marker:false },
+            edit: { featureGroup: drawItems }
+        }).addTo(map);
+        map.on('draw:created', e => drawItems.addLayer(e.layer));
 
-        // 1. Drawing Tools (Red Pen)
-        const drawnItems = new L.FeatureGroup();
-        map.addLayer(drawnItems);
-        new L.Control.Draw({ draw: { polyline: { shapeOptions: { color: '#ff0000', weight: 5 } }, polygon: false, rectangle: false, circle: false, marker: false }, edit: { featureGroup: drawnItems } }).addTo(map);
-        map.on('draw:created', (e) => drawnItems.addLayer(e.layer));
-
-        // 2. Real Address Search
-        async function searchAddress() {
-            const addr = document.getElementById('addr').value;
-            const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${addr}`);
-            const data = await res.json();
-            if(data.length > 0) {
-                const {lat, lon} = data[0];
-                map.setView([lat, lon], 16);
-                L.circle([lat, lon], { color: '#39ff7a', radius: 100 }).addTo(map);
-            } else { alert("Address not found."); }
-        }
-
-        // 3. Manual Deployment & Removal
-        function deploy(n, c) {
-            alert("Click the map to place " + n);
-            map.once('click', (e) => {
-                const m = L.circleMarker(e.latlng, {color: '#fff', fillColor: c, fillOpacity: 1, radius: 10}).addTo(map);
-                m.bindPopup(`${n} <br><button onclick="map.removeLayer(${L.stamp(m)})">REMOVE</button>`);
-            });
-        }
-
-        const units = [{name:"Supervisor",color:"#FFF"},{name:"K9 Team",color:"#87CEFA"},{name:"Law Enforcement",color:"#00F"},{name:"SARs",color:"#F00"},{name:"Civilian",color:"#0F0"},{name:"Suspect",color:"#800080"},{name:"Suspect Vehicle",color:"#000"},{name:"Article Find",color:"#F80"},{name:"Command Post",color:"#FF0"},{name:"Drone",color:"#888"}];
+        const units = [{n:"Supervisor",c:"#FFF"},{n:"K9",c:"#87CEFA"},{n:"LE",c:"#00F"},{n:"SAR",c:"#F00"},{n:"Civ",c:"#0F0"},{n:"Suspect",c:"#800"},{n:"Vehicle",c:"#000"},{n:"Article",c:"#F80"},{n:"CMD",c:"#FF0"},{n:"Drone",c:"#888"}];
         units.forEach(u => {
-            document.getElementById('ledger').innerHTML += `<div style="padding:5px; border-bottom:1px solid #d4b04a;">
-                <span style="background:${u.color}; width:12px; height:12px; display:inline-block;"></span> ${u.name} 
-                <button onclick="deploy('${u.name}', '${u.color}')" style="float:right;">PLACE</button></div>`;
+            document.getElementById('ledger').innerHTML += `<div style="padding:5px; border-bottom:1px solid #d4b04a;">${u.n} <button onclick="setMode('${u.n}','${u.c}')">PLACE</button></div>`;
+        });
+
+        let mode = null;
+        function setMode(n, c) { mode = {n, c}; }
+        map.on('click', e => {
+            if(mode) {
+                const m = L.circleMarker(e.latlng, {fillColor:mode.c, fillOpacity:1, color:'#fff', radius:8}).addTo(map);
+                m.on('contextmenu', () => map.removeLayer(m)); // Right-click to remove
+                mode = null;
+            }
         });
     </script>
 </body>
