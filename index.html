@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TACNET | Tactical Search Operations</title>
-    <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         :root {
@@ -13,55 +12,54 @@
             --gold: #d4b04a;
             --text-main: #e9f1ff;
         }
-        body { background-color: var(--navy-900); color: var(--text-main); font-family: 'Rajdhani', sans-serif; margin: 0; }
+        body { background-color: var(--navy-900); color: var(--text-main); font-family: sans-serif; margin: 0; }
         .view { display: none; padding: 20px; }
         .active { display: block; }
-        .panel { border: 2px solid var(--gold); background: var(--hunter-green); padding: 20px; border-radius: 8px; margin-bottom: 20px; }
-        button { background: var(--gold); color: var(--navy-900); padding: 10px 20px; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase; }
-        /* Map needs a set height to appear */
+        .panel { border: 2px solid var(--gold); background: var(--hunter-green); padding: 20px; border-radius: 8px; }
+        button { background: var(--gold); color: var(--navy-900); padding: 10px 20px; border: none; cursor: pointer; font-weight: bold; margin-top: 10px; }
         #map { height: 500px; width: 100%; border: 2px solid var(--gold); }
     </style>
 </head>
 <body>
 
-    <!-- LANDING PAGE -->
     <div id="login-view" class="view active">
         <div class="panel" style="max-width: 400px; margin: 50px auto; text-align: center;">
             <h1>TACNET</h1>
-            <p>TACTICAL SIGN-IN</p>
             <input type="email" id="email" placeholder="Email" style="width: 90%; padding: 10px; margin: 10px 0;"><br>
             <input type="password" id="password" placeholder="Password" style="width: 90%; padding: 10px; margin: 10px 0;"><br>
             <button onclick="handleLogin()">SIGN IN</button>
         </div>
     </div>
 
-    <!-- OPERATIONS CONSOLE -->
     <div id="dashboard-view" class="view">
         <header style="border-bottom: 3px solid var(--gold); padding: 10px;">
             <h1>TACNET OPERATIONS</h1>
-            <p>Earl Wood · Deputy Sheriff (Ret.)</p>
         </header>
         <div class="panel" style="margin-top: 20px;">
             <h2>Live Tactical Map</h2>
             <div id="map"></div>
-            <button style="margin-top: 15px;" onclick="alert('Unit Deployed')">DEPLOY UNIT</button>
+            <button onclick="deployUnit()">DEPLOY UNIT</button>
         </div>
     </div>
 
-    <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
+        let map;
         function handleLogin() {
-            // Simple check for login
             document.getElementById('login-view').classList.remove('active');
             document.getElementById('dashboard-view').classList.add('active');
             
-            // Initialize map after view is visible
-            setTimeout(function() {
-                const map = L.map('map').setView([37.5, -79.2], 10);
+            setTimeout(() => {
+                map = L.map('map').setView([37.5, -79.2], 10);
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-                map.invalidateSize(); // Crucial: Fixes the tiny square issue
+                map.invalidateSize();
             }, 100);
+        }
+
+        function deployUnit() {
+            // Drops a marker at the center of the map
+            const center = map.getCenter();
+            L.marker([center.lat, center.lng]).addTo(map).bindPopup("Unit Deployed").openPopup();
         }
     </script>
 </body>
