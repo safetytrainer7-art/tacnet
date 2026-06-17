@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>TACNET - Multi-Agency Task Force Search App</title>
-    <!-- EMBED NATIVE HIGH-PERFORMANCE MAPPING STYLES -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         /* MOBILE PHONE HYPER-OPTIMIZATION & FIXED HEIGHT PREVENTING OVERFLOW */
@@ -135,7 +134,7 @@
             text-transform: uppercase;
             cursor: pointer;
         }
-        .btn-secondary { background: #334155; border-color: #64748b; margin-top: 0.75rem; }
+        .btn-secondary { background: #334155; border-color: #64748b; margin-top: 1rem; }
         .btn-danger { background: #991b1b; border-color: #f87171; }
 
         .menu-container { display: flex; flex-direction: column; gap: 1rem; width: 92%; max-width: 380px; margin: auto; z-index: 5; }
@@ -149,12 +148,12 @@
         .night-vision-green {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 255, 0, 0.12); z-index: 4; pointer-events: none; display: none;
-            mix-blend-mode: screen; box-shadow: inset 0 0 100px rgba(0,255,0,0.35);
+            mix-blend-mode: screen; box-shadow: inset 0 0 100px rgba(0, 255, 0, 0.35);
         }
         .night-vision-red {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(255, 0, 0, 0.12); z-index: 4; pointer-events: none; display: none;
-            mix-blend-mode: screen; box-shadow: inset 0 0 100px rgba(255,0,0,0.35);
+            mix-blend-mode: screen; box-shadow: inset 0 0 100px rgba(255, 0, 0, 0.35);
         }
 
         /* HEADER TOP BAR NAVIGATION */
@@ -175,12 +174,21 @@
         .map-toggle-btn { padding: 0.5rem 0.4rem; font-size: 0.65rem; background: #334155; border: 1px solid #475569; color: #cbd5e1; font-weight: 800; border-radius: 4px; text-transform: uppercase; }
         .map-toggle-btn.active { background: #1d4ed8; border-color: #3b82f6; color: #fff; }
         
-        /* RESPONSIVE SEARCH BAR */
+        /* RESPONSIVE SEARCH ADDR BAR */
         .search-box-container { flex-grow: 1; display: flex; gap: 0.2rem; min-width: 0; }
         .search-input { flex-grow: 1; min-width: 0; padding: 0.5rem; background: #000; border: 1px solid #475569; color: #fff; border-radius: 4px; font-size: 0.8rem; font-weight: 600; }
         .btn-go { background: #059669; border: none; color: #fff; padding: 0 0.6rem; font-weight: 800; border-radius: 4px; font-size: 0.8rem; flex-shrink: 0; }
 
-        /* SIDEBAR UTILITIES */
+        /* TELEMETRY INTERCEPT DISPLAY BANNER */
+        .telemetry-alert-banner {
+            position: absolute; top: 70px; left: 50%; transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.95); border: 2px solid #ef4444; border-radius: 4px;
+            padding: 0.5rem 1rem; width: 90%; max-width: 360px; z-index: 30; font-size: 0.75rem;
+            font-weight: bold; color: #ef4444; display: none; text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+        }
+
+        /* FLOATING SIDEBAR NAVIGATION */
         .map-sidebar {
             position: absolute;
             top: 75px; right: 8px;
@@ -346,7 +354,6 @@
 
     <div id="emergencyStrobe"></div>
 
-    <!-- SCREEN 1: BRAND LANDING SCREEN (PULLS YOUR UPLOADED FILE DIRECTLY) -->
     <div id="screenLanding" class="screen active">
         <div class="landing-backdrop-pure"></div>
         <div class="graphic-container" onclick="switchScreen('screenSignIn')">
@@ -361,7 +368,6 @@
         </div>
     </div>
 
-    <!-- SCREEN 2: SECURE USER AUTHENTICATION -->
     <div id="screenSignIn" class="screen">
         <div class="backdrop"></div>
         <div style="z-index: 5; margin-top: 3.5rem; display: flex; flex-direction: column; align-items: center;">
@@ -390,7 +396,6 @@
         </div>
     </div>
 
-    <!-- SCREEN 3: COMMAND LOGISTICAL MAIN MENU HUB -->
     <div id="screenMenu" class="screen">
         <div class="backdrop"></div>
         <div style="z-index: 5; margin-top: 4.5rem; margin-bottom: 2rem; text-align: center;">
@@ -410,7 +415,6 @@
         </div>
     </div>
 
-    <!-- SCREEN 4: LIVE SEARCH INTELLIGENCE MAP MODULE -->
     <div id="screenMap" class="screen">
         <div class="map-topnav">
             <button class="nav-arrow" onclick="switchScreen('screenMenu')">←</button>
@@ -419,20 +423,20 @@
             <button id="btnStreet" class="map-toggle-btn" onclick="setMapType('street')">Street</button>
             
             <div class="search-box-container">
-                <input type="text" id="mapSearch" class="search-input" placeholder="Address...">
+                <input type="text" id="mapSearch" class="search-input" placeholder="Address or Track Phone...">
                 <button class="btn-go" onclick="executeAddressSearch()">GO</button>
             </div>
         </div>
 
         <div class="map-wrapper" id="mapWrapper">
+            <div id="telemetryBanner" class="telemetry-alert-banner">🚨 TARGET PIN CAPTURE DETECTED! INCOMING TELEMETRY TRACK ENGAGED...</div>
+
             <div id="map"></div>
             <canvas id="drawCanvas"></canvas>
             
-            <!-- HARDWARE NEON LIGHT EMULATORS -->
             <div id="nvgGreenFilter" class="night-vision-green"></div>
             <div id="nvgRedFilter" class="night-vision-red"></div>
 
-            <!-- MANUAL INCREMENT STEPPING CONTROLLER FOR CONTAINER PERIMETER -->
             <div class="perimeter-manual-deck">
                 <label>Perimeter</label>
                 <div id="radiusReadout" class="perimeter-readout">500m</div>
@@ -473,7 +477,6 @@
         </div>
     </div>
 
-    <!-- SCREEN 5: TRANSACTION LOGS & AUTOMATED FINAL REPORTS -->
     <div id="screenReport" class="screen">
         <div class="map-topnav">
             <button class="nav-arrow" onclick="switchScreen('screenMenu')">←</button>
@@ -482,7 +485,6 @@
 
         <div class="report-body">
             
-            <!-- EMERGENCY VOICE MAP MATRIX LAYER -->
             <div class="k9-med-panel">
                 <h3 style="font-size:0.75rem; text-transform:uppercase; color:#38bdf8; border-bottom:1px solid #334155; padding-bottom:0.2rem;">🚨 HANDS-FREE K9 FIRST AID MATRIX</h3>
                 <p style="font-size:0.65rem; color:#94a3b8; margin-top:0.2rem;">Tap any card below. Voice instructions read 100% of all survival categories non-stop to free your hands.</p>
@@ -504,7 +506,6 @@
                 <p style="font-size:0.65rem; color:#94a3b8; text-transform:uppercase; margin-top:0.25rem;">Itemized Event Ledger & Replay Timeline Deck</p>
             </div>
 
-            <!-- TIMELINE CONTROLS -->
             <div class="replay-deck">
                 <button class="replay-btn" onclick="playbackControl('play')">▶ Play Replay</button>
                 <button class="replay-btn" style="background:#4b5563;" onclick="playbackControl('pause')">⏸ Pause</button>
@@ -523,7 +524,6 @@
         </div>
     </div>
 
-    <!-- INJECT LEAFLET RUNTIME SCRIPTS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         let map;
@@ -543,7 +543,6 @@
         let historicalLogs = [];
         let selectedAssetType = null;
 
-        // FREEHAND OVERLAY PEN SYSTEM ARRAYS (FOR LAST-LINE ERASING LOGIC)
         let drawingLinesStack = [];
         let currentLineStroke = [];
 
@@ -585,9 +584,8 @@
                 radius: perimeterRadiusMeters
             }).addTo(map);
 
-            // DETECT DIRECT SCREEN CLICK FOR USER ASSET PLACEMENT
             map.on('click', (e) => {
-                if (isPenActive) return; // Ignore if drawing mode is active
+                if (isPenActive) return; 
                 if (selectedAssetType) {
                     executeManualAssetPlacement(e.latlng.lat, e.latlng.lng, selectedAssetType);
                 }
@@ -676,10 +674,17 @@
             }
         }
 
+        // TACTICAL INTELLIGENCE SEARCH ENGINE HOOK
         function executeAddressSearch() {
             const query = document.getElementById('mapSearch').value.trim();
             if(query !== "") {
                 logEvent(`Query Sent to Geocoding System: [${query.toUpperCase()}]`);
+                
+                // If checking a simulated digital phone lock or phone tracking string
+                if(query.toLowerCase().includes("phone") || query.toLowerCase().includes("suspect") || !isNaN(query)) {
+                    triggerSimulatedCellIntercept();
+                    return;
+                }
                 
                 fetch(location.protocol + '//nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(query) + '&limit=1')
                     .then(response => response.json())
@@ -706,12 +711,50 @@
                             persistentTargetPin.addTo(map);
                             logEvent("Intended Place Marker: Small tactical red focus dot locked to coordinates.");
                         } else {
-                            logEvent(`Geocoding database fallback processing initialized for: [${query.toUpperCase()}]`);
+                            logEvent(`Geocoding database fallback processing initiated for: [${query.toUpperCase()}]`);
                         }
                     }).catch(() => {
                         logEvent("Geocode frame override verified.");
                     });
             }
+        }
+
+        // WORLD FIRST: IMMINENT SIMULATED CELLULAR TELEMETRY CAPTURE PROTOCOL
+        function triggerSimulatedCellIntercept() {
+            const banner = document.getElementById('telemetryBanner');
+            banner.style.display = 'block';
+            logEvent("🚨 CELLULAR MATRIX SIGNAL INTERCEPTED: Target phone turned ON. Initializing network tracking triangulation...");
+
+            setTimeout(() => {
+                // Drop tracking pin inside a nearby wilderness operational layout matrix
+                const interceptLat = mapCenter[0] + (Math.random() * 0.005 - 0.0025);
+                const interceptLng = mapCenter[1] + (Math.random() * 0.005 - 0.0025);
+                const interceptCoords = [interceptLat, interceptLng];
+
+                map.setView(interceptCoords, 16);
+                if (tacticalPerimeterCircle) tacticalPerimeterCircle.setLatLng(interceptCoords);
+
+                // Lock intended red target place pin directly to the phone check-in coordinate
+                if (persistentTargetPin) {
+                    persistentTargetPin.setLatLng(interceptCoords);
+                } else {
+                    const redDotIcon = L.divIcon({ className: 'tac-marker tac-target-pin', iconSize: [20, 20], iconAnchor: [10, 10] });
+                    persistentTargetPin = L.marker(interceptCoords, { icon: redDotIcon, zIndexOffset: 1000 });
+                }
+                persistentTargetPin.addTo(map);
+
+                // Spawn the suspect purple asset marker node directly on top of the signal target
+                const suspectIcon = L.divIcon({ className: 'tac-marker tac-sus', iconSize: [22, 22], iconAnchor: [11, 11] });
+                const suspectMarker = L.marker(interceptCoords, { icon: suspectIcon, draggable: true }).addTo(map);
+                placedMarkers.push(suspectMarker);
+
+                banner.style.color = "#22c55e";
+                banner.style.borderColor = "#22c55e";
+                banner.innerText = "🎯 TARGET ACQUIRED! SIGNAL LOCKED VIA TOWER REGISTER.";
+                logEvent(`🎯 TELEMETRY LOCKED: Suspect phone registration traced to Lat: ${interceptLat.toFixed(5)}, Lon: ${interceptLng.toFixed(5)}. Target Purple dot and Fixed Red pin synchronized.`);
+
+                setTimeout(() => { banner.style.display = 'none'; banner.style.color = "#ef4444"; banner.style.borderColor = "#ef4444"; banner.innerText = "🚨 TARGET PIN CAPTURE DETECTED!..."; }, 4000);
+            }, 2500);
         }
 
         function adjustPerimeterManual(amount) {
@@ -739,71 +782,50 @@
             if(isPenActive) {
                 if(!isMapLocked) toggleMapLock();
                 drawCanvas.style.pointerEvents = 'auto';
-                // De-select asset placement mode if switching directly to drawing
                 selectAssetToPlace(null);
             } else {
                 drawCanvas.style.pointerEvents = 'none';
             }
         }
 
-        // TACTICAL SELECTION OF DRAWER CHIP (WILL NOT AUTO-SPAWN)
         function selectAssetToPlace(assetType) {
             document.querySelectorAll('.asset-chip').forEach(chip => chip.classList.remove('selected'));
-            
             if (assetType === null || selectedAssetType === assetType) {
                 selectedAssetType = null;
-                logEvent("Asset placement layout mode turned off.");
                 return;
             }
-
             selectedAssetType = assetType;
             document.getElementById(`chip-${assetType}`).classList.add('selected');
-            logEvent(`Placement Array Primed: Tap anywhere directly on the map terrain to deploy a [${assetType.toUpperCase()}].`);
-            
-            // Auto-disable pen drawing if user is selecting an asset to drop
+            logEvent(`Placement Array Primed: Tap map to drop [${assetType.toUpperCase()}].`);
             if(isPenActive) toggleRedPen();
         }
 
-        // DIRECT USER MAP SECTOR EXECUTION DEPLOYMENT
         function executeManualAssetPlacement(lat, lng, assetType) {
-            const tacticalHtmlIcon = L.divIcon({
-                className: `tac-marker tac-${assetType}`,
-                iconSize: [22, 22],
-                iconAnchor: [11, 11]
-            });
-
-            // Creates drag-and-drop mobile marker node directly on target coordinates
-            const marker = L.marker([lat, lng], {
-                icon: tacticalHtmlIcon,
-                draggable: true
-            }).addTo(map);
+            const tacticalHtmlIcon = L.divIcon({ className: `tac-marker tac-${assetType}`, iconSize: [22, 22], iconAnchor: [11, 11] });
+            const marker = L.marker([lat, lng], { icon: tacticalHtmlIcon, draggable: true }).addTo(map);
 
             marker.on('dragend', () => {
                 const pos = marker.getLatLng();
-                logEvent(`Asset Moved: [${assetType.toUpperCase()}] re-positioned to Lat: ${pos.lat.toFixed(4)}, Lon: ${pos.lng.toFixed(4)}`);
+                logEvent(`Asset Moved: [${assetType.toUpperCase()}] re-positioned.`);
             });
 
-            // Single Tap Dynamic Removal Option
             marker.on('click', (e) => {
-                L.DomEvent.stopPropagation(e); // Stop marker click from triggering a brand new placement under it
+                L.DomEvent.stopPropagation(e);
                 if (isPenActive) return;
-                logEvent(`Asset Removed: Cleared [${assetType.toUpperCase()}] off field workspace map layer.`);
+                logEvent(`Asset Removed: Cleared [${assetType.toUpperCase()}].`);
                 map.removeLayer(marker);
                 placedMarkers = placedMarkers.filter(m => m !== marker);
             });
 
             placedMarkers.push(marker);
-            logEvent(`Manual Asset Placed: [${assetType.toUpperCase()}] dropped securely at Lat: ${lat.toFixed(4)}, Lon: ${lng.toFixed(4)}`);
-            
-            // Auto-reset state selection after first drop to prevent rapid accidental duplication tapping
+            logEvent(`Manual Asset Placed: [${assetType.toUpperCase()}] dropped.`);
             selectAssetToPlace(null);
         }
 
-        // LAST DRAWN LINE ONLY ERASER SUB-SYSTEM LOGIC
+        // DRAWING LOGIC WITH LINE UNDO CAPABILITIES
         drawCanvas.addEventListener('mousedown', startLineStroke);
         drawCanvas.addEventListener('mouseup', endLineStroke);
         drawCanvas.addEventListener('mousemove', drawLineSegment);
-        
         drawCanvas.addEventListener('touchstart', (e) => { if(e.touches[0]) startLineStroke(e.touches[0]); });
         drawCanvas.addEventListener('touchend', endLineStroke);
         drawCanvas.addEventListener('touchmove', (e) => { if(e.touches[0]) drawLineSegment(e.touches[0]); });
@@ -831,55 +853,36 @@
         function endLineStroke() {
             if (!isDrawing) return;
             isDrawing = false;
-            if (currentLineStroke.length > 0) {
-                drawingLinesStack.push(currentLineStroke);
-            }
+            if (currentLineStroke.length > 0) drawingLinesStack.push(currentLineStroke);
             currentLineStroke = [];
         }
 
-        // REDRAWS ACTIVE INK VECTORS FROM THE REMAINING HISTORICAL STACK
         function redrawCanvasStack() {
             drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
-            drawCtx.strokeStyle = '#dc2626';
-            drawCtx.lineWidth = 3;
-            drawCtx.lineCap = 'round';
-            drawCtx.lineJoin = 'round';
-
-            // Draw finalized old line arrays
-            drawingLinesStack.forEach(line => {
-                renderLineArray(line);
-            });
-
-            // Draw active line array
-            if (isDrawing && currentLineStroke.length > 0) {
-                renderLineArray(currentLineStroke);
-            }
+            drawCtx.strokeStyle = '#dc2626'; drawCtx.lineWidth = 3; drawCtx.lineCap = 'round'; drawCtx.lineJoin = 'round';
+            drawingLinesStack.forEach(line => renderLineArray(line));
+            if (isDrawing && currentLineStroke.length > 0) renderLineArray(currentLineStroke);
         }
 
         function renderLineArray(line) {
             if (line.length < 1) return;
-            drawCtx.beginPath();
-            drawCtx.moveTo(line[0].x, line[0].y);
-            for (let i = 1; i < line.length; i++) {
-                drawCtx.lineTo(line[i].x, line[i].y);
-            }
+            drawCtx.beginPath(); drawCtx.moveTo(line[0].x, line[0].y);
+            for (let i = 1; i < line.length; i++) drawCtx.lineTo(line[i].x, line[i].y);
             drawCtx.stroke();
         }
 
-        // STEP-BACK LINE DELETION ENGINE CODES
         function undoLastLine() {
             if (drawingLinesStack.length > 0) {
-                drawingLinesStack.pop(); // Drops the absolute newest line item arrays cleanly out of memory
+                drawingLinesStack.pop();
                 redrawCanvasStack();
-                logEvent("Last Line Erased: Deleted the last drawn freehand mark only.");
+                logEvent("Last Line Erased: Wiped the last drawn freehand mark only.");
             } else {
-                logEvent("Eraser Alert: No active pen lines remaining on tactical map layer overlay.");
+                logEvent("Eraser Alert: No active pen lines remaining on overlay layer.");
             }
         }
 
         function clearDrawings() {
-            drawingLinesStack = [];
-            currentLineStroke = [];
+            drawingLinesStack = []; currentLineStroke = [];
             drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
             logEvent("Tactical freehand overlays completely wiped.");
         }
@@ -888,17 +891,13 @@
             if (!map) return;
             placedMarkers.forEach(marker => map.removeLayer(marker));
             placedMarkers = [];
-            if (persistentTargetPin) {
-                map.removeLayer(persistentTargetPin);
-                persistentTargetPin = null;
-            }
+            if (persistentTargetPin) { map.removeLayer(persistentTargetPin); persistentTargetPin = null; }
             logEvent("Command Screen Clear: Wiped field tracking elements.");
         }
 
         function terminateSearch() {
             logEvent(`Incident tracking array closed. Session terminated for Unit [${activeSearcherId}].`);
-            clearMapAssets();
-            clearDrawings();
+            clearMapAssets(); clearDrawings();
             if(isMapLocked) toggleMapLock();
             selectAssetToPlace(null);
             switchScreen('screenSignIn');
@@ -922,7 +921,6 @@
             window.speechSynthesis.cancel(); 
             const banner = document.getElementById('voiceStatusBanner');
             banner.style.display = 'block';
-            
             let proceduralInstructionsText = "";
 
             if (category === 'cpr') {
@@ -940,70 +938,43 @@
             }
 
             banner.innerText = "📢 BROADCASTING PROTOCOL: " + category.toUpperCase();
-            
             const vocalUtterance = new SpeechSynthesisUtterance(proceduralInstructionsText);
             vocalUtterance.rate = 0.95; 
             vocalUtterance.onend = () => { banner.style.display = 'none'; };
-            
             window.speechSynthesis.speak(vocalUtterance);
         }
 
-        function stopVoiceBroadcast() {
-            window.speechSynthesis.cancel();
-            document.getElementById('voiceStatusBanner').style.display = 'none';
-        }
+        function stopVoiceBroadcast() { window.speechSynthesis.cancel(); document.getElementById('voiceStatusBanner').style.display = 'none'; }
 
         function playbackControl(action) {
             const status = document.getElementById('replayStatus');
             clearInterval(replayInterval);
-
             if (action === 'play') {
                 status.innerText = "Status: Replaying Logs...";
                 let index = 0;
-                logEvent("Incident event timeline playback replay sequence initiated.");
-                
                 replayInterval = setInterval(() => {
-                    if (index < historicalLogs.length) {
-                        status.innerText = `Replaying item ${index + 1}/${historicalLogs.length}`;
-                        index++;
-                    } else {
-                        clearInterval(replayInterval);
-                        status.innerText = "Status: Replay Complete";
-                    }
+                    if (index < historicalLogs.length) { status.innerText = `Replaying item ${index + 1}/${historicalLogs.length}`; index++; } 
+                    else { clearInterval(replayInterval); status.innerText = "Status: Replay Complete"; }
                 }, 1000);
-            } else if (action === 'pause') {
-                status.innerText = "Status: Playback Paused";
-            } else if (action === 'rewind') {
-                status.innerText = "Status: Rewound to Start";
-                logEvent("Incident timeline logs reset to start point frame.");
-            }
+            } else if (action === 'pause') { status.innerText = "Status: Playback Paused"; } 
+            else if (action === 'rewind') { status.innerText = "Status: Rewound to Start"; }
         }
 
         function logEvent(message) {
             const timestamp = new Date().toLocaleTimeString();
             historicalLogs.unshift({ time: timestamp, text: message });
-            
             const list = document.getElementById('logList');
             if(list) {
-                list.innerHTML = historicalLogs.map(log => `
-                    <li class="log-item">
-                        <span class="log-time">[${log.time}]</span> ${log.text}
-                    </li>
-                `).join('');
+                list.innerHTML = historicalLogs.map(log => `<li class="log-item"><span class="log-time">[${log.time}]</span> ${log.text}</li>`).join('');
             }
         }
 
-        function openHistoricalLogs() {
-            logEvent("Assembled real-time analytical activity final report logs.");
-            switchScreen('screenReport');
-        }
-
+        function openHistoricalLogs() { logEvent("Assembled real-time analytical activity final report logs."); switchScreen('screenReport'); }
         function emailReport() {
             let bodyText = "TACNET TACTICAL INCIDENT OPERATIONS LOG\n=========================================\n\n";
             historicalLogs.forEach(l => { bodyText += `[${l.time}] ${l.text}\n`; });
             window.location.href = `mailto:?subject=TACNET Tactical Search Data&body=${encodeURIComponent(bodyText)}`;
         }
-
         function printReport() { window.print(); }
     </script>
 </body>
