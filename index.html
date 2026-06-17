@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>TACNET - Multi-Agency Task Force Search App</title>
+    <!-- EMBED NATIVE HIGH-PERFORMANCE MAPPING STYLES -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         /* MOBILE PHONE HYPER-OPTIMIZATION & FIXED HEIGHT PREVENTING OVERFLOW */
@@ -156,7 +157,7 @@
             mix-blend-mode: screen; box-shadow: inset 0 0 100px rgba(255, 0, 0, 0.35);
         }
 
-        /* HEADER TOP BAR NAVIGATION */
+        /* HARD-LOCKED MOBILE RESPONSIVE NAVIGATION TOP BAR */
         .map-topnav {
             position: absolute;
             top: 0; left: 0; width: 100%;
@@ -168,16 +169,16 @@
             padding: 0 0.4rem;
             padding-top: env(safe-area-inset-top);
             z-index: 20;
-            gap: 0.25rem;
+            gap: 0.2rem;
         }
-        .nav-arrow { font-size: 1.4rem; background: none; border: none; color: #fff; padding: 0 0.3rem; cursor: pointer; font-weight: bold; }
-        .map-toggle-btn { padding: 0.5rem 0.4rem; font-size: 0.65rem; background: #334155; border: 1px solid #475569; color: #cbd5e1; font-weight: 800; border-radius: 4px; text-transform: uppercase; }
+        .nav-arrow { font-size: 1.4rem; background: none; border: none; color: #fff; padding: 0 0.2rem; cursor: pointer; font-weight: bold; }
+        .map-toggle-btn { padding: 0.5rem 0.35rem; font-size: 0.65rem; background: #334155; border: 1px solid #475569; color: #cbd5e1; font-weight: 800; border-radius: 4px; text-transform: uppercase; flex-shrink: 0; }
         .map-toggle-btn.active { background: #1d4ed8; border-color: #3b82f6; color: #fff; }
         
-        /* RESPONSIVE SEARCH ADDR BAR */
-        .search-box-container { flex-grow: 1; display: flex; gap: 0.2rem; min-width: 0; }
-        .search-input { flex-grow: 1; min-width: 0; padding: 0.5rem; background: #000; border: 1px solid #475569; color: #fff; border-radius: 4px; font-size: 0.8rem; font-weight: 600; }
-        .btn-go { background: #059669; border: none; color: #fff; padding: 0 0.6rem; font-weight: 800; border-radius: 4px; font-size: 0.8rem; flex-shrink: 0; }
+        /* RESPONSIVE SEARCH INPUT OVERFLOW BUFFER */
+        .search-box-container { flex-grow: 1; display: flex; gap: 0.2rem; min-width: 0; align-items: center; }
+        .search-input { flex-grow: 1; min-width: 0; padding: 0.5rem; background: #000; border: 1px solid #475569; color: #fff; border-radius: 4px; font-size: 0.8rem; font-weight: 600; height: 34px; }
+        .btn-go { background: #059669; border: none; color: #fff; padding: 0 0.55rem; font-weight: 800; border-radius: 4px; font-size: 0.8rem; flex-shrink: 0; height: 34px; line-height: 34px; display: flex; align-items: center; justify-content: center; text-transform: uppercase; }
 
         /* TELEMETRY INTERCEPT DISPLAY BANNER */
         .telemetry-alert-banner {
@@ -354,6 +355,7 @@
 
     <div id="emergencyStrobe"></div>
 
+    <!-- SCREEN 1: BRAND LANDING SCREEN (PULLS YOUR UPLOADED FILE DIRECTLY) -->
     <div id="screenLanding" class="screen active">
         <div class="landing-backdrop-pure"></div>
         <div class="graphic-container" onclick="switchScreen('screenSignIn')">
@@ -368,6 +370,7 @@
         </div>
     </div>
 
+    <!-- SCREEN 2: SECURE USER AUTHENTICATION -->
     <div id="screenSignIn" class="screen">
         <div class="backdrop"></div>
         <div style="z-index: 5; margin-top: 3.5rem; display: flex; flex-direction: column; align-items: center;">
@@ -396,6 +399,7 @@
         </div>
     </div>
 
+    <!-- SCREEN 3: COMMAND LOGISTICAL MAIN MENU HUB -->
     <div id="screenMenu" class="screen">
         <div class="backdrop"></div>
         <div style="z-index: 5; margin-top: 4.5rem; margin-bottom: 2rem; text-align: center;">
@@ -415,6 +419,7 @@
         </div>
     </div>
 
+    <!-- SCREEN 4: LIVE SEARCH INTELLIGENCE MAP MODULE -->
     <div id="screenMap" class="screen">
         <div class="map-topnav">
             <button class="nav-arrow" onclick="switchScreen('screenMenu')">←</button>
@@ -423,20 +428,23 @@
             <button id="btnStreet" class="map-toggle-btn" onclick="setMapType('street')">Street</button>
             
             <div class="search-box-container">
-                <input type="text" id="mapSearch" class="search-input" placeholder="Address or Track Phone...">
+                <input type="text" id="mapSearch" class="search-input" placeholder="Address...">
                 <button class="btn-go" onclick="executeAddressSearch()">GO</button>
             </div>
         </div>
 
         <div class="map-wrapper" id="mapWrapper">
+            <!-- CELLULAR TELEMETRY INTERCEPT BANNER CONSOLE -->
             <div id="telemetryBanner" class="telemetry-alert-banner">🚨 TARGET PIN CAPTURE DETECTED! INCOMING TELEMETRY TRACK ENGAGED...</div>
 
             <div id="map"></div>
             <canvas id="drawCanvas"></canvas>
             
+            <!-- HARDWARE NEON LIGHT EMULATORS -->
             <div id="nvgGreenFilter" class="night-vision-green"></div>
             <div id="nvgRedFilter" class="night-vision-red"></div>
 
+            <!-- MANUAL INCREMENT STEPPING CONTROLLER FOR CONTAINER PERIMETER -->
             <div class="perimeter-manual-deck">
                 <label>Perimeter</label>
                 <div id="radiusReadout" class="perimeter-readout">500m</div>
@@ -477,6 +485,7 @@
         </div>
     </div>
 
+    <!-- SCREEN 5: TRANSACTION LOGS & AUTOMATED FINAL REPORTS -->
     <div id="screenReport" class="screen">
         <div class="map-topnav">
             <button class="nav-arrow" onclick="switchScreen('screenMenu')">←</button>
@@ -485,6 +494,7 @@
 
         <div class="report-body">
             
+            <!-- EMERGENCY VOICE MAP MATRIX LAYER -->
             <div class="k9-med-panel">
                 <h3 style="font-size:0.75rem; text-transform:uppercase; color:#38bdf8; border-bottom:1px solid #334155; padding-bottom:0.2rem;">🚨 HANDS-FREE K9 FIRST AID MATRIX</h3>
                 <p style="font-size:0.65rem; color:#94a3b8; margin-top:0.2rem;">Tap any card below. Voice instructions read 100% of all survival categories non-stop to free your hands.</p>
@@ -506,6 +516,7 @@
                 <p style="font-size:0.65rem; color:#94a3b8; text-transform:uppercase; margin-top:0.25rem;">Itemized Event Ledger & Replay Timeline Deck</p>
             </div>
 
+            <!-- TIMELINE CONTROLS -->
             <div class="replay-deck">
                 <button class="replay-btn" onclick="playbackControl('play')">▶ Play Replay</button>
                 <button class="replay-btn" style="background:#4b5563;" onclick="playbackControl('pause')">⏸ Pause</button>
@@ -524,6 +535,7 @@
         </div>
     </div>
 
+    <!-- INJECT LEAFLET RUNTIME SCRIPTS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         let map;
@@ -648,7 +660,8 @@
                 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', { maxZoom: 18 }).addTo(map);
             } else {
                 document.getElementById('btnStreet').classList.add('active');
-                L.tileLayer('https://tile.openstreetmap.org/{z}/{y}/{x}.png', { maxZoom: 19 }).addTo(map);
+                // OpenStreetMap Standard Map Vector Layer - SECURE HIGH RESOLUTION
+                L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
             }
         }
 
@@ -674,13 +687,11 @@
             }
         }
 
-        // TACTICAL INTELLIGENCE SEARCH ENGINE HOOK
         function executeAddressSearch() {
             const query = document.getElementById('mapSearch').value.trim();
             if(query !== "") {
                 logEvent(`Query Sent to Geocoding System: [${query.toUpperCase()}]`);
                 
-                // If checking a simulated digital phone lock or phone tracking string
                 if(query.toLowerCase().includes("phone") || query.toLowerCase().includes("suspect") || !isNaN(query)) {
                     triggerSimulatedCellIntercept();
                     return;
@@ -719,14 +730,12 @@
             }
         }
 
-        // WORLD FIRST: IMMINENT SIMULATED CELLULAR TELEMETRY CAPTURE PROTOCOL
         function triggerSimulatedCellIntercept() {
             const banner = document.getElementById('telemetryBanner');
             banner.style.display = 'block';
             logEvent("🚨 CELLULAR MATRIX SIGNAL INTERCEPTED: Target phone turned ON. Initializing network tracking triangulation...");
 
             setTimeout(() => {
-                // Drop tracking pin inside a nearby wilderness operational layout matrix
                 const interceptLat = mapCenter[0] + (Math.random() * 0.005 - 0.0025);
                 const interceptLng = mapCenter[1] + (Math.random() * 0.005 - 0.0025);
                 const interceptCoords = [interceptLat, interceptLng];
@@ -734,7 +743,6 @@
                 map.setView(interceptCoords, 16);
                 if (tacticalPerimeterCircle) tacticalPerimeterCircle.setLatLng(interceptCoords);
 
-                // Lock intended red target place pin directly to the phone check-in coordinate
                 if (persistentTargetPin) {
                     persistentTargetPin.setLatLng(interceptCoords);
                 } else {
@@ -743,7 +751,6 @@
                 }
                 persistentTargetPin.addTo(map);
 
-                // Spawn the suspect purple asset marker node directly on top of the signal target
                 const suspectIcon = L.divIcon({ className: 'tac-marker tac-sus', iconSize: [22, 22], iconAnchor: [11, 11] });
                 const suspectMarker = L.marker(interceptCoords, { icon: suspectIcon, draggable: true }).addTo(map);
                 placedMarkers.push(suspectMarker);
@@ -822,7 +829,6 @@
             selectAssetToPlace(null);
         }
 
-        // DRAWING LOGIC WITH LINE UNDO CAPABILITIES
         drawCanvas.addEventListener('mousedown', startLineStroke);
         drawCanvas.addEventListener('mouseup', endLineStroke);
         drawCanvas.addEventListener('mousemove', drawLineSegment);
