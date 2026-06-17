@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>TACNET - Multi-Agency Task Force Search App</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         /* MOBILE PHONE HYPER-OPTIMIZATION */
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
@@ -124,8 +125,8 @@
         .menu-container { display: flex; flex-direction: column; gap: 1.1rem; width: 90%; max-width: 400px; margin: auto; z-index: 5; }
 
         /* LIVE SPATIAL MAP WORKSPACE */
-        .map-wrapper { position: relative; width: 100%; height: 70%; background: #020617; overflow: hidden; }
-        #mapCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; }
+        .map-wrapper { position: relative; width: 100%; height: 70%; background: #020617; }
+        #map { width: 100%; height: 100%; z-index: 2; }
         #drawCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; }
         
         /* DECK TOP CONTROLS NAVIGATION */
@@ -214,17 +215,26 @@
             font-size: 0.8rem;
             font-weight: 700;
         }
+        
+        /* CUSTOM LEAFLET ICON STYLE CHIPS */
+        .tac-marker {
+            width: 20px !important;
+            height: 20px !important;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            box-shadow: 0 0 8px rgba(0,0,0,0.5);
+        }
+
         .dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
-        .dot.k9 { background: #00eaff; box-shadow: 0 0 6px #00eaff; position: relative; }
-        .dot.k9::after { content: ''; position: absolute; width: 6px; height: 6px; background: #0022ff; border-radius: 50%; top: 4px; left: 4px; }
-        .dot.le { background: #0022ff; box-shadow: 0 0 6px #0022ff; }
-        .dot.sar { background: #ff0000; box-shadow: 0 0 6px #ff0000; }
-        .dot.civ { background: #00ff00; box-shadow: 0 0 6px #00ff00; }
-        .dot.sus { background: #cc00ff; box-shadow: 0 0 6px #cc00ff; }
-        .dot.veh { background: #000000; border: 1px solid #fff; }
-        .dot.drone { background: #888888; box-shadow: 0 0 6px #888888; }
-        .dot.art { background: #ff7700; box-shadow: 0 0 6px #ff7700; }
-        .dot.cp { background: #ffff00; box-shadow: 0 0 6px #ff0000; border: 2px solid #ff0000; border-radius: 0%; }
+        .dot.k9, .tac-k9 { background: #00eaff; box-shadow: 0 0 6px #00eaff; border: 2px solid #0022ff !important; }
+        .dot.le, .tac-le { background: #0022ff; box-shadow: 0 0 6px #0022ff; }
+        .dot.sar, .tac-sar { background: #ff0000; box-shadow: 0 0 6px #ff0000; }
+        .dot.civ, .tac-civ { background: #00ff00; box-shadow: 0 0 6px #00ff00; }
+        .dot.sus, .tac-sus { background: #cc00ff; box-shadow: 0 0 6px #cc00ff; }
+        .dot.veh, .tac-veh { background: #000000; border: 2px solid #fff !important; }
+        .dot.drone, .tac-drone { background: #888888; box-shadow: 0 0 6px #888888; }
+        .dot.art, .tac-art { background: #ff7700; box-shadow: 0 0 6px #ff7700; }
+        .dot.cp, .tac-cp { background: #ffff00; box-shadow: 0 0 6px #ff0000; border: 2px solid #ff0000 !important; border-radius: 0% !important; }
 
         /* FIXED BOTTOM DECK BASE PANEL */
         .bottom-deck { width: 100%; height: 18%; background: #020617; display: flex; flex-direction: column; z-index: 20; padding-bottom: env(safe-area-inset-bottom); }
@@ -259,7 +269,9 @@
         .log-item { padding: 0.55rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); line-height: 1.4; }
         .log-time { color: #94a3b8; margin-right: 0.6rem; font-weight: bold; }
 
-        /* CORE COMPONENT KEYFRAMES */
+        /* HIDE LEAFLET CREDITS PANEL FOR CLEAN LOOK */
+        .leaflet-control-attribution { display: none !important; }
+
         @keyframes pulse-red {
             0% { background: #991b1b; box-shadow: 0 0 10px #991b1b; }
             50% { background: #dc2626; box-shadow: 0 0 25px #dc2626; }
@@ -332,18 +344,18 @@
             <button id="btnStreet" class="map-toggle-btn" onclick="setMapType('street')">Street</button>
             
             <div class="search-box-container">
-                <input type="text" id="mapSearch" class="search-input" placeholder="Enter Tactical Target Address...">
+                <input type="text" id="mapSearch" class="search-input" placeholder="Enter Target Area or Coordinates...">
                 <button class="btn-go" onclick="executeAddressSearch()">GO</button>
             </div>
         </div>
 
         <div class="map-wrapper" id="mapWrapper">
-            <canvas id="mapCanvas"></canvas>
+            <div id="map"></div>
             <canvas id="drawCanvas"></canvas>
 
             <div class="perimeter-slider-container">
                 <label>Radius</label>
-                <input type="range" id="perimeterSlider" class="v-slider" min="40" max="220" value="100" oninput="updatePerimeterScale()">
+                <input type="range" id="perimeterSlider" class="v-slider" min="100" max="1500" value="400" oninput="updatePerimeterScale()">
             </div>
 
             <div class="map-sidebar">
@@ -400,271 +412,169 @@
         </div>
     </div>
 
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        let activeMapType = 'satellite';
-        let mapCenter = { x: 0, y: 0 };
-        let perimeterRadius = 100;
+        let map;
+        let mapCenter = [37.5407, -77.4360]; // Baseline Default View Coordinates (Richmond, VA)
+        let tacticalPerimeterCircle;
         let isMapLocked = false;
         let isPenActive = false;
         let activeEmergency = false;
         let isDrawing = false;
         
-        let placedAssets = [];
+        let placedMarkers = [];
         let historicalLogs = [];
-        let mapFeatures = [];
-        let radarSweepAngle = 0;
 
-        const mapCanvas = document.getElementById('mapCanvas');
-        const mapCtx = mapCanvas.getContext('2d');
         const drawCanvas = document.getElementById('drawCanvas');
         const drawCtx = drawCanvas.getContext('2d');
 
         window.addEventListener('load', () => {
-            resizeCanvases();
-            generateVectorTerrain();
-            initMapCoordinates();
-            logEvent("System booted. TACNET vector engine active.");
-            
-            // Core Animation Loop for Tactical Vector Updates
-            setInterval(() => {
-                if(document.getElementById('screenMap').classList.contains('active')) {
-                    radarSweepAngle += 0.02;
-                    renderTacticalScreen();
-                }
-            }, 30);
+            resizeDrawCanvas();
+            logEvent("System booted. TACNET vector map engine active.");
         });
 
-        window.addEventListener('resize', () => {
-            resizeCanvases();
-            renderTacticalScreen();
-        });
-
-        function resizeCanvases() {
+        function resizeDrawCanvas() {
             const wrapper = document.getElementById('mapWrapper');
             if (wrapper) {
-                mapCanvas.width = wrapper.clientWidth;
-                mapCanvas.height = wrapper.clientHeight;
                 drawCanvas.width = wrapper.clientWidth;
                 drawCanvas.height = wrapper.clientHeight;
             }
         }
 
-        function initMapCoordinates() {
-            mapCenter.x = mapCanvas.width / 2;
-            mapCenter.y = mapCanvas.height / 2;
+        // INITIALIZE REAL MAP MODULE
+        function initRealMap() {
+            if (map) return; // Prevent double initialization crash
+
+            // Setup Map Framework
+            map = L.map('map', {
+                center: mapCenter,
+                zoom: 15,
+                zoomControl: false,
+                attributionControl: false
+            });
+
+            // Set Up Satellite Map Layer Asset as Core Default
+            setMapType('satellite');
+
+            // Construct Initial Operational Perimeter Area
+            const radiusInMeters = parseInt(document.getElementById('perimeterSlider').value);
+            tacticalPerimeterCircle = L.circle(mapCenter, {
+                color: '#22c55e',
+                fillColor: '#22c55e',
+                fillOpacity: 0.12,
+                weight: 3
+            }).addTo(map);
         }
 
-        function generateVectorTerrain() {
-            mapFeatures = [];
-            for (let i = 0; i < 15; i++) {
-                mapFeatures.push({
-                    x: Math.random() * 500,
-                    y: Math.random() * 800,
-                    radius: Math.random() * 90 + 40,
-                    opacity: Math.random() * 0.15 + 0.05
-                });
-            }
-        }
-
-        // LOGIN SIGN-IN DISPATCH PROTOCOLS
+        // LOGIN SWITCH HANDLING
         function handleSignIn() {
             const id = document.getElementById('inputId').value;
             const token = document.getElementById('inputToken').value;
-            
             if(token.trim() !== "") {
-                logEvent(`Inter-Agency Remote Access Authorized via Token: [${token.toUpperCase()}]`);
+                logEvent(`Outside Agency Session Token Active: [${token.toUpperCase()}]`);
                 localStorage.setItem('active_token', token);
             } else {
-                logEvent(`Internal Shield Login Verified: User ID ${id || 'BYPASS_USER'}`);
+                logEvent(`Internal Shield Credentials Approved: User ${id || 'FIELD_COMMAND'}`);
             }
             switchScreen('screenMenu');
         }
 
-        // DIRECT TITLE TAP BYPASS LINK FOR EMERGENCY/TEST OVERRIDES
         function forceBypassLogin() {
-            logEvent("Administrative Master Bypass Triggered via Application Title Header.");
+            logEvent("Command Bypass Approved via Title.");
             switchScreen('screenMenu');
         }
 
         function logOutSession() {
-            logEvent("Active administrative command session detached.");
+            logEvent("Command session safely detached.");
             switchScreen('screenSignIn');
         }
 
         function switchScreen(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             const targetScreen = document.getElementById(screenId);
-            if (targetScreen) {
-                targetScreen.classList.add('active');
-            }
+            if (targetScreen) targetScreen.classList.add('active');
+            
             if(screenId === 'screenMap') {
                 setTimeout(() => {
-                    resizeCanvases();
-                    initMapCoordinates();
-                    renderTacticalScreen();
-                }, 50);
+                    initRealMap();
+                    map.invalidateSize();
+                    resizeDrawCanvas();
+                }, 100);
             }
         }
 
         function startNewSearch() {
             clearMapAssets();
             clearDrawings();
-            logEvent("Initiated fresh target containment parameters.");
+            logEvent("Fresh incident tracking parameters established.");
             switchScreen('screenMap');
         }
 
-        // VECTOR MAP RENDERING ENGINE
-        function renderTacticalScreen() {
-            mapCtx.clearRect(0, 0, mapCanvas.width, mapCanvas.height);
-            
-            if (activeMapType === 'satellite') {
-                mapCtx.fillStyle = '#020617';
-                mapCtx.fillRect(0, 0, mapCanvas.width, mapCanvas.height);
-                
-                mapCtx.fillStyle = '#0f172a';
-                mapFeatures.forEach(feature => {
-                    mapCtx.beginPath();
-                    mapCtx.arc(feature.x, feature.y, feature.radius, 0, Math.PI * 2);
-                    mapCtx.fill();
-                });
-
-                mapCtx.strokeStyle = 'rgba(56, 189, 248, 0.08)';
-                mapCtx.lineWidth = 1;
-                for(let i=0; i<mapCanvas.width; i+=40) {
-                    mapCtx.beginPath(); mapCtx.moveTo(i, 0); mapCtx.lineTo(i, mapCanvas.height); mapCtx.stroke();
-                }
-                for(let j=0; j<mapCanvas.height; j+=40) {
-                    mapCtx.beginPath(); mapCtx.moveTo(0, j); mapCtx.lineTo(mapCanvas.width, j); mapCtx.stroke();
-                }
-
-                mapCtx.strokeStyle = 'rgba(56, 189, 248, 0.15)';
-                mapCtx.lineWidth = 1.5;
-                mapCtx.beginPath(); mapCtx.moveTo(mapCenter.x - 30, mapCenter.y); mapCtx.lineTo(mapCenter.x + 30, mapCenter.y); mapCtx.stroke();
-                mapCtx.beginPath(); mapCtx.moveTo(mapCenter.x, mapCenter.y - 30); mapCtx.lineTo(mapCenter.x, mapCenter.y + 30); mapCtx.stroke();
-
-                mapCtx.strokeStyle = 'rgba(56, 189, 248, 0.12)';
-                mapCtx.lineWidth = 2;
-                mapCtx.beginPath();
-                mapCtx.moveTo(mapCenter.x, mapCenter.y);
-                mapCtx.lineTo(mapCenter.x + Math.cos(radarSweepAngle) * 350, mapCenter.y + Math.sin(radarSweepAngle) * 350);
-                mapCtx.stroke();
-
-            } else if (activeMapType === 'terrain') {
-                mapCtx.fillStyle = '#0f1c0e';
-                mapCtx.fillRect(0, 0, mapCanvas.width, mapCanvas.height);
-                
-                mapCtx.strokeStyle = 'rgba(234, 179, 8, 0.18)';
-                mapCtx.lineWidth = 1.5;
-                for(let r = 50; r < mapCanvas.width; r += 75) {
-                    mapCtx.beginPath(); mapCtx.arc(mapCenter.x, mapCenter.y, r, 0, Math.PI*2); mapCtx.stroke();
-                }
-            } else {
-                mapCtx.fillStyle = '#1e293b';
-                mapCtx.fillRect(0, 0, mapCanvas.width, mapCanvas.height);
-                
-                mapCtx.strokeStyle = '#334155'; 
-                mapCtx.lineWidth = 12;
-                for(let x=40; x<mapCanvas.width; x+=100) {
-                    mapCtx.beginPath(); mapCtx.moveTo(x, 0); mapCtx.lineTo(x, mapCanvas.height); mapCtx.stroke();
-                }
-                for(let y=40; y<mapCanvas.height; y+=100) {
-                    mapCtx.beginPath(); mapCtx.moveTo(0, y); mapCtx.lineTo(mapCanvas.width, y); mapCtx.stroke();
-                }
-            }
-
-            // AUTO-GENERATED GREEN PERIMETER BOUNDARY LOOP
-            mapCtx.strokeStyle = '#22c55e';
-            mapCtx.lineWidth = 3;
-            mapCtx.shadowBlur = 14;
-            mapCtx.shadowColor = '#22c55e';
-            mapCtx.beginPath();
-            mapCtx.arc(mapCenter.x, mapCenter.y, perimeterRadius, 0, Math.PI * 2);
-            mapCtx.stroke();
-            mapCtx.shadowBlur = 0;
-
-            placedAssets.forEach(asset => {
-                drawMapIcon(mapCtx, asset.x, asset.y, asset.type);
-            });
-        }
-
-        function drawMapIcon(ctx, x, y, type) {
-            ctx.save();
-            ctx.shadowBlur = 8;
-            
-            switch(type) {
-                case 'k9':
-                    ctx.shadowColor = '#00eaff'; ctx.fillStyle = '#00eaff';
-                    ctx.beginPath(); ctx.arc(x, y, 10, 0, Math.PI*2); ctx.fill();
-                    ctx.fillStyle = '#0022ff';
-                    ctx.beginPath(); ctx.arc(x, y, 4, 0, Math.PI*2); ctx.fill();
-                    break;
-                case 'le':
-                    ctx.shadowColor = '#0022ff'; ctx.fillStyle = '#0022ff';
-                    ctx.beginPath(); ctx.arc(x, y, 9, 0, Math.PI*2); ctx.fill();
-                    break;
-                case 'sar':
-                    ctx.shadowColor = '#ff0000'; ctx.fillStyle = '#ff0000';
-                    ctx.beginPath(); ctx.arc(x, y, 9, 0, Math.PI*2); ctx.fill();
-                    break;
-                case 'civ':
-                    ctx.shadowColor = '#00ff00'; ctx.fillStyle = '#00ff00';
-                    ctx.beginPath(); ctx.arc(x, y, 9, 0, Math.PI*2); ctx.fill();
-                    break;
-                case 'sus':
-                    ctx.shadowColor = '#cc00ff'; ctx.fillStyle = '#cc00ff';
-                    ctx.beginPath(); ctx.arc(x, y, 9, 0, Math.PI*2); ctx.fill();
-                    break;
-                case 'veh':
-                    ctx.shadowColor = '#ffffff'; ctx.fillStyle = '#000000';
-                    ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.5;
-                    ctx.beginPath(); ctx.arc(x, y, 9, 0, Math.PI*2); ctx.fill(); ctx.stroke();
-                    break;
-                case 'drone':
-                    ctx.shadowColor = '#888888'; ctx.fillStyle = '#888888';
-                    ctx.beginPath(); ctx.arc(x, y, 8, 0, Math.PI*2); ctx.fill();
-                    break;
-                case 'art':
-                    ctx.shadowColor = '#ff7700'; ctx.fillStyle = '#ff7700';
-                    ctx.beginPath(); ctx.arc(x, y, 8, 0, Math.PI*2); ctx.fill();
-                    break;
-                case 'cp':
-                    ctx.shadowColor = '#ff0000'; ctx.fillStyle = '#ffff00';
-                    ctx.strokeStyle = '#ff0000'; ctx.lineWidth = 2;
-                    ctx.fillRect(x - 9, y - 9, 18, 18); ctx.strokeRect(x - 9, y - 9, 18, 18);
-                    break;
-            }
-            ctx.restore();
-        }
-
+        // FLUID MAP STYLE CHANGEOVER OVERLAYS
         function setMapType(type) {
-            activeMapType = type;
+            if (!map) return;
             document.querySelectorAll('.map-toggle-btn').forEach(b => b.classList.remove('active'));
-            if(type === 'satellite') document.getElementById('btnSat').classList.add('active');
-            if(type === 'terrain') document.getElementById('btnTerr').classList.add('active');
-            if(type === 'street') document.getElementById('btnStreet').classList.add('active');
-            renderTacticalScreen();
+            
+            // Wipe out older raster tiles safely before injecting new layer asset
+            map.eachLayer((layer) => {
+                if (layer instanceof L.TileLayer) map.removeLayer(layer);
+            });
+
+            if (type === 'satellite') {
+                document.getElementById('btnSat').classList.add('active');
+                L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+                    maxZoom: 19
+                }).addTo(map);
+            } else if (type === 'terrain') {
+                document.getElementById('btnTerr').classList.add('active');
+                L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{y}/{x}.png', {
+                    maxZoom: 17
+                }).addTo(map);
+            } else {
+                document.getElementById('btnStreet').classList.add('active');
+                L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{y}/{x}{r}.png', {
+                    maxZoom: 20
+                }).addTo(map);
+            }
         }
 
+        // GEOCODING AND POSITION POSITION LOCKING HANDLERS
         function executeAddressSearch() {
             const query = document.getElementById('mapSearch').value;
             if(query.trim() !== "") {
-                logEvent(`Target Intercept Coordinates Geocoded: [${query.toUpperCase()}]`);
-                mapCenter.x = (mapCanvas.width / 2) + (Math.random() * 80 - 40);
-                mapCenter.y = (mapCanvas.height / 2) + (Math.random() * 80 - 40);
-                generateVectorTerrain();
-                renderTacticalScreen();
+                logEvent(`Searching Coordinate Reference Array: [${query.toUpperCase()}]`);
+                
+                // Real-world dynamic simulation fallback coordinates loop
+                // (Moves map safely inside target operation bounds instantly)
+                const varianceX = (Math.random() * 0.02 - 0.01);
+                const varianceY = (Math.random() * 0.02 - 0.01);
+                mapCenter = [mapCenter[0] + varianceX, mapCenter[1] + varianceY];
+                
+                map.setView(mapCenter, 15);
+                if (tacticalPerimeterCircle) tacticalPerimeterCircle.setLatLng(mapCenter);
             }
         }
 
         function updatePerimeterScale() {
-            perimeterRadius = parseInt(document.getElementById('perimeterSlider').value);
-            renderTacticalScreen();
+            const radiusInMeters = parseInt(document.getElementById('perimeterSlider').value);
+            if (tacticalPerimeterCircle) tacticalPerimeterCircle.setRadius(radiusInMeters);
         }
 
         function toggleMapLock() {
             isMapLocked = !isMapLocked;
             document.getElementById('btnLock').style.background = isMapLocked ? '#1d4ed8' : '';
-            logEvent(isMapLocked ? "Spatial Frame Lock Engaged." : "Spatial Frame Lock Disengaged.");
+            if (isMapLocked) {
+                map.dragging.disable();
+                map.touchZoom.disable();
+                map.doubleClickZoom.disable();
+                map.scrollWheelZoom.disable();
+            } else {
+                map.dragging.enable();
+                map.touchZoom.enable();
+                map.doubleClickZoom.enable();
+                map.scrollWheelZoom.enable();
+            }
+            logEvent(isMapLocked ? "Spatial Map Navigation Disabled & Locked." : "Spatial Map Navigation Enabled.");
         }
 
         function toggleRedPen() {
@@ -672,49 +582,48 @@
             document.getElementById('btnPen').classList.toggle('active', isPenActive);
             
             if(isPenActive) {
-                isMapLocked = true;
-                document.getElementById('btnLock').style.background = '#1d4ed8';
+                if(!isMapLocked) toggleMapLock();
                 drawCanvas.style.pointerEvents = 'auto';
             } else {
                 drawCanvas.style.pointerEvents = 'none';
             }
         }
 
+        // TACTICAL ASSET DEPLOYMENT INTERFACE
         function spawnAsset(assetType) {
-            const offset = (placedAssets.length * 20) % 100;
-            const newAsset = {
-                id: Date.now(),
-                type: assetType,
-                x: mapCenter.x + offset - 50,
-                y: mapCenter.y + offset - 50
-            };
-            placedAssets.push(newAsset);
-            logEvent(`Deployed Unit Node: [${assetType.toUpperCase()}] mapped to tactical frame.`);
-            renderTacticalScreen();
+            if (!map) return;
+            
+            // Offset coordinates slightly so markers don't pile directly on top of each other
+            const currentCenter = map.getCenter();
+            const offsetLat = currentCenter.lat + (placedMarkers.length * 0.0005) - 0.001;
+            const offsetLng = currentCenter.lng + (placedMarkers.length * 0.0005) - 0.001;
+
+            // Generate precise colored CSS marker asset
+            const tacticalHtmlIcon = L.divIcon({
+                className: `tac-marker tac-${assetType}`,
+                iconSize: [20, 20],
+                iconAnchor: [10, 10]
+            });
+
+            // Build dynamic interactive field asset node
+            const marker = L.marker([offsetLat, offsetLng], {
+                icon: tacticalHtmlIcon,
+                draggable: true
+            }).addTo(map);
+
+            // One-Click Removal Trigger
+            marker.on('click', () => {
+                if (isPenActive) return;
+                logEvent(`Asset Decommitted: Cleared [${assetType.toUpperCase()}] off grid workspace.`);
+                map.removeLayer(marker);
+                placedMarkers = placedMarkers.filter(m => m !== marker);
+            });
+
+            placedMarkers.push(marker);
+            logEvent(`Deployed Unit Node: [${assetType.toUpperCase()}] locked on coordinates.`);
         }
 
-        mapCanvas.addEventListener('mousedown', handleMapTap);
-        mapCanvas.addEventListener('touchstart', (e) => { if(e.touches[0]) handleMapTap(e.touches[0]); });
-
-        function handleMapTap(e) {
-            if(isMapLocked && !isPenActive) return;
-            const rect = mapCanvas.getBoundingClientRect();
-            const clickX = (e.clientX || e.pageX || (e.touches && e.touches[0].clientX)) - rect.left;
-            const clickY = (e.clientY || e.pageY || (e.touches && e.touches[0].clientY)) - rect.top;
-
-            let assetRemoved = false;
-            for(let i = placedAssets.length - 1; i >= 0; i--) {
-                const dist = Math.hypot(placedAssets[i].x - clickX, placedAssets[i].y - clickY);
-                if(dist < 20) {
-                    logEvent(`Asset Decommitted: Cleared [${placedAssets[i].type.toUpperCase()}] off layout.`);
-                    placedAssets.splice(i, 1);
-                    assetRemoved = true;
-                    break;
-                }
-            }
-            if(assetRemoved) renderTacticalScreen();
-        }
-
+        // FREEHAND SKETCHPEN HOOK INTERACTION ENGINE
         drawCanvas.addEventListener('mousedown', () => isDrawing = true);
         drawCanvas.addEventListener('mouseup', () => isDrawing = false);
         drawCanvas.addEventListener('mousemove', drawFreehand);
@@ -741,9 +650,10 @@
         }
 
         function clearMapAssets() {
-            placedAssets = [];
-            renderTacticalScreen();
-            logEvent("Command Screen Clear: Placed tracking points wiped.");
+            if (!map) return;
+            placedMarkers.forEach(marker => map.removeLayer(marker));
+            placedMarkers = [];
+            logEvent("Command Screen Clear: All active tracking icon markers wiped.");
         }
 
         function terminateSearch() {
@@ -756,10 +666,12 @@
             
             clearMapAssets();
             clearDrawings();
+            if(isMapLocked) toggleMapLock();
             document.getElementById('inputToken').value = "";
             switchScreen('screenSignIn');
         }
 
+        // DISTRESS BEACON EMERGENCY ACTIONS
         function triggerEmergencyAlert() {
             activeEmergency = true;
             document.getElementById('emergencyStrobe').style.display = 'block';
@@ -774,6 +686,7 @@
             }
         }
 
+        // INTERNAL REGISTRATION DATA JOURNAL
         function logEvent(message) {
             const timestamp = new Date().toLocaleTimeString();
             historicalLogs.unshift({ time: timestamp, text: message });
@@ -789,7 +702,7 @@
         }
 
         function openHistoricalLogs() {
-            logEvent("Compiled operational history telemetry.");
+            logEvent("Compiled operational history telemetry summary.");
             switchScreen('screenReport');
         }
 
