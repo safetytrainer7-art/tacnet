@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>TACNET - Multi-Agency Task Force Search App</title>
+    <!-- EMBED NATIVE HIGH-PERFORMANCE MAPPING STYLES -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         /* MOBILE PHONE HYPER-OPTIMIZATION & FIXED HEIGHT PREVENTING OVERFLOW */
@@ -40,7 +41,7 @@
             z-index: 1;
         }
 
-        /* SCREEN 1 BRAND LANDING CONFIGURATION (MATCHES YOUR IMAGE COMPLETELY) */
+        /* SCREEN 1 BRAND LANDING CONFIGURATION */
         .landing-backdrop-pure {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -156,7 +157,7 @@
             mix-blend-mode: screen; box-shadow: inset 0 0 100px rgba(255,0,0,0.35);
         }
 
-        /* AUTO-SCALING NAVIGATION HEADER TOP BAR */
+        /* HEADER TOP BAR NAVIGATION */
         .map-topnav {
             position: absolute;
             top: 0; left: 0; width: 100%;
@@ -174,12 +175,12 @@
         .map-toggle-btn { padding: 0.5rem 0.4rem; font-size: 0.65rem; background: #334155; border: 1px solid #475569; color: #cbd5e1; font-weight: 800; border-radius: 4px; text-transform: uppercase; }
         .map-toggle-btn.active { background: #1d4ed8; border-color: #3b82f6; color: #fff; }
         
-        /* RESPONSIVE SEARCH ADDR BAR */
+        /* RESPONSIVE SEARCH BAR */
         .search-box-container { flex-grow: 1; display: flex; gap: 0.2rem; min-width: 0; }
         .search-input { flex-grow: 1; min-width: 0; padding: 0.5rem; background: #000; border: 1px solid #475569; color: #fff; border-radius: 4px; font-size: 0.8rem; font-weight: 600; }
         .btn-go { background: #059669; border: none; color: #fff; padding: 0 0.6rem; font-weight: 800; border-radius: 4px; font-size: 0.8rem; flex-shrink: 0; }
 
-        /* FLOATING SIDEBAR NAVIGATION */
+        /* SIDEBAR UTILITIES */
         .map-sidebar {
             position: absolute;
             top: 75px; right: 8px;
@@ -199,7 +200,8 @@
             display: flex; align-items: center; justify-content: center;
             cursor: pointer;
         }
-        .tool-btn.active { background: #b91c1c; border-color: #f87171; }
+        .tool-btn.active { background: #1d4ed8; border-color: #3b82f6; }
+        .tool-btn.pen-active { background: #b91c1c; border-color: #f87171; }
 
         /* MANUAL STEPPING CONTROLLER FOR CONTAINER PERIMETER */
         .perimeter-manual-deck {
@@ -249,9 +251,15 @@
             white-space: nowrap;
             font-size: 0.75rem;
             font-weight: 700;
+            cursor: pointer;
+        }
+        .asset-chip.selected {
+            background: #1d4ed8;
+            border-color: #38bdf8;
+            box-shadow: 0 0 8px rgba(56,189,248,0.4);
         }
         
-        /* MARKER CONFIGURATIONS */
+        /* MARKER ICON STYLES */
         .tac-marker { width: 22px !important; height: 22px !important; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 8px rgba(0,0,0,0.6); }
         .dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
         .dot.k9, .tac-k9 { background: #00eaff; box-shadow: 0 0 6px #00eaff; border: 2px solid #0022ff !important; }
@@ -266,7 +274,7 @@
         .dot.boat, .tac-boat { background: #000000; box-shadow: 0 0 6px #ffff00; border: 2px solid #ffff00 !important; }
         .dot.target-pin, .tac-target-pin { background: #ff0000; box-shadow: 0 0 10px #ff0000; border: 2px solid #fff !important; }
 
-        /* ANCHORED STABLE LOWER COMMAND PANEL */
+        /* FIXED BOTTOM DECK BASE PANEL */
         .bottom-deck { width: 100%; height: 18%; background: #020617; display: flex; flex-direction: column; z-index: 20; padding-bottom: env(safe-area-inset-bottom); }
         .emergency-row { width: 100%; height: 55%; padding: 0.3rem; display: flex; gap: 0.3rem; }
         .btn-emergency {
@@ -338,6 +346,7 @@
 
     <div id="emergencyStrobe"></div>
 
+    <!-- SCREEN 1: BRAND LANDING SCREEN (PULLS YOUR UPLOADED FILE DIRECTLY) -->
     <div id="screenLanding" class="screen active">
         <div class="landing-backdrop-pure"></div>
         <div class="graphic-container" onclick="switchScreen('screenSignIn')">
@@ -352,6 +361,7 @@
         </div>
     </div>
 
+    <!-- SCREEN 2: SECURE USER AUTHENTICATION -->
     <div id="screenSignIn" class="screen">
         <div class="backdrop"></div>
         <div style="z-index: 5; margin-top: 3.5rem; display: flex; flex-direction: column; align-items: center;">
@@ -380,6 +390,7 @@
         </div>
     </div>
 
+    <!-- SCREEN 3: COMMAND LOGISTICAL MAIN MENU HUB -->
     <div id="screenMenu" class="screen">
         <div class="backdrop"></div>
         <div style="z-index: 5; margin-top: 4.5rem; margin-bottom: 2rem; text-align: center;">
@@ -399,6 +410,7 @@
         </div>
     </div>
 
+    <!-- SCREEN 4: LIVE SEARCH INTELLIGENCE MAP MODULE -->
     <div id="screenMap" class="screen">
         <div class="map-topnav">
             <button class="nav-arrow" onclick="switchScreen('screenMenu')">←</button>
@@ -416,9 +428,11 @@
             <div id="map"></div>
             <canvas id="drawCanvas"></canvas>
             
+            <!-- HARDWARE NEON LIGHT EMULATORS -->
             <div id="nvgGreenFilter" class="night-vision-green"></div>
             <div id="nvgRedFilter" class="night-vision-red"></div>
 
+            <!-- MANUAL INCREMENT STEPPING CONTROLLER FOR CONTAINER PERIMETER -->
             <div class="perimeter-manual-deck">
                 <label>Perimeter</label>
                 <div id="radiusReadout" class="perimeter-readout">500m</div>
@@ -428,23 +442,23 @@
 
             <div class="map-sidebar">
                 <button id="btnPen" class="tool-btn" onclick="toggleRedPen()">PEN</button>
-                <button class="tool-btn" onclick="clearDrawings()">ERASE</button>
+                <button class="tool-btn" onclick="undoLastLine()">ERASE</button>
                 <button id="btnLock" class="tool-btn" onclick="toggleMapLock()">LOCK</button>
                 <button id="btnNVG" class="tool-btn" style="color:#22c55e;" onclick="cycleNightVision()">NVG</button>
             </div>
         </div>
 
         <div class="asset-drawer">
-            <div class="asset-chip" onclick="spawnAsset('k9')"><span class="dot k9"></span>K9 Team</div>
-            <div class="asset-chip" onclick="spawnAsset('le')"><span class="dot le"></span>LE Blue</div>
-            <div class="asset-chip" onclick="spawnAsset('sar')"><span class="dot sar"></span>SAR Red</div>
-            <div class="asset-chip" onclick="spawnAsset('civ')"><span class="dot civ"></span>Civ Green</div>
-            <div class="asset-chip" onclick="spawnAsset('sus')"><span class="dot sus"></span>Suspect</div>
-            <div class="asset-chip" onclick="spawnAsset('boat')"><span class="dot boat"></span>Boat</div>
-            <div class="asset-chip" onclick="spawnAsset('veh')"><span class="dot veh"></span>Vehicle</div>
-            <div class="asset-chip" onclick="spawnAsset('drone')"><span class="dot drone"></span>Drone</div>
-            <div class="asset-chip" onclick="spawnAsset('art')"><span class="dot art"></span>Article</div>
-            <div class="asset-chip" onclick="spawnAsset('cp')"><span class="dot cp"></span>Command P.</div>
+            <div id="chip-k9" class="asset-chip" onclick="selectAssetToPlace('k9')"><span class="dot k9"></span>K9 Team</div>
+            <div id="chip-le" class="asset-chip" onclick="selectAssetToPlace('le')"><span class="dot le"></span>LE Blue</div>
+            <div id="chip-sar" class="asset-chip" onclick="selectAssetToPlace('sar')"><span class="dot sar"></span>SAR Red</div>
+            <div id="chip-civ" class="asset-chip" onclick="selectAssetToPlace('civ')"><span class="dot civ"></span>Civ Green</div>
+            <div id="chip-sus" class="asset-chip" onclick="selectAssetToPlace('sus')"><span class="dot sus"></span>Suspect</div>
+            <div id="chip-boat" class="asset-chip" onclick="selectAssetToPlace('boat')"><span class="dot boat"></span>Boat</div>
+            <div id="chip-veh" class="asset-chip" onclick="selectAssetToPlace('veh')"><span class="dot veh"></span>Vehicle</div>
+            <div id="chip-drone" class="asset-chip" onclick="selectAssetToPlace('drone')"><span class="dot drone"></span>Drone</div>
+            <div id="chip-art" class="asset-chip" onclick="selectAssetToPlace('art')"><span class="dot art"></span>Article</div>
+            <div id="chip-cp" class="asset-chip" onclick="selectAssetToPlace('cp')"><span class="dot cp"></span>Command P.</div>
         </div>
 
         <div class="bottom-deck">
@@ -459,6 +473,7 @@
         </div>
     </div>
 
+    <!-- SCREEN 5: TRANSACTION LOGS & AUTOMATED FINAL REPORTS -->
     <div id="screenReport" class="screen">
         <div class="map-topnav">
             <button class="nav-arrow" onclick="switchScreen('screenMenu')">←</button>
@@ -467,6 +482,7 @@
 
         <div class="report-body">
             
+            <!-- EMERGENCY VOICE MAP MATRIX LAYER -->
             <div class="k9-med-panel">
                 <h3 style="font-size:0.75rem; text-transform:uppercase; color:#38bdf8; border-bottom:1px solid #334155; padding-bottom:0.2rem;">🚨 HANDS-FREE K9 FIRST AID MATRIX</h3>
                 <p style="font-size:0.65rem; color:#94a3b8; margin-top:0.2rem;">Tap any card below. Voice instructions read 100% of all survival categories non-stop to free your hands.</p>
@@ -488,6 +504,7 @@
                 <p style="font-size:0.65rem; color:#94a3b8; text-transform:uppercase; margin-top:0.25rem;">Itemized Event Ledger & Replay Timeline Deck</p>
             </div>
 
+            <!-- TIMELINE CONTROLS -->
             <div class="replay-deck">
                 <button class="replay-btn" onclick="playbackControl('play')">▶ Play Replay</button>
                 <button class="replay-btn" style="background:#4b5563;" onclick="playbackControl('pause')">⏸ Pause</button>
@@ -506,6 +523,7 @@
         </div>
     </div>
 
+    <!-- INJECT LEAFLET RUNTIME SCRIPTS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         let map;
@@ -519,10 +537,15 @@
         let nvgState = 0; 
         let replayInterval;
         let activeSearcherId = "K9-UNIT 12"; 
-        let perimeterRadiusMeters = 500; // Hard coded integer baseline tracking variable
+        let perimeterRadiusMeters = 500; 
         
         let placedMarkers = [];
         let historicalLogs = [];
+        let selectedAssetType = null;
+
+        // FREEHAND OVERLAY PEN SYSTEM ARRAYS (FOR LAST-LINE ERASING LOGIC)
+        let drawingLinesStack = [];
+        let currentLineStroke = [];
 
         const drawCanvas = document.getElementById('drawCanvas');
         const drawCtx = drawCanvas.getContext('2d');
@@ -538,6 +561,7 @@
             if (wrapper) {
                 drawCanvas.width = wrapper.clientWidth;
                 drawCanvas.height = wrapper.clientHeight;
+                redrawCanvasStack();
             }
         }
 
@@ -560,6 +584,14 @@
                 weight: 3,
                 radius: perimeterRadiusMeters
             }).addTo(map);
+
+            // DETECT DIRECT SCREEN CLICK FOR USER ASSET PLACEMENT
+            map.on('click', (e) => {
+                if (isPenActive) return; // Ignore if drawing mode is active
+                if (selectedAssetType) {
+                    executeManualAssetPlacement(e.latlng.lat, e.latlng.lng, selectedAssetType);
+                }
+            });
         }
 
         function handleSignIn() {
@@ -674,7 +706,7 @@
                             persistentTargetPin.addTo(map);
                             logEvent("Intended Place Marker: Small tactical red focus dot locked to coordinates.");
                         } else {
-                            logEvent(`Geocoding database fallback processing initiated for: [${query.toUpperCase()}]`);
+                            logEvent(`Geocoding database fallback processing initialized for: [${query.toUpperCase()}]`);
                         }
                     }).catch(() => {
                         logEvent("Geocode frame override verified.");
@@ -682,28 +714,15 @@
             }
         }
 
-        // SOLID CLICK-BY-CLICK MANUAL INCREMENT PERIMETER SCALE MODIFIER
         function adjustPerimeterManual(amount) {
             perimeterRadiusMeters += amount;
-            
-            // Safety constraints preventing complete track collapse or field screen lockups
             if (perimeterRadiusMeters < 100) perimeterRadiusMeters = 100;
             if (perimeterRadiusMeters > 5000) perimeterRadiusMeters = 5000;
-            
             if (tacticalPerimeterCircle) {
                 tacticalPerimeterCircle.setRadius(perimeterRadiusMeters);
             }
-            
             document.getElementById('radiusReadout').innerText = perimeterRadiusMeters + "m";
             logEvent(`Perimeter Manual Override: Containment radius shifted to ${perimeterRadiusMeters} meters.`);
-        }
-
-        // FALLBACK SYNC FOR SLIDER RENDERS
-        function updatePerimeterScale() {
-            if(tacticalPerimeterCircle) {
-                perimeterRadiusMeters = tacticalPerimeterCircle.getRadius();
-                document.getElementById('radiusReadout').innerText = perimeterRadiusMeters + "m";
-            }
         }
 
         function toggleMapLock() {
@@ -716,47 +735,187 @@
 
         function toggleRedPen() {
             isPenActive = !isPenActive;
-            document.getElementById('btnPen').classList.toggle('active', isPenActive);
+            document.getElementById('btnPen').classList.toggle('pen-active', isPenActive);
             if(isPenActive) {
                 if(!isMapLocked) toggleMapLock();
                 drawCanvas.style.pointerEvents = 'auto';
+                // De-select asset placement mode if switching directly to drawing
+                selectAssetToPlace(null);
             } else {
                 drawCanvas.style.pointerEvents = 'none';
             }
         }
 
-        function spawnAsset(assetType) {
-            if (!map) return;
+        // TACTICAL SELECTION OF DRAWER CHIP (WILL NOT AUTO-SPAWN)
+        function selectAssetToPlace(assetType) {
+            document.querySelectorAll('.asset-chip').forEach(chip => chip.classList.remove('selected'));
             
-            const currentCenter = map.getCenter();
-            const offsetLat = currentCenter.lat + (Math.random() * 0.003 - 0.0015);
-            const offsetLng = currentCenter.lng + (Math.random() * 0.003 - 0.0015);
+            if (assetType === null || selectedAssetType === assetType) {
+                selectedAssetType = null;
+                logEvent("Asset placement layout mode turned off.");
+                return;
+            }
 
+            selectedAssetType = assetType;
+            document.getElementById(`chip-${assetType}`).classList.add('selected');
+            logEvent(`Placement Array Primed: Tap anywhere directly on the map terrain to deploy a [${assetType.toUpperCase()}].`);
+            
+            // Auto-disable pen drawing if user is selecting an asset to drop
+            if(isPenActive) toggleRedPen();
+        }
+
+        // DIRECT USER MAP SECTOR EXECUTION DEPLOYMENT
+        function executeManualAssetPlacement(lat, lng, assetType) {
             const tacticalHtmlIcon = L.divIcon({
                 className: `tac-marker tac-${assetType}`,
                 iconSize: [22, 22],
                 iconAnchor: [11, 11]
             });
 
-            const marker = L.marker([offsetLat, offsetLng], {
+            // Creates drag-and-drop mobile marker node directly on target coordinates
+            const marker = L.marker([lat, lng], {
                 icon: tacticalHtmlIcon,
                 draggable: true
             }).addTo(map);
 
             marker.on('dragend', () => {
                 const pos = marker.getLatLng();
-                logEvent(`Asset Relocated: [${assetType.toUpperCase()}] moved to Lat: ${pos.lat.toFixed(4)}, Lon: ${pos.lng.toFixed(4)}`);
+                logEvent(`Asset Moved: [${assetType.toUpperCase()}] re-positioned to Lat: ${pos.lat.toFixed(4)}, Lon: ${pos.lng.toFixed(4)}`);
             });
 
-            marker.on('click', () => {
+            // Single Tap Dynamic Removal Option
+            marker.on('click', (e) => {
+                L.DomEvent.stopPropagation(e); // Stop marker click from triggering a brand new placement under it
                 if (isPenActive) return;
-                logEvent(`Asset Decommitted: Cleared [${assetType.toUpperCase()}] off grid workspace.`);
+                logEvent(`Asset Removed: Cleared [${assetType.toUpperCase()}] off field workspace map layer.`);
                 map.removeLayer(marker);
                 placedMarkers = placedMarkers.filter(m => m !== marker);
             });
 
             placedMarkers.push(marker);
-            logEvent(`Deployed Unit Node: [${assetType.toUpperCase()}] locked on coordinates.`);
+            logEvent(`Manual Asset Placed: [${assetType.toUpperCase()}] dropped securely at Lat: ${lat.toFixed(4)}, Lon: ${lng.toFixed(4)}`);
+            
+            // Auto-reset state selection after first drop to prevent rapid accidental duplication tapping
+            selectAssetToPlace(null);
+        }
+
+        // LAST DRAWN LINE ONLY ERASER SUB-SYSTEM LOGIC
+        drawCanvas.addEventListener('mousedown', startLineStroke);
+        drawCanvas.addEventListener('mouseup', endLineStroke);
+        drawCanvas.addEventListener('mousemove', drawLineSegment);
+        
+        drawCanvas.addEventListener('touchstart', (e) => { if(e.touches[0]) startLineStroke(e.touches[0]); });
+        drawCanvas.addEventListener('touchend', endLineStroke);
+        drawCanvas.addEventListener('touchmove', (e) => { if(e.touches[0]) drawLineSegment(e.touches[0]); });
+
+        function startLineStroke(e) {
+            if (!isPenActive) return;
+            isDrawing = true;
+            currentLineStroke = [];
+            appendSegmentPoint(e);
+        }
+
+        function drawLineSegment(e) {
+            if (!isDrawing || !isPenActive) return;
+            appendSegmentPoint(e);
+            redrawCanvasStack();
+        }
+
+        function appendSegmentPoint(e) {
+            const rect = drawCanvas.getBoundingClientRect();
+            const x = (e.clientX || e.pageX || (e.touches && e.touches[0].clientX)) - rect.left;
+            const y = (e.clientY || e.pageY || (e.touches && e.touches[0].clientY)) - rect.top;
+            currentLineStroke.push({ x: x, y: y });
+        }
+
+        function endLineStroke() {
+            if (!isDrawing) return;
+            isDrawing = false;
+            if (currentLineStroke.length > 0) {
+                drawingLinesStack.push(currentLineStroke);
+            }
+            currentLineStroke = [];
+        }
+
+        // REDRAWS ACTIVE INK VECTORS FROM THE REMAINING HISTORICAL STACK
+        function redrawCanvasStack() {
+            drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+            drawCtx.strokeStyle = '#dc2626';
+            drawCtx.lineWidth = 3;
+            drawCtx.lineCap = 'round';
+            drawCtx.lineJoin = 'round';
+
+            // Draw finalized old line arrays
+            drawingLinesStack.forEach(line => {
+                renderLineArray(line);
+            });
+
+            // Draw active line array
+            if (isDrawing && currentLineStroke.length > 0) {
+                renderLineArray(currentLineStroke);
+            }
+        }
+
+        function renderLineArray(line) {
+            if (line.length < 1) return;
+            drawCtx.beginPath();
+            drawCtx.moveTo(line[0].x, line[0].y);
+            for (let i = 1; i < line.length; i++) {
+                drawCtx.lineTo(line[i].x, line[i].y);
+            }
+            drawCtx.stroke();
+        }
+
+        // STEP-BACK LINE DELETION ENGINE CODES
+        function undoLastLine() {
+            if (drawingLinesStack.length > 0) {
+                drawingLinesStack.pop(); // Drops the absolute newest line item arrays cleanly out of memory
+                redrawCanvasStack();
+                logEvent("Last Line Erased: Deleted the last drawn freehand mark only.");
+            } else {
+                logEvent("Eraser Alert: No active pen lines remaining on tactical map layer overlay.");
+            }
+        }
+
+        function clearDrawings() {
+            drawingLinesStack = [];
+            currentLineStroke = [];
+            drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+            logEvent("Tactical freehand overlays completely wiped.");
+        }
+
+        function clearMapAssets() {
+            if (!map) return;
+            placedMarkers.forEach(marker => map.removeLayer(marker));
+            placedMarkers = [];
+            if (persistentTargetPin) {
+                map.removeLayer(persistentTargetPin);
+                persistentTargetPin = null;
+            }
+            logEvent("Command Screen Clear: Wiped field tracking elements.");
+        }
+
+        function terminateSearch() {
+            logEvent(`Incident tracking array closed. Session terminated for Unit [${activeSearcherId}].`);
+            clearMapAssets();
+            clearDrawings();
+            if(isMapLocked) toggleMapLock();
+            selectAssetToPlace(null);
+            switchScreen('screenSignIn');
+        }
+
+        function triggerEmergencyAlert() {
+            activeEmergency = true;
+            document.getElementById('emergencyStrobe').style.display = 'block';
+            logEvent(`🚨 CRITICAL DISTRESS FACTOR: SEARCHER NO. [${activeSearcherId}] IS DOWN! S.O.S. BROADCAST ENFORCED NETWORK-WIDE.`);
+        }
+
+        function resetEmergencyAlert() {
+            if(activeEmergency) {
+                activeEmergency = false;
+                document.getElementById('emergencyStrobe').style.display = 'none';
+                logEvent(`Emergency distress beacon signal for Unit [${activeSearcherId}] successfully reset.`);
+            }
         }
 
         function playK9VoiceProtocol(category) {
@@ -792,7 +951,6 @@
         function stopVoiceBroadcast() {
             window.speechSynthesis.cancel();
             document.getElementById('voiceStatusBanner').style.display = 'none';
-            logEvent("Hands-Free Emergency K9 Medical vocal matrix transmission manually aborted.");
         }
 
         function playbackControl(action) {
@@ -818,61 +976,6 @@
             } else if (action === 'rewind') {
                 status.innerText = "Status: Rewound to Start";
                 logEvent("Incident timeline logs reset to start point frame.");
-            }
-        }
-
-        drawCanvas.addEventListener('mousedown', () => isDrawing = true);
-        drawCanvas.addEventListener('mouseup', () => isDrawing = false);
-        drawCanvas.addEventListener('mousemove', drawFreehand);
-        drawCanvas.addEventListener('touchstart', () => isDrawing = true);
-        drawCanvas.addEventListener('touchend', () => isDrawing = false);
-        drawCanvas.addEventListener('touchmove', (e) => { if(e.touches[0]) drawFreehand(e.touches[0]); });
-
-        function drawFreehand(e) {
-            if(!isDrawing || !isPenActive) return;
-            const rect = drawCanvas.getBoundingClientRect();
-            const x = (e.clientX || e.pageX || (e.touches && e.touches[0].clientX)) - rect.left;
-            const y = (e.clientY || e.pageY || (e.touches && e.touches[0].clientY)) - rect.top;
-
-            drawCtx.fillStyle = '#dc2626';
-            drawCtx.beginPath(); drawCtx.arc(x, y, 3, 0, Math.PI*2); drawCtx.fill();
-        }
-
-        function clearDrawings() {
-            drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
-            logEvent("Tactical freehand overlays purged from workspace window.");
-        }
-
-        function clearMapAssets() {
-            if (!map) return;
-            placedMarkers.forEach(marker => map.removeLayer(marker));
-            placedMarkers = [];
-            if (persistentTargetPin) {
-                map.removeLayer(persistentTargetPin);
-                persistentTargetPin = null;
-            }
-            logEvent("Command Screen Clear: All active tracking icon markers wiped.");
-        }
-
-        function terminateSearch() {
-            logEvent(`Incident tracking array closed. Session terminated for Unit [${activeSearcherId}].`);
-            clearMapAssets();
-            clearDrawings();
-            if(isMapLocked) toggleMapLock();
-            switchScreen('screenSignIn');
-        }
-
-        function triggerEmergencyAlert() {
-            activeEmergency = true;
-            document.getElementById('emergencyStrobe').style.display = 'block';
-            logEvent(`🚨 CRITICAL DISTRESS FACTOR: SEARCHER NO. [${activeSearcherId}] IS DOWN! S.O.S. BROADCAST ENFORCED NETWORK-WIDE.`);
-        }
-
-        function resetEmergencyAlert() {
-            if(activeEmergency) {
-                activeEmergency = false;
-                document.getElementById('emergencyStrobe').style.display = 'none';
-                logEvent(`Emergency distress beacon signal for Unit [${activeSearcherId}] successfully reset.`);
             }
         }
 
