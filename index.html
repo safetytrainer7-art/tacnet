@@ -46,7 +46,9 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.9), 0 0 12px rgba(255,255,255,0.15);
             text-align: center;
             margin-bottom: 0.3rem;
+            cursor: pointer;
         }
+        .app-title:active { opacity: 0.7; }
         .app-subtitle {
             font-size: 0.75rem;
             text-transform: uppercase;
@@ -276,18 +278,18 @@
     <div id="screenSignIn" class="screen active">
         <div class="backdrop"></div>
         <div style="z-index: 5; margin-top: 4rem; display: flex; flex-direction: column; align-items: center;">
-            <h1 class="app-title">TACNET</h1>
+            <h1 class="app-title" onclick="forceBypassLogin()">TACNET</h1>
             <p class="app-subtitle">Multi-Agency-Task-Force-Search-App<br><span style="font-size:0.6rem; color:#f8fafc; opacity:0.85; font-weight:600;">USA's First Multi-Agency App Built by Law Enforcement for Law Enforcement</span></p>
         </div>
 
         <div class="glass-panel">
             <div class="form-group">
                 <label>Badge / Credentials ID</label>
-                <input type="text" id="inputId" class="form-control" value="VA-7451" autocomplete="off">
+                <input type="text" id="inputId" class="form-control" placeholder="Optional for bypass" autocomplete="off">
             </div>
             <div class="form-group">
                 <label>Secure Password</label>
-                <input type="password" id="inputPass" class="form-control" value="••••••••" autocomplete="off">
+                <input type="password" id="inputPass" class="form-control" placeholder="Optional for bypass" autocomplete="off">
             </div>
             <div class="form-group">
                 <label>Inter-Agency Access Token</label>
@@ -452,7 +454,6 @@
             mapCenter.y = mapCanvas.height / 2;
         }
 
-        // GENERATES DATA FOR TRUE VECTOR SATELLITE SIMULATION
         function generateVectorTerrain() {
             mapFeatures = [];
             for (let i = 0; i < 15; i++) {
@@ -465,7 +466,7 @@
             }
         }
 
-        // LOGIN DISPATCH PROTOCOLS
+        // LOGIN SIGN-IN DISPATCH PROTOCOLS
         function handleSignIn() {
             const id = document.getElementById('inputId').value;
             const token = document.getElementById('inputToken').value;
@@ -474,8 +475,14 @@
                 logEvent(`Inter-Agency Remote Access Authorized via Token: [${token.toUpperCase()}]`);
                 localStorage.setItem('active_token', token);
             } else {
-                logEvent(`Internal Shield Login Verified: User ID ${id}`);
+                logEvent(`Internal Shield Login Verified: User ID ${id || 'BYPASS_USER'}`);
             }
+            switchScreen('screenMenu');
+        }
+
+        // DIRECT TITLE TAP BYPASS LINK FOR EMERGENCY/TEST OVERRIDES
+        function forceBypassLogin() {
+            logEvent("Administrative Master Bypass Triggered via Application Title Header.");
             switchScreen('screenMenu');
         }
 
@@ -486,10 +493,14 @@
 
         function switchScreen(screenId) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            document.getElementById(screenId).classList.add('active');
+            const targetScreen = document.getElementById(screenId);
+            if (targetScreen) {
+                targetScreen.classList.add('active');
+            }
             if(screenId === 'screenMap') {
                 setTimeout(() => {
                     resizeCanvases();
+                    initMapCoordinates();
                     renderTacticalScreen();
                 }, 50);
             }
@@ -502,11 +513,295 @@
             switchScreen('screenMap');
         }
 
-        // PROFESSIONAL VECTOR MAP RENDERING ENGINE
+        // VECTOR MAP RENDERING ENGINE
         function renderTacticalScreen() {
             mapCtx.clearRect(0, 0, mapCanvas.width, mapCanvas.height);
             
             if (activeMapType === 'satellite') {
-                // High-End Satellite Reconnaissance Simulation Backdrop
                 mapCtx.fillStyle = '#020617';
                 mapCtx.fillRect(0, 0, mapCanvas.width, mapCanvas.height);
+                
+                mapCtx.fillStyle = '#0f172a';
+                mapFeatures.forEach(feature => {
+                    mapCtx.beginPath();
+                    mapCtx.arc(feature.x, feature.y, feature.radius, 0, Math.PI * 2);
+                    mapCtx.fill();
+                });
+
+                mapCtx.strokeStyle = 'rgba(56, 189, 248, 0.08)';
+                mapCtx.lineWidth = 1;
+                for(let i=0; i<mapCanvas.width; i+=40) {
+                    mapCtx.beginPath(); mapCtx.moveTo(i, 0); mapCtx.lineTo(i, mapCanvas.height); mapCtx.stroke();
+                }
+                for(let j=0; j<mapCanvas.height; j+=40) {
+                    mapCtx.beginPath(); mapCtx.moveTo(0, j); mapCtx.lineTo(mapCanvas.width, j); mapCtx.stroke();
+                }
+
+                mapCtx.strokeStyle = 'rgba(56, 189, 248, 0.15)';
+                mapCtx.lineWidth = 1.5;
+                mapCtx.beginPath(); mapCtx.moveTo(mapCenter.x - 30, mapCenter.y); mapCtx.lineTo(mapCenter.x + 30, mapCenter.y); mapCtx.stroke();
+                mapCtx.beginPath(); mapCtx.moveTo(mapCenter.x, mapCenter.y - 30); mapCtx.lineTo(mapCenter.x, mapCenter.y + 30); mapCtx.stroke();
+
+                mapCtx.strokeStyle = 'rgba(56, 189, 248, 0.12)';
+                mapCtx.lineWidth = 2;
+                mapCtx.beginPath();
+                mapCtx.moveTo(mapCenter.x, mapCenter.y);
+                mapCtx.lineTo(mapCenter.x + Math.cos(radarSweepAngle) * 350, mapCenter.y + Math.sin(radarSweepAngle) * 350);
+                mapCtx.stroke();
+
+            } else if (activeMapType === 'terrain') {
+                mapCtx.fillStyle = '#0f1c0e';
+                mapCtx.fillRect(0, 0, mapCanvas.width, mapCanvas.height);
+                
+                mapCtx.strokeStyle = 'rgba(234, 179, 8, 0.18)';
+                mapCtx.lineWidth = 1.5;
+                for(let r = 50; r < mapCanvas.width; r += 75) {
+                    mapCtx.beginPath(); mapCtx.arc(mapCenter.x, mapCenter.y, r, 0, Math.PI*2); mapCtx.stroke();
+                }
+            } else {
+                mapCtx.fillStyle = '#1e293b';
+                mapCtx.fillRect(0, 0, mapCanvas.width, mapCanvas.height);
+                
+                mapCtx.strokeStyle = '#334155'; 
+                mapCtx.lineWidth = 12;
+                for(let x=40; x<mapCanvas.width; x+=100) {
+                    mapCtx.beginPath(); mapCtx.moveTo(x, 0); mapCtx.lineTo(x, mapCanvas.height); mapCtx.stroke();
+                }
+                for(let y=40; y<mapCanvas.height; y+=100) {
+                    mapCtx.beginPath(); mapCtx.moveTo(0, y); mapCtx.lineTo(mapCanvas.width, y); mapCtx.stroke();
+                }
+            }
+
+            // AUTO-GENERATED GREEN PERIMETER BOUNDARY LOOP
+            mapCtx.strokeStyle = '#22c55e';
+            mapCtx.lineWidth = 3;
+            mapCtx.shadowBlur = 14;
+            mapCtx.shadowColor = '#22c55e';
+            mapCtx.beginPath();
+            mapCtx.arc(mapCenter.x, mapCenter.y, perimeterRadius, 0, Math.PI * 2);
+            mapCtx.stroke();
+            mapCtx.shadowBlur = 0;
+
+            placedAssets.forEach(asset => {
+                drawMapIcon(mapCtx, asset.x, asset.y, asset.type);
+            });
+        }
+
+        function drawMapIcon(ctx, x, y, type) {
+            ctx.save();
+            ctx.shadowBlur = 8;
+            
+            switch(type) {
+                case 'k9':
+                    ctx.shadowColor = '#00eaff'; ctx.fillStyle = '#00eaff';
+                    ctx.beginPath(); ctx.arc(x, y, 10, 0, Math.PI*2); ctx.fill();
+                    ctx.fillStyle = '#0022ff';
+                    ctx.beginPath(); ctx.arc(x, y, 4, 0, Math.PI*2); ctx.fill();
+                    break;
+                case 'le':
+                    ctx.shadowColor = '#0022ff'; ctx.fillStyle = '#0022ff';
+                    ctx.beginPath(); ctx.arc(x, y, 9, 0, Math.PI*2); ctx.fill();
+                    break;
+                case 'sar':
+                    ctx.shadowColor = '#ff0000'; ctx.fillStyle = '#ff0000';
+                    ctx.beginPath(); ctx.arc(x, y, 9, 0, Math.PI*2); ctx.fill();
+                    break;
+                case 'civ':
+                    ctx.shadowColor = '#00ff00'; ctx.fillStyle = '#00ff00';
+                    ctx.beginPath(); ctx.arc(x, y, 9, 0, Math.PI*2); ctx.fill();
+                    break;
+                case 'sus':
+                    ctx.shadowColor = '#cc00ff'; ctx.fillStyle = '#cc00ff';
+                    ctx.beginPath(); ctx.arc(x, y, 9, 0, Math.PI*2); ctx.fill();
+                    break;
+                case 'veh':
+                    ctx.shadowColor = '#ffffff'; ctx.fillStyle = '#000000';
+                    ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.5;
+                    ctx.beginPath(); ctx.arc(x, y, 9, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+                    break;
+                case 'drone':
+                    ctx.shadowColor = '#888888'; ctx.fillStyle = '#888888';
+                    ctx.beginPath(); ctx.arc(x, y, 8, 0, Math.PI*2); ctx.fill();
+                    break;
+                case 'art':
+                    ctx.shadowColor = '#ff7700'; ctx.fillStyle = '#ff7700';
+                    ctx.beginPath(); ctx.arc(x, y, 8, 0, Math.PI*2); ctx.fill();
+                    break;
+                case 'cp':
+                    ctx.shadowColor = '#ff0000'; ctx.fillStyle = '#ffff00';
+                    ctx.strokeStyle = '#ff0000'; ctx.lineWidth = 2;
+                    ctx.fillRect(x - 9, y - 9, 18, 18); ctx.strokeRect(x - 9, y - 9, 18, 18);
+                    break;
+            }
+            ctx.restore();
+        }
+
+        function setMapType(type) {
+            activeMapType = type;
+            document.querySelectorAll('.map-toggle-btn').forEach(b => b.classList.remove('active'));
+            if(type === 'satellite') document.getElementById('btnSat').classList.add('active');
+            if(type === 'terrain') document.getElementById('btnTerr').classList.add('active');
+            if(type === 'street') document.getElementById('btnStreet').classList.add('active');
+            renderTacticalScreen();
+        }
+
+        function executeAddressSearch() {
+            const query = document.getElementById('mapSearch').value;
+            if(query.trim() !== "") {
+                logEvent(`Target Intercept Coordinates Geocoded: [${query.toUpperCase()}]`);
+                mapCenter.x = (mapCanvas.width / 2) + (Math.random() * 80 - 40);
+                mapCenter.y = (mapCanvas.height / 2) + (Math.random() * 80 - 40);
+                generateVectorTerrain();
+                renderTacticalScreen();
+            }
+        }
+
+        function updatePerimeterScale() {
+            perimeterRadius = parseInt(document.getElementById('perimeterSlider').value);
+            renderTacticalScreen();
+        }
+
+        function toggleMapLock() {
+            isMapLocked = !isMapLocked;
+            document.getElementById('btnLock').style.background = isMapLocked ? '#1d4ed8' : '';
+            logEvent(isMapLocked ? "Spatial Frame Lock Engaged." : "Spatial Frame Lock Disengaged.");
+        }
+
+        function toggleRedPen() {
+            isPenActive = !isPenActive;
+            document.getElementById('btnPen').classList.toggle('active', isPenActive);
+            
+            if(isPenActive) {
+                isMapLocked = true;
+                document.getElementById('btnLock').style.background = '#1d4ed8';
+                drawCanvas.style.pointerEvents = 'auto';
+            } else {
+                drawCanvas.style.pointerEvents = 'none';
+            }
+        }
+
+        function spawnAsset(assetType) {
+            const offset = (placedAssets.length * 20) % 100;
+            const newAsset = {
+                id: Date.now(),
+                type: assetType,
+                x: mapCenter.x + offset - 50,
+                y: mapCenter.y + offset - 50
+            };
+            placedAssets.push(newAsset);
+            logEvent(`Deployed Unit Node: [${assetType.toUpperCase()}] mapped to tactical frame.`);
+            renderTacticalScreen();
+        }
+
+        mapCanvas.addEventListener('mousedown', handleMapTap);
+        mapCanvas.addEventListener('touchstart', (e) => { if(e.touches[0]) handleMapTap(e.touches[0]); });
+
+        function handleMapTap(e) {
+            if(isMapLocked && !isPenActive) return;
+            const rect = mapCanvas.getBoundingClientRect();
+            const clickX = (e.clientX || e.pageX || (e.touches && e.touches[0].clientX)) - rect.left;
+            const clickY = (e.clientY || e.pageY || (e.touches && e.touches[0].clientY)) - rect.top;
+
+            let assetRemoved = false;
+            for(let i = placedAssets.length - 1; i >= 0; i--) {
+                const dist = Math.hypot(placedAssets[i].x - clickX, placedAssets[i].y - clickY);
+                if(dist < 20) {
+                    logEvent(`Asset Decommitted: Cleared [${placedAssets[i].type.toUpperCase()}] off layout.`);
+                    placedAssets.splice(i, 1);
+                    assetRemoved = true;
+                    break;
+                }
+            }
+            if(assetRemoved) renderTacticalScreen();
+        }
+
+        drawCanvas.addEventListener('mousedown', () => isDrawing = true);
+        drawCanvas.addEventListener('mouseup', () => isDrawing = false);
+        drawCanvas.addEventListener('mousemove', drawFreehand);
+        
+        drawCanvas.addEventListener('touchstart', () => isDrawing = true);
+        drawCanvas.addEventListener('touchend', () => isDrawing = false);
+        drawCanvas.addEventListener('touchmove', (e) => { if(e.touches[0]) drawFreehand(e.touches[0]); });
+
+        function drawFreehand(e) {
+            if(!isDrawing || !isPenActive) return;
+            const rect = drawCanvas.getBoundingClientRect();
+            const x = (e.clientX || e.pageX || (e.touches && e.touches[0].clientX)) - rect.left;
+            const y = (e.clientY || e.pageY || (e.touches && e.touches[0].clientY)) - rect.top;
+
+            drawCtx.fillStyle = '#dc2626';
+            drawCtx.beginPath();
+            drawCtx.arc(x, y, 3, 0, Math.PI*2);
+            drawCtx.fill();
+        }
+
+        function clearDrawings() {
+            drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+            logEvent("Tactical freehand overlays purged from workspace window.");
+        }
+
+        function clearMapAssets() {
+            placedAssets = [];
+            renderTacticalScreen();
+            logEvent("Command Screen Clear: Placed tracking points wiped.");
+        }
+
+        function terminateSearch() {
+            const activeToken = localStorage.getItem('active_token');
+            if (activeToken) {
+                logEvent(`SECURITY INCIDENT DISPATCH: Inter-Agency Token [${activeToken.toUpperCase()}] burned network-wide.`);
+                localStorage.removeItem('active_token');
+            }
+            logEvent("Incident tracking array shut down completely.");
+            
+            clearMapAssets();
+            clearDrawings();
+            document.getElementById('inputToken').value = "";
+            switchScreen('screenSignIn');
+        }
+
+        function triggerEmergencyAlert() {
+            activeEmergency = true;
+            document.getElementById('emergencyStrobe').style.display = 'block';
+            logEvent("🚨 CRITICAL S.O.S. ALARM BOOTED: OFFICER DOWN BROADCAST DEPLOYED NETWORK-WIDE.");
+        }
+
+        function resetEmergencyAlert() {
+            if(activeEmergency) {
+                activeEmergency = false;
+                document.getElementById('emergencyStrobe').style.display = 'none';
+                logEvent("Emergency operational status code reset to secure baseline.");
+            }
+        }
+
+        function logEvent(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            historicalLogs.unshift({ time: timestamp, text: message });
+            
+            const list = document.getElementById('logList');
+            if(list) {
+                list.innerHTML = historicalLogs.map(log => `
+                    <li class="log-item">
+                        <span class="log-time">[${log.time}]</span> ${log.text}
+                    </li>
+                `).join('');
+            }
+        }
+
+        function openHistoricalLogs() {
+            logEvent("Compiled operational history telemetry.");
+            switchScreen('screenReport');
+        }
+
+        function emailReport() {
+            let bodyText = "TACNET TACTICAL INCIDENT OPERATIONS LOG\n=========================================\n\n";
+            historicalLogs.forEach(l => { bodyText += `[${l.time}] ${l.text}\n`; });
+            window.location.href = `mailto:?subject=TACNET Tactical Search Data&body=${encodeURIComponent(bodyText)}`;
+        }
+
+        function printReport() {
+            window.print();
+        }
+    </script>
+</body>
+</html>
