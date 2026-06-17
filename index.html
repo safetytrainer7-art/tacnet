@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,7 +38,18 @@
             z-index: 1;
         }
 
-        /* TEXT AND BRANDING STYLES (MATCHING IMAGE FOR TAC.png.jpg) */
+        /* BRANDING DESIGN STYLES (MATCHING IMAGE FOR TAC.png.jpg) */
+        .graphic-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 5rem;
+            z-index: 5;
+            cursor: pointer;
+        }
         .app-title {
             font-size: 2.5rem;
             font-weight: 900;
@@ -47,7 +59,6 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.9), 0 0 12px rgba(255,255,255,0.15);
             text-align: center;
             margin-bottom: 0.3rem;
-            cursor: pointer;
         }
         .app-subtitle {
             font-size: 0.75rem;
@@ -63,19 +74,19 @@
         .creator-credits {
             margin-top: auto;
             text-align: center;
-            padding: 1.5rem;
+            padding: 2rem;
             font-weight: 700;
             font-size: 0.8rem;
             letter-spacing: 1px;
             border-top: 1px solid rgba(234, 179, 8, 0.25);
             width: 100%;
             background: rgba(0,0,0,0.6);
-            padding-bottom: calc(1.5rem + env(safe-area-inset-bottom));
+            padding-bottom: calc(2rem + env(safe-area-inset-bottom));
         }
-        .creator-name { color: #eab308; font-size: 1.15rem; margin: 0.2rem 0; text-transform: uppercase; }
-        .creator-title { color: #94a3b8; font-size: 0.75rem; text-transform: uppercase; }
+        .creator-name { color: #eab308; font-size: 1.25rem; margin: 0.3rem 0; text-transform: uppercase; letter-spacing: 1.5px; }
+        .creator-title { color: #94a3b8; font-size: 0.8rem; text-transform: uppercase; }
 
-        /* SECURITY LOGIN PANEL */
+        /* SECURITY LOGIN COMPONENT */
         .glass-panel {
             background: rgba(15, 23, 42, 0.85);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -85,7 +96,7 @@
             padding: 1.75rem;
             width: 90%;
             max-width: 400px;
-            margin: 0 auto;
+            margin: auto;
             z-index: 5;
             box-shadow: 0 20px 30px rgba(0,0,0,0.7);
         }
@@ -101,7 +112,7 @@
             font-size: 1rem;
         }
         
-        /* FIELD CONTROLS */
+        /* INTERFACE BUTTONS */
         .btn {
             width: 100%;
             padding: 1rem;
@@ -124,19 +135,19 @@
         #map { width: 100%; height: 100%; z-index: 2; }
         #drawCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; }
         
-        /* MAP NIGHT SEARCH OVERLAYS */
+        /* NIGHT SEARCH NEON LIGHT OVERLAYS */
         .night-vision-green {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 255, 0, 0.15); z-index: 4; pointer-events: none; display: none;
-            mix-blend-mode: screen; box-shadow: inset 0 0 100px rgba(0,255,0,0.4);
+            background: rgba(0, 255, 0, 0.12); z-index: 4; pointer-events: none; display: none;
+            mix-blend-mode: screen; box-shadow: inset 0 0 100px rgba(0,255,0,0.35);
         }
         .night-vision-red {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255, 0, 0, 0.15); z-index: 4; pointer-events: none; display: none;
-            mix-blend-mode: screen; box-shadow: inset 0 0 100px rgba(255,0,0,0.4);
+            background: rgba(255, 0, 0, 0.12); z-index: 4; pointer-events: none; display: none;
+            mix-blend-mode: screen; box-shadow: inset 0 0 100px rgba(255,0,0,0.35);
         }
 
-        /* DECK TOP CONTROLS NAVIGATION */
+        /* TOP CONSOLE NAVIGATION */
         .map-topnav {
             position: absolute;
             top: 0; left: 0; width: 100%;
@@ -195,7 +206,7 @@
         .perimeter-slider-container label { font-size: 0.55rem; font-weight: 900; text-transform: uppercase; margin-bottom: 0.4rem; color: #94a3b8; }
         .v-slider { writing-mode: bt-lr; -webkit-appearance: slider-vertical; width: 20px; height: 125px; }
 
-        /* FIELD ASSET DRAWER */
+        /* ASSET PLACEMENT DECK */
         .asset-drawer {
             width: 100%; height: 12%;
             background: #0f172a;
@@ -219,7 +230,7 @@
             font-weight: 700;
         }
         
-        /* MARKER LAYERS */
+        /* SPECIFIC MARKER DESIGN LAYERS */
         .tac-marker { width: 22px !important; height: 22px !important; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 8px rgba(0,0,0,0.6); }
         .dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
         .dot.k9, .tac-k9 { background: #00eaff; box-shadow: 0 0 6px #00eaff; border: 2px solid #0022ff !important; }
@@ -234,7 +245,7 @@
         .dot.boat, .tac-boat { background: #000000; box-shadow: 0 0 6px #ffff00; border: 2px solid #ffff00 !important; }
         .dot.target-pin, .tac-target-pin { background: #ff0000; box-shadow: 0 0 10px #ff0000; border: 2px solid #fff !important; }
 
-        /* FIXED BOTTOM DECK BASE PANEL */
+        /* ANCHORED COMMAND OPERATIONS DECK */
         .bottom-deck { width: 100%; height: 18%; background: #020617; display: flex; flex-direction: column; z-index: 20; padding-bottom: env(safe-area-inset-bottom); }
         .emergency-row { width: 100%; height: 55%; padding: 0.35rem; display: flex; gap: 0.35rem; }
         .btn-emergency {
@@ -258,14 +269,14 @@
             animation: flash-strobe 0.25s infinite alternate;
         }
 
-        /* JOURNAL LOGS & PLAYBACK SYSTEM */
+        /* INCIDENT REPLAY JOURNAL PANEL */
         .report-body { flex-grow: 1; padding: 1.25rem; overflow-y: auto; background: #020617; margin-top: 70px; }
         .report-header-block { border-bottom: 2px solid #eab308; padding-bottom: 0.6rem; margin-bottom: 1rem; }
         .log-list { list-style: none; font-family: monospace; font-size: 0.85rem; color: #34d399; }
         .log-item { padding: 0.55rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
         .log-time { color: #94a3b8; margin-right: 0.6rem; font-weight: bold; }
 
-        /* REPLAY CONTROLLER PANEL */
+        /* REPLAY TIMELINE CONTROLLER */
         .replay-deck {
             background: #0f172a;
             border: 1px solid rgba(255,255,255,0.1);
@@ -295,21 +306,43 @@
 
     <div id="emergencyStrobe"></div>
 
-    <div id="screenSignIn" class="screen active">
+    <div id="screenLanding" class="screen active">
         <div class="backdrop"></div>
-        <div style="z-index: 5; margin-top: 4rem; display: flex; flex-direction: column; align-items: center;">
-            <h1 class="app-title" onclick="forceBypassLogin()">TACNET</h1>
-            <p class="app-subtitle">Multi-Agency-Task-Force-Search-App<br><span style="font-size:0.6rem; color:#f8fafc; opacity:0.85; font-weight:600;">USA's First Multi-Agency App Built by Law Enforcement for Law Enforcement</span></p>
+        <div class="graphic-container" onclick="switchScreen('screenSignIn')">
+            <h1 class="app-title">TACNET</h1>
+            <p class="app-subtitle">Multi-Agency-Task-Force-Search-App</p>
+            
+            <p style="color: #cbd5e1; font-size: 0.85rem; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; margin-top: 2rem; text-align: center; padding: 0 2rem; line-height: 1.5;">
+                USA's First Multi-Agency App Built by Law Enforcement for Law Enforcement
+            </p>
+            
+            <div style="margin-top: 4rem; background: rgba(15, 23, 42, 0.6); padding: 1rem 2rem; border-radius: 4px; border: 1px solid rgba(255,255,255,0.1); animation: flash-strobe 1.5s infinite alternate;">
+                <p style="font-size: 0.85rem; font-weight: 800; letter-spacing: 1px; color: #60a5fa; text-transform: uppercase;">[ Tap Screen to Advance ]</p>
+            </div>
+
+            <div class="creator-credits">
+                <div class="creator-title">App Creator</div>
+                <div class="creator-name">EARL WOOD</div>
+                <div class="creator-title">Deputy Sheriff Retired Virginia</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="screenSignIn" class="screen">
+        <div class="backdrop"></div>
+        <div style="z-index: 5; margin-top: 3.5rem; display: flex; flex-direction: column; align-items: center;">
+            <h1 class="app-title" style="font-size: 2rem;">SECURE PORTAL</h1>
+            <p style="font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Verify Agency Identity Access</p>
         </div>
 
         <div class="glass-panel">
             <div class="form-group">
                 <label>Badge / Credentials ID</label>
-                <input type="text" id="inputId" class="form-control" placeholder="Optional for bypass" autocomplete="off">
+                <input type="text" id="inputId" class="form-control" placeholder="Optional for test bypass" autocomplete="off">
             </div>
             <div class="form-group">
                 <label>Secure Password</label>
-                <input type="password" id="inputPass" class="form-control" placeholder="Optional for bypass" autocomplete="off">
+                <input type="password" id="inputPass" class="form-control" placeholder="Optional for test bypass" autocomplete="off">
             </div>
             <div class="form-group">
                 <label>Inter-Agency Access Token</label>
@@ -319,9 +352,7 @@
         </div>
 
         <div class="creator-credits">
-            <div class="creator-title">App Creator</div>
-            <div class="creator-name">EARL WOOD</div>
-            <div class="creator-title">Deputy Sheriff Retired Virginia</div>
+            <div class="creator-name" style="font-size: 0.85rem; color:#94a3b8;">TACNET VERIFIED INTERFACE AUTHENTICATION</div>
         </div>
     </div>
 
@@ -352,7 +383,7 @@
             <button id="btnStreet" class="map-toggle-btn" onclick="setMapType('street')">Street</button>
             
             <div class="search-box-container">
-                <input type="text" id="mapSearch" class="search-input" placeholder="Enter Address (e.g. Richmond, VA)...">
+                <input type="text" id="mapSearch" class="search-input" placeholder="Search Place / Address...">
                 <button class="btn-go" onclick="executeAddressSearch()">GO</button>
             </div>
         </div>
@@ -435,14 +466,14 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         let map;
-        let mapCenter = [37.5407, -77.4360]; // Base Default Location
+        let mapCenter = [37.5407, -77.4360]; // Base Default View (Virginia)
         let tacticalPerimeterCircle;
         let persistentTargetPin = null;
         let isMapLocked = false;
         let isPenActive = false;
         let activeEmergency = false;
         let isDrawing = false;
-        let nvgState = 0; // 0=Off, 1=Green, 2=Red
+        let nvgState = 0; 
         let replayInterval;
         
         let placedMarkers = [];
@@ -451,9 +482,11 @@
         const drawCanvas = document.getElementById('drawCanvas');
         const drawCtx = drawCanvas.getContext('2d');
 
+        // FORCE FULL BOOT UP SEQUENCE RESET TO CORE INTRO LANDING SCREEN ONLY
         window.addEventListener('load', () => {
+            switchScreen('screenLanding');
             resizeDrawCanvas();
-            logEvent("System booted. TACNET tracking layer active.");
+            logEvent("Platform runtime initialization completely established.");
         });
 
         function resizeDrawCanvas() {
@@ -487,17 +520,17 @@
 
         function handleSignIn() {
             const id = document.getElementById('inputId').value;
-            logEvent(`Internal Shield Credentials Approved: User ${id || 'FIELD_COMMAND'}`);
+            logEvent(`Credentials Authenticated: Operational Session Bound to User ID ${id || 'FIELD_COMMAND'}`);
             switchScreen('screenMenu');
         }
 
         function forceBypassLogin() {
-            logEvent("Command Override Master Bypass Activated.");
+            logEvent("Administrative Master Bypass Entry Triggered via Header Action.");
             switchScreen('screenMenu');
         }
 
         function logOutSession() {
-            logEvent("Command session safely detached.");
+            logEvent("Active command security session safely detached.");
             switchScreen('screenSignIn');
         }
 
@@ -518,11 +551,11 @@
         function startNewSearch() {
             clearMapAssets();
             clearDrawings();
-            logEvent("Fresh incident tracking parameters established.");
+            logEvent("Fresh search parameters initialized. Grid perimeter deployed.");
             switchScreen('screenMap');
         }
 
-        // FULLY RE-BUILT HIGH-AVAILABILITY LAYER MAP TILES
+        // FULLY FUNCTIONAL DYNAMIC LAYER SELECTORS
         function setMapType(type) {
             if (!map) return;
             document.querySelectorAll('.map-toggle-btn').forEach(b => b.classList.remove('active'));
@@ -539,11 +572,12 @@
                 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', { maxZoom: 18 }).addTo(map);
             } else {
                 document.getElementById('btnStreet').classList.add('active');
+                // OpenStreetMap Standard Tiles Core Layer
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{y}/{x}.png', { maxZoom: 19 }).addTo(map);
             }
         }
 
-        // PHYSICAL HARDWARE NEON LIGHT EMULATORS
+        // PHYSICAL ELECTRONIC NEON VISION CONTROLLER
         function cycleNightVision() {
             const greenFilter = document.getElementById('nvgGreenFilter');
             const redFilter = document.getElementById('nvgRedFilter');
@@ -566,7 +600,7 @@
             }
         }
 
-        // OPENSTREETMAP DYNAMIC PARSING & INTENDED PLACE PIN LOCK
+        // GEOCODING AND POSITION FIXED PIN CODES
         function executeAddressSearch() {
             const query = document.getElementById('mapSearch').value.trim();
             if(query !== "") {
@@ -584,7 +618,7 @@
                             map.setView(mapCenter, 16);
                             if (tacticalPerimeterCircle) tacticalPerimeterCircle.setLatLng(mapCenter);
                             
-                            // Drop or adjust Persistent Red Dot for structural intent focus
+                            // Drop or adjust Persistent Intended Target Red Pin
                             if (persistentTargetPin) {
                                 persistentTargetPin.setLatLng(mapCenter);
                             } else {
@@ -595,12 +629,13 @@
                                 });
                                 persistentTargetPin = L.marker(mapCenter, { icon: redDotIcon, zIndexOffset: 1000 }).addTo(map);
                             }
+                            persistentTargetPin.addTo(map);
                             logEvent("Intended Place Marker: Small tactical red focus dot locked to coordinates.");
                         } else {
-                            logEvent(`Address search execution fallback initialized for: [${query.toUpperCase()}]`);
+                            logEvent(`Geocoding database fallback processing initiated for: [${query.toUpperCase()}]`);
                         }
                     }).catch(() => {
-                        logEvent("Geocode frame override verified.");
+                        logEvent("Geocode override check complete.");
                     });
             }
         }
@@ -629,7 +664,7 @@
             }
         }
 
-        // UNLIMITED FIELD ASSET SPAWN MECHANIC
+        // UNLIMITED ASSET PLACEMENT LOOPS
         function spawnAsset(assetType) {
             if (!map) return;
             
@@ -664,7 +699,7 @@
             logEvent(`Deployed Unit Node: [${assetType.toUpperCase()}] locked on coordinates.`);
         }
 
-        // RECORD & REPLAY TIMELINE MECHANICS
+        // MEDIA RECORD REPLAY CONTROL MODULE
         function playbackControl(action) {
             const status = document.getElementById('replayStatus');
             clearInterval(replayInterval);
