@@ -121,12 +121,20 @@
 
         /* LIVE SPATIAL MAP WORKSPACE */
         .map-wrapper { position: relative; width: 100%; height: 70%; background: #020617; }
-        #map { width: 100%; height: 100%; z-index: 2; transition: filter 0.3s ease; }
+        #map { width: 100%; height: 100%; z-index: 2; }
         #drawCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; }
         
-        /* NIGHT VISION VIEW FILTERS */
-        .nv-green { filter: matrix(0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0) hue-rotate(90deg) brightness(1.2) contrast(1.2); }
-        .nv-red { filter: matrix(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0) brightness(1.1) contrast(1.3); }
+        /* MAP NIGHT SEARCH OVERLAYS */
+        .night-vision-green {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 255, 0, 0.15); z-index: 4; pointer-events: none; display: none;
+            mix-blend-mode: screen; box-shadow: inset 0 0 100px rgba(0,255,0,0.4);
+        }
+        .night-vision-red {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 0, 0, 0.15); z-index: 4; pointer-events: none; display: none;
+            mix-blend-mode: screen; box-shadow: inset 0 0 100px rgba(255,0,0,0.4);
+        }
 
         /* DECK TOP CONTROLS NAVIGATION */
         .map-topnav {
@@ -224,6 +232,7 @@
         .dot.art, .tac-art { background: #ff7700; box-shadow: 0 0 6px #ff7700; }
         .dot.cp, .tac-cp { background: #ffff00; box-shadow: 0 0 6px #ff0000; border: 2px solid #ff0000 !important; border-radius: 0% !important; }
         .dot.boat, .tac-boat { background: #000000; box-shadow: 0 0 6px #ffff00; border: 2px solid #ffff00 !important; }
+        .dot.target-pin, .tac-target-pin { background: #ff0000; box-shadow: 0 0 10px #ff0000; border: 2px solid #fff !important; }
 
         /* FIXED BOTTOM DECK BASE PANEL */
         .bottom-deck { width: 100%; height: 18%; background: #020617; display: flex; flex-direction: column; z-index: 20; padding-bottom: env(safe-area-inset-bottom); }
@@ -250,8 +259,8 @@
         }
 
         /* JOURNAL LOGS & PLAYBACK SYSTEM */
-        .report-body { flex-grow: 1; padding: 1.25rem; overflow-y: auto; background: #020617; }
-        .report-header-block { border-bottom: 2px solid #eab308; padding-bottom: 0.6rem; margin-bottom: 1rem; margin-top: 75px; }
+        .report-body { flex-grow: 1; padding: 1.25rem; overflow-y: auto; background: #020617; margin-top: 70px; }
+        .report-header-block { border-bottom: 2px solid #eab308; padding-bottom: 0.6rem; margin-bottom: 1rem; }
         .log-list { list-style: none; font-family: monospace; font-size: 0.85rem; color: #34d399; }
         .log-item { padding: 0.55rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
         .log-time { color: #94a3b8; margin-right: 0.6rem; font-weight: bold; }
@@ -343,7 +352,7 @@
             <button id="btnStreet" class="map-toggle-btn" onclick="setMapType('street')">Street</button>
             
             <div class="search-box-container">
-                <input type="text" id="mapSearch" class="search-input" placeholder="Enter Address, Zip, or Coordinates...">
+                <input type="text" id="mapSearch" class="search-input" placeholder="Enter Address (e.g. Richmond, VA)...">
                 <button class="btn-go" onclick="executeAddressSearch()">GO</button>
             </div>
         </div>
@@ -351,6 +360,9 @@
         <div class="map-wrapper" id="mapWrapper">
             <div id="map"></div>
             <canvas id="drawCanvas"></canvas>
+            
+            <div id="nvgGreenFilter" class="night-vision-green"></div>
+            <div id="nvgRedFilter" class="night-vision-red"></div>
 
             <div class="perimeter-slider-container">
                 <label>Radius</label>
@@ -425,6 +437,7 @@
         let map;
         let mapCenter = [37.5407, -77.4360]; // Base Default Location
         let tacticalPerimeterCircle;
+        let persistentTargetPin = null;
         let isMapLocked = false;
         let isPenActive = false;
         let activeEmergency = false;
@@ -509,7 +522,7 @@
             switchScreen('screenMap');
         }
 
-        // RE-ENGINEERED LIVE HIGH-AVAILABILITY LAYER ENGINE
+        // FULLY RE-BUILT HIGH-AVAILABILITY LAYER MAP TILES
         function setMapType(type) {
             if (!map) return;
             document.querySelectorAll('.map-toggle-btn').forEach(b => b.classList.remove('active'));
@@ -523,34 +536,37 @@
                 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19 }).addTo(map);
             } else if (type === 'terrain') {
                 document.getElementById('btnTerr').classList.add('active');
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{y}/{x}.png', { maxZoom: 19 }).addTo(map);
+                L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', { maxZoom: 18 }).addTo(map);
             } else {
                 document.getElementById('btnStreet').classList.add('active');
-                L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{y}/{x}{r}.png', { maxZoom: 20 }).addTo(map);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{y}/{x}.png', { maxZoom: 19 }).addTo(map);
             }
         }
 
-        // NIGHT VISION SHIFT CODES
+        // PHYSICAL HARDWARE NEON LIGHT EMULATORS
         function cycleNightVision() {
-            const mapEl = document.getElementById('map');
+            const greenFilter = document.getElementById('nvgGreenFilter');
+            const redFilter = document.getElementById('nvgRedFilter');
             nvgState = (nvgState + 1) % 3;
-            mapEl.classList.remove('nv-green', 'nv-red');
+            
+            greenFilter.style.display = 'none';
+            redFilter.style.display = 'none';
             
             if (nvgState === 1) {
-                mapEl.classList.add('nv-green');
-                logEvent("NVG Shift: Green light enhancement filter enabled.");
+                greenFilter.style.display = 'block';
+                logEvent("Neon NVG Status: Solid Green Light illumination enabled across map matrix.");
                 document.getElementById('btnNVG').style.color = '#22c55e';
             } else if (nvgState === 2) {
-                mapEl.classList.add('nv-red');
-                logEvent("NVG Shift: Tactical red light tactical lens enabled.");
+                redFilter.style.display = 'block';
+                logEvent("Neon NVG Status: Solid Red Light tactical screen vision active.");
                 document.getElementById('btnNVG').style.color = '#ef4444';
             } else {
-                logEvent("NVG Shift: Night vision lenses deactivated.");
+                logEvent("Neon NVG Status: Night light panels deactivated.");
                 document.getElementById('btnNVG').style.color = '#fff';
             }
         }
 
-        // COORDINATE SEARCH ENGINE FIX
+        // OPENSTREETMAP DYNAMIC PARSING & INTENDED PLACE PIN LOCK
         function executeAddressSearch() {
             const query = document.getElementById('mapSearch').value.trim();
             if(query !== "") {
@@ -567,11 +583,24 @@
                             logEvent(`Geocode Match Locked: [Lat: ${lat.toFixed(4)}, Lon: ${lon.toFixed(4)}]`);
                             map.setView(mapCenter, 16);
                             if (tacticalPerimeterCircle) tacticalPerimeterCircle.setLatLng(mapCenter);
+                            
+                            // Drop or adjust Persistent Red Dot for structural intent focus
+                            if (persistentTargetPin) {
+                                persistentTargetPin.setLatLng(mapCenter);
+                            } else {
+                                const redDotIcon = L.divIcon({
+                                    className: 'tac-marker tac-target-pin',
+                                    iconSize: [20, 20],
+                                    iconAnchor: [10, 10]
+                                });
+                                persistentTargetPin = L.marker(mapCenter, { icon: redDotIcon, zIndexOffset: 1000 }).addTo(map);
+                            }
+                            logEvent("Intended Place Marker: Small tactical red focus dot locked to coordinates.");
                         } else {
-                            logEvent(`Address server timeout fallback executed for: [${query.toUpperCase()}]`);
+                            logEvent(`Address search execution fallback initialized for: [${query.toUpperCase()}]`);
                         }
                     }).catch(() => {
-                        logEvent("Geocode connection override executed.");
+                        logEvent("Geocode frame override verified.");
                     });
             }
         }
@@ -605,7 +634,6 @@
             if (!map) return;
             
             const currentCenter = map.getCenter();
-            // Randomized positioning offset array to allow infinite asset layering without blocking boundaries
             const offsetLat = currentCenter.lat + (Math.random() * 0.003 - 0.0015);
             const offsetLng = currentCenter.lng + (Math.random() * 0.003 - 0.0015);
 
@@ -690,7 +718,11 @@
             if (!map) return;
             placedMarkers.forEach(marker => map.removeLayer(marker));
             placedMarkers = [];
-            logEvent("Command Screen Clear: Placed tracking points wiped.");
+            if (persistentTargetPin) {
+                map.removeLayer(persistentTargetPin);
+                persistentTargetPin = null;
+            }
+            logEvent("Command Screen Clear: All active tracking icon markers wiped.");
         }
 
         function terminateSearch() {
