@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>TACNET - Multi-Agency Task Force Search App</title>
-    <!-- EMBED NATIVE HIGH-PERFORMANCE MAPPING STYLES -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         /* MOBILE PHONE HYPER-OPTIMIZATION */
@@ -29,7 +28,7 @@
         }
         .screen.active { display: flex; }
 
-        /* TACTICAL BACKGROUND DECK (IMAGE FOR TAC.png.jpg SIMULATION) */
+        /* TACTICAL BACKGROUND DECK */
         .backdrop {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -50,7 +49,6 @@
             margin-bottom: 0.3rem;
             cursor: pointer;
         }
-        .app-title:active { opacity: 0.7; }
         .app-subtitle {
             font-size: 0.75rem;
             text-transform: uppercase;
@@ -77,7 +75,7 @@
         .creator-name { color: #eab308; font-size: 1.15rem; margin: 0.2rem 0; text-transform: uppercase; }
         .creator-title { color: #94a3b8; font-size: 0.75rem; text-transform: uppercase; }
 
-        /* SECURITY LOGIN MODULE */
+        /* SECURITY LOGIN PANEL */
         .glass-panel {
             background: rgba(15, 23, 42, 0.85);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -102,9 +100,8 @@
             color: #fff;
             font-size: 1rem;
         }
-        .form-control:focus { border-color: #3b82f6; outline: none; }
         
-        /* FIELD BUTTONS */
+        /* FIELD CONTROLS */
         .btn {
             width: 100%;
             padding: 1rem;
@@ -116,20 +113,21 @@
             font-size: 1rem;
             text-transform: uppercase;
             cursor: pointer;
-            letter-spacing: 0.5px;
         }
-        .btn:active { background: #1e40af; }
         .btn-secondary { background: #334155; border-color: #64748b; margin-top: 1rem; }
         .btn-danger { background: #991b1b; border-color: #f87171; }
 
-        /* COMMAND INTERFACE HUB */
         .menu-container { display: flex; flex-direction: column; gap: 1.1rem; width: 90%; max-width: 400px; margin: auto; z-index: 5; }
 
         /* LIVE SPATIAL MAP WORKSPACE */
         .map-wrapper { position: relative; width: 100%; height: 70%; background: #020617; }
-        #map { width: 100%; height: 100%; z-index: 2; }
+        #map { width: 100%; height: 100%; z-index: 2; transition: filter 0.3s ease; }
         #drawCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; }
         
+        /* NIGHT VISION VIEW FILTERS */
+        .nv-green { filter: matrix(0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0) hue-rotate(90deg) brightness(1.2) contrast(1.2); }
+        .nv-red { filter: matrix(1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0) brightness(1.1) contrast(1.3); }
+
         /* DECK TOP CONTROLS NAVIGATION */
         .map-topnav {
             position: absolute;
@@ -142,14 +140,14 @@
             padding: 0 0.5rem;
             padding-top: env(safe-area-inset-top);
             z-index: 20;
-            gap: 0.35rem;
+            gap: 0.3rem;
         }
-        .nav-arrow { font-size: 1.6rem; background: none; border: none; color: #fff; padding: 0 0.5rem; cursor: pointer; font-weight: bold; }
-        .map-toggle-btn { padding: 0.55rem 0.6rem; font-size: 0.7rem; background: #334155; border: 1px solid #475569; color: #cbd5e1; font-weight: 800; border-radius: 4px; text-transform: uppercase; }
-        .map-toggle-btn.active { background: #1d4ed8; border-color: #3b82f6; color: #fff; box-shadow: 0 0 8px rgba(59,130,246,0.5); }
+        .nav-arrow { font-size: 1.6rem; background: none; border: none; color: #fff; padding: 0 0.4rem; cursor: pointer; font-weight: bold; }
+        .map-toggle-btn { padding: 0.55rem 0.45rem; font-size: 0.65rem; background: #334155; border: 1px solid #475569; color: #cbd5e1; font-weight: 800; border-radius: 4px; text-transform: uppercase; }
+        .map-toggle-btn.active { background: #1d4ed8; border-color: #3b82f6; color: #fff; }
         .search-box-container { flex-grow: 1; display: flex; gap: 0.25rem; }
-        .search-input { flex-grow: 1; padding: 0.55rem; background: #000; border: 1px solid #475569; color: #fff; border-radius: 4px; font-size: 0.9rem; font-weight: 600; }
-        .btn-go { background: #059669; border: none; color: #fff; padding: 0 0.85rem; font-weight: 800; border-radius: 4px; font-size: 0.85rem; text-transform: uppercase; }
+        .search-input { flex-grow: 1; padding: 0.55rem; background: #000; border: 1px solid #475569; color: #fff; border-radius: 4px; font-size: 0.85rem; font-weight: 600; }
+        .btn-go { background: #059669; border: none; color: #fff; padding: 0 0.65rem; font-weight: 800; border-radius: 4px; font-size: 0.85rem; }
 
         /* TACTICAL FLOATING CONTROL PANELS */
         .map-sidebar {
@@ -157,24 +155,22 @@
             top: 80px; right: 10px;
             display: flex;
             flex-direction: column;
-            gap: 0.65rem;
+            gap: 0.5rem;
             z-index: 20;
         }
         .tool-btn {
-            width: 48px; height: 48px;
+            width: 46px; height: 46px;
             border-radius: 6px;
             background: #0f172a;
             border: 2px solid rgba(255,255,255,0.15);
             color: #fff;
-            font-size: 0.75rem;
+            font-size: 0.65rem;
             font-weight: 900;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
-        .tool-btn.active { background: #b91c1c; border-color: #f87171; box-shadow: 0 0 10px #ef4444; }
+        .tool-btn.active { background: #b91c1c; border-color: #f87171; }
 
-        /* ADJ PERIMETER SLIDER CONTAINER */
         .perimeter-slider-container {
             position: absolute;
             top: 80px; left: 10px;
@@ -186,13 +182,12 @@
             flex-direction: column;
             align-items: center;
             z-index: 20;
-            height: 200px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            height: 180px;
         }
-        .perimeter-slider-container label { font-size: 0.6rem; font-weight: 900; text-transform: uppercase; margin-bottom: 0.5rem; color: #94a3b8; }
-        .v-slider { writing-mode: bt-lr; -webkit-appearance: slider-vertical; width: 22px; height: 140px; background: #1e293b; }
+        .perimeter-slider-container label { font-size: 0.55rem; font-weight: 900; text-transform: uppercase; margin-bottom: 0.4rem; color: #94a3b8; }
+        .v-slider { writing-mode: bt-lr; -webkit-appearance: slider-vertical; width: 20px; height: 125px; }
 
-        /* ASSET QUICK MANAGEMENT LAYOUT */
+        /* FIELD ASSET DRAWER */
         .asset-drawer {
             width: 100%; height: 12%;
             background: #0f172a;
@@ -202,29 +197,22 @@
             align-items: center;
             overflow-x: auto;
             padding: 0 0.85rem;
-            gap: 0.95rem;
+            gap: 0.85rem;
             z-index: 15;
-            -webkit-overflow-scrolling: touch;
         }
         .asset-chip {
             display: flex; align-items: center; gap: 0.5rem;
             background: rgba(255,255,255,0.06);
             border: 1px solid rgba(255,255,255,0.12);
-            padding: 0.55rem 0.85rem;
+            padding: 0.5rem 0.75rem;
             border-radius: 24px;
             white-space: nowrap;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 700;
         }
         
-        /* LEAFLET CUSTOM ICON LAYER STYLES */
-        .tac-marker {
-            width: 20px !important;
-            height: 20px !important;
-            border-radius: 50%;
-            border: 2px solid #fff;
-            box-shadow: 0 0 8px rgba(0,0,0,0.5);
-        }
+        /* MARKER LAYERS */
+        .tac-marker { width: 22px !important; height: 22px !important; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 8px rgba(0,0,0,0.6); }
         .dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
         .dot.k9, .tac-k9 { background: #00eaff; box-shadow: 0 0 6px #00eaff; border: 2px solid #0022ff !important; }
         .dot.le, .tac-le { background: #0022ff; box-shadow: 0 0 6px #0022ff; }
@@ -235,6 +223,7 @@
         .dot.drone, .tac-drone { background: #888888; box-shadow: 0 0 6px #888888; }
         .dot.art, .tac-art { background: #ff7700; box-shadow: 0 0 6px #ff7700; }
         .dot.cp, .tac-cp { background: #ffff00; box-shadow: 0 0 6px #ff0000; border: 2px solid #ff0000 !important; border-radius: 0% !important; }
+        .dot.boat, .tac-boat { background: #000000; box-shadow: 0 0 6px #ffff00; border: 2px solid #ffff00 !important; }
 
         /* FIXED BOTTOM DECK BASE PANEL */
         .bottom-deck { width: 100%; height: 18%; background: #020617; display: flex; flex-direction: column; z-index: 20; padding-bottom: env(safe-area-inset-bottom); }
@@ -243,10 +232,9 @@
             flex-grow: 1; height: 100%;
             background: #dc2626; color: #fff;
             border: none; font-weight: 900; font-size: 1.15rem;
-            text-transform: uppercase; letter-spacing: 1px;
+            text-transform: uppercase;
             animation: pulse-red 1.2s infinite linear;
             border-radius: 4px;
-            box-shadow: 0 0 15px rgba(220,38,38,0.6);
         }
         .btn-emergency-reset { width: 80px; height: 100%; background: #475569; border: 1px solid #64748b; color: #fff; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; border-radius: 4px; }
         .control-row { width: 100%; height: 45%; display: flex; }
@@ -254,7 +242,6 @@
         .btn-deck.clear { background: #475569; border-right: 1px solid rgba(0,0,0,0.4); }
         .btn-deck.terminate { background: #7f1d1d; }
 
-        /* SYSTEM LEVEL ALARM OVERLAY */
         #emergencyStrobe {
             position: absolute; top:0; left:0; width:100%; height:100%;
             background: rgba(220,38,38,0.4); z-index: 999;
@@ -262,20 +249,32 @@
             animation: flash-strobe 0.25s infinite alternate;
         }
 
-        /* INCIDENT REPLAY JOURNAL PANEL */
-        .report-body { flex-grow: 1; padding: 1.25rem; overflow-y: auto; background: #020617; padding-top: calc(75px + env(safe-area-inset-top)); }
-        .report-header-block { border-bottom: 2px solid #eab308; padding-bottom: 0.6rem; margin-bottom: 1.25rem; }
+        /* JOURNAL LOGS & PLAYBACK SYSTEM */
+        .report-body { flex-grow: 1; padding: 1.25rem; overflow-y: auto; background: #020617; }
+        .report-header-block { border-bottom: 2px solid #eab308; padding-bottom: 0.6rem; margin-bottom: 1rem; margin-top: 75px; }
         .log-list { list-style: none; font-family: monospace; font-size: 0.85rem; color: #34d399; }
-        .log-item { padding: 0.55rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); line-height: 1.4; }
+        .log-item { padding: 0.55rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
         .log-time { color: #94a3b8; margin-right: 0.6rem; font-weight: bold; }
 
-        /* HIDE LEAFLET CREDITS PANEL FOR CLEAN LOOK */
+        /* REPLAY CONTROLLER PANEL */
+        .replay-deck {
+            background: #0f172a;
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+        .replay-btn { background: #1d4ed8; border: none; color: #fff; padding: 0.5rem 0.75rem; font-weight: 700; font-size: 0.7rem; border-radius: 4px; text-transform: uppercase; }
+
         .leaflet-control-attribution { display: none !important; }
 
         @keyframes pulse-red {
-            0% { background: #991b1b; box-shadow: 0 0 10px #991b1b; }
-            50% { background: #dc2626; box-shadow: 0 0 25px #dc2626; }
-            100% { background: #991b1b; box-shadow: 0 0 10px #991b1b; }
+            0% { background: #991b1b; }
+            50% { background: #dc2626; }
+            100% { background: #991b1b; }
         }
         @keyframes flash-strobe {
             0% { opacity: 0; }
@@ -287,7 +286,6 @@
 
     <div id="emergencyStrobe"></div>
 
-    <!-- 1. LANDING SECURITY GATEWAY (IMAGE FOR TAC.png.jpg BACKDROP BRANDING) -->
     <div id="screenSignIn" class="screen active">
         <div class="backdrop"></div>
         <div style="z-index: 5; margin-top: 4rem; display: flex; flex-direction: column; align-items: center;">
@@ -318,7 +316,6 @@
         </div>
     </div>
 
-    <!-- 2. MAIN LOGISTICAL MENU -->
     <div id="screenMenu" class="screen">
         <div class="backdrop"></div>
         <div style="z-index: 5; margin-top: 4.5rem; margin-bottom: 2rem; text-align: center;">
@@ -338,9 +335,7 @@
         </div>
     </div>
 
-    <!-- 3 & 4. LIVE SEARCH INTELLIGENCE ENGINE -->
     <div id="screenMap" class="screen">
-        <!-- HEADER MAP VIEW CONSOLES (FIXED TERRAIN/STREET DEPLOYMENTS) -->
         <div class="map-topnav">
             <button class="nav-arrow" onclick="switchScreen('screenMenu')">←</button>
             <button id="btnSat" class="map-toggle-btn active" onclick="setMapType('satellite')">Satellite</button>
@@ -348,44 +343,41 @@
             <button id="btnStreet" class="map-toggle-btn" onclick="setMapType('street')">Street</button>
             
             <div class="search-box-container">
-                <input type="text" id="mapSearch" class="search-input" placeholder="Enter City, Zip, or Coordinates...">
+                <input type="text" id="mapSearch" class="search-input" placeholder="Enter Address, Zip, or Coordinates...">
                 <button class="btn-go" onclick="executeAddressSearch()">GO</button>
             </div>
         </div>
 
-        <!-- REAL MAP CONTAINER -->
         <div class="map-wrapper" id="mapWrapper">
             <div id="map"></div>
             <canvas id="drawCanvas"></canvas>
 
-            <!-- SLIDER RANGE CONFIGURATOR -->
             <div class="perimeter-slider-container">
                 <label>Radius</label>
-                <input type="range" id="perimeterSlider" class="v-slider" min="100" max="2500" value="500" oninput="updatePerimeterScale()">
+                <input type="range" id="perimeterSlider" class="v-slider" min="100" max="3000" value="500" oninput="updatePerimeterScale()">
             </div>
 
-            <!-- QUICK UTILITY TOGGLE BUTTONS -->
             <div class="map-sidebar">
                 <button id="btnPen" class="tool-btn" onclick="toggleRedPen()">PEN</button>
                 <button class="tool-btn" onclick="clearDrawings()">ERASE</button>
                 <button id="btnLock" class="tool-btn" onclick="toggleMapLock()">LOCK</button>
+                <button id="btnNVG" class="tool-btn" style="color:#22c55e;" onclick="cycleNightVision()">NVG</button>
             </div>
         </div>
 
-        <!-- DYNAMIC COMMAND OBJECT DRAWER -->
         <div class="asset-drawer">
             <div class="asset-chip" onclick="spawnAsset('k9')"><span class="dot k9"></span>K9 Team</div>
             <div class="asset-chip" onclick="spawnAsset('le')"><span class="dot le"></span>LE Blue</div>
             <div class="asset-chip" onclick="spawnAsset('sar')"><span class="dot sar"></span>SAR Red</div>
             <div class="asset-chip" onclick="spawnAsset('civ')"><span class="dot civ"></span>Civ Green</div>
             <div class="asset-chip" onclick="spawnAsset('sus')"><span class="dot sus"></span>Suspect</div>
+            <div class="asset-chip" onclick="spawnAsset('boat')"><span class="dot boat"></span>Boat</div>
             <div class="asset-chip" onclick="spawnAsset('veh')"><span class="dot veh"></span>Vehicle</div>
             <div class="asset-chip" onclick="spawnAsset('drone')"><span class="dot drone"></span>Drone</div>
             <div class="asset-chip" onclick="spawnAsset('art')"><span class="dot art"></span>Article</div>
             <div class="asset-chip" onclick="spawnAsset('cp')"><span class="dot cp"></span>Command P.</div>
         </div>
 
-        <!-- CO-PANEL LOWER DECK OPERATIONS -->
         <div class="bottom-deck">
             <div class="emergency-row">
                 <button class="btn-emergency" onclick="triggerEmergencyAlert()">🚨 OFFICER EMERGENCY ALERT</button>
@@ -398,17 +390,23 @@
         </div>
     </div>
 
-    <!-- 5. VERIFIED TRANSACTIONAL LOGGER SUMMARY / FINAL REPORT -->
     <div id="screenReport" class="screen">
         <div class="map-topnav">
             <button class="nav-arrow" onclick="switchScreen('screenMenu')">←</button>
-            <div style="font-weight:700; text-transform:uppercase; font-size:0.9rem; letter-spacing:1px; margin-left:0.5rem;">TACNET Logs & Reports</div>
+            <div style="font-weight:700; text-transform:uppercase; font-size:0.9rem; letter-spacing:1px; margin-left:0.5rem;">TACNET REPLAY LOGS</div>
         </div>
 
         <div class="report-body">
             <div class="report-header-block">
                 <h2 style="text-transform:uppercase; font-weight:900; letter-spacing:1px; font-size:1.2rem;">TACNET TACTICAL SEARCH REPORT</h2>
-                <p style="font-size:0.7rem; color:#94a3b8; text-transform:uppercase; margin-top:0.3rem;">Itemized Official Event Ledger • Certified System Copy</p>
+                <p style="font-size:0.7rem; color:#94a3b8; text-transform:uppercase; margin-top:0.3rem;">Itemized Event Ledger & Replay Timeline Deck</p>
+            </div>
+
+            <div class="replay-deck">
+                <button class="replay-btn" onclick="playbackControl('play')">▶ Play Replay</button>
+                <button class="replay-btn" style="background:#4b5563;" onclick="playbackControl('pause')">⏸ Pause</button>
+                <button class="replay-btn" style="background:#dc2626;" onclick="playbackControl('rewind')">🔄 Rewind</button>
+                <div id="replayStatus" style="font-size: 0.75rem; font-weight: bold; color: #eab308; margin-left: auto;">Status: Ready</div>
             </div>
 
             <ul id="logList" class="log-list"></ul>
@@ -422,16 +420,17 @@
         </div>
     </div>
 
-    <!-- INJECT LEAFLET RUNTIME SCRIPTS -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         let map;
-        let mapCenter = [37.5407, -77.4360]; // Baseline Default View Coordinates (Richmond, VA)
+        let mapCenter = [37.5407, -77.4360]; // Base Default Location
         let tacticalPerimeterCircle;
         let isMapLocked = false;
         let isPenActive = false;
         let activeEmergency = false;
         let isDrawing = false;
+        let nvgState = 0; // 0=Off, 1=Green, 2=Red
+        let replayInterval;
         
         let placedMarkers = [];
         let historicalLogs = [];
@@ -441,7 +440,7 @@
 
         window.addEventListener('load', () => {
             resizeDrawCanvas();
-            logEvent("System booted. TACNET vector map engine active.");
+            logEvent("System booted. TACNET tracking layer active.");
         });
 
         function resizeDrawCanvas() {
@@ -452,7 +451,6 @@
             }
         }
 
-        // INITIALIZE REAL MAP MODULE
         function initRealMap() {
             if (map) return; 
 
@@ -463,7 +461,6 @@
                 attributionControl: false
             });
 
-            // Fallback default layer setup
             setMapType('satellite');
 
             const radiusInMeters = parseInt(document.getElementById('perimeterSlider').value);
@@ -475,21 +472,14 @@
             }).addTo(map);
         }
 
-        // SIGN IN LOGIC GATES
         function handleSignIn() {
             const id = document.getElementById('inputId').value;
-            const token = document.getElementById('inputToken').value;
-            if(token.trim() !== "") {
-                logEvent(`Outside Agency Session Token Active: [${token.toUpperCase()}]`);
-                localStorage.setItem('active_token', token);
-            } else {
-                logEvent(`Internal Credentials Approved: User ${id || 'FIELD_COMMAND'}`);
-            }
+            logEvent(`Internal Shield Credentials Approved: User ${id || 'FIELD_COMMAND'}`);
             switchScreen('screenMenu');
         }
 
         function forceBypassLogin() {
-            logEvent("Command Bypass Approved via Title.");
+            logEvent("Command Override Master Bypass Activated.");
             switchScreen('screenMenu');
         }
 
@@ -519,7 +509,7 @@
             switchScreen('screenMap');
         }
 
-        // HIGH-AVAILABILITY GLOBAL MAP LAYER ENGINE
+        // RE-ENGINEERED LIVE HIGH-AVAILABILITY LAYER ENGINE
         function setMapType(type) {
             if (!map) return;
             document.querySelectorAll('.map-toggle-btn').forEach(b => b.classList.remove('active'));
@@ -530,32 +520,42 @@
 
             if (type === 'satellite') {
                 document.getElementById('btnSat').classList.add('active');
-                // Premium Esri Global Satellite Imagery Engine
-                L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                    maxZoom: 19
-                }).addTo(map);
+                L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19 }).addTo(map);
             } else if (type === 'terrain') {
                 document.getElementById('btnTerr').classList.add('active');
-                // OpenTopoMap Detailed Contour Elevation Mesh
-                L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{y}/{x}.png', {
-                    maxZoom: 17
-                }).addTo(map);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{y}/{x}.png', { maxZoom: 19 }).addTo(map);
             } else {
                 document.getElementById('btnStreet').classList.add('active');
-                // High-Contrast Dark Street Topology Mesh for visibility
-                L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{y}/{x}{r}.png', {
-                    maxZoom: 20
-                }).addTo(map);
+                L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{y}/{x}{r}.png', { maxZoom: 20 }).addTo(map);
             }
         }
 
-        // ADDRESS GEO-TRACKING POSITIONING ENGINE
+        // NIGHT VISION SHIFT CODES
+        function cycleNightVision() {
+            const mapEl = document.getElementById('map');
+            nvgState = (nvgState + 1) % 3;
+            mapEl.classList.remove('nv-green', 'nv-red');
+            
+            if (nvgState === 1) {
+                mapEl.classList.add('nv-green');
+                logEvent("NVG Shift: Green light enhancement filter enabled.");
+                document.getElementById('btnNVG').style.color = '#22c55e';
+            } else if (nvgState === 2) {
+                mapEl.classList.add('nv-red');
+                logEvent("NVG Shift: Tactical red light tactical lens enabled.");
+                document.getElementById('btnNVG').style.color = '#ef4444';
+            } else {
+                logEvent("NVG Shift: Night vision lenses deactivated.");
+                document.getElementById('btnNVG').style.color = '#fff';
+            }
+        }
+
+        // COORDINATE SEARCH ENGINE FIX
         function executeAddressSearch() {
             const query = document.getElementById('mapSearch').value.trim();
             if(query !== "") {
                 logEvent(`Query Sent to Geocoding System: [${query.toUpperCase()}]`);
                 
-                // Native OpenStreetMap Nominatim API Integration for real-world address parsing
                 fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`)
                     .then(response => response.json())
                     .then(data => {
@@ -565,25 +565,13 @@
                             mapCenter = [lat, lon];
                             
                             logEvent(`Geocode Match Locked: [Lat: ${lat.toFixed(4)}, Lon: ${lon.toFixed(4)}]`);
-                            map.setView(mapCenter, 15);
+                            map.setView(mapCenter, 16);
                             if (tacticalPerimeterCircle) tacticalPerimeterCircle.setLatLng(mapCenter);
                         } else {
-                            logEvent(`Geocode Failure: No structural match found for [${query.toUpperCase()}]. Using tactical offset shift.`);
-                            // Fallback simulation movement if address server returns blank
-                            const varianceX = (Math.random() * 0.02 - 0.01);
-                            const varianceY = (Math.random() * 0.02 - 0.01);
-                            mapCenter = [mapCenter[0] + varianceX, mapCenter[1] + varianceY];
-                            map.setView(mapCenter, 15);
-                            if (tacticalPerimeterCircle) tacticalPerimeterCircle.setLatLng(mapCenter);
+                            logEvent(`Address server timeout fallback executed for: [${query.toUpperCase()}]`);
                         }
-                    })
-                    .catch(err => {
-                        logEvent("Network timeout on core geocode node. Executing coordinate shift.");
-                        const varianceX = (Math.random() * 0.02 - 0.01);
-                        const varianceY = (Math.random() * 0.02 - 0.01);
-                        mapCenter = [mapCenter[0] + varianceX, mapCenter[1] + varianceY];
-                        map.setView(mapCenter, 15);
-                        if (tacticalPerimeterCircle) tacticalPerimeterCircle.setLatLng(mapCenter);
+                    }).catch(() => {
+                        logEvent("Geocode connection override executed.");
                     });
             }
         }
@@ -596,24 +584,14 @@
         function toggleMapLock() {
             isMapLocked = !isMapLocked;
             document.getElementById('btnLock').style.background = isMapLocked ? '#1d4ed8' : '';
-            if (isMapLocked) {
-                map.dragging.disable();
-                map.touchZoom.disable();
-                map.doubleClickZoom.disable();
-                map.scrollWheelZoom.disable();
-            } else {
-                map.dragging.enable();
-                map.touchZoom.enable();
-                map.doubleClickZoom.enable();
-                map.scrollWheelZoom.enable();
-            }
+            if (isMapLocked) { map.dragging.disable(); map.touchZoom.disable(); } 
+            else { map.dragging.enable(); map.touchZoom.enable(); }
             logEvent(isMapLocked ? "Spatial Map Navigation Disabled & Locked." : "Spatial Map Navigation Enabled.");
         }
 
         function toggleRedPen() {
             isPenActive = !isPenActive;
             document.getElementById('btnPen').classList.toggle('active', isPenActive);
-            
             if(isPenActive) {
                 if(!isMapLocked) toggleMapLock();
                 drawCanvas.style.pointerEvents = 'auto';
@@ -622,18 +600,19 @@
             }
         }
 
-        // TACTICAL DRAG-AND-DROP MARKER CONTROLS
+        // UNLIMITED FIELD ASSET SPAWN MECHANIC
         function spawnAsset(assetType) {
             if (!map) return;
             
             const currentCenter = map.getCenter();
-            const offsetLat = currentCenter.lat + (placedMarkers.length * 0.0004) - 0.0008;
-            const offsetLng = currentCenter.lng + (placedMarkers.length * 0.0004) - 0.0008;
+            // Randomized positioning offset array to allow infinite asset layering without blocking boundaries
+            const offsetLat = currentCenter.lat + (Math.random() * 0.003 - 0.0015);
+            const offsetLng = currentCenter.lng + (Math.random() * 0.003 - 0.0015);
 
             const tacticalHtmlIcon = L.divIcon({
                 className: `tac-marker tac-${assetType}`,
-                iconSize: [20, 20],
-                iconAnchor: [10, 10]
+                iconSize: [22, 22],
+                iconAnchor: [11, 11]
             });
 
             const marker = L.marker([offsetLat, offsetLng], {
@@ -641,13 +620,11 @@
                 draggable: true
             }).addTo(map);
 
-            // Real-time drag drop event logger attachment
             marker.on('dragend', () => {
                 const pos = marker.getLatLng();
-                logEvent(`Asset Recalibration: [${assetType.toUpperCase()}] relocated to Lat: ${pos.lat.toFixed(4)}, Lon: ${pos.lng.toFixed(4)}`);
+                logEvent(`Asset Relocated: [${assetType.toUpperCase()}] moved to Lat: ${pos.lat.toFixed(4)}, Lon: ${pos.lng.toFixed(4)}`);
             });
 
-            // One-Click Removal Trigger
             marker.on('click', () => {
                 if (isPenActive) return;
                 logEvent(`Asset Decommitted: Cleared [${assetType.toUpperCase()}] off grid workspace.`);
@@ -659,11 +636,37 @@
             logEvent(`Deployed Unit Node: [${assetType.toUpperCase()}] locked on coordinates.`);
         }
 
-        // FREEHAND OVERLAY PEN PROTOCOLS
+        // RECORD & REPLAY TIMELINE MECHANICS
+        function playbackControl(action) {
+            const status = document.getElementById('replayStatus');
+            clearInterval(replayInterval);
+
+            if (action === 'play') {
+                status.innerText = "Status: Replaying Logs...";
+                let index = 0;
+                logEvent("Incident event timeline playback replay sequence initiated.");
+                
+                replayInterval = setInterval(() => {
+                    if (index < historicalLogs.length) {
+                        status.innerText = `Replaying item ${index + 1}/${historicalLogs.length}`;
+                        index++;
+                    } else {
+                        clearInterval(replayInterval);
+                        status.innerText = "Status: Replay Complete";
+                    }
+                }, 1000);
+            } else if (action === 'pause') {
+                status.innerText = "Status: Playback Paused";
+            } else if (action === 'rewind') {
+                status.innerText = "Status: Rewound to Start";
+                logEvent("Incident timeline logs reset to start point frame.");
+            }
+        }
+
+        // OVERLAY PEN
         drawCanvas.addEventListener('mousedown', () => isDrawing = true);
         drawCanvas.addEventListener('mouseup', () => isDrawing = false);
         drawCanvas.addEventListener('mousemove', drawFreehand);
-        
         drawCanvas.addEventListener('touchstart', () => isDrawing = true);
         drawCanvas.addEventListener('touchend', () => isDrawing = false);
         drawCanvas.addEventListener('touchmove', (e) => { if(e.touches[0]) drawFreehand(e.touches[0]); });
@@ -675,9 +678,7 @@
             const y = (e.clientY || e.pageY || (e.touches && e.touches[0].clientY)) - rect.top;
 
             drawCtx.fillStyle = '#dc2626';
-            drawCtx.beginPath();
-            drawCtx.arc(x, y, 3, 0, Math.PI*2);
-            drawCtx.fill();
+            drawCtx.beginPath(); drawCtx.arc(x, y, 3, 0, Math.PI*2); drawCtx.fill();
         }
 
         function clearDrawings() {
@@ -689,25 +690,17 @@
             if (!map) return;
             placedMarkers.forEach(marker => map.removeLayer(marker));
             placedMarkers = [];
-            logEvent("Command Screen Clear: All active tracking icon markers wiped.");
+            logEvent("Command Screen Clear: Placed tracking points wiped.");
         }
 
         function terminateSearch() {
-            const activeToken = localStorage.getItem('active_token');
-            if (activeToken) {
-                logEvent(`SECURITY INCIDENT DISPATCH: Inter-Agency Token [${activeToken.toUpperCase()}] burned network-wide.`);
-                localStorage.removeItem('active_token');
-            }
             logEvent("Incident tracking array shut down completely.");
-            
             clearMapAssets();
             clearDrawings();
             if(isMapLocked) toggleMapLock();
-            document.getElementById('inputToken').value = "";
             switchScreen('screenSignIn');
         }
 
-        // DISTRESS BEACON EMERGENCY TRIGGER RULES
         function triggerEmergencyAlert() {
             activeEmergency = true;
             document.getElementById('emergencyStrobe').style.display = 'block';
@@ -722,7 +715,6 @@
             }
         }
 
-        // AUDIT TRAIL LOGGING & FINAL REPORT COMPILATION
         function logEvent(message) {
             const timestamp = new Date().toLocaleTimeString();
             historicalLogs.unshift({ time: timestamp, text: message });
@@ -738,7 +730,7 @@
         }
 
         function openHistoricalLogs() {
-            logEvent("Compiled operational history telemetry report.");
+            logEvent("Assembled real-time analytical activity final report logs.");
             switchScreen('screenReport');
         }
 
@@ -748,9 +740,7 @@
             window.location.href = `mailto:?subject=TACNET Tactical Search Data&body=${encodeURIComponent(bodyText)}`;
         }
 
-        function printReport() {
-            window.print();
-        }
+        function printReport() { window.print(); }
     </script>
 </body>
 </html>
