@@ -96,31 +96,32 @@
         .creator-name { color: #eab308; font-size: 1.4rem; margin: 0.2rem 0; text-transform: uppercase; letter-spacing: 2px; font-weight: 900; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
         .creator-title { color: #cbd5e1; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* SECURITY LOGIN PANEL */
+        /* SECURITY LOGIN PANEL WITH AGENCY TYPE SELECTOR */
         .glass-panel {
             background: rgba(15, 23, 42, 0.85);
             border: 1px solid rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border-radius: 8px;
-            padding: 1.5rem;
+            padding: 1.25rem;
             width: 92%;
             max-width: 380px;
             margin: auto;
             z-index: 5;
             box-shadow: 0 20px 30px rgba(0,0,0,0.7);
         }
-        .form-group { margin-bottom: 1rem; }
+        .form-group { margin-bottom: 0.85rem; }
         .form-group label { display: block; font-size: 0.7rem; text-transform: uppercase; color: #94a3b8; margin-bottom: 0.3rem; font-weight: 700; letter-spacing: 0.5px; }
         .form-control {
             width: 100%;
-            padding: 0.75rem;
+            padding: 0.7rem;
             background: rgba(0, 0, 0, 0.6);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 4px;
             color: #fff;
             font-size: 0.95rem;
         }
+        select.form-control { color: #38bdf8; font-weight: bold; background-color: #0f172a; }
         
         /* FIELD CONTROLS */
         .btn {
@@ -157,7 +158,7 @@
             mix-blend-mode: screen; box-shadow: inset 0 0 100px rgba(255, 0, 0, 0.35);
         }
 
-        /* HARD-LOCKED MOBILE RESPONSIVE NAVIGATION TOP BAR */
+        /* MASTER NAVIGATION CONTROLS TOP BAR */
         .map-topnav {
             position: absolute;
             top: 0; left: 0; width: 100%;
@@ -169,18 +170,19 @@
             padding: 0 0.4rem;
             padding-top: env(safe-area-inset-top);
             z-index: 20;
-            gap: 0.2rem;
+            gap: 0.15rem;
         }
         .nav-arrow { font-size: 1.4rem; background: none; border: none; color: #fff; padding: 0 0.2rem; cursor: pointer; font-weight: bold; }
-        .map-toggle-btn { padding: 0.5rem 0.35rem; font-size: 0.65rem; background: #334155; border: 1px solid #475569; color: #cbd5e1; font-weight: 800; border-radius: 4px; text-transform: uppercase; flex-shrink: 0; }
+        .map-toggle-btn { padding: 0.5rem 0.3rem; font-size: 0.62rem; background: #334155; border: 1px solid #475569; color: #cbd5e1; font-weight: 800; border-radius: 4px; text-transform: uppercase; flex-shrink: 0; }
         .map-toggle-btn.active { background: #1d4ed8; border-color: #3b82f6; color: #fff; }
-        
-        /* RESPONSIVE SEARCH INPUT OVERFLOW BUFFER */
-        .search-box-container { flex-grow: 1; display: flex; gap: 0.2rem; min-width: 0; align-items: center; }
-        .search-input { flex-grow: 1; min-width: 0; padding: 0.5rem; background: #000; border: 1px solid #475569; color: #fff; border-radius: 4px; font-size: 0.8rem; font-weight: 600; height: 34px; }
-        .btn-go { background: #059669; border: none; color: #fff; padding: 0 0.55rem; font-weight: 800; border-radius: 4px; font-size: 0.8rem; flex-shrink: 0; height: 34px; line-height: 34px; display: flex; align-items: center; justify-content: center; text-transform: uppercase; }
+        .btn-token-generator { background: #b45309; border: 1px solid #d97706; color: #fff; font-size: 0.6rem; padding: 0.5rem 0.3rem; font-weight: 900; border-radius: 4px; text-transform: uppercase; flex-shrink: 0; cursor: pointer; }
 
-        /* TELEMETRY INTERCEPT DISPLAY BANNER */
+        /* RESPONSIVE ADDR ENTRY BOX */
+        .search-box-container { flex-grow: 1; display: flex; gap: 0.15rem; min-width: 0; align-items: center; }
+        .search-input { flex-grow: 1; min-width: 0; padding: 0.4rem; background: #000; border: 1px solid #475569; color: #fff; border-radius: 4px; font-size: 0.75rem; font-weight: 600; height: 34px; }
+        .btn-go { background: #059669; border: none; color: #fff; padding: 0 0.45rem; font-weight: 800; border-radius: 4px; font-size: 0.75rem; flex-shrink: 0; height: 34px; line-height: 34px; display: flex; align-items: center; justify-content: center; text-transform: uppercase; }
+
+        /* MUTUAL-AID INTERCEPT DISPATCH BANNER */
         .telemetry-alert-banner {
             position: absolute; top: 70px; left: 50%; transform: translateX(-50%);
             background: rgba(15, 23, 42, 0.95); border: 2px solid #ef4444; border-radius: 4px;
@@ -268,11 +270,16 @@
             box-shadow: 0 0 8px rgba(56,189,248,0.4);
         }
         
-        /* MARKER ICON STYLES */
+        /* JURISDICTION MARKER LAYER STYLES */
         .tac-marker { width: 22px !important; height: 22px !important; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 8px rgba(0,0,0,0.6); }
         .dot { width: 14px; height: 14px; border-radius: 50%; display: inline-block; }
+        
+        /* COLOR CODED HIERARCHY FOR MUTUAL AID ACCOUNTABILITY */
         .dot.k9, .tac-k9 { background: #00eaff; box-shadow: 0 0 6px #00eaff; border: 2px solid #0022ff !important; }
-        .dot.le, .tac-le { background: #0022ff; box-shadow: 0 0 6px #0022ff; }
+        .dot.le-local, .tac-le-local { background: #1d4ed8; box-shadow: 0 0 8px #1d4ed8; border: 2px solid #fff !important; } /* LOCAL BLUE */
+        .dot.le-state, .tac-le-state { background: #eab308; box-shadow: 0 0 8px #eab308; border: 2px solid #1d4ed8 !important; } /* STATE GOLD */
+        .dot.le-federal, .tac-le-federal { background: #991b1b; box-shadow: 0 0 8px #ef4444; border: 2px solid #ff7700 !important; } /* FED CRIMSON */
+
         .dot.sar, .tac-sar { background: #ff0000; box-shadow: 0 0 6px #ff0000; }
         .dot.civ, .tac-civ { background: #00ff00; box-shadow: 0 0 6px #00ff00; }
         .dot.sus, .tac-sus { background: #cc00ff; box-shadow: 0 0 6px #cc00ff; }
@@ -358,7 +365,7 @@
     <!-- SCREEN 1: BRAND LANDING SCREEN (PULLS YOUR UPLOADED FILE DIRECTLY) -->
     <div id="screenLanding" class="screen active">
         <div class="landing-backdrop-pure"></div>
-        <div class="graphic-container" onclick="switchScreen('screenSignIn')">
+        <div class="graphic-container" onclick="checkUrlTokensAndAdvance()">
             <div class="advance-prompt-box">
                 <p class="advance-prompt-text">[ Tap Screen to Advance ]</p>
             </div>
@@ -370,36 +377,40 @@
         </div>
     </div>
 
-    <!-- SCREEN 2: SECURE USER AUTHENTICATION -->
+    <!-- SCREEN 2: SECURE MUTUAL-AID MULTI-AGENCY PORTAL -->
     <div id="screenSignIn" class="screen">
         <div class="backdrop"></div>
-        <div style="z-index: 5; margin-top: 3.5rem; display: flex; flex-direction: column; align-items: center;">
+        <div style="z-index: 5; margin-top: 2rem; display: flex; flex-direction: column; align-items: center;">
             <h1 class="app-title" style="font-size: 2rem;">SECURE PORTAL</h1>
-            <p style="font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Verify Agency Identity Access</p>
+            <p style="font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Verify Tactical Jurisdiction Identity</p>
         </div>
 
         <div class="glass-panel">
             <div class="form-group">
-                <label>Badge / Operational Searcher ID Number</label>
-                <input type="text" id="inputId" class="form-control" value="K9-UNIT 12" placeholder="Enter Searcher Number" autocomplete="off">
+                <label>Command Classification Tier</label>
+                <select id="inputAgencyTier" class="form-control" onchange="adjustDefaultBadgePlaceholder()">
+                    <option value="local">Local Sheriff / Municipal Police</option>
+                    <option value="state">Virginia State Police (VSP) / State</option>
+                    <option value="federal">Federal Task Force / Special Agent</option>
+                </select>
             </div>
             <div class="form-group">
-                <label>Secure Password</label>
+                <label>Operational Unit / Badge Radio ID</label>
+                <input type="text" id="inputId" class="form-control" value="AMHERST K9-1" placeholder="Enter Call Number" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label>Secure Incident Password / Token</label>
                 <input type="password" id="inputPass" class="form-control" value="••••••••" autocomplete="off">
             </div>
-            <div class="form-group">
-                <label>Inter-Agency Access Token</label>
-                <input type="text" id="inputToken" class="form-control" placeholder="Enter Temporary Token">
-            </div>
-            <button class="btn" onclick="handleSignIn()">Secure Sign In</button>
+            <button class="btn" onclick="handleSignIn()">Secure Verification</button>
         </div>
 
         <div class="creator-credits">
-            <div class="creator-name" style="font-size: 0.85rem; color:#94a3b8;">TACNET VERIFIED INTERFACE AUTHENTICATION</div>
+            <div class="creator-name" style="font-size: 0.85rem; color:#94a3b8;">TACNET JURISDICTION AUTHENTICATION MATRIX</div>
         </div>
     </div>
 
-    <!-- SCREEN 3: COMMAND LOGISTICAL MAIN MENU HUB -->
+    <!-- SCREEN 3: MAIN OPERATIONAL MENU HUB -->
     <div id="screenMenu" class="screen">
         <div class="backdrop"></div>
         <div style="z-index: 5; margin-top: 4.5rem; margin-bottom: 2rem; text-align: center;">
@@ -419,7 +430,7 @@
         </div>
     </div>
 
-    <!-- SCREEN 4: LIVE SEARCH INTELLIGENCE MAP MODULE -->
+    <!-- SCREEN 4: LIVE MUTUAL-AID INTELLIGENCE MAP -->
     <div id="screenMap" class="screen">
         <div class="map-topnav">
             <button class="nav-arrow" onclick="switchScreen('screenMenu')">←</button>
@@ -428,9 +439,11 @@
             <button id="btnStreet" class="map-toggle-btn" onclick="setMapType('street')">Street</button>
             
             <div class="search-box-container">
-                <input type="text" id="mapSearch" class="search-input" placeholder="Address...">
+                <input type="text" id="mapSearch" class="search-input" placeholder="Address or Track Phone...">
                 <button class="btn-go" onclick="executeAddressSearch()">GO</button>
             </div>
+            
+            <button class="btn-token-generator" onclick="generateTemporaryMutualAidToken()">[Gen Link]</button>
         </div>
 
         <div class="map-wrapper" id="mapWrapper">
@@ -462,7 +475,9 @@
 
         <div class="asset-drawer">
             <div id="chip-k9" class="asset-chip" onclick="selectAssetToPlace('k9')"><span class="dot k9"></span>K9 Team</div>
-            <div id="chip-le" class="asset-chip" onclick="selectAssetToPlace('le')"><span class="dot le"></span>LE Blue</div>
+            <div id="chip-le-local" class="asset-chip" onclick="selectAssetToPlace('le-local')"><span class="dot le-local"></span>LE Local</div>
+            <div id="chip-le-state" class="asset-chip" onclick="selectAssetToPlace('le-state')"><span class="dot le-state"></span>VSP State</div>
+            <div id="chip-le-federal" class="asset-chip" onclick="selectAssetToPlace('le-federal')"><span class="dot le-federal"></span>Fed Agent</div>
             <div id="chip-sar" class="asset-chip" onclick="selectAssetToPlace('sar')"><span class="dot sar"></span>SAR Red</div>
             <div id="chip-civ" class="asset-chip" onclick="selectAssetToPlace('civ')"><span class="dot civ"></span>Civ Green</div>
             <div id="chip-sus" class="asset-chip" onclick="selectAssetToPlace('sus')"><span class="dot sus"></span>Suspect</div>
@@ -548,8 +563,12 @@
         let isDrawing = false;
         let nvgState = 0; 
         let replayInterval;
-        let activeSearcherId = "K9-UNIT 12"; 
+        
+        // JURISDICTION ACCOUNTABILITY RUNTIME STATES
+        let activeSearcherId = "AMHERST K9-1"; 
+        let activeAgencyTier = "local";
         let perimeterRadiusMeters = 500; 
+        let isMutualAidGuestSession = false;
         
         let placedMarkers = [];
         let historicalLogs = [];
@@ -562,10 +581,33 @@
         const drawCtx = drawCanvas.getContext('2d');
 
         window.addEventListener('load', () => {
-            switchScreen('screenLanding');
             resizeDrawCanvas();
             logEvent("Platform runtime initialization completely established.");
         });
+
+        // TIMED MUTUAL-AID BYPASS SECURITY EVALUATOR
+        function checkUrlTokensAndAdvance() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if(urlParams.has('token')) {
+                const embeddedTokenId = urlParams.get('token').toUpperCase();
+                isMutualAidGuestSession = true;
+                activeSearcherId = "GUEST-" + embeddedTokenId;
+                activeAgencyTier = embeddedTokenId.includes("VSP") ? "state" : "local";
+                
+                logEvent(`🚨 TIMED EMERGENCY ACCESS GRANTED: Mutual-Aid Token Entry [${activeSearcherId}] Verified.`);
+                switchScreen('screenMap');
+            } else {
+                switchScreen('screenSignIn');
+            }
+        }
+
+        function adjustDefaultBadgePlaceholder() {
+            const selectedTier = document.getElementById('inputAgencyTier').value;
+            const badgeInput = document.getElementById('inputId');
+            if (selectedTier === "state") badgeInput.value = "VSP TROOPER 712";
+            else if (selectedTier === "federal") badgeInput.value = "FED AGENT 40";
+            else badgeInput.value = "AMHERST K9-1";
+        }
 
         function resizeDrawCanvas() {
             const wrapper = document.getElementById('mapWrapper');
@@ -605,21 +647,20 @@
         }
 
         function handleSignIn() {
+            activeAgencyTier = document.getElementById('inputAgencyTier').value;
             const id = document.getElementById('inputId').value.trim();
             if(id !== "") {
                 activeSearcherId = id.toUpperCase();
             }
-            logEvent(`Credentials Authenticated: Operational Session Assigned to Tracking Unit: [${activeSearcherId}]`);
-            switchScreen('screenMenu');
-        }
-
-        function forceBypassLogin() {
-            logEvent("Command Override Master Bypass Activated.");
+            logEvent(`Jurisdiction Verified: Operational Session Allocated for Tier [${activeAgencyTier.toUpperCase()}] Unit: [${activeSearcherId}]`);
             switchScreen('screenMenu');
         }
 
         function logOutSession() {
             logEvent(`Command tracking unit [${activeSearcherId}] safely logged out.`);
+            isMutualAidGuestSession = false;
+            // Purge emergency tokens out of query string line
+            window.history.pushState({}, document.title, window.location.pathname);
             switchScreen('screenSignIn');
         }
 
@@ -660,9 +701,19 @@
                 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', { maxZoom: 18 }).addTo(map);
             } else {
                 document.getElementById('btnStreet').classList.add('active');
-                // OpenStreetMap Standard Map Vector Layer - SECURE HIGH RESOLUTION
+                // OpenStreetMap Standard Map Vector Layer - SECURE RESOLUTION FIXED LAYERS
                 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
             }
+        }
+
+        function generateTemporaryMutualAidToken() {
+            const randomId = Math.floor(1000 + Math.random() * 9000);
+            const mockToken = "VSP-HOT-TRACK-" + randomId;
+            const currentUrl = window.location.origin + window.location.pathname;
+            const absoluteInviteLink = `${currentUrl}?token=${mockToken}`;
+            
+            alert(`🚨 EMERGENCY MUTUAL-AID TOKEN GENERATED\n\nCopy this link and send it directly to VSP or adjoining county incoming units:\n\n${absoluteInviteLink}`);
+            logEvent(`Token Console Override: Multi-Agency Guest Invitation Link Broadcast Prepared [${mockToken}].`);
         }
 
         function cycleNightVision() {
@@ -722,7 +773,7 @@
                             persistentTargetPin.addTo(map);
                             logEvent("Intended Place Marker: Small tactical red focus dot locked to coordinates.");
                         } else {
-                            logEvent(`Geocoding database fallback processing initiated for: [${query.toUpperCase()}]`);
+                            logEvent(`Geocoding database fallback processing initialized for: [${query.toUpperCase()}]`);
                         }
                     }).catch(() => {
                         logEvent("Geocode frame override verified.");
@@ -829,6 +880,7 @@
             selectAssetToPlace(null);
         }
 
+        // DRAWING LOGIC WITH SINGLE-LINE RECOVERY CAPABILITIES
         drawCanvas.addEventListener('mousedown', startLineStroke);
         drawCanvas.addEventListener('mouseup', endLineStroke);
         drawCanvas.addEventListener('mousemove', drawLineSegment);
@@ -901,18 +953,25 @@
             logEvent("Command Screen Clear: Wiped field tracking elements.");
         }
 
+        // ABSOLUTE SECURITY DECOMMIT ENGINE OVERRIDE KILL SWITCH
         function terminateSearch() {
-            logEvent(`Incident tracking array closed. Session terminated for Unit [${activeSearcherId}].`);
+            logEvent(`🚨 INCIDENT TERMINATED: Command array killed. Evicting all active tracking links for unit [${activeSearcherId}].`);
             clearMapAssets(); clearDrawings();
             if(isMapLocked) toggleMapLock();
             selectAssetToPlace(null);
+            isMutualAidGuestSession = false;
+            
+            // Scrub incoming access token parameters entirely out of memory
+            window.history.pushState({}, document.title, window.location.pathname);
+            
+            alert("🛑 SEARCH SCHEDULER TERMINATED\n\nAll temporary mutual-aid access credentials have been permanently neutralized.");
             switchScreen('screenSignIn');
         }
 
         function triggerEmergencyAlert() {
             activeEmergency = true;
             document.getElementById('emergencyStrobe').style.display = 'block';
-            logEvent(`🚨 CRITICAL DISTRESS FACTOR: SEARCHER NO. [${activeSearcherId}] IS DOWN! S.O.S. BROADCAST ENFORCED NETWORK-WIDE.`);
+            logEvent(`🚨 CRITICAL DISTRESS FACTOR: SEARCHER NO. [${activeSearcherId}] FROM TIER [${activeAgencyTier.toUpperCase()}] IS DOWN! S.O.S. BROADCAST ENFORCED NETWORK-WIDE.`);
         }
 
         function resetEmergencyAlert() {
