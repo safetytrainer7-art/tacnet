@@ -1,4 +1,5 @@
-<!DOCTYPE html>
+
+!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -55,8 +56,17 @@ html,body{height:100%;background:transparent;color:var(--text);font-family:'Rajd
 .card::before{content:'';position:absolute;inset:0;border-radius:var(--radius);border:1px solid var(--red);opacity:.3;pointer-events:none;}
 .card::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--red),var(--gold),var(--red),transparent);opacity:.7;}
 
-/* TACNET logo text */
-.logo-t1{font-family:'Black Ops One',cursive;font-size:clamp(50px,9vw,78px);line-height:.9;background:linear-gradient(135deg,#fff8a0,#FFD700,#c9a840,#FFD700,#fff3a0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:2px;}
+/* TACNET logo text - glass style see-through text */
+.logo-t1 {
+  font-family: 'Black Ops One', cursive;
+  font-size: clamp(50px, 9vw, 78px);
+  line-height: .9;
+  background: linear-gradient(135deg, rgba(255,248,160,0.9), rgba(255,215,0,0.3), rgba(201,168,64,0.9), rgba(255,215,0,0.3), rgba(255,243,160,0.9));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: 2px;
+}
 .logo-t2{font-family:'Black Ops One',cursive;font-size:clamp(11px,2vw,16px);color:var(--gold);letter-spacing:2px;margin-top:3px;line-height:1.3;}
 .logo-t3{font-size:12px;color:var(--red);letter-spacing:2px;font-weight:700;margin-top:2px;text-transform:uppercase;}
 .logo-t4{font-family:'Share Tech Mono',monospace;font-size:9.5px;color:var(--dim);letter-spacing:.8px;margin-top:7px;line-height:1.9;}
@@ -1239,7 +1249,7 @@ function genTok(){
     const m=Math.floor(left/60000),s=Math.floor((left%60000)/1000);
     document.getElementById('tok-timer').textContent=`Expires in ${m}m ${s}s`;
   },1000);
-  toast(`Token generated — expires in ${mins} min`,'ok');
+  toast(`Token generated — expires in ${mins} min` clip-path,'ok');
 }
 function showTok(){document.getElementById('s-tok').classList.add('on');}
 function closeTok(){document.getElementById('s-tok').classList.remove('on');}
