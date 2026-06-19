@@ -361,4 +361,614 @@
                 <p class="advance-prompt-text">[ Tap Screen to Advance ]</p>
             </div>
             <div class="creator-credits">
-                <div
+                <div class="creator-gold-label">— App Creator —</div>
+                <div class="creator-name">EARL WOOD</div>
+                <div class="creator-title">Deputy Sheriff Retired Virginia</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="screenSignIn" class="screen">
+        <div class="backdrop"></div>
+        <div style="z-index: 5; margin-top: 3.5rem; display: flex; flex-direction: column; align-items: center;">
+            <h1 class="app-title" style="font-size: 2rem;">SECURE PORTAL</h1>
+            <p style="font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Verify Agency Identity Access</p>
+        </div>
+
+        <div class="glass-panel">
+            <div class="form-group">
+                <label>Badge / Operational Searcher ID Number</label>
+                <input type="text" id="inputId" class="form-control" value="K9-UNIT 12" placeholder="Enter Searcher Number" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label>Secure Password</label>
+                <input type="password" id="inputPass" class="form-control" value="••••••••" autocomplete="off">
+            </div>
+            <div class="form-group">
+                <label>Inter-Agency Access Token</label>
+                <input type="text" id="inputToken" class="form-control" placeholder="Enter Temporary Token">
+            </div>
+            <button class="btn" onclick="handleSignIn()">Secure Sign In</button>
+        </div>
+
+        <div class="creator-credits">
+            <div class="creator-name" style="font-size: 0.85rem; color:#94a3b8;">TACNET VERIFIED INTERFACE AUTHENTICATION</div>
+        </div>
+    </div>
+
+    <div id="screenMenu" class="screen">
+        <div class="backdrop"></div>
+        <div style="z-index: 5; margin-top: 4.5rem; margin-bottom: 2rem; text-align: center;">
+            <h1 class="app-title" style="font-size: 2rem;">TACNET HUB</h1>
+            <p style="font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; font-weight:700;">Tactical Field Operations Network</p>
+        </div>
+
+        <div class="menu-container">
+            <button class="btn" onclick="startNewSearch()">Start New Search</button>
+            <button class="btn btn-secondary" onclick="switchScreen('screenMap')">Join Active Search</button>
+            <button class="btn btn-secondary" onclick="openHistoricalLogs()">Historical Logs & Reports</button>
+            <button class="btn btn-danger" style="margin-top: 2.5rem;" onclick="logOutSession()">Log Out Session</button>
+        </div>
+
+        <div class="creator-credits">
+            <div class="creator-name" style="font-size: 0.9rem;">TACNET COMMAND PLATFORM</div>
+        </div>
+    </div>
+
+    <div id="screenMap" class="screen">
+        <div class="map-topnav">
+            <button class="nav-arrow" onclick="switchScreen('screenMenu')">←</button>
+            <button id="btnSat" class="map-toggle-btn active" onclick="setMapType('satellite')">Sat</button>
+            <button id="btnTerr" class="map-toggle-btn" onclick="setMapType('terrain')">Terr</button>
+            <button id="btnStreet" class="map-toggle-btn" onclick="setMapType('street')">Street</button>
+            
+            <div class="search-box-container">
+                <input type="text" id="mapSearch" class="search-input" placeholder="Address or Track Phone...">
+                <button class="btn-go" onclick="executeAddressSearch()">GO</button>
+            </div>
+        </div>
+
+        <div class="map-wrapper" id="mapWrapper">
+            <div id="telemetryBanner" class="telemetry-alert-banner">🚨 TARGET PIN CAPTURE DETECTED! INCOMING TELEMETRY TRACK ENGAGED...</div>
+
+            <div id="map"></div>
+            <canvas id="drawCanvas"></canvas>
+            
+            <div id="nvgGreenFilter" class="night-vision-green"></div>
+            <div id="nvgRedFilter" class="night-vision-red"></div>
+
+            <div class="perimeter-manual-deck">
+                <label>Perimeter</label>
+                <div id="radiusReadout" class="perimeter-readout">500m</div>
+                <button class="step-btn" onclick="adjustPerimeterManual(100)">+</button>
+                <button class="step-btn" onclick="adjustPerimeterManual(-100)">-</button>
+            </div>
+
+            <div class="map-sidebar">
+                <button id="btnPen" class="tool-btn" onclick="toggleRedPen()">PEN</button>
+                <button class="tool-btn" onclick="undoLastLine()">ERASE</button>
+                <button id="btnLock" class="tool-btn" onclick="toggleMapLock()">LOCK</button>
+                <button id="btnNVG" class="tool-btn" style="color:#22c55e;" onclick="cycleNightVision()">NVG</button>
+            </div>
+        </div>
+
+        <div class="asset-drawer">
+            <div id="chip-k9" class="asset-chip" onclick="selectAssetToPlace('k9')"><span class="dot k9"></span>K9 Team</div>
+            <div id="chip-le" class="asset-chip" onclick="selectAssetToPlace('le')"><span class="dot le"></span>LE Blue</div>
+            <div id="chip-sar" class="asset-chip" onclick="selectAssetToPlace('sar')"><span class="dot sar"></span>SAR Red</div>
+            <div id="chip-civ" class="asset-chip" onclick="selectAssetToPlace('civ')"><span class="dot civ"></span>Civ Green</div>
+            <div id="chip-sus" class="asset-chip" onclick="selectAssetToPlace('sus')"><span class="dot sus"></span>Suspect</div>
+            <div id="chip-boat" class="asset-chip" onclick="selectAssetToPlace('boat')"><span class="dot boat"></span>Boat</div>
+            <div id="chip-veh" class="asset-chip" onclick="selectAssetToPlace('veh')"><span class="dot veh"></span>Vehicle</div>
+            <div id="chip-drone" class="asset-chip" onclick="selectAssetToPlace('drone')"><span class="dot drone"></span>Drone</div>
+            <div id="chip-art" class="asset-chip" onclick="selectAssetToPlace('art')"><span class="dot art"></span>Article</div>
+            <div id="chip-cp" class="asset-chip" onclick="selectAssetToPlace('cp')"><span class="dot cp"></span>Command P.</div>
+        </div>
+
+        <div class="bottom-deck">
+            <div class="emergency-row">
+                <button class="btn-emergency" onclick="triggerEmergencyAlert()">🚨 OFFICER EMERGENCY ALERT</button>
+                <button class="btn-emergency-reset" onclick="resetEmergencyAlert()">Reset<br>Alert</button>
+            </div>
+            <div class="control-row">
+                <button class="btn-deck clear" onclick="clearMapAssets()">Clear Now</button>
+                <button class="btn-deck terminate" onclick="terminateSearch()">Terminate Search</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="screenReport" class="screen">
+        <div class="map-topnav">
+            <button class="nav-arrow" onclick="switchScreen('screenMenu')">←</button>
+            <div style="font-weight:700; text-transform:uppercase; font-size:0.85rem; letter-spacing:1px; margin-left:0.4rem;">TACNET REPLAY LOGS</div>
+        </div>
+
+        <div class="report-body">
+            
+            <div class="k9-med-panel">
+                <h3 style="font-size:0.75rem; text-transform:uppercase; color:#38bdf8; border-bottom:1px solid #334155; padding-bottom:0.2rem;">🚨 HANDS-FREE K9 FIRST AID MATRIX</h3>
+                <p style="font-size:0.65rem; color:#94a3b8; margin-top:0.2rem;">Tap any card below. Voice instructions read 100% of all survival categories non-stop to free your hands.</p>
+                
+                <div class="med-grid">
+                    <div class="med-card" onclick="playK9VoiceProtocol('cpr')">K9 CPR</div>
+                    <div class="med-card" onclick="playK9VoiceProtocol('snake')">Snake Bites</div>
+                    <div class="med-card" onclick="playK9VoiceProtocol('eye')">Eye Injuries</div>
+                    <div class="med-card" onclick="playK9VoiceProtocol('paw')">Paw Injuries</div>
+                    <div class="med-card" onclick="playK9VoiceProtocol('bleeding')">Excessive Bleeding</div>
+                    <div class="med-card" onclick="playK9VoiceProtocol('heat')">Heat Exhaustion</div>
+                </div>
+                <div id="voiceStatusBanner" class="med-voice-banner">📢 TRANSMITTING VOCAL COMMANDS...</div>
+                <button class="btn-secondary" style="font-size:0.65rem; padding:0.4rem; margin-top:0.5rem;" onclick="stopVoiceBroadcast()">⏹ Stop Voice Broadcast</button>
+            </div>
+
+            <div class="report-header-block" style="margin-top: 0;">
+                <h2 style="text-transform:uppercase; font-weight:900; letter-spacing:1px; font-size:1.1rem;">TACNET TACTICAL SEARCH REPORT</h2>
+                <p style="font-size:0.65rem; color:#94a3b8; text-transform:uppercase; margin-top:0.25rem;">Itemized Event Ledger & Replay Timeline Deck</p>
+            </div>
+
+            <div class="replay-deck">
+                <button class="replay-btn" onclick="playbackControl('play')">▶ Play Replay</button>
+                <button class="replay-btn" style="background:#4b5563;" onclick="playbackControl('pause')">⏸ Pause</button>
+                <button class="replay-btn" style="background:#dc2626;" onclick="playbackControl('rewind')">🔄 Rewind</button>
+                <div id="replayStatus" style="font-size: 0.7rem; font-weight: bold; color: #eab308; margin-left: auto;">Status: Ready</div>
+            </div>
+
+            <ul id="logList" class="log-list"></ul>
+        </div>
+
+        <div class="bottom-deck" style="height: 10%;">
+            <div class="control-row" style="height: 100%;">
+                <button class="btn-deck clear" onclick="emailReport()">Email Report</button>
+                <button class="btn-deck terminate" style="background:#1d4ed8;" onclick="printReport()">Print to PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        let map;
+        let mapCenter = [37.5407, -77.4360]; 
+        let tacticalPerimeterCircle;
+        let persistentTargetPin = null;
+        let isMapLocked = false;
+        let isPenActive = false;
+        let activeEmergency = false;
+        let isDrawing = false;
+        let nvgState = 0; 
+        let replayInterval;
+        let activeSearcherId = "K9-UNIT 12"; 
+        let perimeterRadiusMeters = 500; 
+        
+        let placedMarkers = [];
+        let historicalLogs = [];
+        let selectedAssetType = null;
+
+        let drawingLinesStack = [];
+        let currentLineStroke = [];
+
+        const drawCanvas = document.getElementById('drawCanvas');
+        const drawCtx = drawCanvas.getContext('2d');
+
+        window.addEventListener('load', () => {
+            switchScreen('screenLanding');
+            resizeDrawCanvas();
+            logEvent("Platform runtime initialization completely established.");
+        });
+
+        function resizeDrawCanvas() {
+            const wrapper = document.getElementById('mapWrapper');
+            if (wrapper) {
+                drawCanvas.width = wrapper.clientWidth;
+                drawCanvas.height = wrapper.clientHeight;
+                redrawCanvasStack();
+            }
+        }
+
+        function initRealMap() {
+            if (map) return; 
+
+            map = L.map('map', {
+                center: mapCenter,
+                zoom: 14,
+                zoomControl: false,
+                attributionControl: false
+            });
+
+            setMapType('satellite');
+
+            tacticalPerimeterCircle = L.circle(mapCenter, {
+                color: '#22c55e',
+                fillColor: '#22c55e',
+                fillOpacity: 0.12,
+                weight: 3,
+                radius: perimeterRadiusMeters
+            }).addTo(map);
+
+            map.on('click', (e) => {
+                if (isPenActive) return; 
+                if (selectedAssetType) {
+                    executeManualAssetPlacement(e.latlng.lat, e.latlng.lng, selectedAssetType);
+                }
+            });
+        }
+
+        function handleSignIn() {
+            const id = document.getElementById('inputId').value.trim();
+            if(id !== "") {
+                activeSearcherId = id.toUpperCase();
+            }
+            logEvent(`Credentials Authenticated: Operational Session Assigned to Tracking Unit: [${activeSearcherId}]`);
+            switchScreen('screenMenu');
+        }
+
+        function forceBypassLogin() {
+            logEvent("Command Override Master Bypass Activated.");
+            switchScreen('screenMenu');
+        }
+
+        function logOutSession() {
+            logEvent(`Command tracking unit [${activeSearcherId}] safely logged out.`);
+            switchScreen('screenSignIn');
+        }
+
+        function switchScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            const targetScreen = document.getElementById(screenId);
+            if (targetScreen) targetScreen.classList.add('active');
+            
+            if(screenId === 'screenMap') {
+                setTimeout(() => {
+                    initRealMap();
+                    map.invalidateSize();
+                    resizeDrawCanvas();
+                }, 100);
+            }
+        }
+
+        function startNewSearch() {
+            clearMapAssets();
+            clearDrawings();
+            logEvent("Fresh search parameters initialized. Grid perimeter deployed.");
+            switchScreen('screenMap');
+        }
+
+        function setMapType(type) {
+            if (!map) return;
+            document.querySelectorAll('.map-toggle-btn').forEach(b => b.classList.remove('active'));
+            
+            map.eachLayer((layer) => {
+                if (layer instanceof L.TileLayer) map.removeLayer(layer);
+            });
+
+            if (type === 'satellite') {
+                document.getElementById('btnSat').classList.add('active');
+                L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19 }).addTo(map);
+            } else if (type === 'terrain') {
+                document.getElementById('btnTerr').classList.add('active');
+                L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', { maxZoom: 18 }).addTo(map);
+            } else {
+                document.getElementById('btnStreet').classList.add('active');
+                L.tileLayer('https://tile.openstreetmap.org/{z}/{y}/{x}.png', { maxZoom: 19 }).addTo(map);
+            }
+        }
+
+        function cycleNightVision() {
+            const greenFilter = document.getElementById('nvgGreenFilter');
+            const redFilter = document.getElementById('nvgRedFilter');
+            nvgState = (nvgState + 1) % 3;
+            
+            greenFilter.style.display = 'none';
+            redFilter.style.display = 'none';
+            
+            if (nvgState === 1) {
+                greenFilter.style.display = 'block';
+                logEvent("Neon NVG Status: Solid Green Light illumination enabled across map matrix.");
+                document.getElementById('btnNVG').style.color = '#22c55e';
+            } else if (nvgState === 2) {
+                redFilter.style.display = 'block';
+                logEvent("Neon NVG Status: Solid Red Light tactical screen vision active.");
+                document.getElementById('btnNVG').style.color = '#ef4444';
+            } else {
+                logEvent("Neon NVG Status: Night light panels deactivated.");
+                document.getElementById('btnNVG').style.color = '#fff';
+            }
+        }
+
+        function executeAddressSearch() {
+            const query = document.getElementById('mapSearch').value.trim();
+            if(query !== "") {
+                logEvent(`Query Sent to Geocoding System: [${query.toUpperCase()}]`);
+                
+                if(query.toLowerCase().includes("phone") || query.toLowerCase().includes("suspect") || !isNaN(query)) {
+                    triggerSimulatedCellIntercept();
+                    return;
+                }
+                
+                fetch(location.protocol + '//nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(query) + '&limit=1')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data && data.length > 0) {
+                            const lat = parseFloat(data[0].lat);
+                            const lon = parseFloat(data[0].lon);
+                            mapCenter = [lat, lon];
+                            
+                            logEvent(`Geocode Match Locked: [Lat: ${lat.toFixed(4)}, Lon: ${lon.toFixed(4)}]`);
+                            map.setView(mapCenter, 16);
+                            if (tacticalPerimeterCircle) tacticalPerimeterCircle.setLatLng(mapCenter);
+                            
+                            if (persistentTargetPin) {
+                                persistentTargetPin.setLatLng(mapCenter);
+                            } else {
+                                const redDotIcon = L.divIcon({
+                                    className: 'tac-marker tac-target-pin',
+                                    iconSize: [20, 20],
+                                    iconAnchor: [10, 10]
+                                });
+                                persistentTargetPin = L.marker(mapCenter, { icon: redDotIcon, zIndexOffset: 1000 }).addTo(map);
+                            }
+                            persistentTargetPin.addTo(map);
+                            logEvent("Intended Place Marker: Small tactical red focus dot locked to coordinates.");
+                        } else {
+                            logEvent(`Geocoding database fallback processing initiated for: [${query.toUpperCase()}]`);
+                        }
+                    }).catch(() => {
+                        logEvent("Geocode frame override verified.");
+                    });
+            }
+        }
+
+        function triggerSimulatedCellIntercept() {
+            const banner = document.getElementById('telemetryBanner');
+            banner.style.display = 'block';
+            logEvent("🚨 CELLULAR MATRIX SIGNAL INTERCEPTED: Target phone turned ON. Initializing network tracking triangulation...");
+
+            setTimeout(() => {
+                const interceptLat = mapCenter[0] + (Math.random() * 0.005 - 0.0025);
+                const interceptLng = mapCenter[1] + (Math.random() * 0.005 - 0.0025);
+                const interceptCoords = [interceptLat, interceptLng];
+
+                map.setView(interceptCoords, 16);
+                if (tacticalPerimeterCircle) tacticalPerimeterCircle.setLatLng(interceptCoords);
+
+                if (persistentTargetPin) {
+                    persistentTargetPin.setLatLng(interceptCoords);
+                } else {
+                    const redDotIcon = L.divIcon({ className: 'tac-marker tac-target-pin', iconSize: [20, 20], iconAnchor: [10, 10] });
+                    persistentTargetPin = L.marker(interceptCoords, { icon: redDotIcon, zIndexOffset: 1000 });
+                }
+                persistentTargetPin.addTo(map);
+
+                const suspectIcon = L.divIcon({ className: 'tac-marker tac-sus', iconSize: [22, 22], iconAnchor: [11, 11] });
+                const suspectMarker = L.marker(interceptCoords, { icon: suspectIcon, draggable: true }).addTo(map);
+                placedMarkers.push(suspectMarker);
+
+                banner.style.color = "#22c55e";
+                banner.style.borderColor = "#22c55e";
+                banner.innerText = "🎯 TARGET ACQUIRED! SIGNAL LOCKED VIA TOWER REGISTER.";
+                logEvent(`🎯 TELEMETRY LOCKED: Suspect phone registration traced to Lat: ${interceptLat.toFixed(5)}, Lon: ${interceptLng.toFixed(5)}. Target Purple dot and Fixed Red pin synchronized.`);
+
+                setTimeout(() => { banner.style.display = 'none'; banner.style.color = "#ef4444"; banner.style.borderColor = "#ef4444"; banner.innerText = "🚨 TARGET PIN CAPTURE DETECTED!..."; }, 4000);
+            }, 2500);
+        }
+
+        function adjustPerimeterManual(amount) {
+            perimeterRadiusMeters += amount;
+            if (perimeterRadiusMeters < 100) perimeterRadiusMeters = 100;
+            if (perimeterRadiusMeters > 5000) perimeterRadiusMeters = 5000;
+            if (tacticalPerimeterCircle) {
+                tacticalPerimeterCircle.setRadius(perimeterRadiusMeters);
+            }
+            document.getElementById('radiusReadout').innerText = perimeterRadiusMeters + "m";
+            logEvent(`Perimeter Manual Override: Containment radius shifted to ${perimeterRadiusMeters} meters.`);
+        }
+
+        function toggleMapLock() {
+            isMapLocked = !isMapLocked;
+            document.getElementById('btnLock').style.background = isMapLocked ? '#1d4ed8' : '';
+            if (isMapLocked) { map.dragging.disable(); map.touchZoom.disable(); } 
+            else { map.dragging.enable(); map.touchZoom.enable(); }
+            logEvent(isMapLocked ? "Spatial Map Navigation Disabled & Locked." : "Spatial Map Navigation Enabled.");
+        }
+
+        function toggleRedPen() {
+            isPenActive = !isPenActive;
+            document.getElementById('btnPen').classList.toggle('pen-active', isPenActive);
+            if(isPenActive) {
+                if(!isMapLocked) toggleMapLock();
+                drawCanvas.style.pointerEvents = 'auto';
+                selectAssetToPlace(null);
+            } else {
+                drawCanvas.style.pointerEvents = 'none';
+            }
+        }
+
+        function selectAssetToPlace(assetType) {
+            document.querySelectorAll('.asset-chip').forEach(chip => chip.classList.remove('selected'));
+            if (assetType === null || selectedAssetType === assetType) {
+                selectedAssetType = null;
+                return;
+            }
+            selectedAssetType = assetType;
+            document.getElementById(`chip-${assetType}`).classList.add('selected');
+            logEvent(`Placement Array Primed: Tap map to drop [${assetType.toUpperCase()}].`);
+            if(isPenActive) toggleRedPen();
+        }
+
+        function executeManualAssetPlacement(lat, lng, assetType) {
+            const tacticalHtmlIcon = L.divIcon({ className: `tac-marker tac-${assetType}`, iconSize: [22, 22], iconAnchor: [11, 11] });
+            const marker = L.marker([lat, lng], { icon: tacticalHtmlIcon, draggable: true }).addTo(map);
+
+            marker.on('dragend', () => {
+                const pos = marker.getLatLng();
+                logEvent(`Asset Moved: [${assetType.toUpperCase()}] re-positioned.`);
+            });
+
+            marker.on('click', (e) => {
+                L.DomEvent.stopPropagation(e);
+                if (isPenActive) return;
+                logEvent(`Asset Removed: Cleared [${assetType.toUpperCase()}].`);
+                map.removeLayer(marker);
+                placedMarkers = placedMarkers.filter(m => m !== marker);
+            });
+
+            placedMarkers.push(marker);
+            logEvent(`Manual Asset Placed: [${assetType.toUpperCase()}] dropped.`);
+            selectAssetToPlace(null);
+        }
+
+        drawCanvas.addEventListener('mousedown', startLineStroke);
+        drawCanvas.addEventListener('mouseup', endLineStroke);
+        drawCanvas.addEventListener('mousemove', drawLineSegment);
+        drawCanvas.addEventListener('touchstart', (e) => { if(e.touches[0]) startLineStroke(e.touches[0]); });
+        drawCanvas.addEventListener('touchend', endLineStroke);
+        drawCanvas.addEventListener('touchmove', (e) => { if(e.touches[0]) drawLineSegment(e.touches[0]); });
+
+        function startLineStroke(e) {
+            if (!isPenActive) return;
+            isDrawing = true;
+            currentLineStroke = [];
+            appendSegmentPoint(e);
+        }
+
+        function drawLineSegment(e) {
+            if (!isDrawing || !isPenActive) return;
+            appendSegmentPoint(e);
+            redrawCanvasStack();
+        }
+
+        function appendSegmentPoint(e) {
+            const rect = drawCanvas.getBoundingClientRect();
+            const x = (e.clientX || e.pageX || (e.touches && e.touches[0].clientX)) - rect.left;
+            const y = (e.clientY || e.pageY || (e.touches && e.touches[0].clientY)) - rect.top;
+            currentLineStroke.push({ x: x, y: y });
+        }
+
+        function endLineStroke() {
+            if (!isDrawing) return;
+            isDrawing = false;
+            if (currentLineStroke.length > 0) drawingLinesStack.push(currentLineStroke);
+            currentLineStroke = [];
+        }
+
+        function redrawCanvasStack() {
+            drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+            drawCtx.strokeStyle = '#dc2626'; drawCtx.lineWidth = 3; drawCtx.lineCap = 'round'; drawCtx.lineJoin = 'round';
+            drawingLinesStack.forEach(line => renderLineArray(line));
+            if (isDrawing && currentLineStroke.length > 0) renderLineArray(currentLineStroke);
+        }
+
+        function renderLineArray(line) {
+            if (line.length < 1) return;
+            drawCtx.beginPath(); drawCtx.moveTo(line[0].x, line[0].y);
+            for (let i = 1; i < line.length; i++) drawCtx.lineTo(line[i].x, line[i].y);
+            drawCtx.stroke();
+        }
+
+        function undoLastLine() {
+            if (drawingLinesStack.length > 0) {
+                drawingLinesStack.pop();
+                redrawCanvasStack();
+                logEvent("Last Line Erased: Wiped the last drawn freehand mark only.");
+            } else {
+                logEvent("Eraser Alert: No active pen lines remaining on overlay layer.");
+            }
+        }
+
+        function clearDrawings() {
+            drawingLinesStack = []; currentLineStroke = [];
+            drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+            logEvent("Tactical freehand overlays completely wiped.");
+        }
+
+        function clearMapAssets() {
+            if (!map) return;
+            placedMarkers.forEach(marker => map.removeLayer(marker));
+            placedMarkers = [];
+            if (persistentTargetPin) { map.removeLayer(persistentTargetPin); persistentTargetPin = null; }
+            logEvent("Command Screen Clear: Wiped field tracking elements.");
+        }
+
+        function terminateSearch() {
+            logEvent(`Incident tracking array closed. Session terminated for Unit [${activeSearcherId}].`);
+            clearMapAssets(); clearDrawings();
+            if(isMapLocked) toggleMapLock();
+            selectAssetToPlace(null);
+            switchScreen('screenSignIn');
+        }
+
+        function triggerEmergencyAlert() {
+            activeEmergency = true;
+            document.getElementById('emergencyStrobe').style.display = 'block';
+            logEvent(`🚨 CRITICAL DISTRESS FACTOR: SEARCHER NO. [${activeSearcherId}] IS DOWN! S.O.S. BROADCAST ENFORCED NETWORK-WIDE.`);
+        }
+
+        function resetEmergencyAlert() {
+            if(activeEmergency) {
+                activeEmergency = false;
+                document.getElementById('emergencyStrobe').style.display = 'none';
+                logEvent(`Emergency distress beacon signal for Unit [${activeSearcherId}] successfully reset.`);
+            }
+        }
+
+        function playK9VoiceProtocol(category) {
+            window.speechSynthesis.cancel(); 
+            const banner = document.getElementById('voiceStatusBanner');
+            banner.style.display = 'block';
+            let proceduralInstructionsText = "";
+
+            if (category === 'cpr') {
+                proceduralInstructionsText = "Beginning Canine C P R Protocol. Step 1. Check for pulse and breathing. If absent, lay the dog on its right side on a firm surface. Step 2. Pull the tongue forward out of the mouth and close the jaws. Step 3. Place both hands directly over the widest part of the chest cage. Step 4. Compress the chest one point five to two inches deep at a constant rate of one hundred to one hundred and twenty compressions per minute. Step 5. Give two breaths into the nose after every thirty chest compressions. Continue this ratio continuously without stopping until help arrives.";
+            } else if (category === 'snake') {
+                proceduralInstructionsText = "Beginning Canine Snake Bite Protocol. Step 1. Restrain the animal immediately and keep them completely calm to slow the spread of venom. Step 2. Locate the bite wound site. Step 3. Keep the bitten area or extremity positioned completely below the level of the heart. Step 4. Flush the wound thoroughly with clean water or sterile saline to remove exterior surface venom. Step 5. Do not apply an ice pack and do not cut into the wound. Step 6. Transport directly to emergency medical support for immediate antivenom administration.";
+            } else if (category === 'eye') {
+                proceduralInstructionsText = "Beginning Canine Eye Injury Protocol. Step 1. Prevent the dog from scratching or rubbing the face completely. Use a cone or hold the paws. Step 2. Flush the injured eye continuously with clean, sterile water or sterile saline solution for three minutes to remove foreign debris. Step 3. If the eyeball is prolapsed out of the socket, do not touch it or try to push it back in. Step 4. Cover the eye immediately with a clean, damp cloth dressing. Step 5. Seek instant veterinary intervention.";
+            } else if (category === 'paw') {
+                proceduralInstructionsText = "Beginning Paw Injury Protocol. Step 1. Examine the footpad for foreign body objects like glass, metal, or thorns. Step 2. Flush the open laceration under running water to clear field dirt. Step 3. Apply firm, constant pressure with a clean cloth patch directly to the bleeding pad site for two full minutes. Step 4. Once bleeding decreases, apply a clean protective protective wrap or bandage over the paw. Step 5. Check carefully to ensure the bandage is not wrapped too tightly around the joint.";
+            } else if (category === 'bleeding') {
+                proceduralInstructionsText = "Beginning Excessive Bleeding Protocol. Step 1. Locate the exact source of arterial or venous bleeding. Step 2. Place a clean sterile compress pad or cloth directly over the open wound site. Step 3. Apply maximum constant direct body pressure with both hands. Do not lift the cloth to check the wound. Step 4. If blood bleeds completely through the cloth dressing, pack more clean layers directly on top and continue heavy manual pressure. Step 5. Wrap a firm pressure bandage over the pack to maintain compression while moving.";
+            } else if (category === 'heat') {
+                proceduralInstructionsText = "Beginning Heat Exhaustion Protocol. Step 1. Move the animal out of direct sunlight into an air conditioned space or deep shade immediately. Step 2. Place a cool, wet towel dressing over the back, neck, and abdomen. Step 3. Direct an active fan or moving air current onto the animal. Step 4. Wet the pads of the paws thoroughly with cool water. Step 5. Offer small amounts of cool drinking water continuously. Do not force water down the throat. Step 6. Monitor internal temperature and stop cooling steps once the core drops down to one hundred and three degrees.";
+            }
+
+            banner.innerText = "📢 BROADCASTING PROTOCOL: " + category.toUpperCase();
+            const vocalUtterance = new SpeechSynthesisUtterance(proceduralInstructionsText);
+            vocalUtterance.rate = 0.95; 
+            vocalUtterance.onend = () => { banner.style.display = 'none'; };
+            window.speechSynthesis.speak(vocalUtterance);
+        }
+
+        function stopVoiceBroadcast() { window.speechSynthesis.cancel(); document.getElementById('voiceStatusBanner').style.display = 'none'; }
+
+        function playbackControl(action) {
+            const status = document.getElementById('replayStatus');
+            clearInterval(replayInterval);
+            if (action === 'play') {
+                status.innerText = "Status: Replaying Logs...";
+                let index = 0;
+                replayInterval = setInterval(() => {
+                    if (index < historicalLogs.length) { status.innerText = `Replaying item ${index + 1}/${historicalLogs.length}`; index++; } 
+                    else { clearInterval(replayInterval); status.innerText = "Status: Replay Complete"; }
+                }, 1000);
+            } else if (action === 'pause') { status.innerText = "Status: Playback Paused"; } 
+            else if (action === 'rewind') { status.innerText = "Status: Rewound to Start"; }
+        }
+
+        function logEvent(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            historicalLogs.unshift({ time: timestamp, text: message });
+            const list = document.getElementById('logList');
+            if(list) {
+                list.innerHTML = historicalLogs.map(log => `<li class="log-item"><span class="log-time">[${log.time}]</span> ${log.text}</li>`).join('');
+            }
+        }
+
+        function openHistoricalLogs() { logEvent("Assembled real-time analytical activity final report logs."); switchScreen('screenReport'); }
+        function emailReport() {
+            let bodyText = "TACNET TACTICAL INCIDENT OPERATIONS LOG\n=========================================\n\n";
+            historicalLogs.forEach(l => { bodyText += `[${l.time}] ${l.text}\n`; });
+            window.location.href = `mailto:?subject=TACNET Tactical Search Data&body=${encodeURIComponent(bodyText)}`;
+        }
+        function printReport() { window.print(); }
+    </script>
+</body>
+</html>
