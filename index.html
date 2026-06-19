@@ -19,7 +19,7 @@
             position: fixed;
         }
 
-        /* 1. MASTER LANDING HOME PAGE PANEL USING YOUR EXACT DESIGN */
+        /* PAGE 1: THE TACNET HOMEPAGE BY ITSELF PERIOD */
         #home-page {
             position: absolute;
             top: 0;
@@ -29,15 +29,10 @@
             background: url('IMAGE FOR TAC.png2.jpg') no-repeat center center;
             background-size: cover;
             z-index: 150;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end; /* Pushes the button to the bottom so it doesn't cover your image text */
-            align-items: center;
-            padding-bottom: 50px;
-            box-sizing: border-box;
+            cursor: pointer; /* Indicates the entire page can be clicked/tapped */
         }
 
-        /* 2. MATCHING SECURITY LOGIN PANEL */
+        /* PAGE 2: MATCHING SIGN IN PAGE FOR OFFICERS */
         #login-panel {
             position: absolute;
             top: 0;
@@ -47,14 +42,14 @@
             background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('IMAGE FOR TAC.png2.jpg') no-repeat center center;
             background-size: cover;
             z-index: 100;
-            display: none;
+            display: none; /* Hidden until Page 1 is tapped */
             flex-direction: column;
             justify-content: center;
             align-items: center;
         }
 
         .login-box {
-            background-color: rgba(7, 20, 12, 0.95);
+            background-color: rgba(7, 20, 12, 0.96);
             border: 2px solid #d4af37; /* Matching Gold Border */
             padding: 20px;
             border-radius: 5px;
@@ -97,7 +92,7 @@
             font-size: 14px;
         }
 
-        /* Rugged Tactical Button */
+        /* Rugged Tactical Button Styling */
         .tactical-btn {
             background-color: #d4af37;
             color: #07140c;
@@ -108,8 +103,7 @@
             font-family: monospace;
             cursor: pointer;
             text-transform: uppercase;
-            width: 85%;
-            max-width: 280px;
+            width: 100%;
             box-shadow: 0 4px 0 #997a15;
             border-radius: 4px;
         }
@@ -125,7 +119,7 @@
             color: #00ff66;
         }
 
-        /* 3. CORE SATELLITE MAP INTERFACE */
+        /* PAGE 3: THE TACNET APP IN FULL */
         #map {
             width: 100%;
             height: 100%;
@@ -152,7 +146,7 @@
             pointer-events: none;
         }
 
-        /* Dashboard Overlays */
+        /* Mobile HUD Overlays */
         .dashboard-overlay {
             position: absolute;
             bottom: 10px;
@@ -234,12 +228,10 @@
 </head>
 <body>
 
-    <!-- 1. LIVE MASTER HOME PAGE FROM YOUR DESIGN -->
-    <div id="home-page">
-        <button class="tactical-btn" onclick="engageSecurePortal()">Engage Secure Portal</button>
-    </div>
+    <!-- PAGE 1: THE TACNET HOMEPAGE BY ITSELF PERIOD -->
+    <div id="home-page" onclick="goToPageTwo()"></div>
 
-    <!-- 2. MATCHING LOGIN PANEL -->
+    <!-- PAGE 2: MATCHING SIGN IN PAGE FOR OFFICERS -->
     <div id="login-panel">
         <div class="login-box">
             <h2>CREDENTIAL VERIFICATION</h2>
@@ -263,15 +255,16 @@
                 <input type="password" id="officer-pass" placeholder="••••••••" required>
             </div>
             
-            <button class="tactical-btn" style="width:100%;" onclick="verifyOfficerLogon()">Authorize Terminal</button>
+            <!-- Click to go to Page 3 -->
+            <button class="tactical-btn" onclick="verifyOfficerLogon()">Authorize Terminal</button>
             <div id="status-msg"></div>
         </div>
     </div>
 
-    <!-- 3. ACTIVE SATELLITE COMMAND GRAPH -->
+    <!-- PAGE 3: THE TACNET APP IN FULL -->
     <div id="map"></div>
 
-    <!-- Mobile HUD Overlay -->
+    <!-- Unified Mobile HUD Dashboard Overlay -->
     <div class="dashboard-overlay" id="main-dashboard" style="display: none;">
         
         <!-- Live Mutual Aid Roster Board -->
@@ -319,7 +312,8 @@
         const testRoom = "tacnet-va-mock-search";
         const eventSource = new EventSource(`https://sse.nodeflux.org/rooms/${testRoom}/stream`);
 
-        function engageSecurePortal() {
+        // Tapping anywhere on the homepage triggers page 2
+        function goToPageTwo() {
             document.getElementById('home-page').style.display = 'none';
             document.getElementById('login-panel').style.display = 'flex';
         }
@@ -376,6 +370,7 @@
             document.getElementById('search-logs').innerHTML = "<b>[OPS LOG]</b> Logs reset.";
         }
 
+        // Process authorized log in to go to Page 3
         function verifyOfficerLogon() {
             const idInput = document.getElementById('officer-email').value.trim();
             const pass = document.getElementById('officer-pass').value;
