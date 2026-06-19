@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -180,12 +181,12 @@
         // Spin up the map grid and start broadcasting coordinates
         function initializeTacticalMap(officerEmail) {
             // Default center point over Virginia
-            tacticalMap = L.map('map').setView([37.5, -79.0], 14);
+            tacticalMap = L.map('map').setView([37.5, -79.0], 16);
 
-            // Ultra-reliable OpenStreetMap layout (Fixed layer)
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            // High-precision live satellite imagery feed
+            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
                 maxZoom: 19,
-                attribution: 'TACNET ACTIVE GRID'
+                attribution: 'TACNET SATELLITE COMMAND'
             }).addTo(tacticalMap);
 
             // Listen for other units walking around the yard and draw them live
