@@ -182,9 +182,10 @@
             // Default center point over Virginia
             tacticalMap = L.map('map').setView([37.5, -79.0], 14);
 
-            // High-contrast tactical map theme
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-                attribution: 'TACNET LOCAL MOCK GRID'
+            // Ultra-reliable OpenStreetMap layout (Fixed layer)
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: 'TACNET ACTIVE GRID'
             }).addTo(tacticalMap);
 
             // Listen for other units walking around the yard and draw them live
