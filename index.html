@@ -4,65 +4,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TACNET - Multi-Agency Task Force Search App</title>
-    <!-- Tailwind CSS for functional positioning -->
+    <!-- Tailwind CSS for structural positioning -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Appwrite Web SDK -->
     <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.0"></script>
     <style>
-        /* Smooth subtle breathing animation to give the entire interface a live operational feel */
-        @keyframes tacticalPulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.01); }
-            100% { transform: scale(1); }
-        }
-        .live-panel {
-            animation: tacticalPulse 12s ease-in-out infinite;
+        /* Smooth upward slide transition when the user clicks the homepage */
+        .slide-up {
+            transform: translateY(-100%);
+            transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
         }
     </style>
 </head>
-<body class="bg-[#02040a] text-white font-sans min-h-screen flex flex-col items-center justify-center p-0 m-0 overflow-x-hidden">
+<body class="bg-[#02040a] text-white font-sans min-h-screen flex items-center justify-center p-0 m-0 overflow-hidden">
 
-    <!-- Main Container: Locks strictly to your exact image design proportions -->
-    <div class="relative w-full max-w-[500px] aspect-[9/16] bg-black shadow-2xl overflow-hidden live-panel border border-zinc-900">
+    <!-- Main Tactical Frame -->
+    <div class="relative w-full max-w-[500px] aspect-[9/16] bg-[#030712] shadow-2xl overflow-hidden border border-zinc-900">
         
-        <!-- RESTORED: Your exact design file containing the satellite, earth, and brushed rusted metal cracked text -->
-        <img src="IMAGE FOR TAC.png2.jpg" alt="TACNET Landing Page" class="absolute inset-0 w-full h-full object-cover z-0">
-
-        <!-- Functional Overlay: Placed cleanly over the original button area without blocking the text -->
-        <div class="absolute inset-0 z-10 flex flex-col justify-end items-center pb-[28%] px-6 bg-gradient-to-t from-black/40 via-transparent to-transparent">
+        <!-- PAGE 1: YOUR FULL HOMEPAGE (Clicks anywhere to reveal Page 2) -->
+        <div id="homepage-layer" onclick="revealLoginPortal()" class="absolute inset-0 z-20 cursor-pointer select-none">
+            <!-- Your exact, untouched design file with the satellite, earth, and cracked text -->
+            <img src="landing.jpg" alt="TACNET Landing Page" class="w-full h-full object-cover">
             
-            <!-- Appwrite Status Indicator (Discreetly sits right above the input fields) -->
-            <div id="connection-status" class="mb-3 inline-flex items-center gap-1.5 bg-black/90 px-3 py-1 rounded-full border border-emerald-500/40 text-[10px] text-emerald-400 tracking-widest uppercase shadow-md font-mono">
+            <!-- Discreet pulsing prompt at the very bottom letting officers know to tap -->
+            <div class="absolute bottom-6 w-full text-center animate-pulse">
+                <span class="bg-black/80 px-4 py-1.5 rounded border border-zinc-700 text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-bold">
+                    [ Tap Anywhere to Secure Entry ]
+                </span>
+            </div>
+        </div>
+
+        <!-- PAGE 2: SECURE SIGN-IN PORTAL (Hidden directly underneath Page 1) -->
+        <div class="absolute inset-0 z-10 flex flex-col justify-center items-center px-6 bg-gradient-to-b from-[#030712] via-zinc-950 to-black">
+            
+            <!-- Appwrite System Status -->
+            <div id="connection-status" class="mb-4 inline-flex items-center gap-1.5 bg-zinc-900/80 px-3 py-1 rounded border border-emerald-500/30 text-[10px] text-emerald-400 tracking-widest uppercase font-mono">
                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                Appwrite Link Active
+                Appwrite Mainframe Secure
             </div>
 
-            <!-- Operational Login Portal Box -->
-            <div id="login-portal" class="bg-black/90 border border-zinc-800/80 p-4 rounded-md w-full max-w-[340px] shadow-2xl backdrop-blur-md">
-                <form id="auth-form" class="space-y-3 text-left">
+            <!-- Login Container Box -->
+            <div id="login-portal" class="bg-zinc-900/40 border border-zinc-800 p-5 rounded-md w-full max-w-[340px] shadow-2xl backdrop-blur-md">
+                <div class="text-center mb-4">
+                    <h2 class="text-xl font-black tracking-wider text-gray-300 uppercase">Credential Verification</h2>
+                    <p class="text-[9px] text-zinc-500 uppercase tracking-widest mt-0.5">Multi-Agency Task Force Access Only</p>
+                </div>
+
+                <form id="auth-form" class="space-y-4 text-left">
                     <div>
-                        <label class="block text-[10px] uppercase tracking-widest text-zinc-400 mb-0.5 font-bold">Agency Email</label>
-                        <input type="email" id="officer-email" required class="w-full bg-zinc-950/90 border border-zinc-700/60 rounded px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-[#dfb76c] transition-colors" placeholder="officer@agency.gov">
+                        <label class="block text-[10px] uppercase tracking-widest text-zinc-400 mb-1 font-bold">Agency Email Address</label>
+                        <input type="email" id="officer-email" required class="w-full bg-black/80 border border-zinc-700/60 rounded px-3 py-2 text-xs text-white focus:outline-none focus:border-[#dfb76c] transition-colors font-mono" placeholder="officer@agency.gov">
                     </div>
                     <div>
-                        <label class="block text-[10px] uppercase tracking-widest text-zinc-400 mb-0.5 font-bold">Secure PIN / Password</label>
-                        <input type="password" id="officer-password" required class="w-full bg-zinc-950/90 border border-zinc-700/60 rounded px-2.5 py-1.5 text-xs text-white focus:outline-none focus:border-[#dfb76c] transition-colors" placeholder="••••••••">
+                        <label class="block text-[10px] uppercase tracking-widest text-zinc-400 mb-1 font-bold">Secure Access PIN / Password</label>
+                        <input type="password" id="officer-password" required class="w-full bg-black/80 border border-zinc-700/60 rounded px-3 py-2 text-xs text-white focus:outline-none focus:border-[#dfb76c] transition-colors font-mono" placeholder="••••••••">
                     </div>
                     
-                    <!-- This sits directly over the tactical button area to activate the secure stream -->
-                    <button type="submit" class="w-full bg-gradient-to-r from-[#dfb76c] to-[#b8934b] text-black font-black text-xs uppercase tracking-widest py-2.5 rounded shadow-lg hover:brightness-110 transition-all duration-200 active:scale-[0.97] mt-1">
-                        Secure Access Login
+                    <button type="submit" class="w-full bg-gradient-to-r from-[#dfb76c] to-[#b8934b] text-black font-black text-xs uppercase tracking-widest py-3 rounded shadow-lg hover:brightness-110 transition-all duration-200 active:scale-[0.97] mt-2">
+                        Authorize Terminal
                     </button>
                 </form>
-                <div id="auth-error" class="hidden mt-2 text-[10px] uppercase tracking-wider text-red-400 font-bold text-center"></div>
+                
+                <div id="auth-error" class="hidden mt-3 text-[10px] uppercase tracking-wider text-red-400 font-bold text-center"></div>
             </div>
 
+            <!-- Return Control -->
+            <button onclick="hideLoginPortal()" class="mt-6 text-[9px] uppercase tracking-widest text-zinc-500 hover:text-zinc-300 transition-colors font-bold">
+                ← Back to Tactical Display
+            </button>
         </div>
+
     </div>
 
-    <!-- Core Appwrite Logic Script Integration -->
+    <!-- System Core Logic -->
     <script>
-        // Backend Initialization using your project details
+        // Appwrite Cloud Configuration
         const client = new Appwrite.Client();
         client
             .setEndpoint('https://nyc.cloud.appwrite.io/v1')
@@ -70,7 +86,17 @@
 
         const account = new Appwrite.Account(client);
 
-        // Secure Authentication submission to Appwrite Cloud
+        // Flow Mechanics: Slides your homepage up out of the way
+        function revealLoginPortal() {
+            document.getElementById('homepage-layer').classList.add('slide-up');
+        }
+
+        // Flow Mechanics: Slides your homepage back down into view
+        function hideLoginPortal() {
+            document.getElementById('homepage-layer').classList.remove('slide-up');
+        }
+
+        // Appwrite Secure Authentication Stream
         document.getElementById('auth-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('officer-email').value;
@@ -80,10 +106,10 @@
             errorDiv.classList.add('hidden');
 
             try {
-                // Generates official officer session
+                // Initialize the official officer field session
                 await account.createEmailPasswordSession(email, password);
                 
-                // Routes authenticated user to the main task force dashboard
+                // Successful verification: Forward directly into full TACNET operations
                 window.location.href = 'dashboard.html';
             } catch (error) {
                 errorDiv.innerText = `Access Denied: ${error.message}`;
