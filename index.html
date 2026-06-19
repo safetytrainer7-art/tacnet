@@ -1,0 +1,37 @@
+/* Full-Screen Space Canvas Backdrop */
+#space-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1; /* Sits permanently behind all app content */
+  pointer-events: none;
+  background: #020617; /* Space baseline void color */
+}
+
+/* See-Through Frosted Glass Panels */
+.card, .opanel, .repwrap, #side {
+  background: rgba(10, 24, 12, 0.65) !important; /* See-through dark hunter green tint */
+  backdrop-filter: blur(12px) saturate(160%) !important; /* Frosted refraction layer */
+  -webkit-backdrop-filter: blur(12px) saturate(160%) !important;
+  border: 1.5px solid rgba(42, 85, 48, 0.5) !important; /* Subtle green borders */
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+/* Brilliant See-Through Glass Heading Text Layout */
+.logo-t1 {
+  font-family: 'Black Ops One', cursive;
+  font-size: clamp(50px, 9vw, 78px);
+  line-height: .9;
+  background: linear-gradient(135deg, rgba(255,215,0,0.9), rgba(255,255,255,0.2), rgba(255,215,0,0.9));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent; /* Makes text see-through, catching the background gradient */
+  background-clip: text;
+  letter-spacing: 2px;
+}
+
+/* Ensure the app shell doesn't completely block out the canvas view */
+#shell {
+  background: transparent !important;
+}
+#s-land, #s-dash, #body {
+  background: transparent !important;
+}
