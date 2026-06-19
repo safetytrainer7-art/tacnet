@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TACNET COMMAND</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TACNET SYSTEMS</title>
+    <!-- Leaflet Map CSS for tactical mapping -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         /* Rugged, military-grade dark hunter green and high-contrast theme */
@@ -16,6 +17,7 @@
             font-family: 'Courier New', Courier, monospace;
             color: #00ff66; /* Neon Green LED look */
             overflow: hidden;
+            position: fixed;
         }
 
         /* Full screen tactical map backdrop */
@@ -28,22 +30,22 @@
             z-index: 1;
         }
 
-        /* Rugged, cracked gold lettering header */
+        /* Compact header optimized for mobile scaling screens */
         .tactical-header {
             position: absolute;
-            top: 10px;
+            top: 8px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 10;
-            font-size: 24px;
+            font-size: 16px;
             font-weight: bold;
             color: #d4af37; /* Gold */
-            text-shadow: 2px 2px 4px #000, -1px -1px 0 #000, 1px -1px 0 #000;
-            letter-spacing: 2px;
+            text-shadow: 2px 2px 3px #000, -1px -1px 0 #000, 1px -1px 0 #000;
+            letter-spacing: 1px;
             text-transform: uppercase;
             text-align: center;
+            width: 95%;
             pointer-events: none;
-            width: 90%;
         }
 
         /* Secure Login Overlay panel */
@@ -53,7 +55,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(11, 29, 18, 0.95); /* Solid Dark Green Shield */
+            background-color: rgba(11, 29, 18, 0.98); /* Solid Dark Green Shield */
             z-index: 100;
             display: flex;
             flex-direction: column;
@@ -64,227 +66,314 @@
         .login-box {
             background-color: #07140c;
             border: 2px solid #d4af37; /* Gold Border */
-            padding: 30px;
+            padding: 20px;
             border-radius: 5px;
             box-shadow: 0 0 15px rgba(0, 255, 102, 0.3);
             width: 85%;
-            max-width: 400px;
+            max-width: 340px;
             text-align: center;
+            box-sizing: border-box;
         }
 
         .login-box h2 {
             color: #d4af37;
-            margin-bottom: 20px;
-            font-size: 22px;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 18px;
         }
 
         .input-group {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             text-align: left;
         }
 
         .input-group label {
             display: block;
-            font-size: 12px;
+            font-size: 11px;
             margin-bottom: 5px;
             text-transform: uppercase;
         }
 
         .input-group input {
             width: 100%;
-            padding: 10px;
+            padding: 8px;
             background-color: #112217;
             border: 1px solid #00ff66;
             color: #00ff66;
             font-family: monospace;
             box-sizing: border-box;
+            font-size: 14px;
         }
 
         .tactical-btn {
             background-color: #d4af37;
             color: #07140c;
             border: none;
-            padding: 12px 25px;
-            font-size: 16px;
+            padding: 10px 20px;
+            font-size: 14px;
             font-weight: bold;
             font-family: monospace;
             cursor: pointer;
             text-transform: uppercase;
             width: 100%;
-            box-shadow: 0 4px 0 #997a15;
+            box-shadow: 0 3px 0 #997a15;
         }
 
         .tactical-btn:active {
-            transform: translateY(4px);
+            transform: translateY(3px);
             box-shadow: none;
         }
 
         #status-msg {
-            margin-top: 15px;
-            font-size: 14px;
+            margin-top: 10px;
+            font-size: 12px;
             color: #00ff66;
         }
 
-        /* Complete Command Module Dashboard (Overlay elements) */
+        /* Compact Dashboard Container for mobile viewports */
         .dashboard-overlay {
             position: absolute;
-            bottom: 20px;
-            left: 10px;
-            right: 10px;
+            bottom: 10px;
+            left: 8px;
+            right: 8px;
             z-index: 5;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 6px;
             pointer-events: none;
+            max-height: 50%;
         }
 
         .dashboard-card {
-            background-color: rgba(7, 20, 12, 0.9);
+            background-color: rgba(7, 20, 12, 0.92);
             border: 1px solid #00ff66;
-            border-left: 4px solid #d4af37;
-            padding: 12px;
+            border-left: 3px solid #d4af37;
+            padding: 8px;
             border-radius: 4px;
             pointer-events: auto;
-            max-height: 180px;
-            overflow-y: auto;
+            box-sizing: border-box;
         }
 
         .card-title {
             color: #d4af37;
             font-weight: bold;
-            font-size: 14px;
-            margin-bottom: 8px;
+            font-size: 12px;
+            margin-bottom: 6px;
             text-transform: uppercase;
             border-bottom: 1px dashed #00ff66;
-            padding-bottom: 4px;
-        }
-
-        .med-grid {
+            padding-bottom: 2px;
             display: flex;
-            gap: 5px;
+            justify-content: space-between;
         }
 
-        .med-btn {
+        .med-grid, .search-grid {
+            display: flex;
+            gap: 4px;
+        }
+
+        .med-btn, .action-btn {
             background-color: #112217;
             border: 1px solid #d4af37;
             color: #00ff66;
             font-family: monospace;
-            font-size: 11px;
-            padding: 6px;
+            font-size: 10px;
+            padding: 5px;
             cursor: pointer;
             flex: 1;
             text-align: center;
+            text-transform: uppercase;
         }
 
-        .med-btn:hover, .med-btn.active {
+        .med-btn:active, .action-btn:active, .action-btn.active {
             background-color: #d4af37;
             color: #07140c;
         }
 
-        #med-instructions {
-            margin-top: 8px;
+        .output-box {
+            margin-top: 5px;
             font-size: 11px;
-            line-height: 1.4;
+            line-height: 1.3;
             color: #ffffff;
             background: #020704;
-            padding: 6px;
+            padding: 5px;
             border-radius: 3px;
+            max-height: 60px;
+            overflow-y: auto;
         }
 
         .roster-list {
-            font-size: 12px;
+            font-size: 11px;
             margin: 0;
-            padding-left: 15px;
+            padding-left: 12px;
+            max-height: 50px;
+            overflow-y: auto;
+        }
+        
+        .roster-list li {
+            margin-bottom: 2px;
         }
     </style>
 </head>
 <body>
 
-    <div class="tactical-header">TACNET MULTI-AGENCY TASK FORCE</div>
+    <!-- Compact Tactical Header -->
+    <div class="tactical-header" id="main-title">TACNET TASK FORCE INITIALIZATION</div>
 
+    <!-- Secure Authorization Shield -->
     <div id="login-panel">
         <div class="login-box">
-            <h2>TACTICAL LOGIN</h2>
+            <h2>TACTICAL VERIFICATION</h2>
             <div class="input-group">
-                <label>Duty Email / Unit ID</label>
-                <input type="email" id="officer-email" placeholder="e.g., unit1, unit2" required>
+                <label>Duty ID / Callsign</label>
+                <input type="text" id="officer-email" placeholder="e.g., unit1, unit2" required autocomplete="off" autocapitalize="none">
             </div>
             <div class="input-group">
-                <label>Security Access Code</label>
+                <label>Security Code</label>
                 <input type="password" id="officer-pass" placeholder="••••••••" required>
             </div>
-            <button class="tactical-btn" onclick="verifyOfficerLogon()">Authorize Access</button>
+            <button class="tactical-btn" onclick="verifyOfficerLogon()">Authorize Terminal</button>
             <div id="status-msg"></div>
         </div>
     </div>
 
+    <!-- Active Satellite Grid Map Layout -->
     <div id="map"></div>
 
+    <!-- Complete Integrated Mobile Dashboard Overlay -->
     <div class="dashboard-overlay" id="main-dashboard" style="display: none;">
+        
+        <!-- Live Mission Roster Board -->
         <div class="dashboard-card">
-            <div class="card-title">Active Mission Roster</div>
+            <div class="card-title"><span>Active Searchers & K9 Teams</span> <span style="color:#00ff66;" id="searcher-count">[1 ACTIVE]</span></div>
             <ul class="roster-list" id="mission-roster">
-                <li>Waiting for active unit pings...</li>
+                <li>Awaiting team logon pings...</li>
             </ul>
         </div>
 
+        <!-- Integrated Search Operations Control -->
         <div class="dashboard-card">
-            <div class="card-title">K9 Emergency Medical Module (Hands-Free Active)</div>
+            <div class="card-title">Search Pattern Control</div>
+            <div class="search-grid">
+                <button class="action-btn" id="btn-grid" onclick="toggleSearchPattern('Grid Search')">Grid Pattern</button>
+                <button class="action-btn" id="btn-perimeter" onclick="toggleSearchPattern('Perimeter Lock')">Perimeter</button>
+                <button class="action-btn" onclick="clearSearchLogs()">Reset Log</button>
+            </div>
+            <div id="search-logs" class="output-box"><b>[OPS LOG]</b> Ground units staging. Ready to deploy search patterns.</div>
+        </div>
+
+        <!-- Integrated K9 First Aid Emergency Module -->
+        <div class="dashboard-card">
+            <div class="card-title">Hands-Free K9 Medical Field Module</div>
             <div class="med-grid">
                 <button class="med-btn" onclick="showMed('cpr')">K9 CPR</button>
-                <button class="med-btn" onclick="showMed('snake')">SNAKE BITE</button>
-                <button class="med-btn" onclick="showMed('bleed')">BLEEDING</button>
+                <button class="med-btn" onclick="showMed('snake')">Snake Bite</button>
+                <button class="med-btn" onclick="showMed('bleed')">Bleeding</button>
             </div>
-            <div id="med-instructions">Select emergency medical protocols above to display instant tactical instructions.</div>
+            <div id="med-instructions" class="output-box">Select emergency medical protocols above to display instant tactical instructions.</div>
         </div>
     </div>
 
+    <!-- Core Mapping Framework -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <script>
         let tacticalMap;
         let activeMarkers = {};
+        let currentUserId = "UNIT1";
         
         // Setup the secure public broadcast stream for tonight's field exercise
         const testRoom = "tacnet-va-mock-search";
         const eventSource = new EventSource(`https://sse.nodeflux.org/rooms/${testRoom}/stream`);
 
-        // Handle Medical Module Display Changes
+        // Medical Module Content
         const medProtocols = {
-            cpr: "<b>[K9 CPR PROTOCOL]</b><br>1. Lay K9 on right side. <br>2. Compress chest 100-120 BPM over widest part of ribcage.<br>3. 30 compressions to 2 breaths. Clear airway.",
-            snake: "<b>[K9 SNAKE BITE PROTOCOL]</b><br>1. Restrict movement immediately; keep bite below heart level.<br>2. DO NOT cut or apply ice.<br>3. Identify species if safe. Transport rapidly to emergency vet.",
-            bleed: "<b>[K9 EXCESSIVE BLEEDING]</b><br>1. Apply direct pressure using sterile field dressing.<br>2. Elevate limb if applicable.<br>3. Apply pressure bandage. If bleeding breaks through, add layer; do not remove base bandage."
+            cpr: "<b>[K9 CPR PROTOCOL]</b><br>1. Lay K9 on right side. Compress widest part of ribcage 100-120 BPM.<br>2. 30 compressions to 2 rescue breaths. Ensure airway is clear.",
+            snake: "<b>[K9 SNAKE BITE]</b><br>1. Immobilize K9 immediately. Keep bite below heart level.<br>2. DO NOT apply ice or tourniqets. Transport rapidly to emergency vet facility.",
+            bleed: "<b>[K9 EXCESSIVE BLEEDING]</b><br>1. Apply steady direct pressure using clean field dressing.<br>2. Pack dressing over wound site. Bandage firmly. Do not remove base layers."
         };
 
         function showMed(type) {
             document.getElementById('med-instructions').innerHTML = medProtocols[type];
         }
 
-        // Grant instant entry and unlock complete system dashboard
-        function verifyOfficerLogon() {
-            const email = document.getElementById('officer-email').value;
-            const pass = document.getElementById('officer-pass').value;
-            const status = document.getElementById('status-msg');
+        // Active Search Pattern Operations Simulation
+        let activePattern = null;
+        let searchVisuals = [];
 
-            if (email === "" || pass.length < 4) {
-                status.style.color = "#ff3333";
-                status.innerText = "INVALID OPERATIONAL ENTRY";
+        function toggleSearchPattern(patternName) {
+            const logBox = document.getElementById('search-logs');
+            
+            // Clean up any old visible search circles/squares on map
+            searchVisuals.forEach(layer => tacticalMap.removeLayer(layer));
+            searchVisuals = [];
+
+            if (activePattern === patternName) {
+                activePattern = null;
+                logBox.innerHTML = `<b>[OPS LOG]</b> ${patternName} cancelled by Command. Ready for redeployment.`;
+                document.getElementById('btn-grid').classList.remove('active');
+                document.getElementById('btn-perimeter').classList.remove('active');
                 return;
             }
 
-            status.innerText = "SYNCHRONIZING SECURE CHANNELS...";
+            activePattern = patternName;
+            logBox.innerHTML = `<b>[OPS LOG]</b> ${patternName.toUpperCase()} DEPLOYED. Drawing coordinates around units...`;
+            
+            if (patternName === 'Grid Search') {
+                document.getElementById('btn-grid').classList.add('active');
+                document.getElementById('btn-perimeter').classList.remove('active');
+            } else {
+                document.getElementById('btn-perimeter').classList.add('active');
+                document.getElementById('btn-grid').classList.remove('active');
+            }
+
+            // Draw operational boundaries centered on the map view point
+            const center = tacticalMap.getCenter();
+            if (patternName === 'Grid Search') {
+                // Draw a grid rectangle overlay
+                const bounds = [
+                    [center.lat - 0.003, center.lng - 0.004],
+                    [center.lat + 0.003, center.lng + 0.004]
+                ];
+                const rect = L.rectangle(bounds, {color: "#00ff66", weight: 1, fillOpacity: 0.1}).addTo(tacticalMap);
+                searchVisuals.push(rect);
+            } else {
+                // Draw a perimeter block circle overlay
+                const circle = L.circle(center, {radius: 400, color: "#d4af37", weight: 2, fillOpacity: 0.05}).addTo(tacticalMap);
+                searchVisuals.push(circle);
+            }
+        }
+
+        function clearSearchLogs() {
+            document.getElementById('search-logs').innerHTML = "<b>[OPS LOG]</b> Logs cleared. Waiting for operational orders.";
+        }
+
+        // Grant entry and activate the unified tactical dashboard
+        function verifyOfficerLogon() {
+            const idInput = document.getElementById('officer-email').value.trim();
+            const pass = document.getElementById('officer-pass').value;
+            const status = document.getElementById('status-msg');
+
+            if (idInput === "" || pass.length < 4) {
+                status.style.color = "#ff3333";
+                status.innerText = "INVALID SYSTEM ID ENTRY";
+                return;
+            }
+
+            currentUserId = idInput.toUpperCase();
+            status.innerText = "ESTABLISHING SAT-LINK CORRIDORS...";
 
             setTimeout(() => {
                 document.getElementById('login-panel').style.display = 'none';
                 document.getElementById('main-dashboard').style.display = 'flex';
-                initializeTacticalMap(email);
+                document.getElementById('main-title').innerText = `TACNET CORE - OPERATIONAL STATUS`;
+                initializeTacticalMap(currentUserId);
             }, 800);
         }
 
         // Spin up the map grid and engage satellite operational view
-        function initializeTacticalMap(officerEmail) {
+        function initializeTacticalMap(officerLabel) {
             // Center tracking viewpoint over Virginia
-            tacticalMap = L.map('map').setView([37.5, -79.0], 16);
+            tacticalMap = L.map('map', {zoomControl: false}).setView([37.5, -79.0], 16);
 
             // High-precision live satellite imagery feed
             L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
@@ -292,38 +381,48 @@
                 attribution: 'TACNET SATELLITE COMMAND'
             }).addTo(tacticalMap);
 
-            // Update the Mission Roster Board
+            // Dynamically rebuild the Active Searcher Roster panel
             function updateRosterUI() {
                 const rosterEl = document.getElementById('mission-roster');
+                const countEl = document.getElementById('searcher-count');
                 rosterEl.innerHTML = "";
                 
-                // Put your callsign at the top
+                // Base caller at the top of the command element
                 const myLi = document.createElement('li');
                 myLi.style.color = "#d4af37";
-                myLi.innerHTML = `<b>${officerEmail.toUpperCase()} [BASE COMMAND] (YOU)</b>`;
+                myLi.innerHTML = `● <b>${officerLabel} (YOU)</b> - TRACKING ACTIVE`;
                 rosterEl.appendChild(myLi);
 
-                // Add active tracking units
+                let totalCount = 1;
+
+                // Add active tracking searchers from the server stream
                 Object.keys(activeMarkers).forEach(unit => {
-                    if (unit !== officerEmail) {
+                    if (unit !== officerLabel) {
                         const li = document.createElement('li');
-                        li.innerText = `${unit.toUpperCase()} [FIELD UNIT] - ACTIVE SIGNAL`;
+                        li.innerHTML = `<span style="color:#00ff66;">●</span> ${unit} - GRID POSITION ACTIVE`;
                         rosterEl.appendChild(li);
+                        totalCount++;
                     }
                 });
+
+                countEl.innerText = `[${totalCount} ACTIVE]`;
             }
 
             // Listen for other units walking around the yard and update map pins + roster live
             eventSource.onmessage = function(event) {
                 try {
                     const data = JSON.parse(event.data);
-                    if (data.officer && data.officer !== officerEmail) {
-                        if (activeMarkers[data.officer]) {
-                            activeMarkers[data.officer].setLatLng([data.latitude, data.longitude]);
+                    if (data.officer && data.officer.toUpperCase() !== officerLabel) {
+                        const name = data.officer.toUpperCase();
+                        if (activeMarkers[name]) {
+                            activeMarkers[name].setLatLng([data.latitude, data.longitude]);
                         } else {
-                            activeMarkers[data.officer] = L.marker([data.latitude, data.longitude]).addTo(tacticalMap)
-                                .bindPopup(`<b>${data.officer.toUpperCase()}</b>`)
+                            activeMarkers[name] = L.marker([data.latitude, data.longitude]).addTo(tacticalMap)
+                                .bindPopup(`<b>SEARCHER: ${name}</b>`)
                                 .openPopup();
+                            
+                            // Log incoming searcher alert
+                            document.getElementById('search-logs').innerHTML = `<b>[ALERT]</b> ${name} entered search field grid.`;
                         }
                         updateRosterUI();
                     }
@@ -341,11 +440,11 @@
                         tacticalMap.setView([lat, lng]);
 
                         // Draw your personal marker pin
-                        if (activeMarkers[officerEmail]) {
-                            activeMarkers[officerEmail].setLatLng([lat, lng]);
+                        if (activeMarkers[officerLabel]) {
+                            activeMarkers[officerLabel].setLatLng([lat, lng]);
                         } else {
-                            activeMarkers[officerEmail] = L.marker([lat, lng]).addTo(tacticalMap)
-                                .bindPopup(`<b>${officerEmail.toUpperCase()} (YOU)</b>`)
+                            activeMarkers[officerLabel] = L.marker([lat, lng]).addTo(tacticalMap)
+                                .bindPopup(`<b>${officerLabel} (COMMAND)</b>`)
                                 .openPopup();
                         }
 
@@ -355,7 +454,7 @@
                         fetch(`https://sse.nodeflux.org/rooms/${testRoom}/emit`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ officer: officerEmail, latitude: lat, longitude: lng })
+                            body: JSON.stringify({ officer: officerLabel, latitude: lat, longitude: lng })
                         }).catch(e => console.log("Network ping omitted"));
                     },
                     (err) => alert("GPS Signal Error. Turn on Location Services."),
@@ -365,7 +464,6 @@
                 alert("Tactical Error: GPS Hardware undetected.");
             }
             
-            // Render basic roster right away
             updateRosterUI();
         }
     </script>
