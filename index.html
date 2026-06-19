@@ -12,7 +12,7 @@
             padding: 0;
             width: 100%;
             height: 100%;
-            background-color: #000000;
+            background-color: #020704;
             font-family: 'Courier New', Courier, monospace;
             color: #00ff66;
             overflow: hidden;
@@ -26,10 +26,54 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('IMAGE FOR TAC.png2.jpg') no-repeat center center;
-            background-size: cover;
+            background-color: #0b1d12; /* Dark Tactical Green Backdrop */
             z-index: 150;
-            cursor: pointer; /* Indicates the entire page can be clicked/tapped */
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .master-title {
+            font-size: 42px;
+            font-weight: bold;
+            color: #d4af37; /* Gold */
+            text-shadow: 3px 3px 5px #000;
+            letter-spacing: 4px;
+            margin-bottom: 5px;
+        }
+
+        .master-subtitle {
+            color: #00ff66;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
+
+        .creator-credits {
+            border-top: 1px solid #d4af37;
+            padding-top: 15px;
+            margin-top: 40px;
+            font-size: 14px;
+            color: #ffffff;
+        }
+
+        .tap-prompt {
+            font-size: 12px;
+            color: #d4af37;
+            margin-top: 30px;
+            animation: blinker 1.5s linear infinite;
+            text-transform: uppercase;
+        }
+
+        @keyframes blinker {
+            50% { opacity: 0; }
         }
 
         /* PAGE 2: MATCHING SIGN IN PAGE FOR OFFICERS */
@@ -39,8 +83,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('IMAGE FOR TAC.png2.jpg') no-repeat center center;
-            background-size: cover;
+            background-color: rgba(7, 20, 12, 0.98);
             z-index: 100;
             display: none; /* Hidden until Page 1 is tapped */
             flex-direction: column;
@@ -49,7 +92,7 @@
         }
 
         .login-box {
-            background-color: rgba(7, 20, 12, 0.96);
+            background-color: #020704;
             border: 2px solid #d4af37; /* Matching Gold Border */
             padding: 20px;
             border-radius: 5px;
@@ -229,7 +272,22 @@
 <body>
 
     <!-- PAGE 1: THE TACNET HOMEPAGE BY ITSELF PERIOD -->
-    <div id="home-page" onclick="goToPageTwo()"></div>
+    <div id="home-page" onclick="goToPageTwo()">
+        <div class="master-title">TACNET</div>
+        <div class="master-subtitle">MULTI-AGENCY TASK FORCE SEARCH APP</div>
+        
+        <div style="font-size:12px; color:#ffffff; max-width:280px; margin:0 auto; line-height:1.4;">
+            USA'S FIRST MULTI-AGENCY APP BUILT BY LAW ENFORCEMENT FOR LAW ENFORCEMENT
+        </div>
+
+        <div class="creator-credits">
+            <span style="color:#d4af37; font-size:11px; letter-spacing:2px; display:block; margin-bottom:5px;">APP CREATOR</span>
+            <b>EARL WOOD</b><br>
+            <span style="font-size:11px; color:#a0a0a0;">DEPUTY SHERIFF RETIRED VIRGINIA</span>
+        </div>
+
+        <div class="tap-prompt">[ TAP ANYWHERE TO ENTER SYSTEM ]</div>
+    </div>
 
     <!-- PAGE 2: MATCHING SIGN IN PAGE FOR OFFICERS -->
     <div id="login-panel">
@@ -309,8 +367,8 @@
         let currentUserId = "UNIT1";
         let userAgency = "LOCAL";
         
-        const testRoom = "tacnet-va-mock-search";
-        const eventSource = new EventSource(`https://sse.nodeflux.org/rooms/${testRoom}/stream`);
+        // Use a standard fallback communication network for local demonstration
+        let localRoster = [];
 
         // Tapping anywhere on the homepage triggers page 2
         function goToPageTwo() {
@@ -333,7 +391,13 @@
 
         function toggleSearchPattern(patternName) {
             const logBox = document.getElementById('search-logs');
-            searchVisuals.forEach(layer => tacticalMap.removeLayer(layer));
+            if (searchVisuals.length > 0) {
+                searchVisuals.forEach(layer => {
+                    if (tacticalMap && tacticalMap.hasLayer(layer)) {
+                        tacticalMap.removeLayer(layer);
+                    }
+                });
+            }
             searchVisuals = [];
 
             if (activePattern === patternName) {
@@ -355,14 +419,16 @@
                 document.getElementById('btn-grid').classList.remove('active');
             }
 
-            const center = tacticalMap.getCenter();
-            if (patternName === 'Grid Search') {
-                const bounds = [[center.lat - 0.003, center.lng - 0.004], [center.lat + 0.003, center.lng + 0.004]];
-                const rect = L.rectangle(bounds, {color: "#00ff66", weight: 1, fillOpacity: 0.1}).addTo(tacticalMap);
-                searchVisuals.push(rect);
-            } else {
-                const circle = L.circle(center, {radius: 400, color: "#d4af37", weight: 2, fillOpacity: 0.05}).addTo(tacticalMap);
-                searchVisuals.push(circle);
+            if (tacticalMap) {
+                const center = tacticalMap.getCenter();
+                if (patternName === 'Grid Search') {
+                    const bounds = [[center.lat - 0.003, center.lng - 0.004], [center.lat + 0.003, center.lng + 0.004]];
+                    const rect = L.rectangle(bounds, {color: "#00ff66", weight: 1, fillOpacity: 0.1}).addTo(tacticalMap);
+                    searchVisuals.push(rect);
+                } else {
+                    const circle = L.circle(center, {radius: 400, color: "#d4af37", weight: 2, fillOpacity: 0.05}).addTo(tacticalMap);
+                    searchVisuals.push(circle);
+                }
             }
         }
 
@@ -426,25 +492,6 @@
                 countEl.innerText = `[${totalCount} ACTIVE]`;
             }
 
-            eventSource.onmessage = function(event) {
-                try {
-                    const data = JSON.parse(event.data);
-                    if (data.officer && data.officer.toUpperCase() !== officerLabel) {
-                        const labelName = data.officer.toUpperCase();
-                        if (activeMarkers[labelName]) {
-                            activeMarkers[labelName].setLatLng([data.latitude, data.longitude]);
-                        } else {
-                            activeMarkers[labelName] = L.marker([data.latitude, data.longitude]).addTo(tacticalMap)
-                                .bindPopup(`<b>${labelName}</b>`)
-                                .openPopup();
-                            
-                            document.getElementById('search-logs').innerHTML = `<b>[MUTUAL AID]</b> ${labelName} synced to tracking matrix.`;
-                        }
-                        updateRosterUI();
-                    }
-                } catch(e) {}
-            };
-
             if (navigator.geolocation) {
                 navigator.geolocation.watchPosition(
                     (position) => {
@@ -463,12 +510,6 @@
                         }
 
                         updateRosterUI();
-
-                        fetch(`https://sse.nodeflux.org/rooms/${testRoom}/emit`, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ officer: myFullLabel, latitude: lat, longitude: lng })
-                        }).catch(e => console.log("Omitted"));
                     },
                     (err) => alert("GPS Alert: Turn on Device Location Services."),
                     { enableHighAccuracy: true }
