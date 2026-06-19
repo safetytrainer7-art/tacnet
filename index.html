@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TACNET</title>
-    <!-- Leaflet Map CSS for tactical mapping -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         /* Rugged, military-grade dark hunter green and high-contrast theme */
@@ -27,7 +26,6 @@
             top: 0;
             left: 0;
             z-index: 1;
-            background-color: #001122; /* Royal Blue tactical backdrop hint */
         }
 
         /* Rugged, cracked gold lettering header */
@@ -123,109 +121,120 @@
         #status-msg {
             margin-top: 15px;
             font-size: 14px;
-            color: #ff3333; /* Red for errors, changes to green on success */
+            color: #00ff66;
         }
     </style>
 </head>
 <body>
 
-    <!-- Tactical Header -->
     <div class="tactical-header">TACNET SYSTEM ACTIVE</div>
 
-    <!-- Secure Authorization Shield -->
     <div id="login-panel">
         <div class="login-box">
-            <h2>CREDENTIAL VERIFICATION</h2>
+            <h2>MOCK SEARCH AUTHORIZATION</h2>
             <div class="input-group">
                 <label>Duty Email / Unit ID</label>
-                <input type="email" id="officer-email" placeholder="unit@tacnet.com" required>
+                <input type="email" id="officer-email" placeholder="unit1 to unit6" required>
             </div>
             <div class="input-group">
                 <label>Security Access Code</label>
-                <input type="password" id="officer-pass" placeholder="••••••••" required>
+                <input type="password" id="officer-pass" placeholder="Any 8 characters" required>
             </div>
             <button class="tactical-btn" onclick="verifyOfficerLogon()">Authorize Access</button>
             <div id="status-msg"></div>
         </div>
     </div>
 
-    <!-- Active Grid Map Layout -->
     <div id="map"></div>
 
-    <!-- Core Systems Frameworks via Secure CDN Links -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.0"></script>
 
     <script>
-        // Initialize Appwrite Client Core connected straight to New York
-        const client = new Appwrite.Client();
-        client
-            .setEndpoint('https://nyc.cloud.appwrite.io/v1') 
-            .setProject('66731ba3000b9a897df8'); // Your real USA Project ID from your New York server
-
-        const account = new Appwrite.Account(client);
         let tacticalMap;
         let activeMarkers = {};
+        
+        // Setup a public mock broadcast room so phones can communicate directly tonight
+        const testRoom = "tacnet-va-mock-search";
+        const eventSource = new EventSource(`https://sse.nodeflux.org/rooms/${testRoom}/stream`);
 
-        // Verify login credentials against your 1-6 cloud database roster
-        async function verifyOfficerLogon() {
+        // Force authorization to bypass Appwrite's stuck cloud server
+        function verifyOfficerLogon() {
             const email = document.getElementById('officer-email').value;
             const pass = document.getElementById('officer-pass').value;
             const status = document.getElementById('status-msg');
 
-            status.style.color = '#00ff66';
-            status.innerText = "TRANSMITTING TO NY SERVER...";
-
-            try {
-                // Attempt secure cloud session verification
-                await account.createEmailPasswordSession(email, pass);
-                
-                status.innerText = "ACCESS GRANTED. INITIALIZING GRID...";
-                setTimeout(() => {
-                    document.getElementById('login-panel').style.display = 'none';
-                    initializeTacticalMap(email);
-                }, 1000);
-
-            } catch (error) {
-                status.style.color = '#ff3333';
-                status.innerText = "AUTH FAILURE: " + error.message;
+            if (email === "" || pass.length < 4) {
+                status.style.color = "#ff3333";
+                status.innerText = "INVALID ENTRY";
+                return;
             }
+
+            status.innerText = "DECRYPTING LINK...";
+
+            setTimeout(() => {
+                document.getElementById('login-panel').style.display = 'none';
+                initializeTacticalMap(email);
+            }, 800);
         }
 
-        // Spin up the map grid once user clearance is authorized
+        // Spin up the map grid and start broadcasting coordinates
         function initializeTacticalMap(officerEmail) {
-            // Default center point roughly over Virginia region
-            tacticalMap = L.map('map').setView([37.5, -79.0], 13);
+            // Default center point over Virginia
+            tacticalMap = L.map('map').setView([37.5, -79.0], 14);
 
-            // Dark, tactical map design layer
+            // High-contrast tactical map theme
             L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-                attribution: 'TACNET SECURE GRID'
+                attribution: 'TACNET LOCAL MOCK GRID'
             }).addTo(tacticalMap);
 
-            // Start hardware GPS tracking chip loop
+            // Listen for other units walking around the yard and draw them live
+            eventSource.onmessage = function(event) {
+                try {
+                    const data = JSON.parse(event.data);
+                    // Don't draw our own duplicate marker from the stream
+                    if (data.officer !== officerEmail) {
+                        if (activeMarkers[data.officer]) {
+                            activeMarkers[data.officer].setLatLng([data.latitude, data.longitude]);
+                        } else {
+                            activeMarkers[data.officer] = L.marker([data.latitude, data.longitude]).addTo(tacticalMap)
+                                .bindPopup(`<b>${data.officer.toUpperCase()}</b>`)
+                                .openPopup();
+                        }
+                    }
+                } catch(e) {}
+            };
+
+            // Start hardware GPS tracking loop
             if (navigator.geolocation) {
                 navigator.geolocation.watchPosition(
                     (position) => {
                         const lat = position.coords.latitude;
                         const lng = position.coords.longitude;
 
-                        // Center map on this commander's device location
+                        // Center map directly on your device
                         tacticalMap.setView([lat, lng]);
 
-                        // Clean or update marker pin for this unit
+                        // Draw your personal marker pin
                         if (activeMarkers[officerEmail]) {
                             activeMarkers[officerEmail].setLatLng([lat, lng]);
                         } else {
                             activeMarkers[officerEmail] = L.marker([lat, lng]).addTo(tacticalMap)
-                                .bindPopup(`<b>${officerEmail.split('@')[0].toUpperCase()} (YOU)</b>`)
+                                .bindPopup(`<b>${officerEmail.toUpperCase()} (YOU)</b>`)
                                 .openPopup();
                         }
+
+                        // Broadcast your current GPS coords to the other guys' phones
+                        fetch(`https://sse.nodeflux.org/rooms/${testRoom}/emit`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ officer: officerEmail, latitude: lat, longitude: lng })
+                        }).catch(e => console.log("Network ping omitted"));
                     },
-                    (err) => console.error("GPS Signal Lost: ", err),
+                    (err) => alert("GPS Signal Error. Turn on Location Services."),
                     { enableHighAccuracy: true }
                 );
             } else {
-                alert("Tactical Error: GPS Hardware undetected or disabled on this device.");
+                alert("Tactical Error: GPS Hardware undetected.");
             }
         }
     </script>
