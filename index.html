@@ -3,69 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>TACNET SYSTEMS</title>
+    <title>TACNET PLATFORM</title>
     <!-- Leaflet Map CSS for tactical mapping -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
-        /* Rugged, military-grade dark hunter green and high-contrast theme */
         body, html {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
-            background-color: #0b1d12; /* Dark Hunter Green */
+            background-color: #000000;
             font-family: 'Courier New', Courier, monospace;
-            color: #00ff66; /* Neon Green LED look */
+            color: #00ff66;
             overflow: hidden;
             position: fixed;
         }
 
-        /* Full screen tactical map backdrop */
-        #map {
-            width: 100%;
-            height: 100%;
+        /* 1. MASTER LANDING HOME PAGE PANEL USING YOUR EXACT DESIGN */
+        #home-page {
             position: absolute;
             top: 0;
             left: 0;
-            z-index: 1;
+            width: 100%;
+            height: 100%;
+            background: url('IMAGE FOR TAC.png2.jpg') no-repeat center center;
+            background-size: cover;
+            z-index: 150;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end; /* Pushes the button to the bottom so it doesn't cover your image text */
+            align-items: center;
+            padding-bottom: 50px;
+            box-sizing: border-box;
         }
 
-        /* Compact header optimized for mobile scaling screens */
-        .tactical-header {
-            position: absolute;
-            top: 8px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 10;
-            font-size: 16px;
-            font-weight: bold;
-            color: #d4af37; /* Gold */
-            text-shadow: 2px 2px 3px #000, -1px -1px 0 #000, 1px -1px 0 #000;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            text-align: center;
-            width: 95%;
-            pointer-events: none;
-        }
-
-        /* Secure Login Overlay panel */
+        /* 2. MATCHING SECURITY LOGIN PANEL */
         #login-panel {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(11, 29, 18, 0.98); /* Solid Dark Green Shield */
+            background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('IMAGE FOR TAC.png2.jpg') no-repeat center center;
+            background-size: cover;
             z-index: 100;
-            display: flex;
+            display: none;
             flex-direction: column;
             justify-content: center;
             align-items: center;
         }
 
         .login-box {
-            background-color: #07140c;
-            border: 2px solid #d4af37; /* Gold Border */
+            background-color: rgba(7, 20, 12, 0.95);
+            border: 2px solid #d4af37; /* Matching Gold Border */
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0 0 15px rgba(0, 255, 102, 0.3);
@@ -80,21 +70,23 @@
             margin-top: 0;
             margin-bottom: 15px;
             font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .input-group {
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             text-align: left;
         }
 
         .input-group label {
             display: block;
             font-size: 11px;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
             text-transform: uppercase;
         }
 
-        .input-group input {
+        .input-group input, .input-group select {
             width: 100%;
             padding: 8px;
             background-color: #112217;
@@ -105,22 +97,25 @@
             font-size: 14px;
         }
 
+        /* Rugged Tactical Button */
         .tactical-btn {
             background-color: #d4af37;
             color: #07140c;
             border: none;
-            padding: 10px 20px;
-            font-size: 14px;
+            padding: 14px 24px;
+            font-size: 16px;
             font-weight: bold;
             font-family: monospace;
             cursor: pointer;
             text-transform: uppercase;
-            width: 100%;
-            box-shadow: 0 3px 0 #997a15;
+            width: 85%;
+            max-width: 280px;
+            box-shadow: 0 4px 0 #997a15;
+            border-radius: 4px;
         }
 
         .tactical-btn:active {
-            transform: translateY(3px);
+            transform: translateY(4px);
             box-shadow: none;
         }
 
@@ -130,7 +125,34 @@
             color: #00ff66;
         }
 
-        /* Compact Dashboard Container for mobile viewports */
+        /* 3. CORE SATELLITE MAP INTERFACE */
+        #map {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .tactical-header {
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            font-size: 15px;
+            font-weight: bold;
+            color: #d4af37;
+            text-shadow: 2px 2px 3px #000;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            text-align: center;
+            width: 95%;
+            pointer-events: none;
+        }
+
+        /* Dashboard Overlays */
         .dashboard-overlay {
             position: absolute;
             bottom: 10px;
@@ -145,7 +167,7 @@
         }
 
         .dashboard-card {
-            background-color: rgba(7, 20, 12, 0.92);
+            background-color: rgba(7, 20, 12, 0.94);
             border: 1px solid #00ff66;
             border-left: 3px solid #d4af37;
             padding: 8px;
@@ -208,49 +230,59 @@
             max-height: 50px;
             overflow-y: auto;
         }
-        
-        .roster-list li {
-            margin-bottom: 2px;
-        }
     </style>
 </head>
 <body>
 
-    <!-- Compact Tactical Header -->
-    <div class="tactical-header" id="main-title">TACNET TASK FORCE INITIALIZATION</div>
+    <!-- 1. LIVE MASTER HOME PAGE FROM YOUR DESIGN -->
+    <div id="home-page">
+        <button class="tactical-btn" onclick="engageSecurePortal()">Engage Secure Portal</button>
+    </div>
 
-    <!-- Secure Authorization Shield -->
+    <!-- 2. MATCHING LOGIN PANEL -->
     <div id="login-panel">
         <div class="login-box">
-            <h2>TACTICAL VERIFICATION</h2>
+            <h2>CREDENTIAL VERIFICATION</h2>
+            
             <div class="input-group">
-                <label>Duty ID / Callsign</label>
+                <label>Agency Clearance</label>
+                <select id="officer-agency">
+                    <option value="Local">LOCAL (Sheriff / PD / K9)</option>
+                    <option value="State">STATE (VSP / Mutual Aid)</option>
+                    <option value="Federal">FEDERAL (Task Force / SAR)</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label>Unit ID / Callsign</label>
                 <input type="text" id="officer-email" placeholder="e.g., unit1, unit2" required autocomplete="off" autocapitalize="none">
             </div>
+            
             <div class="input-group">
-                <label>Security Code</label>
+                <label>Security Access Code</label>
                 <input type="password" id="officer-pass" placeholder="••••••••" required>
             </div>
-            <button class="tactical-btn" onclick="verifyOfficerLogon()">Authorize Terminal</button>
+            
+            <button class="tactical-btn" style="width:100%;" onclick="verifyOfficerLogon()">Authorize Terminal</button>
             <div id="status-msg"></div>
         </div>
     </div>
 
-    <!-- Active Satellite Grid Map Layout -->
+    <!-- 3. ACTIVE SATELLITE COMMAND GRAPH -->
     <div id="map"></div>
 
-    <!-- Complete Integrated Mobile Dashboard Overlay -->
+    <!-- Mobile HUD Overlay -->
     <div class="dashboard-overlay" id="main-dashboard" style="display: none;">
         
-        <!-- Live Mission Roster Board -->
+        <!-- Live Mutual Aid Roster Board -->
         <div class="dashboard-card">
             <div class="card-title"><span>Active Searchers & K9 Teams</span> <span style="color:#00ff66;" id="searcher-count">[1 ACTIVE]</span></div>
             <ul class="roster-list" id="mission-roster">
-                <li>Awaiting team logon pings...</li>
+                <li>Awaiting field tracking signals...</li>
             </ul>
         </div>
 
-        <!-- Integrated Search Operations Control -->
+        <!-- Search Pattern Controls -->
         <div class="dashboard-card">
             <div class="card-title">Search Pattern Control</div>
             <div class="search-grid">
@@ -258,10 +290,10 @@
                 <button class="action-btn" id="btn-perimeter" onclick="toggleSearchPattern('Perimeter Lock')">Perimeter</button>
                 <button class="action-btn" onclick="clearSearchLogs()">Reset Log</button>
             </div>
-            <div id="search-logs" class="output-box"><b>[OPS LOG]</b> Ground units staging. Ready to deploy search patterns.</div>
+            <div id="search-logs" class="output-box"><b>[OPS LOG]</b> Terminal initialized. Ready to deploy tracking arrays.</div>
         </div>
 
-        <!-- Integrated K9 First Aid Emergency Module -->
+        <!-- Hands-Free K9 Emergency Medical Module -->
         <div class="dashboard-card">
             <div class="card-title">Hands-Free K9 Medical Field Module</div>
             <div class="med-grid">
@@ -273,6 +305,8 @@
         </div>
     </div>
 
+    <div class="tactical-header" id="main-title" style="display: none;">TACNET CORE OPERATIONAL</div>
+
     <!-- Core Mapping Framework -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -280,12 +314,16 @@
         let tacticalMap;
         let activeMarkers = {};
         let currentUserId = "UNIT1";
+        let userAgency = "LOCAL";
         
-        // Setup the secure public broadcast stream for tonight's field exercise
         const testRoom = "tacnet-va-mock-search";
         const eventSource = new EventSource(`https://sse.nodeflux.org/rooms/${testRoom}/stream`);
 
-        // Medical Module Content
+        function engageSecurePortal() {
+            document.getElementById('home-page').style.display = 'none';
+            document.getElementById('login-panel').style.display = 'flex';
+        }
+
         const medProtocols = {
             cpr: "<b>[K9 CPR PROTOCOL]</b><br>1. Lay K9 on right side. Compress widest part of ribcage 100-120 BPM.<br>2. 30 compressions to 2 rescue breaths. Ensure airway is clear.",
             snake: "<b>[K9 SNAKE BITE]</b><br>1. Immobilize K9 immediately. Keep bite below heart level.<br>2. DO NOT apply ice or tourniqets. Transport rapidly to emergency vet facility.",
@@ -296,27 +334,24 @@
             document.getElementById('med-instructions').innerHTML = medProtocols[type];
         }
 
-        // Active Search Pattern Operations Simulation
         let activePattern = null;
         let searchVisuals = [];
 
         function toggleSearchPattern(patternName) {
             const logBox = document.getElementById('search-logs');
-            
-            // Clean up any old visible search circles/squares on map
             searchVisuals.forEach(layer => tacticalMap.removeLayer(layer));
             searchVisuals = [];
 
             if (activePattern === patternName) {
                 activePattern = null;
-                logBox.innerHTML = `<b>[OPS LOG]</b> ${patternName} cancelled by Command. Ready for redeployment.`;
+                logBox.innerHTML = `<b>[OPS LOG]</b> ${patternName} aborted.`;
                 document.getElementById('btn-grid').classList.remove('active');
                 document.getElementById('btn-perimeter').classList.remove('active');
                 return;
             }
 
             activePattern = patternName;
-            logBox.innerHTML = `<b>[OPS LOG]</b> ${patternName.toUpperCase()} DEPLOYED. Drawing coordinates around units...`;
+            logBox.innerHTML = `<b>[OPS LOG]</b> ${patternName.toUpperCase()} ACTIVATED. Rendering sector boundaries...`;
             
             if (patternName === 'Grid Search') {
                 document.getElementById('btn-grid').classList.add('active');
@@ -326,80 +361,68 @@
                 document.getElementById('btn-grid').classList.remove('active');
             }
 
-            // Draw operational boundaries centered on the map view point
             const center = tacticalMap.getCenter();
             if (patternName === 'Grid Search') {
-                // Draw a grid rectangle overlay
-                const bounds = [
-                    [center.lat - 0.003, center.lng - 0.004],
-                    [center.lat + 0.003, center.lng + 0.004]
-                ];
+                const bounds = [[center.lat - 0.003, center.lng - 0.004], [center.lat + 0.003, center.lng + 0.004]];
                 const rect = L.rectangle(bounds, {color: "#00ff66", weight: 1, fillOpacity: 0.1}).addTo(tacticalMap);
                 searchVisuals.push(rect);
             } else {
-                // Draw a perimeter block circle overlay
                 const circle = L.circle(center, {radius: 400, color: "#d4af37", weight: 2, fillOpacity: 0.05}).addTo(tacticalMap);
                 searchVisuals.push(circle);
             }
         }
 
         function clearSearchLogs() {
-            document.getElementById('search-logs').innerHTML = "<b>[OPS LOG]</b> Logs cleared. Waiting for operational orders.";
+            document.getElementById('search-logs').innerHTML = "<b>[OPS LOG]</b> Logs reset.";
         }
 
-        // Grant entry and activate the unified tactical dashboard
         function verifyOfficerLogon() {
             const idInput = document.getElementById('officer-email').value.trim();
             const pass = document.getElementById('officer-pass').value;
             const status = document.getElementById('status-msg');
+            userAgency = document.getElementById('officer-agency').value.toUpperCase();
 
             if (idInput === "" || pass.length < 4) {
                 status.style.color = "#ff3333";
-                status.innerText = "INVALID SYSTEM ID ENTRY";
+                status.innerText = "INVALID ENTRY CREDENTIALS";
                 return;
             }
 
             currentUserId = idInput.toUpperCase();
-            status.innerText = "ESTABLISHING SAT-LINK CORRIDORS...";
+            status.innerText = "ESTABLISHING MULTI-AGENCY UPLINKS...";
 
             setTimeout(() => {
                 document.getElementById('login-panel').style.display = 'none';
+                document.getElementById('main-title').style.display = 'block';
                 document.getElementById('main-dashboard').style.display = 'flex';
-                document.getElementById('main-title').innerText = `TACNET CORE - OPERATIONAL STATUS`;
-                initializeTacticalMap(currentUserId);
+                initializeTacticalMap(currentUserId, userAgency);
             }, 800);
         }
 
-        // Spin up the map grid and engage satellite operational view
-        function initializeTacticalMap(officerLabel) {
-            // Center tracking viewpoint over Virginia
+        function initializeTacticalMap(officerLabel, agencyTag) {
             tacticalMap = L.map('map', {zoomControl: false}).setView([37.5, -79.0], 16);
 
-            // High-precision live satellite imagery feed
             L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
                 maxZoom: 19,
-                attribution: 'TACNET SATELLITE COMMAND'
+                attribution: 'TACNET SECURE MULTI-AGENCY GRID'
             }).addTo(tacticalMap);
 
-            // Dynamically rebuild the Active Searcher Roster panel
             function updateRosterUI() {
                 const rosterEl = document.getElementById('mission-roster');
                 const countEl = document.getElementById('searcher-count');
                 rosterEl.innerHTML = "";
                 
-                // Base caller at the top of the command element
                 const myLi = document.createElement('li');
                 myLi.style.color = "#d4af37";
-                myLi.innerHTML = `● <b>${officerLabel} (YOU)</b> - TRACKING ACTIVE`;
+                myLi.innerHTML = `● <b>[${agencyTag}] ${officerLabel} (YOU)</b>`;
                 rosterEl.appendChild(myLi);
 
                 let totalCount = 1;
 
-                // Add active tracking searchers from the server stream
                 Object.keys(activeMarkers).forEach(unit => {
                     if (unit !== officerLabel) {
                         const li = document.createElement('li');
-                        li.innerHTML = `<span style="color:#00ff66;">●</span> ${unit} - GRID POSITION ACTIVE`;
+                        li.innerHTML = `<span style="color:#00ff66;">●</span> ${unit} - TRACKING FEED ACTIVE`;
                         rosterEl.appendChild(li);
                         totalCount++;
                     }
@@ -408,60 +431,55 @@
                 countEl.innerText = `[${totalCount} ACTIVE]`;
             }
 
-            // Listen for other units walking around the yard and update map pins + roster live
             eventSource.onmessage = function(event) {
                 try {
                     const data = JSON.parse(event.data);
                     if (data.officer && data.officer.toUpperCase() !== officerLabel) {
-                        const name = data.officer.toUpperCase();
-                        if (activeMarkers[name]) {
-                            activeMarkers[name].setLatLng([data.latitude, data.longitude]);
+                        const labelName = data.officer.toUpperCase();
+                        if (activeMarkers[labelName]) {
+                            activeMarkers[labelName].setLatLng([data.latitude, data.longitude]);
                         } else {
-                            activeMarkers[name] = L.marker([data.latitude, data.longitude]).addTo(tacticalMap)
-                                .bindPopup(`<b>SEARCHER: ${name}</b>`)
+                            activeMarkers[labelName] = L.marker([data.latitude, data.longitude]).addTo(tacticalMap)
+                                .bindPopup(`<b>${labelName}</b>`)
                                 .openPopup();
                             
-                            // Log incoming searcher alert
-                            document.getElementById('search-logs').innerHTML = `<b>[ALERT]</b> ${name} entered search field grid.`;
+                            document.getElementById('search-logs').innerHTML = `<b>[MUTUAL AID]</b> ${labelName} synced to tracking matrix.`;
                         }
                         updateRosterUI();
                     }
                 } catch(e) {}
             };
 
-            // Start hardware GPS tracking loop
             if (navigator.geolocation) {
                 navigator.geolocation.watchPosition(
                     (position) => {
                         const lat = position.coords.latitude;
                         const lng = position.coords.longitude;
 
-                        // Center map directly on your device
                         tacticalMap.setView([lat, lng]);
 
-                        // Draw your personal marker pin
+                        const myFullLabel = `[${agencyTag}] ${officerLabel}`;
                         if (activeMarkers[officerLabel]) {
                             activeMarkers[officerLabel].setLatLng([lat, lng]);
                         } else {
                             activeMarkers[officerLabel] = L.marker([lat, lng]).addTo(tacticalMap)
-                                .bindPopup(`<b>${officerLabel} (COMMAND)</b>`)
+                                .bindPopup(`<b>${myFullLabel}</b>`)
                                 .openPopup();
                         }
 
                         updateRosterUI();
 
-                        // Broadcast your current GPS coords to the other guys' phones
                         fetch(`https://sse.nodeflux.org/rooms/${testRoom}/emit`, {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ officer: officerLabel, latitude: lat, longitude: lng })
-                        }).catch(e => console.log("Network ping omitted"));
+                            body: JSON.stringify({ officer: myFullLabel, latitude: lat, longitude: lng })
+                        }).catch(e => console.log("Omitted"));
                     },
-                    (err) => alert("GPS Signal Error. Turn on Location Services."),
+                    (err) => alert("GPS Alert: Turn on Device Location Services."),
                     { enableHighAccuracy: true }
                 );
             } else {
-                alert("Tactical Error: GPS Hardware undetected.");
+                alert("Tactical Error: No GPS.");
             }
             
             updateRosterUI();
