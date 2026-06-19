@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TACNET - Multi-Agency Task Force Search App</title>
-    <!-- Tailwind CSS for structural positioning -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Appwrite Web SDK -->
     <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.0"></script>
     <style>
         /* Smooth upward slide transition when the user clicks the homepage */
@@ -18,15 +16,11 @@
 </head>
 <body class="bg-[#02040a] text-white font-sans min-h-screen flex items-center justify-center p-0 m-0 overflow-hidden">
 
-    <!-- Main Tactical Frame -->
     <div class="relative w-full max-w-[500px] aspect-[9/16] bg-[#030712] shadow-2xl overflow-hidden border border-zinc-900">
         
-        <!-- PAGE 1: YOUR FULL HOMEPAGE (Clicks anywhere to reveal Page 2) -->
         <div id="homepage-layer" onclick="revealLoginPortal()" class="absolute inset-0 z-20 cursor-pointer select-none">
-            <!-- Your exact, untouched design file with the satellite, earth, and cracked text -->
             <img src="landing.jpg" alt="TACNET Landing Page" class="w-full h-full object-cover">
             
-            <!-- Discreet pulsing prompt at the very bottom letting officers know to tap -->
             <div class="absolute bottom-6 w-full text-center animate-pulse">
                 <span class="bg-black/80 px-4 py-1.5 rounded border border-zinc-700 text-[10px] uppercase tracking-[0.2em] text-zinc-400 font-bold">
                     [ Tap Anywhere to Secure Entry ]
@@ -34,16 +28,13 @@
             </div>
         </div>
 
-        <!-- PAGE 2: SECURE SIGN-IN PORTAL (Hidden directly underneath Page 1) -->
         <div class="absolute inset-0 z-10 flex flex-col justify-center items-center px-6 bg-gradient-to-b from-[#030712] via-zinc-950 to-black">
             
-            <!-- Appwrite System Status -->
             <div id="connection-status" class="mb-4 inline-flex items-center gap-1.5 bg-zinc-900/80 px-3 py-1 rounded border border-emerald-500/30 text-[10px] text-emerald-400 tracking-widest uppercase font-mono">
                 <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                 Appwrite Mainframe Secure
             </div>
 
-            <!-- Login Container Box -->
             <div id="login-portal" class="bg-zinc-900/40 border border-zinc-800 p-5 rounded-md w-full max-w-[340px] shadow-2xl backdrop-blur-md">
                 <div class="text-center mb-4">
                     <h2 class="text-xl font-black tracking-wider text-gray-300 uppercase">Credential Verification</h2>
@@ -68,7 +59,6 @@
                 <div id="auth-error" class="hidden mt-3 text-[10px] uppercase tracking-wider text-red-400 font-bold text-center"></div>
             </div>
 
-            <!-- Return Control -->
             <button onclick="hideLoginPortal()" class="mt-6 text-[9px] uppercase tracking-widest text-zinc-500 hover:text-zinc-300 transition-colors font-bold">
                 ← Back to Tactical Display
             </button>
@@ -76,7 +66,6 @@
 
     </div>
 
-    <!-- System Core Logic -->
     <script>
         // Appwrite Cloud Configuration
         const client = new Appwrite.Client();
