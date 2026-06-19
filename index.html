@@ -1,37 +1,291 @@
-/* Full-Screen Space Canvas Backdrop */
-#space-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: -1; /* Sits permanently behind all app content */
-  pointer-events: none;
-  background: #020617; /* Space baseline void color */
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>TACNET - USA's First Multi-Agency Task Force Search App</title>
+    <style>
+        /* TACTICAL DEVICE INTERFACE RESET */
+        * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
+        body, html { 
+            width: 100%; 
+            height: 100%; 
+            font-family: 'Arial Black', Gadget, sans-serif; 
+            background-color: #02040a; 
+            color: #f1f5f9;
+            overflow: hidden;
+            position: fixed;
+            touch-action: none;
+        }
 
-/* See-Through Frosted Glass Panels */
-.card, .opanel, .repwrap, #side {
-  background: rgba(10, 24, 12, 0.65) !important; /* See-through dark hunter green tint */
-  backdrop-filter: blur(12px) saturate(160%) !important; /* Frosted refraction layer */
-  -webkit-backdrop-filter: blur(12px) saturate(160%) !important;
-  border: 1.5px solid rgba(42, 85, 48, 0.5) !important; /* Subtle green borders */
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-}
+        /* MASTER CANVAS MAPPED TO YOUR UPLOADED HOMEPAGE DESIGN */
+        .tacnet-homepage-canvas {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            height: 100%;
+            margin: 0 auto;
+            /* Matches the design profile in IMAGE FOR TAC.png2.jpg */
+            background: black url('IMAGE FOR TAC.png2.jpg') no-repeat center center;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: calc(2rem + env(safe-area-inset-top)) 1.5rem calc(2rem + env(safe-area-inset-bottom)) 1.5rem;
+            box-shadow: 0 0 40px rgba(0,0,0,1);
+        }
 
-/* Brilliant See-Through Glass Heading Text Layout */
-.logo-t1 {
-  font-family: 'Black Ops One', cursive;
-  font-size: clamp(50px, 9vw, 78px);
-  line-height: .9;
-  background: linear-gradient(135deg, rgba(255,215,0,0.9), rgba(255,255,255,0.2), rgba(255,215,0,0.9));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent; /* Makes text see-through, catching the background gradient */
-  background-clip: text;
-  letter-spacing: 2px;
-}
+        /* TOP TRANSMISSION SECTOR */
+        .transmission-space {
+            width: 100%;
+            height: 35%; /* Holds space for the satellite asset in your layout */
+        }
 
-/* Ensure the app shell doesn't completely block out the canvas view */
-#shell {
-  background: transparent !important;
-}
-#s-land, #s-dash, #body {
-  background: transparent !important;
-}
+        /* TEXT AND CONTROL CENTER BLOCK */
+        .center-branding-deck {
+            width: 100%;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* RUGGED METALLIC LOGO BLOCK */
+        .logo-tacnet {
+            font-size: 3.5rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            color: #a1a8b8;
+            text-shadow: 
+                -2px -2px 0 #333,  
+                 2px -2px 0 #333,
+                -2px  2px 0 #333,
+                 2px  2px 0 #333,
+                 3px  5px 15px rgba(0,0,0,0.9);
+            text-transform: uppercase;
+        }
+
+        .sub-tag-taskforce {
+            font-size: 0.95rem;
+            font-weight: 900;
+            color: #cbd5e1;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 0.25rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
+        }
+
+        .descriptor-line {
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #e2e8f0;
+            margin-top: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-shadow: 1px 1px 3px rgba(0,0,0,1);
+        }
+
+        /* INTERACTIVE RADAR ACTIVATION TRIGGER */
+        .btn-launch-radar {
+            margin-top: 1.5rem;
+            width: 100%;
+            background: linear-gradient(135deg, #152e1c 0%, #0a170e 100%);
+            border: 2px solid #eab308;
+            border-radius: 8px;
+            padding: 1rem;
+            color: #eab308;
+            font-size: 1.1rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+            transition: transform 0.1s ease;
+        }
+        .btn-launch-radar:active {
+            transform: scale(0.97);
+            background: #0a170e;
+        }
+
+        /* TELEMETRY SLIDE-OVER MAP CANVAS DISPLAY */
+        .telemetry-overlay-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #050a07;
+            z-index: 100;
+            display: none;
+            flex-direction: column;
+            padding: calc(1rem + env(safe-area-inset-top)) 1rem calc(1rem + env(safe-area-inset-bottom)) 1rem;
+        }
+        .map-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid #eab308;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        .map-title { font-size: 1.2rem; font-weight: 900; color: #eab308; text-transform: uppercase; }
+        .btn-abort { background: #5f1515; border: 1px solid #ef4444; color: #fff; padding: 0.4rem 1rem; font-weight: 800; font-size: 0.75rem; border-radius: 4px; text-transform: uppercase; cursor: pointer; }
+
+        .radar-grid-field {
+            flex-grow: 1;
+            background: radial-gradient(circle, #0b1a10 10%, #030704 100%);
+            background-image: 
+                linear-gradient(rgba(21, 58, 33, 0.25) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(21, 58, 33, 0.25) 1px, transparent 1px);
+            background-size: 40px 40px;
+            border: 2px solid #153a21;
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        /* RADAR GPS BLIPS */
+        .radar-blip {
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background-color: #4ade80;
+            box-shadow: 0 0 12px #4ade80;
+            cursor: pointer;
+            transform: translate(-50%, -50%);
+        }
+        .blip-tag {
+            position: absolute; top: 22px; left: 50%; transform: translateX(-50%);
+            background: rgba(0,0,0,0.9); border: 1px solid #4ade80;
+            padding: 2px 6px; font-size: 0.55rem; font-weight: 900; border-radius: 3px; white-space: nowrap; color: #4ade80;
+        }
+
+        /* SLIDE INTERFACE FOR VELOCITY TRACKS */
+        .drawer-telemetry-tray {
+            background: #09140f;
+            border-top: 3px solid #eab308;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 8px;
+            display: none;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+        .data-card { background: rgba(0,0,0,0.5); border: 1px solid #153a21; padding: 0.5rem 0.75rem; border-radius: 4px; }
+        .data-label { font-size: 0.55rem; color: #4ade80; text-transform: uppercase; font-weight: 800; }
+        .data-value { font-size: 1.1rem; color: #fff; font-weight: 900; font-family: monospace; margin-top: 0.1rem; }
+
+        /* CREATOR PROFILE ACCORDING TO IMAGE FOR TAC.png2.jpg */
+        .profile-divider { width: 80px; height: 1px; background: linear-gradient(90deg, transparent, #eab308, transparent); margin: 0.5rem auto; }
+        .creator-title-tag { font-family: 'Segoe UI', sans-serif; font-size: 0.75rem; color: #eab308; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; }
+        .creator-name-tag { font-size: 1.8rem; font-weight: 900; color: #fff; letter-spacing: 1px; text-transform: uppercase; margin: 0.2rem 0; }
+        .creator-rank-tag { font-family: 'Segoe UI', sans-serif; font-size: 0.85rem; color: #eab308; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; }
+    </style>
+</head>
+<body>
+
+    <!-- HOMEPAGE STRUCTURE MATCHING YOUR EXACT DESIGN DESIGNATION -->
+    <div class="tacnet-homepage-canvas">
+        
+        <!-- SATELLITE AREA SPACE -->
+        <div class="transmission-space"></div>
+
+        <!-- IDENTITY CENTER DECK -->
+        <div class="center-branding-deck">
+            <div class="logo-tacnet">TACNET</div>
+            <div class="sub-tag-taskforce">MULTI-AGENCY-TASK-FORCE-SEARCH-APP</div>
+            <div class="descriptor-line">USA's First Multi-Agency App Built By Law Enforcement For Law Enforcement</div>
+            
+            <!-- MASTER ACTUATOR TO UNLOCK LIVE FIELD MAP -->
+            <button class="btn-launch-radar" onclick="engageLiveCommandMap()">Launch Live Tracker Console</button>
+        </div>
+
+        <!-- TAIL MANAGEMENT PLATE -->
+        <div style="text-align: center; width: 100%;">
+            <div class="creator-title-tag">APP CREATOR</div>
+            <div class="profile-divider"></div>
+            <div class="creator-name-tag">EARL WOOD</div>
+            <div class="creator-rank-tag">DEPUTY SHERIFF RETIRED VIRGINIA</div>
+        </div>
+
+    </div>
+
+    <!-- RADAR SCANNER WORKSPACE SCREEN (SLIDES OVER ON SELECTION) -->
+    <div id="telemetryOverlay" class="telemetry-overlay-screen">
+        <div class="map-header">
+            <div class="map-title">TACNET LIVE TELEMETRY PERIMETER</div>
+            <button class="btn-abort" onclick="secureExitMap()">← Home</button>
+        </div>
+
+        <div class="radar-grid-field">
+            <!-- Simulated Active Duty Tracking Node -->
+            <div class="radar-blip" style="top: 40%; left: 35%;" onclick="viewNodeTelemetry('AMHERST K9-1', 'FIELD TRACK', '2.2 MPH', '145° SE')">
+                <span class="blip-tag">AMHERST K9-1</span>
+            </div>
+            
+            <div class="radar-blip" style="top: 65%; left: 70%; background-color: #38bdf8; box-shadow: 0 0 12px #38bdf8;" onclick="viewNodeTelemetry('VSP CRUISE-14', 'INTERCEPT VECTR', '52.4 MPH', '270° NW')">
+                <span class="blip-tag" style="border-color: #38bdf8; color: #38bdf8;">VSP-14</span>
+            </div>
+        </div>
+
+        <!-- TELEMETRY FEED DRAWER DATA DISPLAY -->
+        <div id="telemetryTray" class="drawer-telemetry-tray">
+            <div class="data-card">
+                <div class="data-label">Callsign ID</div>
+                <div class="data-value" id="traceCallsign">-</div>
+            </div>
+            <div class="data-card">
+                <div class="data-label">Operation Matrix</div>
+                <div class="data-value" id="traceOp" style="color: #4ade80;">-</div>
+            </div>
+            <div class="data-card">
+                <div class="data-label">Live Velocity</div>
+                <div class="data-value" id="traceSpeed" style="color: #eab308;">-</div>
+            </div>
+            <div class="data-card">
+                <div class="data-label">Compass Heading</div>
+                <div class="data-value" id="traceBearing">-</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // MASTER WORKSPACE NAVIGATION INTERFACES
+        function engageLiveCommandMap() {
+            document.getElementById('telemetryOverlay').style.display = 'flex';
+        }
+
+        function secureExitMap() {
+            document.getElementById('telemetryOverlay').style.display = 'none';
+            document.getElementById('telemetryTray').style.display = 'none';
+        }
+
+        // TELEMETRY DRAWER LOGIC
+        function viewNodeTelemetry(callsign, op, speed, bearing) {
+            document.getElementById('traceCallsign').innerText = callsign;
+            document.getElementById('traceOp').innerText = op;
+            document.getElementById('traceSpeed').innerText = speed;
+            document.getElementById('traceBearing').innerText = bearing;
+            
+            document.getElementById('telemetryTray').style.display = 'grid';
+        }
+
+        // DYNAMIC VEHICULAR TELEMETRY VARIANT SIMULATION
+        setInterval(() => {
+            if (document.getElementById('telemetryTray').style.display === 'grid') {
+                const activeId = document.getElementById('traceCallsign').innerText;
+                if (activeId === 'VSP CRUISE-14') {
+                    const dynamicSpeed = (48 + Math.random() * 7).toFixed(1);
+                    document.getElementById('traceSpeed').innerText = `${dynamicSpeed} MPH`;
+                } else if (activeId === 'AMHERST K9-1') {
+                    const dynamicSpeed = (1.8 + Math.random() * 0.5).toFixed(1);
+                    document.getElementById('traceSpeed').innerText = `${dynamicSpeed} MPH`;
+                }
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
