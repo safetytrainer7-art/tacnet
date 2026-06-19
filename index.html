@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TACNET</title>
+    <title>TACNET COMMAND</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         /* Rugged, military-grade dark hunter green and high-contrast theme */
@@ -36,14 +35,15 @@
             left: 50%;
             transform: translateX(-50%);
             z-index: 10;
-            font-size: 28px;
+            font-size: 24px;
             font-weight: bold;
             color: #d4af37; /* Gold */
-            text-shadow: 2px 2px 4px #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+            text-shadow: 2px 2px 4px #000, -1px -1px 0 #000, 1px -1px 0 #000;
             letter-spacing: 2px;
             text-transform: uppercase;
             text-align: center;
             pointer-events: none;
+            width: 90%;
         }
 
         /* Secure Login Overlay panel */
@@ -75,7 +75,7 @@
         .login-box h2 {
             color: #d4af37;
             margin-bottom: 20px;
-            font-size: 24px;
+            font-size: 22px;
         }
 
         .input-group {
@@ -124,22 +124,94 @@
             font-size: 14px;
             color: #00ff66;
         }
+
+        /* Complete Command Module Dashboard (Overlay elements) */
+        .dashboard-overlay {
+            position: absolute;
+            bottom: 20px;
+            left: 10px;
+            right: 10px;
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+
+        .dashboard-card {
+            background-color: rgba(7, 20, 12, 0.9);
+            border: 1px solid #00ff66;
+            border-left: 4px solid #d4af37;
+            padding: 12px;
+            border-radius: 4px;
+            pointer-events: auto;
+            max-height: 180px;
+            overflow-y: auto;
+        }
+
+        .card-title {
+            color: #d4af37;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            border-bottom: 1px dashed #00ff66;
+            padding-bottom: 4px;
+        }
+
+        .med-grid {
+            display: flex;
+            gap: 5px;
+        }
+
+        .med-btn {
+            background-color: #112217;
+            border: 1px solid #d4af37;
+            color: #00ff66;
+            font-family: monospace;
+            font-size: 11px;
+            padding: 6px;
+            cursor: pointer;
+            flex: 1;
+            text-align: center;
+        }
+
+        .med-btn:hover, .med-btn.active {
+            background-color: #d4af37;
+            color: #07140c;
+        }
+
+        #med-instructions {
+            margin-top: 8px;
+            font-size: 11px;
+            line-height: 1.4;
+            color: #ffffff;
+            background: #020704;
+            padding: 6px;
+            border-radius: 3px;
+        }
+
+        .roster-list {
+            font-size: 12px;
+            margin: 0;
+            padding-left: 15px;
+        }
     </style>
 </head>
 <body>
 
-    <div class="tactical-header">TACNET SYSTEM ACTIVE</div>
+    <div class="tactical-header">TACNET MULTI-AGENCY TASK FORCE</div>
 
     <div id="login-panel">
         <div class="login-box">
-            <h2>MOCK SEARCH AUTHORIZATION</h2>
+            <h2>TACTICAL LOGIN</h2>
             <div class="input-group">
                 <label>Duty Email / Unit ID</label>
-                <input type="email" id="officer-email" placeholder="unit1 to unit6" required>
+                <input type="email" id="officer-email" placeholder="e.g., unit1, unit2" required>
             </div>
             <div class="input-group">
                 <label>Security Access Code</label>
-                <input type="password" id="officer-pass" placeholder="Any 8 characters" required>
+                <input type="password" id="officer-pass" placeholder="••••••••" required>
             </div>
             <button class="tactical-btn" onclick="verifyOfficerLogon()">Authorize Access</button>
             <div id="status-msg"></div>
@@ -148,17 +220,47 @@
 
     <div id="map"></div>
 
+    <div class="dashboard-overlay" id="main-dashboard" style="display: none;">
+        <div class="dashboard-card">
+            <div class="card-title">Active Mission Roster</div>
+            <ul class="roster-list" id="mission-roster">
+                <li>Waiting for active unit pings...</li>
+            </ul>
+        </div>
+
+        <div class="dashboard-card">
+            <div class="card-title">K9 Emergency Medical Module (Hands-Free Active)</div>
+            <div class="med-grid">
+                <button class="med-btn" onclick="showMed('cpr')">K9 CPR</button>
+                <button class="med-btn" onclick="showMed('snake')">SNAKE BITE</button>
+                <button class="med-btn" onclick="showMed('bleed')">BLEEDING</button>
+            </div>
+            <div id="med-instructions">Select emergency medical protocols above to display instant tactical instructions.</div>
+        </div>
+    </div>
+
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
     <script>
         let tacticalMap;
         let activeMarkers = {};
         
-        // Setup a public mock broadcast room so phones can communicate directly tonight
+        // Setup the secure public broadcast stream for tonight's field exercise
         const testRoom = "tacnet-va-mock-search";
         const eventSource = new EventSource(`https://sse.nodeflux.org/rooms/${testRoom}/stream`);
 
-        // Force authorization to bypass Appwrite's stuck cloud server
+        // Handle Medical Module Display Changes
+        const medProtocols = {
+            cpr: "<b>[K9 CPR PROTOCOL]</b><br>1. Lay K9 on right side. <br>2. Compress chest 100-120 BPM over widest part of ribcage.<br>3. 30 compressions to 2 breaths. Clear airway.",
+            snake: "<b>[K9 SNAKE BITE PROTOCOL]</b><br>1. Restrict movement immediately; keep bite below heart level.<br>2. DO NOT cut or apply ice.<br>3. Identify species if safe. Transport rapidly to emergency vet.",
+            bleed: "<b>[K9 EXCESSIVE BLEEDING]</b><br>1. Apply direct pressure using sterile field dressing.<br>2. Elevate limb if applicable.<br>3. Apply pressure bandage. If bleeding breaks through, add layer; do not remove base bandage."
+        };
+
+        function showMed(type) {
+            document.getElementById('med-instructions').innerHTML = medProtocols[type];
+        }
+
+        // Grant instant entry and unlock complete system dashboard
         function verifyOfficerLogon() {
             const email = document.getElementById('officer-email').value;
             const pass = document.getElementById('officer-pass').value;
@@ -166,21 +268,22 @@
 
             if (email === "" || pass.length < 4) {
                 status.style.color = "#ff3333";
-                status.innerText = "INVALID ENTRY";
+                status.innerText = "INVALID OPERATIONAL ENTRY";
                 return;
             }
 
-            status.innerText = "DECRYPTING LINK...";
+            status.innerText = "SYNCHRONIZING SECURE CHANNELS...";
 
             setTimeout(() => {
                 document.getElementById('login-panel').style.display = 'none';
+                document.getElementById('main-dashboard').style.display = 'flex';
                 initializeTacticalMap(email);
             }, 800);
         }
 
-        // Spin up the map grid and start broadcasting coordinates
+        // Spin up the map grid and engage satellite operational view
         function initializeTacticalMap(officerEmail) {
-            // Default center point over Virginia
+            // Center tracking viewpoint over Virginia
             tacticalMap = L.map('map').setView([37.5, -79.0], 16);
 
             // High-precision live satellite imagery feed
@@ -189,12 +292,32 @@
                 attribution: 'TACNET SATELLITE COMMAND'
             }).addTo(tacticalMap);
 
-            // Listen for other units walking around the yard and draw them live
+            // Update the Mission Roster Board
+            function updateRosterUI() {
+                const rosterEl = document.getElementById('mission-roster');
+                rosterEl.innerHTML = "";
+                
+                // Put your callsign at the top
+                const myLi = document.createElement('li');
+                myLi.style.color = "#d4af37";
+                myLi.innerHTML = `<b>${officerEmail.toUpperCase()} [BASE COMMAND] (YOU)</b>`;
+                rosterEl.appendChild(myLi);
+
+                // Add active tracking units
+                Object.keys(activeMarkers).forEach(unit => {
+                    if (unit !== officerEmail) {
+                        const li = document.createElement('li');
+                        li.innerText = `${unit.toUpperCase()} [FIELD UNIT] - ACTIVE SIGNAL`;
+                        rosterEl.appendChild(li);
+                    }
+                });
+            }
+
+            // Listen for other units walking around the yard and update map pins + roster live
             eventSource.onmessage = function(event) {
                 try {
                     const data = JSON.parse(event.data);
-                    // Don't draw our own duplicate marker from the stream
-                    if (data.officer !== officerEmail) {
+                    if (data.officer && data.officer !== officerEmail) {
                         if (activeMarkers[data.officer]) {
                             activeMarkers[data.officer].setLatLng([data.latitude, data.longitude]);
                         } else {
@@ -202,6 +325,7 @@
                                 .bindPopup(`<b>${data.officer.toUpperCase()}</b>`)
                                 .openPopup();
                         }
+                        updateRosterUI();
                     }
                 } catch(e) {}
             };
@@ -225,6 +349,8 @@
                                 .openPopup();
                         }
 
+                        updateRosterUI();
+
                         // Broadcast your current GPS coords to the other guys' phones
                         fetch(`https://sse.nodeflux.org/rooms/${testRoom}/emit`, {
                             method: 'POST',
@@ -238,6 +364,9 @@
             } else {
                 alert("Tactical Error: GPS Hardware undetected.");
             }
+            
+            // Render basic roster right away
+            updateRosterUI();
         }
     </script>
 </body>
