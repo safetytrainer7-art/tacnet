@@ -290,7 +290,6 @@
             box-shadow: 0 6px 14px rgba(0,0,0,0.6);
             font-family: monospace; font-size: 0.85rem; font-weight: 900; color: #38bdf8;
         }
-        /* DOUBLED COMPASS TARGET SECTOR WEIGHT FOR FAST TRACKING INSPECTION */
         .compass-arrow {
             width: 28px; height: 28px;
             background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2338bdf8"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>') no-repeat center;
@@ -475,6 +474,7 @@
 
     <div id="emergencyStrobe"></div>
 
+    <!-- IMMERSIVE WHITE HARD-COPY DOCUMENT PRINT SIMULATOR -->
     <div id="printPreviewLayer" class="print-preview-modal">
         <div class="preview-alert-strip">
             <span style="font-size:0.65rem; font-weight:800; color:#475569; text-transform:uppercase; letter-spacing:0.5px;">📋 VERIFIED PRE-PRINT PREVIEW</span>
@@ -518,6 +518,7 @@
         <div id="prevDocLogs" style="font-family:monospace; font-size:0.7rem; line-height:1.4;"></div>
     </div>
 
+    <!-- INITIAL DISPLAY SCREEN -->
     <div id="screenLanding" class="screen">
         <div class="landing-backdrop-pure"></div>
         <div class="graphic-link-wrapper" onclick="switchScreen('screenSignIn')">
@@ -532,6 +533,7 @@
         </div>
     </div>
 
+    <!-- SECURE FIELD GATEWAY PANEL -->
     <div id="screenSignIn" class="screen">
         <div class="backdrop"></div>
         <div style="z-index: 5; margin-top: 1.5rem; display: flex; flex-direction: column; align-items: center;">
@@ -572,6 +574,7 @@
         </div>
     </div>
 
+    <!-- TACNET MAIN HUB GRID -->
     <div id="screenMenu" class="screen">
         <div class="backdrop"></div>
         <div style="z-index: 5; margin-top: 2.5rem; margin-bottom: 1rem; text-align: center;">
@@ -595,6 +598,7 @@
         </div>
     </div>
 
+    <!-- ACTIVE MAP WORKSPACE -->
     <div id="screenMap" class="screen">
         <div class="map-topnav">
             <div class="nav-arrow" onclick="switchScreen('screenMenu')">←</div>
@@ -614,6 +618,7 @@
             <div id="map"></div>
             <canvas id="drawCanvas"></canvas>
             
+            <!-- MAGNIFIED HARDWARE TELEMETRY DIRECTIONAL DECK -->
             <div class="compass-deck">
                 <div id="compassArrow" class="compass-arrow"></div>
                 <div>HDG: <span id="headingReadout">000°</span></div>
@@ -621,6 +626,7 @@
 
             <div id="nvgGreenFilter" class="night-vision-green"></div>
 
+            <!-- STEP BUTTON DECK PER OPERATIONAL SPECIFICATION -->
             <div id="commanderPerimeterDeck" class="perimeter-manual-deck">
                 <label>Perimeter</label>
                 <div id="radiusReadout" class="perimeter-readout">500m</div>
@@ -628,6 +634,7 @@
                 <button class="step-btn" onclick="adjustPerimeterManual(-100)">-</button>
             </div>
 
+            <!-- COMPACT SIDEBAR OVERLAY TOOL DRAWER -->
             <div class="map-sidebar">
                 <button id="btnPen" class="tool-btn" onclick="toggleRedPen()">PEN</button>
                 <button class="tool-btn" onclick="undoLastLine()">ERASE</button>
@@ -636,6 +643,7 @@
             </div>
         </div>
 
+        <!-- ASSET DRAWER -->
         <div class="asset-drawer">
             <div id="chip-k9" class="asset-chip" onclick="selectAssetToPlace('k9')"><span class="dot k9"></span>K9 Team</div>
             <div id="chip-le" class="asset-chip" onclick="selectAssetToPlace('le')"><span class="dot le"></span>LE Blue</div>
@@ -661,6 +669,7 @@
         </div>
     </div>
 
+    <!-- ADJUSTED STRATEGIC LEDGER WORKSPACE -->
     <div id="screenReport" class="screen">
         <div class="map-topnav" style="height:55px;">
             <div class="nav-arrow" onclick="switchScreen('screenMenu')">←</div>
@@ -715,6 +724,7 @@
         </div>
     </div>
 
+    <!-- VOICE ASSISTANT FIELD PANEL -->
     <div id="screenK9Voice" class="screen">
         <div class="map-topnav">
             <div class="nav-arrow" onclick="handleK9VoiceBackNavigation()">←</div>
@@ -811,4 +821,344 @@
             if (isUserAuthenticatedSession) {
                 switchScreen('screenMenu');
             } else {
-                switch
+                switchScreen('screenSignIn');
+            }
+        }
+
+        function setOperationalRole(role) {
+            assignedRole = role;
+            document.getElementById('roleSearcher').classList.toggle('active', role === 'searcher');
+            document.getElementById('roleCommander').classList.toggle('active', role === 'commander');
+        }
+
+        function resizeDrawCanvas() {
+            const wrapper = document.getElementById('mapWrapper');
+            if (wrapper && drawCanvas) {
+                drawCanvas.width = wrapper.clientWidth;
+                drawCanvas.height = wrapper.clientHeight;
+                redrawCanvasStack();
+            }
+        }
+
+        function initRealMap() {
+            if (map) return; 
+            map = L.map('map', { center: mapCenter, zoom: 18, zoomControl: false, attributionControl: false });
+            setMapType('satellite');
+
+            tacticalPerimeterCircle = L.circle(mapCenter, {
+                color: '#22c55e', fillColor: '#22c55e', fillOpacity: 0.12, weight: 3, radius: perimeterRadiusMeters
+            }).addTo(map);
+
+            map.on('click', (e) => {
+                if (isPenActive) return; 
+                if (selectedAssetType) executeManualAssetPlacement(e.latlng.lat, e.latlng.lng, selectedAssetType);
+            });
+        }
+
+        function trackUserGPS() {
+            if (!navigator.geolocation) return;
+            if (gpsWatchId) navigator.geolocation.clearWatch(gpsWatchId);
+
+            // FIXED HANDLER FUNCTION TO SAFELY HANDLE BOOT TIMING INTERFACES WITHOUT BROWSER FAILURE
+            gpsWatchId = navigator.geolocation.watchPosition((position) => {
+                const uLat = position.coords.latitude; const uLng = position.coords.longitude;
+                const currentCoords = [uLat, uLng];
+
+                if (!userLocationMarker) {
+                    const gpsIcon = L.divIcon({ className: 'tac-marker user-gps-dot', iconSize: [20, 20], iconAnchor: [10, 10] });
+                    userLocationMarker = L.marker(currentCoords, { icon: gpsIcon }).addTo(map);
+                    map.setView(currentCoords, 18); 
+                    mapCenter = currentCoords;
+                    if(tacticalPerimeterCircle) tacticalPerimeterCircle.setLatLng(currentCoords);
+                } else {
+                    userLocationMarker.setLatLng(currentCoords);
+                    if (!isMapLocked) {
+                        map.setView(currentCoords, map.getZoom());
+                    }
+                }
+            }, (err) => { console.log('GPS Telemetry buffering...'); }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 });
+        }
+
+        function setupOrientationCompass() {
+            if (window.DeviceOrientationEvent) {
+                window.addEventListener('deviceorientation', handleOrientationUpdate, true);
+            }
+        }
+
+        function handleOrientationUpdate(event) {
+            let heading = event.webkitCompassHeading || event.alpha;
+            if (heading) {
+                const angle = Math.round(heading);
+                document.getElementById('headingReadout').innerText = String(angle).padStart(3, '0') + "°";
+                if(document.getElementById('compassArrow')) document.getElementById('compassArrow').style.transform = `rotate(${angle}deg)`;
+            }
+        }
+
+        function handleSignIn() {
+            const nameIn = document.getElementById('inputName');
+            const agencyIn = document.getElementById('inputAgency');
+            const rankIn = document.getElementById('inputRank');
+
+            nameIn.classList.remove('error-field'); agencyIn.classList.remove('error-field'); rankIn.classList.remove('error-field');
+            let fault = false;
+            if (nameIn.value.trim() === "") { nameIn.classList.add('error-field'); fault = true; }
+            if (agencyIn.value.trim() === "") { agencyIn.classList.add('error-field'); fault = true; }
+            if (rankIn.value.trim() === "") { rankIn.classList.add('error-field'); fault = true; }
+
+            if (fault) return;
+
+            activeOperatorName = nameIn.value.trim(); activeOperatorAgency = agencyIn.value.trim(); activeOperatorCallSign = rankIn.value.trim().toUpperCase();
+            isUserAuthenticatedSession = true; 
+            
+            const isCommander = (assignedRole === 'commander');
+            document.getElementById('commanderIntelBlock').style.display = isCommander ? 'block' : 'none';
+            document.getElementById('commanderPerimeterDeck').style.display = isCommander ? 'flex' : 'none';
+            document.getElementById('commanderControlRow').style.display = isCommander ? 'flex' : 'none';
+
+            logEvent(`Verified Authentication: [${activeOperatorCallSign}] logged in as ${assignedRole.toUpperCase()}.`);
+            switchScreen('screenMenu');
+        }
+
+        function logOutSession() {
+            if(gpsWatchId) navigator.geolocation.clearWatch(gpsWatchId);
+            userLocationMarker = null;
+            isUserAuthenticatedSession = false;
+            document.getElementById('inputName').value = ""; document.getElementById('inputAgency').value = ""; document.getElementById('inputRank').value = "";
+            switchScreen('screenSignIn');
+        }
+
+        function startNewSearch() {
+            clearMapAssets(); clearDrawings();
+            perimeterRadiusMeters = 500; 
+            if (tacticalPerimeterCircle) tacticalPerimeterCircle.setRadius(perimeterRadiusMeters);
+            document.getElementById('radiusReadout').innerText = perimeterRadiusMeters + "m";
+            logEvent("Fresh search parameters initialized.");
+            switchScreen('screenMap');
+        }
+
+        function setMapType(type) {
+            if (!map) return;
+            document.querySelectorAll('.map-toggle-btn').forEach(b => b.classList.remove('active'));
+            map.eachLayer((layer) => { if (layer instanceof L.TileLayer) map.removeLayer(layer); });
+
+            if (type === 'satellite') {
+                document.getElementById('btnSat').classList.add('active');
+                L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19 }).addTo(map);
+                L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, opacity: 0.85 }).addTo(map);
+                L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, opacity: 0.75 }).addTo(map);
+            } else {
+                document.getElementById('btnTerr').classList.add('active');
+                L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', { maxZoom: 18 }).addTo(map);
+            }
+        }
+
+        function toggleVetDirectoryPanel() {
+            const panel = document.getElementById('vetInfoContainerBlock');
+            panel.style.display = (panel.style.display === 'none' || panel.style.display === '') ? 'block' : 'none';
+        }
+
+        function executeAddressSearch() {
+            const query = document.getElementById('mapSearch').value.trim();
+            if(query !== "") {
+                fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(query) + '&limit=1')
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data && data.length > 0) {
+                            const lat = parseFloat(data[0].lat); const lon = parseFloat(data[0].lon);
+                            mapCenter = [lat, lon]; map.setView(mapCenter, 18);
+                            if (tacticalPerimeterCircle) tacticalPerimeterCircle.setLatLng(mapCenter);
+                            
+                            if (persistentTargetPin) {
+                                persistentTargetPin.setLatLng(mapCenter);
+                            } else {
+                                const redDotIcon = L.divIcon({ className: 'tac-marker tac-target-pin', iconSize: [18, 18], iconAnchor: [9, 9] });
+                                persistentTargetPin = L.marker(mapCenter, { icon: redDotIcon, zIndexOffset: 2000 });
+                            }
+                            persistentTargetPin.addTo(map);
+                            logEvent(`Geocoded Focus Lock: Persistent Red Target Dot pinned.`);
+                        }
+                    });
+            }
+        }
+
+        function adjustPerimeterManual(amount) {
+            perimeterRadiusMeters += amount;
+            if (perimeterRadiusMeters < 100) perimeterRadiusMeters = 100;
+            if (perimeterRadiusMeters > 5000) perimeterRadiusMeters = 5000;
+            if (tacticalPerimeterCircle) {
+                tacticalPerimeterCircle.setRadius(perimeterRadiusMeters);
+            }
+            document.getElementById('radiusReadout').innerText = perimeterRadiusMeters + "m";
+            logEvent(`Perimeter Adjusted: Radius modified manually to ${perimeterRadiusMeters}m.`);
+        }
+
+        function toggleMapLock() {
+            isMapLocked = !isMapLocked; document.getElementById('btnLock').style.background = isMapLocked ? '#1d4ed8' : '';
+            if (isMapLocked) { map.dragging.disable(); map.touchZoom.disable(); } else { map.dragging.enable(); map.touchZoom.enable(); }
+        }
+
+        function toggleRedPen() {
+            isPenActive = !isPenActive; document.getElementById('btnPen').classList.toggle('pen-active', isPenActive);
+            if(isPenActive) { if(!isMapLocked) toggleMapLock(); drawCanvas.style.pointerEvents = 'auto'; } else { drawCanvas.style.pointerEvents = 'none'; }
+        }
+
+        function selectAssetToPlace(assetType) {
+            document.querySelectorAll('.asset-chip').forEach(chip => chip.classList.remove('selected'));
+            if (selectedAssetType === assetType) { selectedAssetType = null; return; }
+            selectedAssetType = assetType; document.getElementById(`chip-${assetType}`).classList.add('selected');
+        }
+
+        function executeManualAssetPlacement(lat, lng, assetType) {
+            const htmlIcon = L.divIcon({ className: `tac-marker tac-${assetType}`, iconSize: [20, 20], iconAnchor: [10, 10] });
+            const marker = L.marker([lat, lng], { icon: htmlIcon, draggable: true }).addTo(map);
+            
+            marker.on('click', (e) => {
+                L.DomEvent.stopPropagation(e);
+                if (isPenActive) return; 
+                map.removeLayer(marker);
+                placedMarkers = placedMarkers.filter(m => m !== marker);
+                logEvent(`Asset Removed: Purged [${assetType.toUpperCase()}] marker.`);
+            });
+
+            placedMarkers.push(marker);
+            logEvent(`Asset Deployed: dropped custom operational target token [${assetType.toUpperCase()}].`);
+            selectAssetToPlace(null);
+        }
+
+        function generatePrintPreviewLayout() {
+            document.getElementById('prevDocCaseId').innerText = document.getElementById('reportCaseNumber').value || "UNSPECIFIED";
+            document.getElementById('prevDocOffense').innerText = document.getElementById('reportOffenseType').value || "General Field Ops";
+            
+            document.getElementById('prevDocOfficer').innerText = activeOperatorName || "Not Recorded";
+            document.getElementById('prevDocAgency').innerText = activeOperatorAgency || "Not Recorded";
+            document.getElementById('prevDocCallsign').innerText = activeOperatorCallSign || "Not Recorded";
+            
+            document.getElementById('prevDocNotes').innerText = document.getElementById('reportNotes').value || "No command notes filed.";
+            document.getElementById('prevDocDisp').innerText = document.getElementById('reportDisposition').value || "NO DISPOSITION DEPLOYED";
+            
+            const logsContainer = document.getElementById('prevDocLogs');
+            if (historicalLogs.length === 0) {
+                logsContainer.innerHTML = "<p>No analytical telemetry entries logged during this sequence.</p>";
+            } else {
+                logsContainer.innerHTML = historicalLogs.map(log => `<p style='margin-bottom:0.25rem;'><b>[${log.time}]</b> ${log.text}</p>`).join('');
+            }
+            
+            document.getElementById('printPreviewLayer').style.display = 'block';
+        }
+
+        function closePrintPreviewLayout() {
+            document.getElementById('printPreviewLayer').style.display = 'none';
+        }
+
+        function executeHardPrint() {
+            generatePrintPreviewLayout(); 
+            setTimeout(() => { window.print(); }, 150);
+        }
+
+        drawCanvas.addEventListener('mousedown', startLineStroke); drawCanvas.addEventListener('mouseup', endLineStroke); drawCanvas.addEventListener('mousemove', drawLineSegment);
+        drawCanvas.addEventListener('touchstart', (e) => { if(e.touches[0]) startLineStroke(e.touches[0]); }); drawCanvas.addEventListener('touchend', endLineStroke);
+        drawCanvas.addEventListener('touchmove', (e) => { if(e.touches[0]) drawLineSegment(e.touches[0]); });
+
+        function startLineStroke(e) { if (!isPenActive) return; isDrawing = true; currentLineStroke = []; appendSegmentPoint(e); }
+        function drawLineSegment(e) { if (!isDrawing || !isPenActive) return; appendSegmentPoint(e); redrawCanvasStack(); }
+        function appendSegmentPoint(e) {
+            const rect = drawCanvas.getBoundingClientRect();
+            const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left; const y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
+            currentLineStroke.push({ x: x, y: y });
+        }
+        function endLineStroke() { if (!isDrawing) return; isDrawing = false; if (currentLineStroke.length > 0) drawingLinesStack.push(currentLineStroke); }
+
+        function redrawCanvasStack() {
+            drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
+            drawCtx.strokeStyle = '#dc2626'; drawCtx.lineWidth = 3; drawCtx.lineCap = 'round'; drawCtx.lineJoin = 'round';
+            drawingLinesStack.forEach(line => renderLineArray(line));
+            if (isDrawing && currentLineStroke.length > 0) renderLineArray(currentLineStroke);
+        }
+
+        function renderLineArray(line) {
+            if (line.length < 1) return; drawCtx.beginPath(); drawCtx.moveTo(line[0].x, line[0].y);
+            for (let i = 1; i < line.length; i++) drawCtx.lineTo(line[i].x, line[i].y);
+            drawCtx.stroke();
+        }
+
+        function undoLastLine() { if (drawingLinesStack.length > 0) { drawingLinesStack.pop(); redrawCanvasStack(); } }
+        function clearDrawings() { drawingLinesStack = []; if(drawCtx) drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height); }
+        function clearMapAssets() { placedMarkers.forEach(m => map.removeLayer(m)); placedMarkers = []; if(persistentTargetPin) { map.removeLayer(persistentTargetPin); persistentTargetPin = null; } }
+        
+        function terminateSearch() { 
+            clearMapAssets(); clearDrawings(); if(gpsWatchId) navigator.geolocation.clearWatch(gpsWatchId); 
+            logEvent("Search officially terminated. System resetting permissions...");
+            assignedRole = "searcher";
+            isUserAuthenticatedSession = false; 
+            document.getElementById('commanderIntelBlock').style.display = 'none';
+            document.getElementById('commanderPerimeterDeck').style.display = 'none';
+            document.getElementById('commanderControlRow').style.display = 'none';
+            document.getElementById('inputName').value = ""; document.getElementById('inputAgency').value = ""; document.getElementById('inputRank').value = "";
+            switchScreen('screenSignIn');
+        }
+
+        function triggerEmergencyAlert() { document.getElementById('emergencyStrobe').style.display = 'block'; logEvent("🚨 DISTRESS ALARM DEPLOYED."); }
+        function resetEmergencyAlert() { document.getElementById('emergencyStrobe').style.display = 'none'; }
+
+        function playK9VoiceProtocol(category) {
+            window.speechSynthesis.cancel();
+            currentVoiceCategory = category;
+            const banner = document.getElementById('voiceStatusBanner'); banner.style.display = 'block';
+            let txt = "";
+
+            if (category === 'cpr') {
+                txt = "Canine CPR Protocol. Step 1. Check breathing and pulse. Step 2. Lay dog on its right side. Step 3. Compress chest 1.5 to 2 inches deep at 100 to 120 beats per minute. Step 4. Deliver 2 rescue breaths into the nose for every 30 compressions. Repeat continuously.";
+            } else if (category === 'gunshot') {
+                txt = "Gunshot Trauma Protocol. Step 1. Maintain muzzle control. Step 2. Pack the entry and wound cavity directly with gauze dressing cloth. Step 3. Apply sustained manual direct downward pressure without stopping. Step 4. Bandage firmly while maintaining compression and sprint directly to emergency regional veterinary support links.";
+            } else if (category === 'snake') {
+                txt = "Venomous Snake Bite Protocol. Step 1. Restrain the animal instantly. Minimize physical exertion completely. Step 2. Keep bite site positioned below heart level. Step 3. Flush bite wound puncture opening clean with water. Do not ice. Do not cut.";
+            } else if (category === 'bleeding') {
+                txt = "Severe Hemorrhage Bleeding Protocol. Step 1. Apply clean sterile trauma pad compress dressing cloth over lanceration site. Step 2. Secure maximum two handed direct downward heavy bone pressure. Step 3. Wrap a binding compression wrap. Do not check bleeding cavity until transit complete.";
+            } else if (category === 'heat') {
+                txt = "Heat Exhaustion Protocol. Step 1. Extract animal from hyperthermic exposure elements into deep shade. Step 2. Wrap underbelly, neck, and paws using cool damp cloths. Step 3. Circulate dynamic fan airflow over fur. Do not drop core below 103 degrees.";
+            } else if (category === 'eye') {
+                txt = "Ocular Eye Injury Protocol. Step 1. Restrain paws to prevent mechanical corneal abrasion rubbing. Step 2. Irrigate eye continuously for 3 full minutes with sterile saline solution to clear dirt debris. Step 3. Cover eye with moist padding cloth.";
+            } else if (category === 'paw') {
+                txt = "Paw Pad Fracture Trauma Protocol. Step 1. Clear exterior field glass metal stones out of lacerated tissue. Step 2. Apply pressure dressing patch block directly onto bleeding pad skin for 2 full minutes. Step 3. Wrap protective boot bandage.";
+            }
+
+            banner.innerText = "📢 VOCAL BROADCAST ACTIVE: " + category.toUpperCase();
+            const utterance = new SpeechSynthesisUtterance(txt);
+            utterance.rate = 0.95; utterance.onend = () => { banner.style.display = 'none'; };
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function repeatLastVoiceBroadcast() { if(currentVoiceCategory !== "") playK9VoiceProtocol(currentVoiceCategory); }
+        function stopVoiceBroadcast() { window.speechSynthesis.cancel(); document.getElementById('voiceStatusBanner').style.display = 'none'; }
+
+        function playbackControl(action) {
+            const status = document.getElementById('replayStatus'); clearInterval(replayInterval);
+            if (action === 'play') {
+                status.innerText = "Replaying Case Event Timeline...";
+                let idx = 0;
+                replayInterval = setInterval(() => {
+                    if (idx < historicalLogs.length) {
+                        status.innerText = `Log Update: ${idx + 1}/${historicalLogs.length}`; idx++;
+                    } else { clearInterval(replayInterval); status.innerText = "Replay Complete"; }
+                }, 1000);
+            } else if (action === 'pause') { status.innerText = "Playback Frozen"; }
+        }
+
+        function emailFinalReport() {
+            const notes = document.getElementById('reportNotes').value;
+            const disposition = document.getElementById('reportDisposition').value;
+            let body = `TACNET TACTICAL BRIEF INCIDENT CASE LEDGER\nNotes: ${notes}\nFinal Disposition: ${disposition}\n\n`;
+            historicalLogs.forEach(l => { body += `[${l.time}] ${l.text}\n`; });
+            window.location.href = `mailto:?subject=TACNET Incident Report Log Export&body=${encodeURIComponent(body)}`;
+        }
+
+        function logEvent(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            historicalLogs.unshift({ time: timestamp, text: message });
+            const list = document.getElementById('logList');
+            if(list) list.innerHTML = historicalLogs.map(log => `<li class="log-item"><span>[${log.time}]</span> ${log.text}</li>`).join('');
+        }
+        function openHistoricalLogs() { logEvent("Analytical operating event report ledger opened."); switchScreen('screenReport'); }
+    </script>
+</body>
+</html>
