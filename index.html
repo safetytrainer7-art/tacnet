@@ -31,7 +31,7 @@
         #screenLanding { display: flex !important; z-index: 20; }
         .screen.active { display: flex !important; z-index: 30; }
 
-        /* BACKDROP CORE CONFIGURATIONS */
+        /* BACKDROP CORE LAYER INTERFACE PROFILE */
         .backdrop {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -53,6 +53,7 @@
             z-index: 1;
         }
 
+        /* MASTER GRAPHIC CONTAINER CLICK TRACK */
         .graphic-link-wrapper {
             width: 100%;
             height: 100%;
@@ -383,7 +384,7 @@
             mix-blend-mode: screen; box-shadow: inset 0 0 100px rgba(0, 255, 0, 0.35);
         }
 
-        /* COURE REPLAY & PRE-REPORT MATRIX STYLES */
+        /* COURT REPLAY & PRE-REPORT MATRIX STYLES */
         .report-body { flex-grow: 1; padding: 1rem; overflow-y: auto; background: #020617; margin-top: 60px; }
         .report-header-block { border-bottom: 2px solid #eab308; padding-bottom: 0.5rem; margin-bottom: 1rem; }
         
@@ -499,7 +500,7 @@
         </div>
     </div>
 
-    <!-- TACNET MAIN HUB GRID - FULL FIVE CONFIGURATION BUTTON MATRIX -->
+    <!-- TACNET MAIN HUB GRID -->
     <div id="screenMenu" class="screen">
         <div class="backdrop"></div>
         <div style="z-index: 5; margin-top: 2.5rem; margin-bottom: 1rem; text-align: center;">
@@ -549,7 +550,7 @@
 
             <div id="nvgGreenFilter" class="night-vision-green"></div>
 
-            <!-- RESTORED STEP BUTTON DECK PER OPERATIONAL SPECIFICATION -->
+            <!-- STEP BUTTON DECK PER OPERATIONAL SPECIFICATION -->
             <div id="commanderPerimeterDeck" class="perimeter-manual-deck">
                 <label>Perimeter</label>
                 <div id="radiusReadout" class="perimeter-readout">500m</div>
@@ -566,7 +567,7 @@
             </div>
         </div>
 
-        <!-- ASSET DRAWER INDEX -->
+        <!-- EXTENDED FIELD ASSET DRAWER PROFILE INDEX -->
         <div class="asset-drawer">
             <div id="chip-k9" class="asset-chip" onclick="selectAssetToPlace('k9')"><span class="dot k9"></span>K9 Team</div>
             <div id="chip-le" class="asset-chip" onclick="selectAssetToPlace('le')"><span class="dot le"></span>LE Blue</div>
@@ -592,7 +593,7 @@
         </div>
     </div>
 
-    <!-- PRE-REPORT EDITABLE PREVIEW & FORENSIC TIMELINE REPLAY -->
+    <!-- TIMELINE PROFILE HISTORY REPORT CONTAINER -->
     <div id="screenReport" class="screen">
         <div class="map-topnav">
             <div class="nav-arrow" onclick="switchScreen('screenMenu')">←</div>
@@ -636,7 +637,7 @@
         </div>
     </div>
 
-    <!-- FIELD AUDIO MEDICAL MATRIX SCREEN -->
+    <!-- VOCAL ASSISTANT FIELD PANEL DIRECT SYSTEM DATA HOOKS -->
     <div id="screenK9Voice" class="screen">
         <div class="map-topnav">
             <div class="nav-arrow" onclick="handleK9VoiceBackNavigation()">←</div>
@@ -754,7 +755,9 @@
 
         function initRealMap() {
             if (map) return; 
-            map = L.map('map', { center: mapCenter, zoom: 14, zoomControl: false, attributionControl: false });
+            
+            // POINT 2: DEFAULT ENGINE BOOTS TO MAX HIGH-RESOLUTION ZOOM PROFILE (ZOOM LEVEL 18)
+            map = L.map('map', { center: mapCenter, zoom: 18, zoomControl: false, attributionControl: false });
             setMapType('satellite');
 
             tacticalPerimeterCircle = L.circle(mapCenter, {
@@ -767,6 +770,7 @@
             });
         }
 
+        // POINT 1: AUTOMATED TELEMETRY AUTO-CENTERING ENGINE W/ ZERO USER CONSOLE TOUCH REQUIRED
         function trackUserGPS() {
             if (!navigator.geolocation) return;
             if (gpsWatchId) navigator.geolocation.clearWatch(gpsWatchId);
@@ -778,10 +782,16 @@
                 if (!userLocationMarker) {
                     const gpsIcon = L.divIcon({ className: 'tac-marker user-gps-dot', iconSize: [20, 20], iconAnchor: [10, 10] });
                     userLocationMarker = L.marker(currentCoords, { icon: gpsIcon }).addTo(map);
-                    map.setView(currentCoords, 16); mapCenter = currentCoords;
+                    map.setView(currentCoords, 18); 
+                    mapCenter = currentCoords;
                     if(tacticalPerimeterCircle) tacticalPerimeterCircle.setLatLng(currentCoords);
                 } else {
                     userLocationMarker.setLatLng(currentCoords);
+                    
+                    // HANDS-FREE TRACKING BOUND: Automatically keeps map centered over your movement path
+                    if (!isMapLocked) {
+                        map.setView(currentCoords, map.getZoom());
+                    }
                 }
             }, null, { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 });
         }
@@ -871,7 +881,7 @@
                     .then(data => {
                         if (data && data.length > 0) {
                             const lat = parseFloat(data[0].lat); const lon = parseFloat(data[0].lon);
-                            mapCenter = [lat, lon]; map.setView(mapCenter, 16);
+                            mapCenter = [lat, lon]; map.setView(mapCenter, 18);
                             if (tacticalPerimeterCircle) tacticalPerimeterCircle.setLatLng(mapCenter);
                             
                             if (persistentTargetPin) {
@@ -895,7 +905,7 @@
                 tacticalPerimeterCircle.setRadius(perimeterRadiusMeters);
             }
             document.getElementById('radiusReadout').innerText = perimeterRadiusMeters + "m";
-            logEvent(`Perimeter Adjusted: Radius modified manually to ${perimeterRadiusMeters} meters.`);
+            logEvent("Perimeter Adjusted: Radius modified manually.");
         }
 
         function toggleMapLock() {
@@ -995,7 +1005,7 @@
             } else if (category === 'eye') {
                 txt = "Ocular Eye Injury Protocol. Step 1. Restrain paws to prevent mechanical corneal abrasion rubbing. Step 2. Irrigate eye continuously for 3 full minutes with sterile saline solution to clear dirt debris. Step 3. Cover eye with moist padding cloth.";
             } else if (category === 'paw') {
-                txt = "Paw Pad Fracture Trauma Protocol. Step 1. Clear exterior field glass metal stones out of lacerated tissue. Step 2. Apply pressure dressing patch block directly onto bleeding pad skin for 2 full minutes. Step 3. Wrap protective boot bandage.";
+                txt = "Paw Pad Fracture Trauma Protocol. Step 1. Clear exterior field glass metal stones out of lancerated tissue. Step 2. Apply pressure dressing patch block directly onto bleeding pad skin for 2 full minutes. Step 3. Wrap protective boot bandage.";
             }
 
             banner.innerText = "📢 VOCAL BROADCAST ACTIVE: " + category.toUpperCase();
