@@ -26,15 +26,16 @@
             display: none;
             flex-direction: column;
             z-index: 10;
+            background-color: #020208;
         }
         #screenLanding { display: flex !important; z-index: 20; }
         .screen.active { display: flex !important; z-index: 30; }
 
-        /* BACKDROP MODULES */
+        /* BACKDROP CORE CONFIGURATIONS */
         .backdrop {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(2, 6, 23, 0.45), rgba(15, 23, 42, 0.85)), 
+            background: linear-gradient(rgba(2, 6, 23, 0.55), rgba(15, 23, 42, 0.9)), 
                         url('image_b2b73d.jpg');
             background-size: 100% 100%;
             background-position: center;
@@ -97,7 +98,7 @@
         .creator-name { color: #eab308; font-size: 1.4rem; margin: 0.2rem 0; text-transform: uppercase; letter-spacing: 2px; font-weight: 900; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
         .creator-title { color: #cbd5e1; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* PORTAL PANEL */
+        /* PORTAL GLASS PANEL */
         .glass-panel {
             background: rgba(15, 23, 42, 0.85);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -121,7 +122,6 @@
             border-radius: 4px;
             color: #fff;
             font-size: 0.95rem;
-            transition: border-color 0.2s;
         }
         .form-control.error-field {
             border-color: #ef4444 !important;
@@ -151,6 +151,26 @@
             border-color: #60a5fa;
             color: #fff;
         }
+
+        /* GATEWAY QUICK ACCESS LINK ROW */
+        .gateway-utilities-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        .util-btn {
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid #3b82f6;
+            color: #38bdf8;
+            padding: 0.5rem;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            text-align: center;
+            cursor: pointer;
+        }
         
         .btn {
             display: block;
@@ -171,7 +191,7 @@
 
         .menu-container { display: flex; flex-direction: column; gap: 0.8rem; width: 92%; max-width: 380px; margin: auto; z-index: 5; }
 
-        /* PROPORTIONAL SCREEN RESCALING FOR IPHONE 15 PRO */
+        /* FIXED IPHONE 15 PRO STRUCTURAL HEIGHT SEGMENTS */
         .map-topnav {
             height: 60px;
             background: #0f172a;
@@ -185,7 +205,7 @@
         }
         .map-wrapper { 
             position: relative; 
-            flex-grow: 1; /* Automatically absorbs space safely between headers and drawer */
+            flex-grow: 1;
             width: 100%; 
             background: #020617; 
         }
@@ -193,7 +213,7 @@
         #drawCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; }
         
         .asset-drawer {
-            height: 65px;
+            height: 60px;
             background: #0f172a;
             border-top: 2px solid rgba(255,255,255,0.1);
             border-bottom: 2px solid rgba(255,255,255,0.1);
@@ -205,7 +225,7 @@
             flex-shrink: 0;
         }
         .bottom-deck { 
-            height: 110px; 
+            height: 105px; 
             background: #020617; 
             display: flex; 
             flex-direction: column; 
@@ -213,7 +233,25 @@
             padding-bottom: env(safe-area-inset-bottom); 
         }
 
-        /* OVERLAY PLACEMENT CONTROLS */
+        /* PERIMETER FLUID SLIDER DRAWER PANEL */
+        .perimeter-slider-deck {
+            position: absolute;
+            top: 12px; left: 8px;
+            background: rgba(15, 23, 42, 0.95);
+            border: 2px solid rgba(255,255,255,0.15);
+            padding: 0.5rem;
+            border-radius: 6px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            z-index: 20;
+            width: 120px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+        .perimeter-slider-deck label { font-size: 0.5rem; font-weight: 900; text-transform: uppercase; color: #94a3b8; }
+        .slider-control { width: 100%; margin: 0.3rem 0; accent-color: #22c55e; }
+        .perimeter-readout { font-size: 0.65rem; font-family: monospace; font-weight: 800; color: #22c55e; background: #000; padding: 0.1rem 0.3rem; border-radius: 3px; }
+
         .compass-deck {
             position: absolute;
             bottom: 8px; left: 8px;
@@ -225,14 +263,10 @@
             align-items: center;
             gap: 0.4rem;
             z-index: 25;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-            font-family: monospace;
-            font-size: 0.7rem;
-            font-weight: 800;
-            color: #38bdf8;
+            font-family: monospace; font-size: 0.7rem; font-weight: 800; color: #38bdf8;
         }
         .compass-arrow {
-            width: 14px; height: 14px;
+            width: 12px; height: 14px;
             background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2338bdf8"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>') no-repeat center;
             background-size: contain;
             transition: transform 0.2s ease;
@@ -240,49 +274,23 @@
 
         .map-sidebar {
             position: absolute;
-            top: 15px; right: 8px;
+            top: 12px; right: 8px;
             display: flex;
             flex-direction: column;
             gap: 0.4rem;
             z-index: 20;
         }
         .tool-btn {
-            width: 40px; height: 42px;
+            width: 38px; height: 40px;
             border-radius: 6px;
             background: #0f172a;
             border: 2px solid rgba(255,255,255,0.15);
-            color: #fff;
-            font-size: 0.55rem;
-            font-weight: 900;
+            color: #fff; font-size: 0.55rem; font-weight: 900;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer;
         }
         .tool-btn.active { background: #1d4ed8; border-color: #3b82f6; }
         .tool-btn.pen-active { background: #b91c1c; border-color: #f87171; }
-
-        .perimeter-manual-deck {
-            position: absolute;
-            top: 15px; left: 8px;
-            background: #0f172a;
-            border: 2px solid rgba(255,255,255,0.15);
-            padding: 0.4rem;
-            border-radius: 6px;
-            display: none; 
-            flex-direction: column;
-            align-items: center;
-            z-index: 20;
-            gap: 0.3rem;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        }
-        .perimeter-manual-deck label { font-size: 0.5rem; font-weight: 900; text-transform: uppercase; color: #94a3b8; text-align: center; }
-        .perimeter-readout { font-size: 0.65rem; font-family: monospace; font-weight: 800; color: #22c55e; background: #000; padding: 0.15rem 0.3rem; border-radius: 3px; border: 1px solid #334155; }
-        .step-btn {
-            width: 34px; height: 34px;
-            background: #1e293b; border: 1px solid #475569;
-            color: #fff; font-size: 1.1rem; font-weight: bold;
-            border-radius: 4px; display: flex; align-items: center; justify-content: center;
-            cursor: pointer;
-        }
 
         .nav-arrow { font-size: 1.4rem; background: none; border: none; color: #fff; padding: 0 0.3rem; cursor: pointer; font-weight: bold; }
         .map-toggle-btn { padding: 0.5rem 0.4rem; font-size: 0.65rem; background: #334155; border: 1px solid #475569; color: #cbd5e1; font-weight: 800; border-radius: 4px; text-transform: uppercase; }
@@ -292,7 +300,7 @@
         .btn-go { background: #059669; border: none; color: #fff; padding: 0 0.6rem; font-weight: 800; border-radius: 4px; font-size: 0.8rem; flex-shrink: 0; }
 
         .telemetry-alert-banner {
-            position: absolute; top: 15px; left: 50%; transform: translateX(-50%);
+            position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
             background: rgba(15, 23, 42, 0.95); border: 2px solid #ef4444; border-radius: 4px;
             padding: 0.5rem 1rem; width: 90%; max-width: 340px; z-index: 30; font-size: 0.7rem;
             font-weight: bold; color: #ef4444; display: none; text-align: center;
@@ -300,17 +308,13 @@
 
         .asset-chip {
             display: flex; align-items: center; gap: 0.3rem;
-            background: rgba(255,255,255,0.06);
-            border: 1px solid rgba(255,255,255,0.12);
-            padding: 0.4rem 0.55rem;
-            border-radius: 24px;
-            white-space: nowrap;
-            font-size: 0.7rem;
-            font-weight: 700;
-            cursor: pointer;
+            background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+            padding: 0.4rem 0.55rem; border-radius: 24px;
+            white-space: nowrap; font-size: 0.7rem; font-weight: 700; cursor: pointer;
         }
         .asset-chip.selected { background: #1d4ed8; border-color: #38bdf8; }
         
+        /* HARDCODED TOKEN SYMBOLS */
         .tac-marker { width: 20px !important; height: 20px !important; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 8px rgba(0,0,0,0.6); }
         .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
         .dot.k9, .tac-k9 { background: #00eaff; border: 2px solid #0022ff !important; }
@@ -318,41 +322,37 @@
         .dot.sar, .tac-sar { background: #ff0000; }
         .dot.civ, .tac-civ { background: #00ff00; }
         .dot.sus, .tac-sus { background: #cc00ff; }
+        /* boat node signature layout */
+        .dot.boat, .tac-boat { background: #000000; box-shadow: 0 0 6px #ffff00; border: 2px solid #ffff00 !important; }
+        /* vehicle split target signature layout */
+        .dot.veh, .tac-veh { background: #000000; border: 2px solid #ffffff !important; }
+        /* drone matte gray signature layout */
+        .dot.drone, .tac-drone { background: #888888; }
+        /* article finder high-visibility orange signature layout */
+        .dot.art, .tac-art { background: #ff7700; }
+        /* command post golden star signature layout */
+        .dot.cp, .tac-cp { background: #ffff00; border: 2px solid #ff0000 !important; border-radius: 0% !important; }
         .user-gps-dot { background: #f43f5e; box-shadow: 0 0 14px #f43f5e; border: 2px solid #fff !important; }
+        /* direct search pinpoint target dot */
+        .dot.target-pin, .tac-target-pin { background: #ff0000; box-shadow: 0 0 10px #ff0000; border: 2px solid #ffffff !important; }
 
         .intel-responsibilities-block {
-            background: rgba(30, 41, 59, 0.5);
-            border: 1px solid rgba(56, 189, 248, 0.2);
-            padding: 0.6rem;
-            border-radius: 4px;
-            margin-bottom: 0.8rem;
-            font-size: 0.65rem;
-            line-height: 1.25;
-            color: #cbd5e1;
+            background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(56, 189, 248, 0.2);
+            padding: 0.6rem; border-radius: 4px; margin-bottom: 0.8rem; font-size: 0.65rem; line-height: 1.25; color: #cbd5e1;
         }
 
-        .emergency-row { width: 100%; height: 50px; padding: 0.25rem; display: flex; gap: 0.25rem; }
+        .emergency-row { width: 100%; height: 48px; padding: 0.25rem; display: flex; gap: 0.25rem; }
         .btn-emergency {
-            flex-grow: 1; height: 100%;
-            background: #dc2626; color: #fff;
-            border: none; font-weight: 900; font-size: 0.95rem;
-            text-transform: uppercase;
-            animation: pulse-red 1.2s infinite linear;
-            border-radius: 4px;
+            flex-grow: 1; height: 100%; background: #dc2626; color: #fff;
+            border: none; font-weight: 900; font-size: 0.95rem; text-transform: uppercase;
+            animation: pulse-red 1.2s infinite linear; border-radius: 4px;
         }
         .btn-emergency-reset { width: 70px; height: 100%; background: #475569; border: 1px solid #64748b; color: #fff; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; border-radius: 4px; }
         
-        .control-row { width: 100%; height: 45px; display: flex; }
+        .control-row { width: 100%; height: 42px; display: flex; }
         .btn-deck { flex: 1; height: 100%; border: none; font-weight: 800; font-size: 0.8rem; text-transform: uppercase; color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; }
         .btn-deck.clear { background: #475569; border-right: 1px solid rgba(0,0,0,0.4); }
         .btn-deck.terminate { background: #7f1d1d; }
-
-        #emergencyStrobe {
-            position: absolute; top:0; left:0; width:100%; height:100%;
-            background: rgba(220,38,38,0.4); z-index: 999;
-            pointer-events: none; display: none;
-            animation: flash-strobe 0.25s infinite alternate;
-        }
 
         .night-vision-green {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -360,11 +360,35 @@
             mix-blend-mode: screen; box-shadow: inset 0 0 100px rgba(0, 255, 0, 0.35);
         }
 
-        .report-body { flex-grow: 1; padding: 1rem; overflow-y: auto; background: #020617; margin-top: 65px; }
-        .log-list { list-style: none; font-family: monospace; font-size: 0.75rem; color: #34d399; }
-        .log-item { padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        /* FORENSIC COURT REPLAY & MASTER RECORD STYLES */
+        .report-body { flex-grow: 1; padding: 1rem; overflow-y: auto; background: #020617; margin-top: 60px; }
+        .report-header-block { border-bottom: 2px solid #eab308; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+        
+        /* HANDS-FREE FIELD INSTRUCTIONALIST SYSTEM MATRICES */
+        .k9-med-panel {
+            background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(56, 189, 248, 0.2);
+            border-radius: 8px; padding: 0.85rem; margin-bottom: 1.25rem;
+        }
+        .med-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem; margin-top: 0.6rem; }
+        .med-card {
+            background: #1e293b; border: 1px solid #475569; border-radius: 6px; padding: 0.65rem;
+            text-align: center; cursor: pointer; font-size: 0.7rem; font-weight: 800; text-transform: uppercase;
+        }
+        .med-card:active { background: #0f172a; border-color: #38bdf8; }
+        .med-voice-banner {
+            background: #030712; border: 1px solid #22c55e; border-radius: 4px; padding: 0.5rem;
+            margin-top: 0.6rem; font-size: 0.7rem; font-weight: bold; color: #22c55e; display: none; text-align: center;
+        }
+        .vets-directory {
+            margin-top: 0.8rem; background: #090d16; border: 1px dashed rgba(234, 179, 8, 0.3); padding: 0.5rem; border-radius: 4px; font-size: 0.65rem;
+        }
 
-        .leaflet-control-attribution { display: none !important; }
+        .replay-deck {
+            background: #0f172a; border: 1px solid rgba(255,255,255,0.1);
+            padding: 0.65rem; display: flex; align-items: center; gap: 0.4rem; border-radius: 6px; margin-bottom: 1rem;
+        }
+        .replay-btn { background: #1d4ed8; border: none; color: #fff; padding: 0.45rem 0.65rem; font-weight: 700; font-size: 0.65rem; border-radius: 4px; text-transform: uppercase; }
+
         @keyframes pulse-red { 0% { background: #991b1b; } 50% { background: #dc2626; } 100% { background: #991b1b; } }
         @keyframes flash-strobe { 0% { opacity: 0; } 100% { opacity: 1; } }
     </style>
@@ -373,6 +397,7 @@
 
     <div id="emergencyStrobe"></div>
 
+    <!-- MAIN APP INITIAL LANDING WRAPPER -->
     <div id="screenLanding" class="screen">
         <div class="landing-backdrop-pure"></div>
         <div class="graphic-link-wrapper" onclick="switchScreen('screenSignIn')">
@@ -387,11 +412,12 @@
         </div>
     </div>
 
+    <!-- SECURE FIELD GATEWAY PANEL WITH DEDICATED RADIO TIERING ACCESS CONTROLLERS -->
     <div id="screenSignIn" class="screen">
         <div class="backdrop"></div>
-        <div style="z-index: 5; margin-top: 2.5rem; display: flex; flex-direction: column; align-items: center;">
+        <div style="z-index: 5; margin-top: 1.5rem; display: flex; flex-direction: column; align-items: center;">
             <h1 class="app-title" style="font-size: 1.8rem; font-weight: 900; letter-spacing: 2px;">SECURE PORTAL</h1>
-            <p style="font-size: 0.65rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; margin-bottom: 1rem;">Verify Field Operator Identity</p>
+            <p style="font-size: 0.65rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; margin-bottom: 0.6rem;">Verify Field Operator Identity</p>
         </div>
 
         <div class="glass-panel">
@@ -415,16 +441,23 @@
                 <input type="text" id="inputRank" class="form-control" placeholder="Required: e.g., K9-12" autocomplete="off">
             </div>
             <div class="btn" onclick="handleSignIn()">Enter TACNET</div>
+
+            <!-- GATEWAY INTEGRATED DIRECT ACCESS ACTION DRAWER -->
+            <div class="gateway-utilities-grid">
+                <div class="util-btn" onclick="openHistoricalLogs()">Logs & Replay</div>
+                <div class="util-btn" onclick="switchScreen('screenK9Voice')">Verbal K9 Help</div>
+            </div>
         </div>
 
-        <div class="creator-credits">
-            <div class="creator-name" style="font-size: 0.8rem; color:#94a3b8;">TACNET VERIFIED INTERFACE AUTHENTICATION</div>
+        <div class="creator-credits" style="padding: 0.5rem;">
+            <div class="creator-name" style="font-size: 0.75rem; color:#94a3b8;">TACNET VERIFIED INTERFACE AUTHENTICATION</div>
         </div>
     </div>
 
+    <!-- MAIN PLATFORM CONTROL PLATFORM HUB -->
     <div id="screenMenu" class="screen">
         <div class="backdrop"></div>
-        <div style="z-index: 5; margin-top: 3.5rem; margin-bottom: 1.5rem; text-align: center;">
+        <div style="z-index: 5; margin-top: 3rem; margin-bottom: 1.5rem; text-align: center;">
             <h1 class="app-title" style="font-size: 1.8rem;">TACNET HUB</h1>
             <p style="font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; font-weight:700;">Tactical Field Operations Network</p>
         </div>
@@ -444,6 +477,7 @@
         </div>
     </div>
 
+    <!-- ACTIVE TARGET GRID OPERATION MAP WORKSPACE -->
     <div id="screenMap" class="screen">
         <div class="map-topnav">
             <div class="nav-arrow" onclick="switchScreen('screenMenu')">←</div>
@@ -470,13 +504,14 @@
 
             <div id="nvgGreenFilter" class="night-vision-green"></div>
 
-            <div id="commanderPerimeterDeck" class="perimeter-manual-deck">
-                <label>Perimeter</label>
+            <!-- PRIVILEGED SLIDER BAR INSTANT ADJUSTMENT DECK CONTAINER -->
+            <div id="commanderPerimeterDeck" class="perimeter-slider-deck">
+                <label>Radius Sweep</label>
+                <input type="range" id="perimeterSlider" class="slider-control" min="100" max="5000" step="50" value="500" oninput="handleSliderMovement(this.value)">
                 <div id="radiusReadout" class="perimeter-readout">500m</div>
-                <button class="step-btn" onclick="adjustPerimeterManual(100)">+</button>
-                <button class="step-btn" onclick="adjustPerimeterManual(-100)">-</button>
             </div>
 
+            <!-- COMPACT SIDEBAR OVERLAY TOOL DRAWER -->
             <div class="map-sidebar">
                 <button id="btnPen" class="tool-btn" onclick="toggleRedPen()">PEN</button>
                 <button class="tool-btn" onclick="undoLastLine()">ERASE</button>
@@ -485,12 +520,18 @@
             </div>
         </div>
 
+        <!-- EXTENDED FIELD ASSET DRAWER PROFILE INDEX -->
         <div class="asset-drawer">
             <div id="chip-k9" class="asset-chip" onclick="selectAssetToPlace('k9')"><span class="dot k9"></span>K9 Team</div>
             <div id="chip-le" class="asset-chip" onclick="selectAssetToPlace('le')"><span class="dot le"></span>LE Blue</div>
             <div id="chip-sar" class="asset-chip" onclick="selectAssetToPlace('sar')"><span class="dot sar"></span>SAR Red</div>
             <div id="chip-civ" class="asset-chip" onclick="selectAssetToPlace('civ')"><span class="dot civ"></span>Civ Green</div>
             <div id="chip-sus" class="asset-chip" onclick="selectAssetToPlace('sus')"><span class="dot sus"></span>Suspect</div>
+            <div id="chip-boat" class="asset-chip" onclick="selectAssetToPlace('boat')"><span class="dot boat"></span>Boat</div>
+            <div id="chip-veh" class="asset-chip" onclick="selectAssetToPlace('veh')"><span class="dot veh"></span>Vehicle</div>
+            <div id="chip-drone" class="asset-chip" onclick="selectAssetToPlace('drone')"><span class="dot drone"></span>Drone</div>
+            <div id="chip-art" class="asset-chip" onclick="selectAssetToPlace('art')"><span class="dot art"></span>Article</div>
+            <div id="chip-cp" class="asset-chip" onclick="selectAssetToPlace('cp')"><span class="dot cp"></span>Command P.</div>
         </div>
 
         <div class="bottom-deck">
@@ -505,14 +546,82 @@
         </div>
     </div>
 
+    <!-- FORENSIC TIMELINE REPLAY & Professional DISPOSITION CONTAINER -->
     <div id="screenReport" class="screen">
         <div class="map-topnav">
             <div class="nav-arrow" onclick="switchScreen('screenMenu')">←</div>
-            <div style="font-weight:700; text-transform:uppercase; font-size:0.85rem; letter-spacing:1px; margin-left:0.4rem;">TACNET REPLAY LOGS</div>
+            <div style="font-weight:700; text-transform:uppercase; font-size:0.85rem; letter-spacing:1px; margin-left:0.4rem;">TACNET TACTICAL COMMAND LEDGER</div>
         </div>
 
         <div class="report-body">
-            <ul id="logList" class="log-list"></ul>
+            <div class="report-header-block" style="background: linear-gradient(90deg, #1e3a8a, #701a75); padding: 0.8rem; border-radius: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">
+                <h2 style="text-transform:uppercase; font-weight:900; letter-spacing:1px; font-size:1.1rem; color:#ffff00; text-shadow: 0 2px 4px #000;">TACNET INCIDENT BRIEF & TIMELINE REPORT</h2>
+                <p style="font-size:0.65rem; color:#e2e8f0; text-transform:uppercase; margin-top:0.15rem; font-weight: 700;">Legal Court-Admissible Forensic Analytics</p>
+            </div>
+
+            <!-- DISPATCH NOTEBOOKS & FINAL JUDICIAL DISPOSITION INPUT MATRIX -->
+            <div class="k9-med-panel" style="margin-bottom: 1rem; border-color: #eab308;">
+                <h3 style="font-size:0.75rem; color: #eab308; margin-bottom: 0.4rem;">📝 INCIDENT NOTES & FINAL DISPOSITION</h3>
+                <div class="form-group">
+                    <label style="font-size: 0.55rem;">Operational Command Brief Notes</label>
+                    <textarea id="reportNotes" class="form-control" style="height: 50px; font-size: 0.8rem; font-family: sans-serif;" placeholder="Enter operational case summary logs..."></textarea>
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label style="font-size: 0.55rem;">Final Case Disposition Status</label>
+                    <input type="text" id="reportDisposition" class="form-control" style="padding: 0.4rem; font-size: 0.8rem;" placeholder="e.g., Target Located, Handed to EMS, Cleared.">
+                </div>
+            </div>
+
+            <div class="replay-deck">
+                <button class="replay-btn" onclick="playbackControl('play')">▶ Play Court Replay</button>
+                <button class="replay-btn" style="background:#4b5563;" onclick="playbackControl('pause')">⏸ Pause</button>
+                <div id="replayStatus" style="font-size: 0.65rem; font-weight: bold; color: #eab308; margin-left: auto;">Status: Operational</div>
+            </div>
+
+            <h3 style="font-size:0.7rem; color: #34d399; margin-bottom: 0.3rem; text-transform: uppercase;">Itemized Event Track Logs</h3>
+            <ul id="logList" class="log-list" style="max-height: 120px; overflow-y: auto; background: #000; padding: 0.4rem; border-radius: 4px; border: 1px solid #1e293b;"></ul>
+
+            <div class="gateway-utilities-grid" style="margin-top: 1rem;">
+                <div class="util-btn" style="background: #059669; border-color: #10b981; color:#fff;" onclick="window.print()">Print to Professional PDF</div>
+                <div class="util-btn" style="background: #2563eb; border-color: #3b82f6; color:#fff;" onclick="emailFinalReport()">Email Out Report</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VOICE ASSISTANT MODULE PANEL -->
+    <div id="screenK9Voice" class="screen">
+        <div class="map-topnav">
+            <div class="nav-arrow" onclick="switchScreen('screenSignIn')">←</div>
+            <div style="font-weight:700; text-transform:uppercase; font-size:0.85rem; letter-spacing:1px; margin-left:0.4rem;">HANDS-FREE K9 MEDICAL MATRIX</div>
+        </div>
+
+        <div class="report-body">
+            <div class="k9-med-panel" style="margin-bottom: 0.5rem;">
+                <p style="font-size:0.65rem; color:#cbd5e1; line-height: 1.3;">Tap any emergency card below. Automated synthetic local speech arrays will read step-by-step lifesaving procedures aloud to ensure hands remain entirely clear to administer operational medical field care.</p>
+                
+                <div class="med-grid">
+                    <div class="med-card" style="border-left: 3px solid #ff0000;" onclick="playK9VoiceProtocol('cpr')">K9 CPR</div>
+                    <div class="med-card" style="border-left: 3px solid #ef4444;" onclick="playK9VoiceProtocol('gunshot')">Gunshot</div>
+                    <div class="med-card" style="border-left: 3px solid #eab308;" onclick="playK9VoiceProtocol('snake')">Snake Bites</div>
+                    <div class="med-card" style="border-left: 3px solid #f97316;" onclick="playK9VoiceProtocol('bleeding')">Bleeding</div>
+                    <div class="med-card" style="border-left: 3px solid #ef4444;" onclick="playK9VoiceProtocol('heat')">Heat Exhaust</div>
+                    <div class="med-card" style="border-left: 3px solid #3b82f6;" onclick="playK9VoiceProtocol('eye')">Eye Injury</div>
+                    <div class="med-card" style="border-left: 3px solid #10b981;" onclick="playK9VoiceProtocol('paw')">Paw Injury</div>
+                </div>
+
+                <div id="voiceStatusBanner" class="med-voice-banner">📢 TRANSMITTING VOCAL COMMANDS...</div>
+                
+                <div class="role-toggle-container" style="margin-top: 0.8rem; gap: 0.4rem;">
+                    <div class="role-btn" style="background:#dc2626; color:#fff; border:none;" onclick="repeatLastVoiceBroadcast()">🔄 Repeat Section</div>
+                    <div class="role-btn" style="background:#475569; color:#fff; border:none;" onclick="stopVoiceBroadcast()">⏹ Stop Audio</div>
+                </div>
+
+                <div class="vets-directory">
+                    <span style="color:#eab308; font-weight:800; text-transform:uppercase;">🚨 EMERGENCY AREA VETERINARY FEED DATA Links:</span><br>
+                    • Blue Ridge Animal Hospital Support Line: <a href="tel:4342399126" style="color:#38bdf8; text-decoration:none; font-weight:bold;">(434) 239-9126</a><br>
+                    • Emergency Veterinary Center Matrix: <a href="tel:5405638575" style="color:#38bdf8; text-decoration:none; font-weight:bold;">(540) 563-8575</a>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -529,11 +638,11 @@
         let activeEmergency = false;
         let isDrawing = false;
         let nvgState = 0; 
+        let replayInterval;
+        let currentVoiceCategory = "";
         
         let assignedRole = "searcher"; 
-        let activeOperatorName = "";
-        let activeOperatorAgency = "";
-        let activeOperatorCallSign = "";
+        let activeOperatorName = ""; let activeOperatorAgency = ""; let activeOperatorCallSign = "";
         
         let perimeterRadiusMeters = 500; 
         let placedMarkers = [];
@@ -600,15 +709,12 @@
         function trackUserGPS() {
             if (!navigator.geolocation) return;
             gpsWatchId = navigator.geolocation.watchPosition((position) => {
-                const uLat = position.coords.latitude;
-                const uLng = position.coords.longitude;
+                const uLat = position.coords.latitude; const uLng = position.coords.longitude;
                 const currentCoords = [uLat, uLng];
-
                 if (!userLocationMarker) {
                     const gpsIcon = L.divIcon({ className: 'tac-marker user-gps-dot', iconSize: [20, 20], iconAnchor: [10, 10] });
                     userLocationMarker = L.marker(currentCoords, { icon: gpsIcon }).addTo(map);
-                    map.setView(currentCoords, 16);
-                    mapCenter = currentCoords;
+                    map.setView(currentCoords, 16); mapCenter = currentCoords;
                     if(tacticalPerimeterCircle) tacticalPerimeterCircle.setLatLng(currentCoords);
                 } else {
                     userLocationMarker.setLatLng(currentCoords);
@@ -618,16 +724,7 @@
 
         function setupOrientationCompass() {
             if (window.DeviceOrientationEvent) {
-                if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-                    document.body.addEventListener('click', function req() {
-                        DeviceOrientationEvent.requestPermission().then(state => {
-                            if (state === 'granted') window.addEventListener('deviceorientation', handleOrientationUpdate, true);
-                        });
-                        document.body.removeEventListener('click', req);
-                    });
-                } else {
-                    window.addEventListener('deviceorientation', handleOrientationUpdate, true);
-                }
+                window.addEventListener('deviceorientation', handleOrientationUpdate, true);
             }
         }
 
@@ -640,34 +737,22 @@
             }
         }
 
-        // STRICT GATEWAY VALIDATION LOGIC ENGINE
         function handleSignIn() {
             const nameIn = document.getElementById('inputName');
             const agencyIn = document.getElementById('inputAgency');
             const rankIn = document.getElementById('inputRank');
 
-            // Reset visual errors before evaluating validation
-            nameIn.classList.remove('error-field');
-            agencyIn.classList.remove('error-field');
-            rankIn.classList.remove('error-field');
+            nameIn.classList.remove('error-field'); agencyIn.classList.remove('error-field'); rankIn.classList.remove('error-field');
+            let fault = false;
+            if (nameIn.value.trim() === "") { nameIn.classList.add('error-field'); fault = true; }
+            if (agencyIn.value.trim() === "") { agencyIn.classList.add('error-field'); fault = true; }
+            if (rankIn.value.trim() === "") { rankIn.classList.add('error-field'); fault = true; }
 
-            let validationFaultDetected = false;
+            if (fault) return;
 
-            if (nameIn.value.trim() === "") { nameIn.classList.add('error-field'); validationFaultDetected = true; }
-            if (agencyIn.value.trim() === "") { agencyIn.classList.add('error-field'); validationFaultDetected = true; }
-            if (rankIn.value.trim() === "") { rankIn.classList.add('error-field'); validationFaultDetected = true; }
-
-            // HALT PROCESS IMMEDIATELY IF ANY EXECUTABLE INPUT BOX IS EMPTY
-            if (validationFaultDetected) {
-                alert("OPERATIONAL DENIAL: All field registry metrics are strictly mandatory. Complete the form to establish network trace connection.");
-                return;
-            }
-
-            activeOperatorName = nameIn.value.trim();
-            activeOperatorAgency = agencyIn.value.trim();
-            activeOperatorCallSign = rankIn.value.trim().toUpperCase();
-
+            activeOperatorName = nameIn.value.trim(); activeOperatorAgency = agencyIn.value.trim(); activeOperatorCallSign = rankIn.value.trim().toUpperCase();
             const isCommander = (assignedRole === 'commander');
+            
             document.getElementById('commanderIntelBlock').style.display = isCommander ? 'block' : 'none';
             document.getElementById('commanderPerimeterDeck').style.display = isCommander ? 'flex' : 'none';
             document.getElementById('commanderControlRow').style.display = isCommander ? 'flex' : 'none';
@@ -679,15 +764,12 @@
         function logOutSession() {
             if(gpsWatchId) navigator.geolocation.clearWatch(gpsWatchId);
             userLocationMarker = null;
-            document.getElementById('inputName').value = "";
-            document.getElementById('inputAgency').value = "";
-            document.getElementById('inputRank').value = "";
+            document.getElementById('inputName').value = ""; document.getElementById('inputAgency').value = ""; document.getElementById('inputRank').value = "";
             switchScreen('screenSignIn');
         }
 
         function startNewSearch() {
-            clearMapAssets();
-            clearDrawings();
+            clearMapAssets(); clearDrawings();
             logEvent("Fresh search parameters initialized.");
             switchScreen('screenMap');
         }
@@ -711,10 +793,10 @@
 
         function cycleNightVision() {
             const greenFilter = document.getElementById('nvgGreenFilter');
-            nvgState = (nvgState + 1) % 2;
-            greenFilter.style.display = (nvgState === 1) ? 'block' : 'none';
+            nvgState = (nvgState + 1) % 2; greenFilter.style.display = (nvgState === 1) ? 'block' : 'none';
         }
 
+        // TACTICAL ADDRESS LOCATOR PIN INTERFACE DATA HOOKS
         function executeAddressSearch() {
             const query = document.getElementById('mapSearch').value.trim();
             if(query !== "") {
@@ -725,61 +807,59 @@
                             const lat = parseFloat(data[0].lat); const lon = parseFloat(data[0].lon);
                             mapCenter = [lat, lon]; map.setView(mapCenter, 16);
                             if (tacticalPerimeterCircle) tacticalPerimeterCircle.setLatLng(mapCenter);
+                            
+                            // PLOTS SOLID RED TARGET PIN THAT REMAINS STUCK ON TARGET COORDINATES
+                            if (persistentTargetPin) {
+                                persistentTargetPin.setLatLng(mapCenter);
+                            } else {
+                                const redDotIcon = L.divIcon({ className: 'tac-marker tac-target-pin', iconSize: [18, 18], iconAnchor: [9, 9] });
+                                persistentTargetPin = L.marker(mapCenter, { icon: redDotIcon, zIndexOffset: 2000 }).addTo(map);
+                            }
+                            logEvent(`Geocoded Focus Lock: Persistent Red Target Dot pinned to Address Location.`);
                         }
                     });
             }
         }
 
-        function adjustPerimeterManual(amount) {
-            perimeterRadiusMeters += amount;
+        function handleSliderMovement(val) {
+            perimeterRadiusMeters = parseInt(val);
             if (tacticalPerimeterCircle) tacticalPerimeterCircle.setRadius(perimeterRadiusMeters);
             document.getElementById('radiusReadout').innerText = perimeterRadiusMeters + "m";
         }
 
         function toggleMapLock() {
-            isMapLocked = !isMapLocked;
-            document.getElementById('btnLock').style.background = isMapLocked ? '#1d4ed8' : '';
+            isMapLocked = !isMapLocked; document.getElementById('btnLock').style.background = isMapLocked ? '#1d4ed8' : '';
             if (isMapLocked) { map.dragging.disable(); map.touchZoom.disable(); } else { map.dragging.enable(); map.touchZoom.enable(); }
         }
 
         function toggleRedPen() {
-            isPenActive = !isPenActive;
-            document.getElementById('btnPen').classList.toggle('pen-active', isPenActive);
-            if(isPenActive) {
-                if(!isMapLocked) toggleMapLock();
-                drawCanvas.style.pointerEvents = 'auto';
-            } else {
-                drawCanvas.style.pointerEvents = 'none';
-            }
+            isPenActive = !isPenActive; document.getElementById('btnPen').classList.toggle('pen-active', isPenActive);
+            if(isPenActive) { if(!isMapLocked) toggleMapLock(); drawCanvas.style.pointerEvents = 'auto'; } else { drawCanvas.style.pointerEvents = 'none'; }
         }
 
         function selectAssetToPlace(assetType) {
             document.querySelectorAll('.asset-chip').forEach(chip => chip.classList.remove('selected'));
             if (selectedAssetType === assetType) { selectedAssetType = null; return; }
-            selectedAssetType = assetType;
-            document.getElementById(`chip-${assetType}`).classList.add('selected');
+            selectedAssetType = assetType; document.getElementById(`chip-${assetType}`).classList.add('selected');
         }
 
         function executeManualAssetPlacement(lat, lng, assetType) {
-            const tacticalHtmlIcon = L.divIcon({ className: `tac-marker tac-${assetType}`, iconSize: [20, 20], iconAnchor: [10, 10] });
-            const marker = L.marker([lat, lng], { icon: tacticalHtmlIcon, draggable: true }).addTo(map);
+            const htmlIcon = L.divIcon({ className: `tac-marker tac-${assetType}`, iconSize: [20, 20], iconAnchor: [10, 10] });
+            const marker = L.marker([lat, lng], { icon: htmlIcon, draggable: true }).addTo(map);
             placedMarkers.push(marker);
+            logEvent(`Asset Deployed: dropped custom operational target token [${assetType.toUpperCase()}] on tracking matrix grid.`);
             selectAssetToPlace(null);
         }
 
-        drawCanvas.addEventListener('mousedown', startLineStroke);
-        drawCanvas.addEventListener('mouseup', endLineStroke);
-        drawCanvas.addEventListener('mousemove', drawLineSegment);
-        drawCanvas.addEventListener('touchstart', (e) => { if(e.touches[0]) startLineStroke(e.touches[0]); });
-        drawCanvas.addEventListener('touchend', endLineStroke);
+        drawCanvas.addEventListener('mousedown', startLineStroke); drawCanvas.addEventListener('mouseup', endLineStroke); drawCanvas.addEventListener('mousemove', drawLineSegment);
+        drawCanvas.addEventListener('touchstart', (e) => { if(e.touches[0]) startLineStroke(e.touches[0]); }); drawCanvas.addEventListener('touchend', endLineStroke);
         drawCanvas.addEventListener('touchmove', (e) => { if(e.touches[0]) drawLineSegment(e.touches[0]); });
 
         function startLineStroke(e) { if (!isPenActive) return; isDrawing = true; currentLineStroke = []; appendSegmentPoint(e); }
         function drawLineSegment(e) { if (!isDrawing || !isPenActive) return; appendSegmentPoint(e); redrawCanvasStack(); }
         function appendSegmentPoint(e) {
             const rect = drawCanvas.getBoundingClientRect();
-            const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left;
-            const y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
+            const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left; const y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
             currentLineStroke.push({ x: x, y: y });
         }
         function endLineStroke() { if (!isDrawing) return; isDrawing = false; if (currentLineStroke.length > 0) drawingLinesStack.push(currentLineStroke); }
@@ -792,37 +872,82 @@
         }
 
         function renderLineArray(line) {
-            if (line.length < 1) return;
-            drawCtx.beginPath(); drawCtx.moveTo(line[0].x, line[0].y);
+            if (line.length < 1) return; drawCtx.beginPath(); drawCtx.moveTo(line[0].x, line[0].y);
             for (let i = 1; i < line.length; i++) drawCtx.lineTo(line[i].x, line[i].y);
             drawCtx.stroke();
         }
 
         function undoLastLine() { if (drawingLinesStack.length > 0) { drawingLinesStack.pop(); redrawCanvasStack(); } }
         function clearDrawings() { drawingLinesStack = []; if(drawCtx) drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height); }
-        function clearMapAssets() { placedMarkers.forEach(m => map.removeLayer(m)); placedMarkers = []; }
+        function clearMapAssets() { placedMarkers.forEach(m => map.removeLayer(m)); placedMarkers = []; if(persistentTargetPin) { map.removeLayer(persistentTargetPin); persistentTargetPin = null; } }
         
         function terminateSearch() { 
-            clearMapAssets(); 
-            clearDrawings(); 
-            if(gpsWatchId) navigator.geolocation.clearWatch(gpsWatchId); 
+            clearMapAssets(); clearDrawings(); if(gpsWatchId) navigator.geolocation.clearWatch(gpsWatchId); 
             logEvent("Search officially terminated. System resetting permissions...");
-            
-            // RESET PRIVILEGES AUTOMATICALLY UPON SEARCH TERMINATION WIPE
             assignedRole = "searcher";
             document.getElementById('commanderIntelBlock').style.display = 'none';
             document.getElementById('commanderPerimeterDeck').style.display = 'none';
             document.getElementById('commanderControlRow').style.display = 'none';
-            
-            document.getElementById('inputName').value = "";
-            document.getElementById('inputAgency').value = "";
-            document.getElementById('inputRank').value = "";
-            
+            document.getElementById('inputName').value = ""; document.getElementById('inputAgency').value = ""; document.getElementById('inputRank').value = "";
             switchScreen('screenSignIn');
         }
 
         function triggerEmergencyAlert() { document.getElementById('emergencyStrobe').style.display = 'block'; logEvent("🚨 DISTRESS ALARM DEPLOYED."); }
         function resetEmergencyAlert() { document.getElementById('emergencyStrobe').style.display = 'none'; }
+
+        // AUDIO VOCAL ASSISTANT MODULE ENGINES
+        function playK9VoiceProtocol(category) {
+            window.speechSynthesis.cancel();
+            currentVoiceCategory = category;
+            const banner = document.getElementById('voiceStatusBanner'); banner.style.display = 'block';
+            let txt = "";
+
+            if (category === 'cpr') {
+                txt = "Canine CPR Protocol. Step 1. Check breathing and pulse. Step 2. Lay dog on its right side. Step 3. Compress chest 1.5 to 2 inches deep at 100 to 120 beats per minute. Step 4. Deliver 2 rescue breaths into the nose for every 30 compressions. Repeat continuously.";
+            } else if (category === 'gunshot') {
+                txt = "Gunshot Trauma Protocol. Step 1. Maintain muzzle control. Step 2. Pack the entry and wound cavity directly with gauze dressing cloth. Step 3. Apply sustained manual direct downward pressure without stopping. Step 4. Bandage firmly while maintaining compression and sprint directly to emergency regional veterinary support links.";
+            } else if (category === 'snake') {
+                txt = "Venomous Snake Bite Protocol. Step 1. Restrain the animal instantly. Minimize physical exertion completely. Step 2. Keep bite site positioned below heart level. Step 3. Flush bite wound puncture opening clean with water. Do not ice. Do not cut.";
+            } else if (category === 'bleeding') {
+                txt = "Severe Hemorrhage Bleeding Protocol. Step 1. Apply clean sterile trauma pad compress dressing cloth over laceration site. Step 2. Secure maximum two handed direct downward heavy bone pressure. Step 3. Wrap a binding compression wrap. Do not check bleeding cavity until transit complete.";
+            } else if (category === 'heat') {
+                txt = "Heat Exhaustion Protocol. Step 1. Extract animal from hyperthermic exposure elements into deep shade. Step 2. Wrap underbelly, neck, and paws using cool damp cloths. Step 3. Circulate dynamic fan airflow over fur. Do not drop core below 103 degrees.";
+            } else if (category === 'eye') {
+                txt = "Ocular Eye Injury Protocol. Step 1. Restrain paws to prevent mechanical corneal abrasion rubbing. Step 2. Irrigate eye continuously for 3 full minutes with sterile saline solution to clear dirt debris. Step 3. Cover eye with moist padding cloth.";
+            } else if (category === 'paw') {
+                txt = "Paw Pad Fracture Trauma Protocol. Step 1. Clear exterior field glass metal stones out of lacerated tissue. Step 2. Apply pressure dressing patch block directly onto bleeding pad skin for 2 full minutes. Step 3. Wrap protective boot bandage.";
+            }
+
+            banner.innerText = "📢 VOCAL BROADCAST ACTIVE: " + category.toUpperCase();
+            const utterance = new SpeechSynthesisUtterance(txt);
+            utterance.rate = 0.95; utterance.onend = () => { banner.style.display = 'none'; };
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function repeatLastVoiceBroadcast() { if(currentVoiceCategory !== "") playK9VoiceProtocol(currentVoiceCategory); }
+        function stopVoiceBroadcast() { window.speechSynthesis.cancel(); document.getElementById('voiceStatusBanner').style.display = 'none'; }
+
+        // FORENSIC AUDIT REPLAY MATRIX INTERFACE ENGINE
+        function playbackControl(action) {
+            const status = document.getElementById('replayStatus'); clearInterval(replayInterval);
+            if (action === 'play') {
+                status.innerText = "Replaying Case Event Timeline...";
+                let idx = 0;
+                replayInterval = setInterval(() => {
+                    if (idx < historicalLogs.length) {
+                        status.innerText = `Forensic Log Trace Element: ${idx + 1}/${historicalLogs.length}`; idx++;
+                    } else { clearInterval(replayInterval); status.innerText = "Forensic Timeline Playback Finalized"; }
+                }, 1000);
+            } else if (action === 'pause') { status.innerText = "Playback Frozen"; }
+        }
+
+        function emailFinalReport() {
+            const notes = document.getElementById('reportNotes').value;
+            const disposition = document.getElementById('reportDisposition').value;
+            let body = `TACNET TACTICAL BRIEF INCIDENT CASE LEDGER\nNotes: ${notes}\nFinal Disposition: ${disposition}\n\n`;
+            historicalLogs.forEach(l => { body += `[${l.time}] ${l.text}\n`; });
+            window.location.href = `mailto:?subject=TACNET Incident Report Log Export&body=${encodeURIComponent(body)}`;
+        }
 
         function logEvent(message) {
             const timestamp = new Date().toLocaleTimeString();
