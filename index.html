@@ -31,7 +31,7 @@
         #screenLanding { display: flex !important; z-index: 20; }
         .screen.active { display: flex !important; z-index: 30; }
 
-        /* BACKDROP CORE LAYER INTERFACE PROFILE */
+        /* BACKDROP CORE CONFIGURATIONS */
         .backdrop {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -53,7 +53,6 @@
             z-index: 1;
         }
 
-        /* MASTER GRAPHIC CONTAINER CLICK TRACK */
         .graphic-link-wrapper {
             width: 100%;
             height: 100%;
@@ -212,7 +211,7 @@
             color: #22c55e !important; 
             background: none; 
             border: none; 
-            padding: 0 0.6rem; 
+            padding: 0 0.4rem; 
             cursor: pointer; 
             display: flex;
             align-items: center;
@@ -320,7 +319,14 @@
         .map-toggle-btn.active { background: #1d4ed8; border-color: #3b82f6; color: #fff; }
         .search-box-container { flex-grow: 1; display: flex; gap: 0.2rem; min-width: 0; }
         .search-input { flex-grow: 1; min-width: 0; padding: 0.5rem; background: #000; border: 1px solid #475569; color: #fff; border-radius: 4px; font-size: 0.8rem; font-weight: 600; }
-        .btn-go { background: #059669; border: none; color: #fff; padding: 0 0.6rem; font-weight: 800; border-radius: 4px; font-size: 0.8rem; flex-shrink: 0; }
+        
+        /* FAST TRIGGER CLEAN MAP ASSET CONTROLLER */
+        .btn-clear-now {
+            background: #475569; border: 1px solid #64748b; color: #fff; padding: 0 0.5rem;
+            font-weight: 800; border-radius: 4px; font-size: 0.65rem; text-transform: uppercase; flex-shrink: 0; height: 32px;
+        }
+        .btn-clear-now:active { background: #1e293b; }
+        .btn-go { background: #059669; border: none; color: #fff; padding: 0 0.6rem; font-weight: 800; border-radius: 4px; font-size: 0.8rem; flex-shrink: 0; height: 32px; }
 
         .telemetry-alert-banner {
             position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
@@ -384,11 +390,11 @@
             mix-blend-mode: screen; box-shadow: inset 0 0 100px rgba(0, 255, 0, 0.35);
         }
 
-        /* COURT REPLAY & PRE-REPORT MATRIX STYLES */
-        .report-body { flex-grow: 1; padding: 1rem; overflow-y: auto; background: #020617; margin-top: 60px; }
-        .report-header-block { border-bottom: 2px solid #eab308; padding-bottom: 0.5rem; margin-bottom: 1rem; }
+        /* DE-CLUTTERED EXECUTIVE REPORT WORKSPACE */
+        .report-body { flex-grow: 1; padding: 0.8rem; overflow-y: auto; background: #020617; }
+        .report-header-block { border-bottom: 2px solid #eab308; padding: 0.75rem; margin-bottom: 0.75rem; }
         
-        /* FIELD AUDIO MEDICAL MATRIX STYLES */
+        /* AUDIO VOCAL ARRAY COMPONENT MATRICES */
         .k9-med-panel {
             background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(56, 189, 248, 0.2);
             border-radius: 8px; padding: 0.85rem; margin-bottom: 1.25rem;
@@ -418,21 +424,38 @@
 
         .replay-deck {
             background: #0f172a; border: 1px solid rgba(255,255,255,0.1);
-            padding: 0.65rem; display: flex; align-items: center; gap: 0.4rem; border-radius: 6px; margin-bottom: 1rem;
+            padding: 0.5rem; display: flex; align-items: center; gap: 0.4rem; border-radius: 6px; margin-bottom: 0.6rem;
         }
-        .replay-btn { background: #1d4ed8; border: none; color: #fff; padding: 0.45rem 0.65rem; font-weight: 700; font-size: 0.65rem; border-radius: 4px; text-transform: uppercase; }
+        .replay-btn { background: #1d4ed8; border: none; color: #fff; padding: 0.45rem 0.55rem; font-weight: 700; font-size: 0.65rem; border-radius: 4px; text-transform: uppercase; }
 
-        /* PRE-REPORT REVIEW EDITABLE CARD LAYOUTS */
+        /* PRE-REPORT REVIEW EDITABLE CARD LAYOUTS - SPACING FIXES */
         .editable-review-card {
-            background: rgba(30, 41, 59, 0.4);
-            border: 1px dashed #38bdf8;
-            padding: 0.8rem;
+            background: rgba(15, 23, 42, 0.75);
+            border: 1px solid #334155;
+            padding: 0.75rem;
             border-radius: 6px;
-            margin-top: 1rem;
+            margin-bottom: 0.75rem;
         }
 
-        .log-list { list-style: none; font-family: monospace; font-size: 0.75rem; color: #34d399; }
-        .log-item { padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .log-list { list-style: none; font-family: monospace; font-size: 0.7rem; color: #34d399; }
+        .log-item { padding: 0.3rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+
+        /* IMMERSIVE PRE-PRINT LAYOUT SIMULATOR OVERLAY */
+        .print-preview-modal {
+            display: none;
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #ffffff; color: #000000;
+            z-index: 1000; overflow-y: auto; padding: 1.5rem;
+            user-select: text; -webkit-user-select: text;
+        }
+        .preview-alert-strip {
+            background: #f1f5f9; border: 1px solid #cbd5e1; padding: 0.5rem; border-radius: 4px;
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;
+        }
+        .preview-doc-header { border-bottom: 3px double #000; padding-bottom: 0.5rem; margin-bottom: 1rem; text-align: center; }
+        .preview-doc-table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; font-size: 0.8rem; }
+        .preview-doc-table td { padding: 0.4rem; border: 1px solid #cbd5e1; }
 
         .leaflet-control-attribution { display: none !important; }
         @keyframes pulse-red { 0% { background: #991b1b; } 50% { background: #dc2626; } 100% { background: #991b1b; } }
@@ -443,7 +466,41 @@
 
     <div id="emergencyStrobe"></div>
 
-    <!-- INITIAL DISPLAY SCREEN -->
+    <div id="printPreviewLayer" class="print-preview-modal">
+        <div class="preview-alert-strip">
+            <span style="font-size:0.65rem; font-weight:800; color:#475569; text-transform:uppercase; letter-spacing:0.5px;">📋 VERIFIED PRE-PRINT PREVIEW</span>
+            <button onclick="closePrintPreviewLayout()" style="background:#dc2626; color:#fff; border:none; padding:0.35rem 0.65rem; border-radius:4px; font-weight:bold; font-size:0.65rem; text-transform:uppercase;">Exit Preview</button>
+        </div>
+        <div class="preview-doc-header">
+            <h1 style="font-size:1.4rem; font-weight:900; letter-spacing:1px;">TACNET INCIDENT COMMAND LEDGER</h1>
+            <p style="font-size:0.7rem; text-transform:uppercase; letter-spacing:1px; margin-top:0.2rem; font-weight:700;">Official Multi-Agency Task Force Court Record</p>
+        </div>
+        <table class="preview-doc-table">
+            <tr>
+                <td style="font-weight:bold; width:30%;">Reporting Officer:</td>
+                <td id="prevDocOfficer">— Pending Check In —</td>
+            </tr>
+            <tr>
+                <td style="font-weight:bold;">Command Agency:</td>
+                <td id="prevDocAgency">— Pending Check In —</td>
+            </tr>
+            <tr>
+                <td style="font-weight:bold;">Call Sign Registry:</td>
+                <td id="prevDocCallsign">— Pending Check In —</td>
+            </tr>
+            <tr>
+                <td style="font-weight:bold;">Case Notes Summary:</td>
+                <td id="prevDocNotes" style="white-space: pre-wrap;"></td>
+            </tr>
+            <tr>
+                <td style="font-weight:bold;">Final Case Disposition:</td>
+                <td id="prevDocDisp" style="font-weight:bold; text-transform:uppercase;"></td>
+            </tr>
+        </table>
+        <h3 style="font-size:0.8rem; text-transform:uppercase; border-bottom:1px solid #000; padding-bottom:0.2rem; margin-bottom:0.5rem;">Forensic Operational Event Timeline Logs</h3>
+        <div id="prevDocLogs" style="font-family:monospace; font-size:0.7rem; line-height:1.4;"></div>
+    </div>
+
     <div id="screenLanding" class="screen">
         <div class="landing-backdrop-pure"></div>
         <div class="graphic-link-wrapper" onclick="switchScreen('screenSignIn')">
@@ -458,7 +515,6 @@
         </div>
     </div>
 
-    <!-- SECURE FIELD GATEWAY PANEL -->
     <div id="screenSignIn" class="screen">
         <div class="backdrop"></div>
         <div style="z-index: 5; margin-top: 1.5rem; display: flex; flex-direction: column; align-items: center;">
@@ -488,7 +544,6 @@
             </div>
             <div class="btn" onclick="handleSignIn()">Enter TACNET</div>
 
-            <!-- GATEWAY INTEGRATED DIRECT ACCESS ACTION DRAWER -->
             <div class="gateway-utilities-grid">
                 <div class="util-btn" onclick="openHistoricalLogs()">Logs & Replay</div>
                 <div class="util-btn" onclick="switchScreen('screenK9Voice')">Verbal K9 Help</div>
@@ -500,7 +555,6 @@
         </div>
     </div>
 
-    <!-- TACNET MAIN HUB GRID -->
     <div id="screenMenu" class="screen">
         <div class="backdrop"></div>
         <div style="z-index: 5; margin-top: 2.5rem; margin-bottom: 1rem; text-align: center;">
@@ -524,7 +578,6 @@
         </div>
     </div>
 
-    <!-- ACTIVE MAP WORKSPACE -->
     <div id="screenMap" class="screen">
         <div class="map-topnav">
             <div class="nav-arrow" onclick="switchScreen('screenMenu')">←</div>
@@ -535,6 +588,7 @@
                 <input type="text" id="mapSearch" class="search-input" placeholder="Address or Track Phone...">
                 <button class="btn-go" onclick="executeAddressSearch()">GO</button>
             </div>
+            <button class="btn-clear-now" onclick="clearMapAssets()">Clear Map</button>
         </div>
 
         <div class="map-wrapper" id="mapWrapper">
@@ -550,7 +604,6 @@
 
             <div id="nvgGreenFilter" class="night-vision-green"></div>
 
-            <!-- STEP BUTTON DECK PER OPERATIONAL SPECIFICATION -->
             <div id="commanderPerimeterDeck" class="perimeter-manual-deck">
                 <label>Perimeter</label>
                 <div id="radiusReadout" class="perimeter-readout">500m</div>
@@ -558,7 +611,6 @@
                 <button class="step-btn" onclick="adjustPerimeterManual(-100)">-</button>
             </div>
 
-            <!-- COMPACT SIDEBAR OVERLAY TOOL DRAWER -->
             <div class="map-sidebar">
                 <button id="btnPen" class="tool-btn" onclick="toggleRedPen()">PEN</button>
                 <button class="tool-btn" onclick="undoLastLine()">ERASE</button>
@@ -567,7 +619,6 @@
             </div>
         </div>
 
-        <!-- EXTENDED FIELD ASSET DRAWER PROFILE INDEX -->
         <div class="asset-drawer">
             <div id="chip-k9" class="asset-chip" onclick="selectAssetToPlace('k9')"><span class="dot k9"></span>K9 Team</div>
             <div id="chip-le" class="asset-chip" onclick="selectAssetToPlace('le')"><span class="dot le"></span>LE Blue</div>
@@ -593,51 +644,49 @@
         </div>
     </div>
 
-    <!-- TIMELINE PROFILE HISTORY REPORT CONTAINER -->
     <div id="screenReport" class="screen">
-        <div class="map-topnav">
+        <div class="map-topnav" style="height:55px;">
             <div class="nav-arrow" onclick="switchScreen('screenMenu')">←</div>
-            <div style="font-weight:700; text-transform:uppercase; font-size:0.85rem; letter-spacing:1px; margin-left:0.4rem;">TACNET TACTICAL COMMAND LEDGER</div>
+            <div style="font-weight:700; text-transform:uppercase; font-size:0.8rem; letter-spacing:1px; margin-left:0.2rem;">TACNET REPORT WORKSPACE</div>
         </div>
 
         <div class="report-body">
-            <div class="report-header-block" style="background: linear-gradient(90deg, #1e3a8a, #701a75); padding: 0.8rem; border-radius: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">
-                <h2 style="text-transform:uppercase; font-weight:900; letter-spacing:1px; font-size:1.1rem; color:#ffff00; text-shadow: 0 2px 4px #000;">TACNET PRE-REPORT REVIEW MATRIX</h2>
-                <p style="font-size:0.65rem; color:#e2e8f0; text-transform:uppercase; margin-top:0.15rem; font-weight: 700;">Verify and Edit All Metrics Before Verification Final Submission</p>
-            </div>
-
-            <!-- COMPLETELY EDITABLE INTEL NOTES REVIEW CONTAINER -->
             <div class="editable-review-card">
-                <h3 style="font-size:0.75rem; color: #38bdf8; margin-bottom: 0.5rem; text-transform:uppercase; font-weight:800;">📝 EDITABLE DISPATCH RECORD FIELD ENTRY</h3>
+                <h3 style="font-size:0.7rem; color: #38bdf8; margin-bottom: 0.4rem; text-transform:uppercase; font-weight:800; letter-spacing:0.5px;">📝 EDITABLE PRE-REPORT RECORDS</h3>
                 
-                <div class="form-group">
-                    <label style="font-size: 0.55rem; color: #94a3b8;">Reviewer Command Case Notes (Modify Directly Below)</label>
-                    <textarea id="reportNotes" class="form-control" style="height: 70px; font-size: 0.85rem; font-family: sans-serif; border: 1px solid #475569;" placeholder="Type or correct operational summary brief..."></textarea>
+                <div class="form-group" style="margin-bottom: 0.5rem;">
+                    <label style="font-size: 0.55rem; color: #94a3b8;">Command Case Summary Notes (Direct Input Entry)</label>
+                    <textarea id="reportNotes" class="form-control" style="height: 55px; font-size: 0.8rem; font-family: sans-serif; border: 1px solid #475569;" placeholder="Type or adjust operational brief summaries..."></textarea>
                 </div>
                 
                 <div class="form-group" style="margin-bottom: 0;">
-                    <label style="font-size: 0.55rem; color: #94a3b8;">Final Field Case Disposition (Modify Directly Below)</label>
-                    <input type="text" id="reportDisposition" class="form-control" style="padding: 0.5rem; font-size: 0.85rem; border: 1px solid #475569;" placeholder="e.g., Target Located Safely via K9 Team Track. Cleared.">
+                    <label style="font-size: 0.55rem; color: #94a3b8;">Final Case Disposition Status (Direct Input Entry)</label>
+                    <input type="text" id="reportDisposition" class="form-control" style="padding: 0.45rem; font-size: 0.8rem; border: 1px solid #475569;" placeholder="e.g., Target Located Safely via K9 Tracking. Cleared.">
                 </div>
             </div>
 
-            <div class="replay-deck" style="margin-top:1rem; margin-bottom:0.8rem;">
-                <button class="replay-btn" onclick="playbackControl('play')">▶ Play Court Replay</button>
+            <div class="replay-deck">
+                <button class="replay-btn" onclick="playbackControl('play')">▶ Play Replay</button>
                 <button class="replay-btn" style="background:#4b5563;" onclick="playbackControl('pause')">⏸ Pause</button>
                 <div id="replayStatus" style="font-size: 0.65rem; font-weight: bold; color: #eab308; margin-left: auto;">Status: Ready</div>
             </div>
 
-            <h3 style="font-size:0.7rem; color: #34d399; margin-bottom: 0.3rem; text-transform: uppercase;">Forensic Incident Logs</h3>
-            <ul id="logList" class="log-list" style="max-height: 110px; overflow-y: auto; background: #000; padding: 0.4rem; border-radius: 4px; border: 1px solid #1e293b;"></ul>
+            <div style="background: rgba(0,0,0,0.4); padding: 0.5rem; border-radius: 4px; border: 1px solid #1e293b;">
+                <h4 style="font-size:0.65rem; color: #34d399; margin-bottom: 0.2rem; text-transform: uppercase; letter-spacing:0.5px;">Timeline Incident Track Log</h4>
+                <ul id="logList" class="log-list" style="max-height: 80px; overflow-y: auto;"></ul>
+            </div>
 
-            <div class="gateway-utilities-grid" style="margin-top: 0.8rem;">
-                <div class="util-btn" style="background: #059669; border-color: #10b981; color:#fff;" onclick="window.print()">Print Final Verified PDF</div>
-                <div class="util-btn" style="background: #2563eb; border-color: #3b82f6; color:#fff;" onclick="emailFinalReport()">Email Final Report</div>
+            <div class="gateway-utilities-grid" style="margin-top: 0.6rem; grid-template-columns: 1fr;">
+                <button class="btn" style="background: #eab308; border-color: #facc15; color:#000; font-size: 0.8rem; padding: 0.65rem;" onclick="generatePrintPreviewLayout()">📋 Show Print Layout Preview</button>
+            </div>
+            
+            <div class="gateway-utilities-grid" style="margin-top: 0.5rem;">
+                <div class="util-btn" style="background: #059669; border-color: #10b981; color:#fff;" onclick="executeHardPrint()">Print Final PDF</div>
+                <div class="util-btn" style="background: #2563eb; border-color: #3b82f6; color:#fff;" onclick="emailFinalReport()">Email Out Report</div>
             </div>
         </div>
     </div>
 
-    <!-- VOCAL ASSISTANT FIELD PANEL DIRECT SYSTEM DATA HOOKS -->
     <div id="screenK9Voice" class="screen">
         <div class="map-topnav">
             <div class="nav-arrow" onclick="handleK9VoiceBackNavigation()">←</div>
@@ -755,8 +804,6 @@
 
         function initRealMap() {
             if (map) return; 
-            
-            // POINT 2: DEFAULT ENGINE BOOTS TO MAX HIGH-RESOLUTION ZOOM PROFILE (ZOOM LEVEL 18)
             map = L.map('map', { center: mapCenter, zoom: 18, zoomControl: false, attributionControl: false });
             setMapType('satellite');
 
@@ -770,7 +817,6 @@
             });
         }
 
-        // POINT 1: AUTOMATED TELEMETRY AUTO-CENTERING ENGINE W/ ZERO USER CONSOLE TOUCH REQUIRED
         function trackUserGPS() {
             if (!navigator.geolocation) return;
             if (gpsWatchId) navigator.geolocation.clearWatch(gpsWatchId);
@@ -787,8 +833,6 @@
                     if(tacticalPerimeterCircle) tacticalPerimeterCircle.setLatLng(currentCoords);
                 } else {
                     userLocationMarker.setLatLng(currentCoords);
-                    
-                    // HANDS-FREE TRACKING BOUND: Automatically keeps map centered over your movement path
                     if (!isMapLocked) {
                         map.setView(currentCoords, map.getZoom());
                     }
@@ -865,7 +909,6 @@
                 document.getElementById('btnTerr').classList.add('active');
                 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', { maxZoom: 18 }).addTo(map);
             }
-            logEvent(`Map Layer Shifted: Display synchronized to [${type.toUpperCase()}] matrix view.`);
         }
 
         function toggleVetDirectoryPanel() {
@@ -905,7 +948,7 @@
                 tacticalPerimeterCircle.setRadius(perimeterRadiusMeters);
             }
             document.getElementById('radiusReadout').innerText = perimeterRadiusMeters + "m";
-            logEvent("Perimeter Adjusted: Radius modified manually.");
+            logEvent(`Perimeter Adjusted: Radius modified manually to ${perimeterRadiusMeters}m.`);
         }
 
         function toggleMapLock() {
@@ -939,6 +982,34 @@
             placedMarkers.push(marker);
             logEvent(`Asset Deployed: dropped custom operational target token [${assetType.toUpperCase()}].`);
             selectAssetToPlace(null);
+        }
+
+        // GENERATES THE CLEAN BLACK-ON-WHITE EXECUTIVE REPORT DATA TO PROOFREAD
+        function generatePrintPreviewLayout() {
+            document.getElementById('prevDocOfficer').innerText = activeOperatorName || "Not Recorded";
+            document.getElementById('prevDocAgency').innerText = activeOperatorAgency || "Not Recorded";
+            document.getElementById('prevDocCallsign').innerText = activeOperatorCallSign || "Not Recorded";
+            
+            document.getElementById('prevDocNotes').innerText = document.getElementById('reportNotes').value || "No custom logs compiled.";
+            document.getElementById('prevDocDisp').innerText = document.getElementById('reportDisposition').value || "NO DISPOSITION VERIFIED";
+            
+            const logsContainer = document.getElementById('prevDocLogs');
+            if (historicalLogs.length === 0) {
+                logsContainer.innerHTML = "<p>No analytical telemetry entries logged during this sequence.</p>";
+            } else {
+                logsContainer.innerHTML = historicalLogs.map(log => `<p style='margin-bottom:0.25rem;'><b>[${log.time}]</b> ${log.text}</p>`).join('');
+            }
+            
+            document.getElementById('printPreviewLayer').style.display = 'block';
+        }
+
+        function closePrintPreviewLayout() {
+            document.getElementById('printPreviewLayer').style.display = 'none';
+        }
+
+        function executeHardPrint() {
+            generatePrintPreviewLayout(); // Ensure preview data maps fresh
+            setTimeout(() => { window.print(); }, 150);
         }
 
         drawCanvas.addEventListener('mousedown', startLineStroke); drawCanvas.addEventListener('mouseup', endLineStroke); drawCanvas.addEventListener('mousemove', drawLineSegment);
@@ -1005,7 +1076,7 @@
             } else if (category === 'eye') {
                 txt = "Ocular Eye Injury Protocol. Step 1. Restrain paws to prevent mechanical corneal abrasion rubbing. Step 2. Irrigate eye continuously for 3 full minutes with sterile saline solution to clear dirt debris. Step 3. Cover eye with moist padding cloth.";
             } else if (category === 'paw') {
-                txt = "Paw Pad Fracture Trauma Protocol. Step 1. Clear exterior field glass metal stones out of lancerated tissue. Step 2. Apply pressure dressing patch block directly onto bleeding pad skin for 2 full minutes. Step 3. Wrap protective boot bandage.";
+                txt = "Paw Pad Fracture Trauma Protocol. Step 1. Clear exterior field glass metal stones out of lacerated tissue. Step 2. Apply pressure dressing patch block directly onto bleeding pad skin for 2 full minutes. Step 3. Wrap protective boot bandage.";
             }
 
             banner.innerText = "📢 VOCAL BROADCAST ACTIVE: " + category.toUpperCase();
