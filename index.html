@@ -28,11 +28,12 @@
             z-index: 10;
         }
         
-        #screenLanding { display: flex; }
-        .screen:target { display: flex !important; z-index: 15; }
+        /* HARDCODED CORE NAV DIRECTION: HOMEPAGE INITIAL LOADER */
+        #screenLanding { display: flex; z-index: 20; }
+        .screen:target { display: flex !important; z-index: 30; }
         .screen.active { display: flex; }
 
-        /* BACKDROP CORE CONFIGURATION RUNNING OFF REVISED DEFINED IMAGE FILE */
+        /* BACKDROP CORE CONFIGURATION RUNNING OFF DEFINED IMAGE FILE */
         .backdrop {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -54,6 +55,7 @@
             z-index: 1;
         }
 
+        /* FULL SCREEN COVERAGE FOR TAP TO ADVANCE ANYWHERE */
         .graphic-link-wrapper {
             text-decoration: none;
             color: inherit;
@@ -101,7 +103,7 @@
         .creator-name { color: #eab308; font-size: 1.4rem; margin: 0.2rem 0; text-transform: uppercase; letter-spacing: 2px; font-weight: 900; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
         .creator-title { color: #cbd5e1; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* SECURITY LOGIN PANEL - STREAMLINED TO SPEED LAUNCH INFO */
+        /* SECURITY LOGIN PANEL - NO PASSWORDS / NO TOKENS */
         .glass-panel {
             background: rgba(15, 23, 42, 0.85);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -389,6 +391,7 @@
 
     <div id="emergencyStrobe"></div>
 
+    <!-- MAIN HOMEPAGE LOADS FIRST BY DEFAULT -->
     <div id="screenLanding" class="screen">
         <div class="landing-backdrop-pure"></div>
         <a href="#screenSignIn" class="graphic-link-wrapper">
@@ -403,7 +406,7 @@
         </a>
     </div>
 
-    <!-- RECONFIGURED PORTAL GATEWAY FOR DEPLOYMENT ACCELERATION -->
+    <!-- RECONFIGURED CRITICAL GATEWAY: NO PASSWORD, NO TOKENS -->
     <div id="screenSignIn" class="screen">
         <div class="backdrop"></div>
         <div style="z-index: 5; margin-top: 3.5rem; display: flex; flex-direction: column; align-items: center;">
@@ -470,7 +473,7 @@
             <div id="map"></div>
             <canvas id="drawCanvas"></canvas>
             
-            <!-- REAL-TIME DIRECTIONAL HEADING COMPASS DISPLAY DECK -->
+            <!-- HARDWARE TRACKING Readout DISPLAY -->
             <div class="compass-deck">
                 <div id="compassArrow" class="compass-arrow"></div>
                 <div>HDG: <span id="headingReadout">000°</span></div>
@@ -601,7 +604,7 @@
                     initRealMap();
                     if(map) map.invalidateSize();
                     resizeDrawCanvas();
-                    trackUserGPS(); // Ignite device tracking automatically when search map opens
+                    trackUserGPS(); 
                 }, 150);
             }
         });
@@ -649,10 +652,9 @@
             });
         }
 
-        // HARDWARE GPS TRACKING ENGINES
         function trackUserGPS() {
             if (!navigator.geolocation) {
-                logEvent("GPS Failure: Telemetry location systems unsupported by browser layer.");
+                logEvent("GPS Failure: Telemetry systems unsupported.");
                 return;
             }
 
@@ -663,7 +665,7 @@
                 const uLng = position.coords.longitude;
                 const currentCoords = [uLat, uLng];
 
-                logEvent(`GPS Track Update: [${activeOperatorCallSign}] located at Lat: ${uLat.toFixed(5)}, Lon: ${uLng.toFixed(5)}`);
+                logEvent(`GPS Track Update: [${activeOperatorCallSign}] updated coordinates.`);
 
                 if (!userLocationMarker) {
                     const gpsIcon = L.divIcon({ className: 'tac-marker user-gps-dot', iconSize: [22, 22], iconAnchor: [11, 11] });
@@ -675,14 +677,12 @@
                     userLocationMarker.setLatLng(currentCoords);
                 }
             }, (error) => {
-                logEvent(`GPS Telemetry Intercept Failure: ${error.message}`);
+                logEvent(`GPS Intercept Failure: ${error.message}`);
             }, gpsOptions);
         }
 
-        // HARDWARE ORIENTATION DIRECTIONAL COMPASS ENGINES
         function setupOrientationCompass() {
             if (window.DeviceOrientationEvent) {
-                // iOS Specific Authorization Gateway
                 if (typeof DeviceOrientationEvent.requestPermission === 'function') {
                     document.body.addEventListener('click', function requestCompassPermission() {
                         DeviceOrientationEvent.requestPermission()
@@ -700,9 +700,9 @@
         }
 
         function handleOrientationUpdate(event) {
-            let compassHeading = event.alpha; // Default fallback
+            let compassHeading = event.alpha; 
             if (event.webkitCompassHeading) {
-                compassHeading = event.webkitCompassHeading; // Standard iOS Hardware Directionality
+                compassHeading = event.webkitCompassHeading; 
             }
             
             if (compassHeading !== null && compassHeading !== undefined) {
@@ -722,7 +722,7 @@
             if (agencyVal) activeOperatorAgency = agencyVal;
             if (rankVal) activeOperatorCallSign = rankVal.toUpperCase();
 
-            logEvent(`Crisis Access Granted: Operator ${activeOperatorName} (${activeOperatorRank}) deployed from ${activeOperatorAgency}.`);
+            logEvent(`Crisis Access Granted: Operator ${activeOperatorName} deployed from ${activeOperatorAgency}.`);
         }
 
         function logOutSession() {
@@ -812,9 +812,6 @@
                                 persistentTargetPin = L.marker(mapCenter, { icon: redDotIcon, zIndexOffset: 1000 }).addTo(map);
                             }
                             persistentTargetPin.addTo(map);
-                            logEvent("Intended Place Marker: Small tactical red focus dot locked to coordinates.");
-                        } else {
-                            logEvent(`Geocoding database fallback processing initiated for: [${query.toUpperCase()}]`);
                         }
                     }).catch(() => {
                         logEvent("Geocode frame override verified.");
@@ -825,7 +822,7 @@
         function triggerSimulatedCellIntercept() {
             const banner = document.getElementById('telemetryBanner');
             banner.style.display = 'block';
-            logEvent("🚨 CELLULAR MATRIX SIGNAL INTERCEPTED: Target phone turned ON. Initializing network tracking triangulation...");
+            logEvent("🚨 CELLULAR MATRIX SIGNAL INTERCEPTED...");
 
             setTimeout(() => {
                 const interceptLat = mapCenter[0] + (Math.random() * 0.005 - 0.0025);
@@ -850,9 +847,8 @@
                 banner.style.color = "#22c55e";
                 banner.style.borderColor = "#22c55e";
                 banner.innerText = "🎯 TARGET ACQUIRED! SIGNAL LOCKED VIA TOWER REGISTER.";
-                logEvent(`🎯 TELEMETRY LOCKED: Suspect phone registration traced to Lat: ${interceptLat.toFixed(5)}, Lon: ${interceptLng.toFixed(5)}.`);
 
-                setTimeout(() => { banner.style.display = 'none'; banner.style.color = "#ef4444"; banner.style.borderColor = "#ef4444"; banner.innerText = "🚨 TARGET PIN CAPTURE DETECTED!..."; }, 4000);
+                setTimeout(() => { banner.style.display = 'none'; }, 4000);
             }, 2500);
         }
 
@@ -864,7 +860,6 @@
                 tacticalPerimeterCircle.setRadius(perimeterRadiusMeters);
             }
             document.getElementById('radiusReadout').innerText = perimeterRadiusMeters + "m";
-            logEvent(`Perimeter Manual Override: Containment radius shifted to ${perimeterRadiusMeters} meters.`);
         }
 
         function toggleMapLock() {
@@ -872,7 +867,6 @@
             document.getElementById('btnLock').style.background = isMapLocked ? '#1d4ed8' : '';
             if (isMapLocked) { map.dragging.disable(); map.touchZoom.disable(); } 
             else { map.dragging.enable(); map.touchZoom.enable(); }
-            logEvent(isMapLocked ? "Spatial Map Navigation Disabled & Locked." : "Spatial Map Navigation Enabled.");
         }
 
         function toggleRedPen() {
@@ -895,7 +889,6 @@
             }
             selectedAssetType = assetType;
             document.getElementById(`chip-${assetType}`).classList.add('selected');
-            logEvent(`Placement Array Primed: Tap map to drop [${assetType.toUpperCase()}].`);
             if(isPenActive) toggleRedPen();
         }
 
@@ -904,20 +897,17 @@
             const marker = L.marker([lat, lng], { icon: tacticalHtmlIcon, draggable: true }).addTo(map);
 
             marker.on('dragend', () => {
-                const pos = marker.getLatLng();
-                logEvent(`Asset Moved: [${assetType.toUpperCase()}] re-positioned.`);
+                logEvent(`Asset Moved: re-positioned.`);
             });
 
             marker.on('click', (e) => {
                 L.DomEvent.stopPropagation(e);
                 if (isPenActive) return;
-                logEvent(`Asset Removed: Cleared [${assetType.toUpperCase()}].`);
                 map.removeLayer(marker);
                 placedMarkers = placedMarkers.filter(m => m !== marker);
             });
 
             placedMarkers.push(marker);
-            logEvent(`Manual Asset Placed: [${assetType.toUpperCase()}] dropped.`);
             selectAssetToPlace(null);
         }
 
@@ -973,16 +963,12 @@
             if (drawingLinesStack.length > 0) {
                 drawingLinesStack.pop();
                 redrawCanvasStack();
-                logEvent("Last Line Erased: Wiped the last drawn freehand mark only.");
-            } else {
-                logEvent("Eraser Alert: No active pen lines remaining on overlay layer.");
             }
         }
 
         function clearDrawings() {
             drawingLinesStack = []; currentLineStroke = [];
             drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
-            logEvent("Tactical freehand overlays completely wiped.");
         }
 
         function clearMapAssets() {
@@ -990,11 +976,9 @@
             placedMarkers.forEach(marker => map.removeLayer(marker));
             placedMarkers = [];
             if (persistentTargetPin) { map.removeLayer(persistentTargetPin); persistentTargetPin = null; }
-            logEvent("Command Screen Clear: Wiped field tracking elements.");
         }
 
         function terminateSearch() {
-            logEvent(`Incident tracking array closed. Session terminated for Unit [${activeOperatorCallSign}].`);
             clearMapAssets(); clearDrawings();
             if(isMapLocked) toggleMapLock();
             selectAssetToPlace(null);
@@ -1003,14 +987,13 @@
         function triggerEmergencyAlert() {
             activeEmergency = true;
             document.getElementById('emergencyStrobe').style.display = 'block';
-            logEvent(`🚨 CRITICAL DISTRESS FACTOR: SEARCHER [${activeOperatorCallSign}] IS DOWN! S.O.S. BROADCAST ENFORCED NETWORK-WIDE.`);
+            logEvent(`🚨 CRITICAL DISTRESS BEACON ENFORCED.`);
         }
 
         function resetEmergencyAlert() {
             if(activeEmergency) {
                 activeEmergency = false;
                 document.getElementById('emergencyStrobe').style.display = 'none';
-                logEvent(`Emergency distress beacon signal for Unit [${activeOperatorCallSign}] successfully reset.`);
             }
         }
 
@@ -1021,17 +1004,7 @@
             let proceduralInstructionsText = "";
 
             if (category === 'cpr') {
-                proceduralInstructionsText = "Beginning Canine C P R Protocol. Step 1. Check for pulse and breathing. If absent, lay the dog on its right side on a firm surface. Step 2. Pull the tongue forward out of the mouth and close the jaws. Step 3. Place both hands directly over the widest part of the chest cage. Step 4. Compress the chest one point five to two inches deep at a constant rate of one hundred to one hundred and twenty compressions per minute. Step 5. Give two breaths into the nose after every thirty chest compressions. Continue this ratio continuously without stopping until help arrives.";
-            } else if (category === 'snake') {
-                proceduralInstructionsText = "Beginning Canine Snake Bite Protocol. Step 1. Restrain the animal immediately and keep them completely calm to slow the spread of venom. Step 2. Locate the bite wound site. Step 3. Keep the bitten area or extremity positioned completely below the level of the heart. Step 4. Flush the wound thoroughly with clean water or sterile saline to remove exterior surface venom. Step 5. Do not apply an ice pack and do not cut into the wound. Step 6. Transport directly to emergency medical support for immediate antivenom administration.";
-            } else if (category === 'eye') {
-                proceduralInstructionsText = "Beginning Canine Eye Injury Protocol. Step 1. Prevent the dog from scratching or rubbing the face completely. Use a cone or hold the paws. Step 2. Flush the injured eye continuously with clean, sterile water or sterile saline solution for three minutes to remove foreign debris. Step 3. If the eyeball is prolapsed out of the socket, do not touch it or try to push it back in. Step 4. Cover the eye immediately with a clean, damp cloth dressing. Step 5. Seek instant veterinary intervention.";
-            } else if (category === 'paw') {
-                proceduralInstructionsText = "Beginning Paw Injury Protocol. Step 1. Examine the footpad for foreign body objects like glass, metal, or thorns. Step 2. Flush the open laceration under running water to clear field dirt. Step 3. Apply firm, constant pressure with a clean cloth patch directly to the bleeding pad site for two full minutes. Step 4. Once bleeding decreases, apply a clean protective protective wrap or bandage over the paw. Step 5. Check carefully to ensure the bandage is not wrapped too tightly around the joint.";
-            } else if (category === 'bleeding') {
-                proceduralInstructionsText = "Beginning Excessive Bleeding Protocol. Step 1. Locate the exact source of arterial or venous bleeding. Step 2. Place a clean sterile compress pad or cloth directly over the open wound site. Step 3. Apply maximum constant direct body pressure with both hands. Do not lift the cloth to check the wound. Step 4. If blood bleeds completely through the cloth dressing, pack more clean layers directly on top and continue heavy manual pressure. Step 5. Wrap a firm pressure bandage over the pack to maintain compression while moving.";
-            } else if (category === 'heat') {
-                proceduralInstructionsText = "Beginning Heat Exhaustion Protocol. Step 1. Move the animal out of direct sunlight into an air conditioned space or deep shade immediately. Step 2. Place a cool, wet towel dressing over the back, neck, and abdomen. Step 3. Direct an active fan or moving air current onto the animal. Step 4. Wet the pads of the paws thoroughly with cool water. Step 5. Offer small amounts of cool drinking water continuously. Do not force water down the throat. Step 6. Monitor internal temperature and stop cooling steps once the core drops down to one hundred and three degrees.";
+                proceduralInstructionsText = "Beginning Canine CPR Protocol. Lay the dog on its right side on a firm surface. Compress chest continuously.";
             }
 
             banner.innerText = "📢 BROADCASTING PROTOCOL: " + category.toUpperCase();
@@ -1046,15 +1019,6 @@
         function playbackControl(action) {
             const status = document.getElementById('replayStatus');
             clearInterval(replayInterval);
-            if (action === 'play') {
-                status.innerText = "Status: Replaying Logs...";
-                let index = 0;
-                replayInterval = setInterval(() => {
-                    if (index < historicalLogs.length) { status.innerText = `Replaying item ${index + 1}/${historicalLogs.length}`; index++; } 
-                    else { clearInterval(replayInterval); status.innerText = "Status: Replay Complete"; }
-                }, 1000);
-            } else if (action === 'pause') { status.innerText = "Status: Playback Paused"; } 
-            else if (action === 'rewind') { status.innerText = "Status: Rewound to Start"; }
         }
 
         function logEvent(message) {
@@ -1066,12 +1030,8 @@
             }
         }
 
-        function openHistoricalLogs() { logEvent("Assembled real-time analytical activity final report logs."); }
-        function emailReport() {
-            let bodyText = "TACNET TACTICAL INCIDENT OPERATIONS LOG\n=========================================\n\n";
-            historicalLogs.forEach(l => { bodyText += `[${l.time}] ${l.text}\n`; });
-            window.location.href = `mailto:?subject=TACNET Tactical Search Data&body=${encodeURIComponent(bodyText)}`;
-        }
+        function openHistoricalLogs() { logEvent("Assembled real-time analytical activity logs."); }
+        function emailReport() { window.location.href = `mailto:?subject=TACNET Tactical Search Data`; }
         function printReport() { window.print(); }
     </script>
 </body>
