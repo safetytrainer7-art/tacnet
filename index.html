@@ -28,28 +28,26 @@
             z-index: 10;
         }
         
-        /* Fallback rules: Show landing by default; switch automatically if an anchor # is targeted */
         #screenLanding { display: flex; }
         .screen:target { display: flex !important; z-index: 15; }
         .screen.active { display: flex; }
 
-        /* DIRECT LINK BACKDROP ATTRIBUTE FOR YOUR EXACT IMAGE */
+        /* BACKDROP CORE CONFIGURATION RUNNING OFF REVISED DEFINED IMAGE FILE */
         .backdrop {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(rgba(2, 6, 23, 0.45), rgba(15, 23, 42, 0.85)), 
-                        url('IMAGE FOR TAC.png2.jpg');
+                        url('image_b2b73d.jpg');
             background-size: 100% 100%;
             background-position: center;
             background-repeat: no-repeat;
             z-index: 1;
         }
 
-        /* SCREEN 1 BRAND LANDING CONFIGURATION */
         .landing-backdrop-pure {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: url('IMAGE FOR TAC.png2.jpg');
+            background: url('image_b2b73d.jpg');
             background-size: 100% 100%;
             background-position: center;
             background-repeat: no-repeat;
@@ -103,7 +101,7 @@
         .creator-name { color: #eab308; font-size: 1.4rem; margin: 0.2rem 0; text-transform: uppercase; letter-spacing: 2px; font-weight: 900; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
         .creator-title { color: #cbd5e1; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* SECURITY LOGIN PANEL */
+        /* SECURITY LOGIN PANEL - STREAMLINED TO SPEED LAUNCH INFO */
         .glass-panel {
             background: rgba(15, 23, 42, 0.85);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -155,6 +153,31 @@
         #map { width: 100%; height: 100%; z-index: 2; }
         #drawCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; }
         
+        /* DIRECTIONAL ORIENTATION COMPASS INDICATOR */
+        .compass-deck {
+            position: absolute;
+            bottom: 12px; left: 8px;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            padding: 0.4rem 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 25;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            font-family: monospace;
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: #38bdf8;
+        }
+        .compass-arrow {
+            width: 16px; height: 16px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2338bdf8"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>') no-repeat center;
+            background-size: contain;
+            transition: transform 0.2s ease;
+        }
+
         /* MAP NIGHT SEARCH OVERLAYS */
         .night-vision-green {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -292,6 +315,7 @@
         .dot.cp, .tac-cp { background: #ffff00; box-shadow: 0 0 6px #ff0000; border: 2px solid #ff0000 !important; border-radius: 0% !important; }
         .dot.boat, .tac-boat { background: #000000; box-shadow: 0 0 6px #ffff00; border: 2px solid #ffff00 !important; }
         .dot.target-pin, .tac-target-pin { background: #ff0000; box-shadow: 0 0 10px #ff0000; border: 2px solid #fff !important; }
+        .user-gps-dot { background: #f43f5e; box-shadow: 0 0 14px #f43f5e; border: 2px solid #fff !important; }
 
         /* FIXED BOTTOM DECK BASE PANEL */
         .bottom-deck { width: 100%; height: 18%; background: #020617; display: flex; flex-direction: column; z-index: 20; padding-bottom: env(safe-area-inset-bottom); }
@@ -367,7 +391,6 @@
 
     <div id="screenLanding" class="screen">
         <div class="landing-backdrop-pure"></div>
-        <!-- Wrap layout in an HTML anchor link to jump directly to the sign-in container -->
         <a href="#screenSignIn" class="graphic-link-wrapper">
             <div class="advance-prompt-box">
                 <p class="advance-prompt-text">[ Tap Screen to Advance ]</p>
@@ -380,27 +403,28 @@
         </a>
     </div>
 
+    <!-- RECONFIGURED PORTAL GATEWAY FOR DEPLOYMENT ACCELERATION -->
     <div id="screenSignIn" class="screen">
         <div class="backdrop"></div>
         <div style="z-index: 5; margin-top: 3.5rem; display: flex; flex-direction: column; align-items: center;">
-            <h1 class="app-title" style="font-size: 2rem;">SECURE PORTAL</h1>
-            <p style="font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Verify Agency Identity Access</p>
+            <h1 class="app-title" style="font-size: 2rem; font-weight: 900; letter-spacing: 2px;">SECURE PORTAL</h1>
+            <p style="font-size: 0.7rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;">Verify Field Operator Identity</p>
         </div>
 
         <div class="glass-panel">
             <div class="form-group">
-                <label>Badge / Operational Searcher ID Number</label>
-                <input type="text" id="inputId" class="form-control" value="K9-UNIT 12" placeholder="Enter Searcher Number" autocomplete="off">
+                <label>Operator Full Name</label>
+                <input type="text" id="inputName" class="form-control" placeholder="e.g., Deputy J. Doe" autocomplete="off">
             </div>
             <div class="form-group">
-                <label>Secure Password</label>
-                <input type="password" id="inputPass" class="form-control" value="••••••••" autocomplete="off">
+                <label>Operational Agency / Department</label>
+                <input type="text" id="inputAgency" class="form-control" placeholder="e.g., Sheriff's Department" autocomplete="off">
             </div>
             <div class="form-group">
-                <label>Inter-Agency Access Token</label>
-                <input type="text" id="inputToken" class="form-control" placeholder="Enter Temporary Token">
+                <label>Rank / Call Sign Designation</label>
+                <input type="text" id="inputRank" class="form-control" placeholder="e.g., K9-UNIT 12" autocomplete="off">
             </div>
-            <a href="#screenMenu" class="btn">Secure Sign In</a>
+            <a href="#screenMenu" class="btn" onclick="handleSignIn()">Enter TACNET</a>
         </div>
 
         <div class="creator-credits">
@@ -446,6 +470,12 @@
             <div id="map"></div>
             <canvas id="drawCanvas"></canvas>
             
+            <!-- REAL-TIME DIRECTIONAL HEADING COMPASS DISPLAY DECK -->
+            <div class="compass-deck">
+                <div id="compassArrow" class="compass-arrow"></div>
+                <div>HDG: <span id="headingReadout">000°</span></div>
+            </div>
+
             <div id="nvgGreenFilter" class="night-vision-green"></div>
             <div id="nvgRedFilter" class="night-vision-red"></div>
 
@@ -542,32 +572,36 @@
         let mapCenter = [37.5407, -77.4360]; 
         let tacticalPerimeterCircle;
         let persistentTargetPin = null;
+        let userLocationMarker = null;
+        let gpsWatchId = null;
         let isMapLocked = false;
         let isPenActive = false;
         let activeEmergency = false;
         let isDrawing = false;
         let nvgState = 0; 
         let replayInterval;
-        let activeSearcherId = "K9-UNIT 12"; 
-        let perimeterRadiusMeters = 500; 
         
+        let activeOperatorName = "Unknown Searcher";
+        let activeOperatorAgency = "Task Force";
+        let activeOperatorCallSign = "FIELD-UNIT";
+        
+        let perimeterRadiusMeters = 500; 
         let placedMarkers = [];
         let historicalLogs = [];
         let selectedAssetType = null;
-
         let drawingLinesStack = [];
         let currentLineStroke = [];
 
         const drawCanvas = document.getElementById('drawCanvas');
         const drawCtx = drawCanvas.getContext('2d');
 
-        // Watch layout target changes to safely boot up Leaflet mapping features
         window.addEventListener('hashchange', () => {
             if(window.location.hash === '#screenMap') {
                 setTimeout(() => {
                     initRealMap();
                     if(map) map.invalidateSize();
                     resizeDrawCanvas();
+                    trackUserGPS(); // Ignite device tracking automatically when search map opens
                 }, 150);
             }
         });
@@ -575,6 +609,7 @@
         window.addEventListener('load', () => {
             resizeDrawCanvas();
             logEvent("Platform runtime initialization completely established.");
+            setupOrientationCompass();
         });
 
         function resizeDrawCanvas() {
@@ -614,16 +649,86 @@
             });
         }
 
-        function handleSignIn() {
-            const id = document.getElementById('inputId').value.trim();
-            if(id !== "") {
-                activeSearcherId = id.toUpperCase();
+        // HARDWARE GPS TRACKING ENGINES
+        function trackUserGPS() {
+            if (!navigator.geolocation) {
+                logEvent("GPS Failure: Telemetry location systems unsupported by browser layer.");
+                return;
             }
-            logEvent(`Credentials Authenticated: Operational Session Assigned to Tracking Unit: [${activeSearcherId}]`);
+
+            const gpsOptions = { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 };
+            
+            gpsWatchId = navigator.geolocation.watchPosition((position) => {
+                const uLat = position.coords.latitude;
+                const uLng = position.coords.longitude;
+                const currentCoords = [uLat, uLng];
+
+                logEvent(`GPS Track Update: [${activeOperatorCallSign}] located at Lat: ${uLat.toFixed(5)}, Lon: ${uLng.toFixed(5)}`);
+
+                if (!userLocationMarker) {
+                    const gpsIcon = L.divIcon({ className: 'tac-marker user-gps-dot', iconSize: [22, 22], iconAnchor: [11, 11] });
+                    userLocationMarker = L.marker(currentCoords, { icon: gpsIcon }).addTo(map);
+                    map.setView(currentCoords, 16);
+                    mapCenter = currentCoords;
+                    if(tacticalPerimeterCircle) tacticalPerimeterCircle.setLatLng(currentCoords);
+                } else {
+                    userLocationMarker.setLatLng(currentCoords);
+                }
+            }, (error) => {
+                logEvent(`GPS Telemetry Intercept Failure: ${error.message}`);
+            }, gpsOptions);
+        }
+
+        // HARDWARE ORIENTATION DIRECTIONAL COMPASS ENGINES
+        function setupOrientationCompass() {
+            if (window.DeviceOrientationEvent) {
+                // iOS Specific Authorization Gateway
+                if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+                    document.body.addEventListener('click', function requestCompassPermission() {
+                        DeviceOrientationEvent.requestPermission()
+                            .then(permissionState => {
+                                if (permissionState === 'granted') {
+                                    window.addEventListener('deviceorientation', handleOrientationUpdate, true);
+                                }
+                            });
+                        document.body.removeEventListener('click', requestCompassPermission);
+                    });
+                } else {
+                    window.addEventListener('deviceorientation', handleOrientationUpdate, true);
+                }
+            }
+        }
+
+        function handleOrientationUpdate(event) {
+            let compassHeading = event.alpha; // Default fallback
+            if (event.webkitCompassHeading) {
+                compassHeading = event.webkitCompassHeading; // Standard iOS Hardware Directionality
+            }
+            
+            if (compassHeading !== null && compassHeading !== undefined) {
+                const angle = Math.round(compassHeading);
+                document.getElementById('headingReadout').innerText = String(angle).padStart(3, '0') + "°";
+                const arrow = document.getElementById('compassArrow');
+                if(arrow) arrow.style.transform = `rotate(${angle}deg)`;
+            }
+        }
+
+        function handleSignIn() {
+            const nameVal = document.getElementById('inputName').value.trim();
+            const agencyVal = document.getElementById('inputAgency').value.trim();
+            const rankVal = document.getElementById('inputRank').value.trim();
+
+            if (nameVal) activeOperatorName = nameVal;
+            if (agencyVal) activeOperatorAgency = agencyVal;
+            if (rankVal) activeOperatorCallSign = rankVal.toUpperCase();
+
+            logEvent(`Crisis Access Granted: Operator ${activeOperatorName} (${activeOperatorRank}) deployed from ${activeOperatorAgency}.`);
         }
 
         function logOutSession() {
-            logEvent(`Command tracking unit [${activeSearcherId}] safely logged out.`);
+            if(gpsWatchId) navigator.geolocation.clearWatch(gpsWatchId);
+            userLocationMarker = null;
+            logEvent(`Operator session cleared for designator [${activeOperatorCallSign}].`);
         }
 
         function startNewSearch() {
@@ -889,7 +994,7 @@
         }
 
         function terminateSearch() {
-            logEvent(`Incident tracking array closed. Session terminated for Unit [${activeSearcherId}].`);
+            logEvent(`Incident tracking array closed. Session terminated for Unit [${activeOperatorCallSign}].`);
             clearMapAssets(); clearDrawings();
             if(isMapLocked) toggleMapLock();
             selectAssetToPlace(null);
@@ -898,14 +1003,14 @@
         function triggerEmergencyAlert() {
             activeEmergency = true;
             document.getElementById('emergencyStrobe').style.display = 'block';
-            logEvent(`🚨 CRITICAL DISTRESS FACTOR: SEARCHER NO. [${activeSearcherId}] IS DOWN! S.O.S. BROADCAST ENFORCED NETWORK-WIDE.`);
+            logEvent(`🚨 CRITICAL DISTRESS FACTOR: SEARCHER [${activeOperatorCallSign}] IS DOWN! S.O.S. BROADCAST ENFORCED NETWORK-WIDE.`);
         }
 
         function resetEmergencyAlert() {
             if(activeEmergency) {
                 activeEmergency = false;
                 document.getElementById('emergencyStrobe').style.display = 'none';
-                logEvent(`Emergency distress beacon signal for Unit [${activeSearcherId}] successfully reset.`);
+                logEvent(`Emergency distress beacon signal for Unit [${activeOperatorCallSign}] successfully reset.`);
             }
         }
 
