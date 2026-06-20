@@ -27,11 +27,10 @@
             flex-direction: column;
             z-index: 10;
         }
-        /* FORCES THE HOMEPAGE MASTER INTERFACE LAYER TO BOOT FIRST */
         #screenLanding { display: flex !important; z-index: 20; }
         .screen.active { display: flex !important; z-index: 30; }
 
-        /* BACKDROP CORE LAYER INTERFACE PROFILE */
+        /* BACKDROP MODULES */
         .backdrop {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -53,7 +52,6 @@
             z-index: 1;
         }
 
-        /* MASTER GRAPHIC CONTAINER CLICK TRACK */
         .graphic-link-wrapper {
             width: 100%;
             height: 100%;
@@ -99,7 +97,7 @@
         .creator-name { color: #eab308; font-size: 1.4rem; margin: 0.2rem 0; text-transform: uppercase; letter-spacing: 2px; font-weight: 900; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
         .creator-title { color: #cbd5e1; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* SECURITY LOGIN PANEL - STREAMLINED IDENTITY DATA ENTRY ONLY */
+        /* PORTAL PANEL */
         .glass-panel {
             background: rgba(15, 23, 42, 0.85);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -117,15 +115,19 @@
         .form-group label { display: block; font-size: 0.65rem; text-transform: uppercase; color: #94a3b8; margin-bottom: 0.2rem; font-weight: 700; letter-spacing: 0.5px; }
         .form-control {
             width: 100%;
-            padding: 0.65rem;
+            padding: 0.75rem;
             background: rgba(0, 0, 0, 0.6);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 4px;
             color: #fff;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+        }
+        .form-control.error-field {
+            border-color: #ef4444 !important;
+            background: rgba(127, 29, 29, 0.4) !important;
         }
 
-        /* RADIO TOGGLE SELECTION COMPONENT METRICES */
         .role-toggle-container {
             display: flex;
             gap: 0.5rem;
@@ -150,7 +152,6 @@
             color: #fff;
         }
         
-        /* FIELD CONTROLS */
         .btn {
             display: block;
             text-align: center;
@@ -170,12 +171,49 @@
 
         .menu-container { display: flex; flex-direction: column; gap: 0.8rem; width: 92%; max-width: 380px; margin: auto; z-index: 5; }
 
-        /* LIVE SPATIAL MAP WORKSPACE */
-        .map-wrapper { position: relative; width: 100%; height: 72%; background: #020617; }
+        /* PROPORTIONAL SCREEN RESCALING FOR IPHONE 15 PRO */
+        .map-topnav {
+            height: 60px;
+            background: #0f172a;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            padding: 0 0.4rem;
+            padding-top: env(safe-area-inset-top);
+            gap: 0.25rem;
+            flex-shrink: 0;
+        }
+        .map-wrapper { 
+            position: relative; 
+            flex-grow: 1; /* Automatically absorbs space safely between headers and drawer */
+            width: 100%; 
+            background: #020617; 
+        }
         #map { width: 100%; height: 100%; z-index: 2; }
         #drawCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; }
         
-        /* DIRECTIONAL ORIENTATION COMPASS INDICATOR */
+        .asset-drawer {
+            height: 65px;
+            background: #0f172a;
+            border-top: 2px solid rgba(255,255,255,0.1);
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            overflow-x: auto;
+            padding: 0 0.5rem;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+        .bottom-deck { 
+            height: 110px; 
+            background: #020617; 
+            display: flex; 
+            flex-direction: column; 
+            flex-shrink: 0;
+            padding-bottom: env(safe-area-inset-bottom); 
+        }
+
+        /* OVERLAY PLACEMENT CONTROLS */
         .compass-deck {
             position: absolute;
             bottom: 8px; left: 8px;
@@ -200,17 +238,16 @@
             transition: transform 0.2s ease;
         }
 
-        /* FLOATING SIDEBAR NAVIGATION */
         .map-sidebar {
             position: absolute;
-            top: 75px; right: 8px;
+            top: 15px; right: 8px;
             display: flex;
             flex-direction: column;
             gap: 0.4rem;
             z-index: 20;
         }
         .tool-btn {
-            width: 40px; height: 44px;
+            width: 40px; height: 42px;
             border-radius: 6px;
             background: #0f172a;
             border: 2px solid rgba(255,255,255,0.15);
@@ -223,10 +260,9 @@
         .tool-btn.active { background: #1d4ed8; border-color: #3b82f6; }
         .tool-btn.pen-active { background: #b91c1c; border-color: #f87171; }
 
-        /* MANUAL STEPPING CONTROLLER FOR CONTAINER PERIMETER */
         .perimeter-manual-deck {
             position: absolute;
-            top: 75px; left: 8px;
+            top: 15px; left: 8px;
             background: #0f172a;
             border: 2px solid rgba(255,255,255,0.15);
             padding: 0.4rem;
@@ -247,21 +283,21 @@
             border-radius: 4px; display: flex; align-items: center; justify-content: center;
             cursor: pointer;
         }
-        .step-btn:active { background: #1d4ed8; border-color: #3b82f6; }
 
-        /* FIELD ASSET DRAWER */
-        .asset-drawer {
-            width: 100%; height: 10%;
-            background: #0f172a;
-            border-top: 2px solid rgba(255,255,255,0.1);
-            border-bottom: 2px solid rgba(255,255,255,0.1);
-            display: flex;
-            align-items: center;
-            overflow-x: auto;
-            padding: 0 0.5rem;
-            gap: 0.5rem;
-            z-index: 15;
+        .nav-arrow { font-size: 1.4rem; background: none; border: none; color: #fff; padding: 0 0.3rem; cursor: pointer; font-weight: bold; }
+        .map-toggle-btn { padding: 0.5rem 0.4rem; font-size: 0.65rem; background: #334155; border: 1px solid #475569; color: #cbd5e1; font-weight: 800; border-radius: 4px; text-transform: uppercase; }
+        .map-toggle-btn.active { background: #1d4ed8; border-color: #3b82f6; color: #fff; }
+        .search-box-container { flex-grow: 1; display: flex; gap: 0.2rem; min-width: 0; }
+        .search-input { flex-grow: 1; min-width: 0; padding: 0.5rem; background: #000; border: 1px solid #475569; color: #fff; border-radius: 4px; font-size: 0.8rem; font-weight: 600; }
+        .btn-go { background: #059669; border: none; color: #fff; padding: 0 0.6rem; font-weight: 800; border-radius: 4px; font-size: 0.8rem; flex-shrink: 0; }
+
+        .telemetry-alert-banner {
+            position: absolute; top: 15px; left: 50%; transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.95); border: 2px solid #ef4444; border-radius: 4px;
+            padding: 0.5rem 1rem; width: 90%; max-width: 340px; z-index: 30; font-size: 0.7rem;
+            font-weight: bold; color: #ef4444; display: none; text-align: center;
         }
+
         .asset-chip {
             display: flex; align-items: center; gap: 0.3rem;
             background: rgba(255,255,255,0.06);
@@ -273,14 +309,10 @@
             font-weight: 700;
             cursor: pointer;
         }
-        .asset-chip.selected {
-            background: #1d4ed8;
-            border-color: #38bdf8;
-        }
+        .asset-chip.selected { background: #1d4ed8; border-color: #38bdf8; }
         
-        /* MARKER STYLE MATRICES */
         .tac-marker { width: 20px !important; height: 20px !important; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 8px rgba(0,0,0,0.6); }
-        .dot { width: 12px; height: 14px; border-radius: 50%; display: inline-block; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
         .dot.k9, .tac-k9 { background: #00eaff; border: 2px solid #0022ff !important; }
         .dot.le, .tac-le { background: #0022ff; }
         .dot.sar, .tac-sar { background: #ff0000; }
@@ -288,7 +320,6 @@
         .dot.sus, .tac-sus { background: #cc00ff; }
         .user-gps-dot { background: #f43f5e; box-shadow: 0 0 14px #f43f5e; border: 2px solid #fff !important; }
 
-        /* COMMAND INTERFACE INTEL INFORMATION BANNER BLOCK */
         .intel-responsibilities-block {
             background: rgba(30, 41, 59, 0.5);
             border: 1px solid rgba(56, 189, 248, 0.2);
@@ -300,20 +331,18 @@
             color: #cbd5e1;
         }
 
-        /* FIXED BOTTOM DECK PANEL CONTAINER */
-        .bottom-deck { width: 100%; height: 18%; background: #020617; display: flex; flex-direction: column; z-index: 20; padding-bottom: env(safe-area-inset-bottom); }
-        .emergency-row { width: 100%; height: 55%; padding: 0.25rem; display: flex; gap: 0.25rem; }
+        .emergency-row { width: 100%; height: 50px; padding: 0.25rem; display: flex; gap: 0.25rem; }
         .btn-emergency {
             flex-grow: 1; height: 100%;
             background: #dc2626; color: #fff;
-            border: none; font-weight: 900; font-size: 1rem;
+            border: none; font-weight: 900; font-size: 0.95rem;
             text-transform: uppercase;
             animation: pulse-red 1.2s infinite linear;
             border-radius: 4px;
         }
         .btn-emergency-reset { width: 70px; height: 100%; background: #475569; border: 1px solid #64748b; color: #fff; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; border-radius: 4px; }
         
-        .control-row { width: 100%; height: 45%; display: flex; }
+        .control-row { width: 100%; height: 45px; display: flex; }
         .btn-deck { flex: 1; height: 100%; border: none; font-weight: 800; font-size: 0.8rem; text-transform: uppercase; color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; }
         .btn-deck.clear { background: #475569; border-right: 1px solid rgba(0,0,0,0.4); }
         .btn-deck.terminate { background: #7f1d1d; }
@@ -375,15 +404,15 @@
             </div>
             <div class="form-group">
                 <label>Operator Full Name</label>
-                <input type="text" id="inputName" class="form-control" placeholder="e.g., Deputy J. Doe" autocomplete="off">
+                <input type="text" id="inputName" class="form-control" placeholder="Required: Full Name" autocomplete="off">
             </div>
             <div class="form-group">
                 <label>Operational Agency / Department</label>
-                <input type="text" id="inputAgency" class="form-control" placeholder="e.g., Sheriff's Department" autocomplete="off">
+                <input type="text" id="inputAgency" class="form-control" placeholder="Required: Agency" autocomplete="off">
             </div>
             <div class="form-group">
                 <label>Rank / Call Sign Designation</label>
-                <input type="text" id="inputRank" class="form-control" placeholder="e.g., K9-UNIT 12" autocomplete="off">
+                <input type="text" id="inputRank" class="form-control" placeholder="Required: e.g., K9-12" autocomplete="off">
             </div>
             <div class="btn" onclick="handleSignIn()">Enter TACNET</div>
         </div>
@@ -402,7 +431,7 @@
 
         <div class="menu-container">
             <div id="commanderIntelBlock" class="intel-responsibilities-block" style="display:none;">
-                <span style="color:#eab308; font-weight:800;">COMMANDER AUTHORITY ACTIVE:</span> You hold structural administrative responsibility over this target layout profile. You are authorized to manually shift perimeters, purge assets, and issue operational termination execution matrix commands.
+                <span style="color:#eab308; font-weight:800;">COMMANDER AUTHORITY ACTIVE:</span> You hold structural administrative responsibility over this active operation. You are authorized to alter perimeters, purge assets, and execute search termination matrices.
             </div>
             <div class="btn" onclick="startNewSearch()">Start New Search</div>
             <div class="btn btn-secondary" onclick="switchScreen('screenMap')">Join Active Search</div>
@@ -502,9 +531,9 @@
         let nvgState = 0; 
         
         let assignedRole = "searcher"; 
-        let activeOperatorName = "Unknown Searcher";
-        let activeOperatorAgency = "Task Force";
-        let activeOperatorCallSign = "FIELD-UNIT";
+        let activeOperatorName = "";
+        let activeOperatorAgency = "";
+        let activeOperatorCallSign = "";
         
         let perimeterRadiusMeters = 500; 
         let placedMarkers = [];
@@ -516,7 +545,6 @@
         const drawCanvas = document.getElementById('drawCanvas');
         const drawCtx = drawCanvas.getContext('2d');
 
-        // FORCED RUNTIME CONTROLLER SETS LANDING AS SCREEN ENTRY POINT
         window.addEventListener('load', () => {
             switchScreen('screenLanding');
             resizeDrawCanvas();
@@ -556,29 +584,16 @@
 
         function initRealMap() {
             if (map) return; 
-
-            map = L.map('map', {
-                center: mapCenter,
-                zoom: 14,
-                zoomControl: false,
-                attributionControl: false
-            });
-
+            map = L.map('map', { center: mapCenter, zoom: 14, zoomControl: false, attributionControl: false });
             setMapType('satellite');
 
             tacticalPerimeterCircle = L.circle(mapCenter, {
-                color: '#22c55e',
-                fillColor: '#22c55e',
-                fillOpacity: 0.12,
-                weight: 3,
-                radius: perimeterRadiusMeters
+                color: '#22c55e', fillColor: '#22c55e', fillOpacity: 0.12, weight: 3, radius: perimeterRadiusMeters
             }).addTo(map);
 
             map.on('click', (e) => {
                 if (isPenActive) return; 
-                if (selectedAssetType) {
-                    executeManualAssetPlacement(e.latlng.lat, e.latlng.lng, selectedAssetType);
-                }
+                if (selectedAssetType) executeManualAssetPlacement(e.latlng.lat, e.latlng.lng, selectedAssetType);
             });
         }
 
@@ -625,14 +640,32 @@
             }
         }
 
+        // STRICT GATEWAY VALIDATION LOGIC ENGINE
         function handleSignIn() {
-            const nameVal = document.getElementById('inputName').value.trim();
-            const agencyVal = document.getElementById('inputAgency').value.trim();
-            const rankVal = document.getElementById('inputRank').value.trim();
+            const nameIn = document.getElementById('inputName');
+            const agencyIn = document.getElementById('inputAgency');
+            const rankIn = document.getElementById('inputRank');
 
-            if (nameVal) activeOperatorName = nameVal;
-            if (agencyVal) activeOperatorAgency = agencyVal;
-            if (rankVal) activeOperatorCallSign = rankVal.toUpperCase();
+            // Reset visual errors before evaluating validation
+            nameIn.classList.remove('error-field');
+            agencyIn.classList.remove('error-field');
+            rankIn.classList.remove('error-field');
+
+            let validationFaultDetected = false;
+
+            if (nameIn.value.trim() === "") { nameIn.classList.add('error-field'); validationFaultDetected = true; }
+            if (agencyIn.value.trim() === "") { agencyIn.classList.add('error-field'); validationFaultDetected = true; }
+            if (rankIn.value.trim() === "") { rankIn.classList.add('error-field'); validationFaultDetected = true; }
+
+            // HALT PROCESS IMMEDIATELY IF ANY EXECUTABLE INPUT BOX IS EMPTY
+            if (validationFaultDetected) {
+                alert("OPERATIONAL DENIAL: All field registry metrics are strictly mandatory. Complete the form to establish network trace connection.");
+                return;
+            }
+
+            activeOperatorName = nameIn.value.trim();
+            activeOperatorAgency = agencyIn.value.trim();
+            activeOperatorCallSign = rankIn.value.trim().toUpperCase();
 
             const isCommander = (assignedRole === 'commander');
             document.getElementById('commanderIntelBlock').style.display = isCommander ? 'block' : 'none';
@@ -646,6 +679,9 @@
         function logOutSession() {
             if(gpsWatchId) navigator.geolocation.clearWatch(gpsWatchId);
             userLocationMarker = null;
+            document.getElementById('inputName').value = "";
+            document.getElementById('inputAgency').value = "";
+            document.getElementById('inputRank').value = "";
             switchScreen('screenSignIn');
         }
 
@@ -764,13 +800,24 @@
 
         function undoLastLine() { if (drawingLinesStack.length > 0) { drawingLinesStack.pop(); redrawCanvasStack(); } }
         function clearDrawings() { drawingLinesStack = []; if(drawCtx) drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height); }
-
         function clearMapAssets() { placedMarkers.forEach(m => map.removeLayer(m)); placedMarkers = []; }
+        
         function terminateSearch() { 
             clearMapAssets(); 
             clearDrawings(); 
             if(gpsWatchId) navigator.geolocation.clearWatch(gpsWatchId); 
             logEvent("Search officially terminated. System resetting permissions...");
+            
+            // RESET PRIVILEGES AUTOMATICALLY UPON SEARCH TERMINATION WIPE
+            assignedRole = "searcher";
+            document.getElementById('commanderIntelBlock').style.display = 'none';
+            document.getElementById('commanderPerimeterDeck').style.display = 'none';
+            document.getElementById('commanderControlRow').style.display = 'none';
+            
+            document.getElementById('inputName').value = "";
+            document.getElementById('inputAgency').value = "";
+            document.getElementById('inputRank').value = "";
+            
             switchScreen('screenSignIn');
         }
 
