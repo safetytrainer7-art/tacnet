@@ -31,7 +31,7 @@
         #screenLanding { display: flex !important; z-index: 20; }
         .screen.active { display: flex !important; z-index: 30; }
 
-        /* BACKDROP CORE LAYER INTERFACE PROFILE */
+        /* BACKDROP CORE CONFIGURATIONS */
         .backdrop {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -53,7 +53,6 @@
             z-index: 1;
         }
 
-        /* MASTER GRAPHIC CONTAINER CLICK TRACK */
         .graphic-link-wrapper {
             width: 100%;
             height: 100%;
@@ -99,7 +98,7 @@
         .creator-name { color: #eab308; font-size: 1.4rem; margin: 0.2rem 0; text-transform: uppercase; letter-spacing: 2px; font-weight: 900; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
         .creator-title { color: #cbd5e1; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* SECURITY LOGIN PANEL - STREAMLINED IDENTITY DATA ENTRY ONLY */
+        /* SECURITY LOGIN PANEL */
         .glass-panel {
             background: rgba(15, 23, 42, 0.85);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -129,7 +128,6 @@
             background: rgba(127, 29, 29, 0.4) !important;
         }
 
-        /* RADIO TOGGLE SELECTION COMPONENT METRICES */
         .role-toggle-container {
             display: flex;
             gap: 0.5rem;
@@ -154,7 +152,6 @@
             color: #fff;
         }
 
-        /* GATEWAY QUICK ACCESS LINK ROW */
         .gateway-utilities-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -207,7 +204,7 @@
             flex-shrink: 0;
         }
 
-        /* HIGH-VISIBILITY NEON GREEN BACK NAVIGATION ARROW STYLE */
+        /* HIGH-VISIBILITY NEON GREEN NAVIGATION ARROWS */
         .nav-arrow { 
             font-size: 2.1rem !important; 
             font-weight: 900 !important; 
@@ -252,7 +249,7 @@
             padding-bottom: env(safe-area-inset-bottom); 
         }
 
-        /* MANUAL STEPPING CONTROLLER FOR CONTAINER PERIMETER RESTORED */
+        /* MANUAL STEPPING CONTROLLER FOR CONTAINER PERIMETER */
         .perimeter-manual-deck {
             position: absolute;
             top: 12px; left: 8px;
@@ -339,7 +336,7 @@
         }
         .asset-chip.selected { background: #1d4ed8; border-color: #38bdf8; }
         
-        /* HARDCODED TOKEN SYMBOLS WITH REMOVAL CAPABILITIES INSCRIPTED */
+        /* SYMBOLS WITH REMOVAL CAPABILITIES INSCRIPTED */
         .tac-marker { width: 20px !important; height: 20px !important; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 8px rgba(0,0,0,0.6); pointer-events: auto !important; }
         .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
         .dot.k9, .tac-k9 { background: #00eaff; border: 2px solid #0022ff !important; }
@@ -386,10 +383,11 @@
             mix-blend-mode: screen; box-shadow: inset 0 0 100px rgba(0, 255, 0, 0.35);
         }
 
+        /* COURE REPLAY & PRE-REPORT MATRIX STYLES */
         .report-body { flex-grow: 1; padding: 1rem; overflow-y: auto; background: #020617; margin-top: 60px; }
         .report-header-block { border-bottom: 2px solid #eab308; padding-bottom: 0.5rem; margin-bottom: 1rem; }
         
-        /* AUDIO VOCAL ARRAY COMPONENT MATRICES */
+        /* FIELD AUDIO MEDICAL MATRIX STYLES */
         .k9-med-panel {
             background: rgba(15, 23, 42, 0.9); border: 1px solid rgba(56, 189, 248, 0.2);
             border-radius: 8px; padding: 0.85rem; margin-bottom: 1.25rem;
@@ -401,7 +399,6 @@
         }
         .med-card:active { background: #0f172a; border-color: #38bdf8; }
         
-        /* DEDICATED CRISIS VET DISPATCH BUTTON LINK STYLED TRAUMA RED */
         .vet-emergency-trigger-card {
             background: #dc2626 !important;
             border: 2px solid #f87171 !important;
@@ -424,6 +421,15 @@
         }
         .replay-btn { background: #1d4ed8; border: none; color: #fff; padding: 0.45rem 0.65rem; font-weight: 700; font-size: 0.65rem; border-radius: 4px; text-transform: uppercase; }
 
+        /* PRE-REPORT REVIEW EDITABLE CARD LAYOUTS */
+        .editable-review-card {
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px dashed #38bdf8;
+            padding: 0.8rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+        }
+
         .log-list { list-style: none; font-family: monospace; font-size: 0.75rem; color: #34d399; }
         .log-item { padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
 
@@ -436,7 +442,7 @@
 
     <div id="emergencyStrobe"></div>
 
-    <!-- INITIAL DISPLAY SCREEN LOADER RUNTIME GATE -->
+    <!-- INITIAL DISPLAY SCREEN -->
     <div id="screenLanding" class="screen">
         <div class="landing-backdrop-pure"></div>
         <div class="graphic-link-wrapper" onclick="switchScreen('screenSignIn')">
@@ -508,10 +514,7 @@
             <div class="btn" onclick="startNewSearch()">Start New Search</div>
             <div class="btn btn-secondary" onclick="switchScreen('screenMap')">Join Active Search</div>
             <div class="btn btn-secondary" onclick="openHistoricalLogs()">Historical Logs & Reports</div>
-            
-            <!-- VERBAL FIRST AID EMERGENCY SHORTCUT ELEMENT MOUNTED HERE AS BUTTON NO. 4 -->
             <div class="btn btn-secondary" style="border-color: #38bdf8; color: #38bdf8;" onclick="switchScreen('screenK9Voice')">Verbal K9 First Aid</div>
-            
             <div class="btn btn-danger" style="margin-top: 1rem;" onclick="logOutSession()">Log Out Session</div>
         </div>
 
@@ -523,7 +526,6 @@
     <!-- ACTIVE MAP WORKSPACE -->
     <div id="screenMap" class="screen">
         <div class="map-topnav">
-            <!-- HIGH-VISIBILITY NAVIGATION ARROW HOOK -->
             <div class="nav-arrow" onclick="switchScreen('screenMenu')">←</div>
             <button id="btnSat" class="map-toggle-btn active" onclick="setMapType('satellite')">Sat</button>
             <button id="btnTerr" class="map-toggle-btn" onclick="setMapType('terrain')">Terr</button>
@@ -564,7 +566,7 @@
             </div>
         </div>
 
-        <!-- EXTENDED FIELD ASSET DRAWER PROFILE INDEX -->
+        <!-- ASSET DRAWER INDEX -->
         <div class="asset-drawer">
             <div id="chip-k9" class="asset-chip" onclick="selectAssetToPlace('k9')"><span class="dot k9"></span>K9 Team</div>
             <div id="chip-le" class="asset-chip" onclick="selectAssetToPlace('le')"><span class="dot le"></span>LE Blue</div>
@@ -590,7 +592,7 @@
         </div>
     </div>
 
-    <!-- TIMELINE PROFILE HISTORY REPORT CONTAINER -->
+    <!-- PRE-REPORT EDITABLE PREVIEW & FORENSIC TIMELINE REPLAY -->
     <div id="screenReport" class="screen">
         <div class="map-topnav">
             <div class="nav-arrow" onclick="switchScreen('screenMenu')">←</div>
@@ -599,39 +601,42 @@
 
         <div class="report-body">
             <div class="report-header-block" style="background: linear-gradient(90deg, #1e3a8a, #701a75); padding: 0.8rem; border-radius: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">
-                <h2 style="text-transform:uppercase; font-weight:900; letter-spacing:1px; font-size:1.1rem; color:#ffff00; text-shadow: 0 2px 4px #000;">TACNET INCIDENT BRIEF & TIMELINE REPORT</h2>
-                <p style="font-size:0.65rem; color:#e2e8f0; text-transform:uppercase; margin-top:0.15rem; font-weight: 700;">Legal Court-Admissible Forensic Analytics</p>
+                <h2 style="text-transform:uppercase; font-weight:900; letter-spacing:1px; font-size:1.1rem; color:#ffff00; text-shadow: 0 2px 4px #000;">TACNET PRE-REPORT REVIEW MATRIX</h2>
+                <p style="font-size:0.65rem; color:#e2e8f0; text-transform:uppercase; margin-top:0.15rem; font-weight: 700;">Verify and Edit All Metrics Before Verification Final Submission</p>
             </div>
 
-            <div class="k9-med-panel" style="margin-bottom: 1rem; border-color: #eab308;">
-                <h3 style="font-size:0.75rem; color: #eab308; margin-bottom: 0.4rem;">📝 INCIDENT NOTES & FINAL DISPOSITION</h3>
+            <!-- COMPLETELY EDITABLE INTEL NOTES REVIEW CONTAINER -->
+            <div class="editable-review-card">
+                <h3 style="font-size:0.75rem; color: #38bdf8; margin-bottom: 0.5rem; text-transform:uppercase; font-weight:800;">📝 EDITABLE DISPATCH RECORD FIELD ENTRY</h3>
+                
                 <div class="form-group">
-                    <label style="font-size: 0.55rem;">Operational Command Brief Notes</label>
-                    <textarea id="reportNotes" class="form-control" style="height: 50px; font-size: 0.8rem; font-family: sans-serif;" placeholder="Enter operational case summary logs..."></textarea>
+                    <label style="font-size: 0.55rem; color: #94a3b8;">Reviewer Command Case Notes (Modify Directly Below)</label>
+                    <textarea id="reportNotes" class="form-control" style="height: 70px; font-size: 0.85rem; font-family: sans-serif; border: 1px solid #475569;" placeholder="Type or correct operational summary brief..."></textarea>
                 </div>
+                
                 <div class="form-group" style="margin-bottom: 0;">
-                    <label style="font-size: 0.55rem;">Final Case Disposition Status</label>
-                    <input Savvy type="text" id="reportDisposition" class="form-control" style="padding: 0.4rem; font-size: 0.8rem;" placeholder="e.g., Target Located, Handed to EMS, Cleared.">
+                    <label style="font-size: 0.55rem; color: #94a3b8;">Final Field Case Disposition (Modify Directly Below)</label>
+                    <input type="text" id="reportDisposition" class="form-control" style="padding: 0.5rem; font-size: 0.85rem; border: 1px solid #475569;" placeholder="e.g., Target Located Safely via K9 Team Track. Cleared.">
                 </div>
             </div>
 
-            <div class="replay-deck">
+            <div class="replay-deck" style="margin-top:1rem; margin-bottom:0.8rem;">
                 <button class="replay-btn" onclick="playbackControl('play')">▶ Play Court Replay</button>
                 <button class="replay-btn" style="background:#4b5563;" onclick="playbackControl('pause')">⏸ Pause</button>
                 <div id="replayStatus" style="font-size: 0.65rem; font-weight: bold; color: #eab308; margin-left: auto;">Status: Ready</div>
             </div>
 
-            <h3 style="font-size:0.7rem; color: #34d399; margin-bottom: 0.3rem; text-transform: uppercase;">Itemized Event Track Logs</h3>
-            <ul id="logList" class="log-list" style="max-height: 120px; overflow-y: auto; background: #000; padding: 0.4rem; border-radius: 4px; border: 1px solid #1e293b;"></ul>
+            <h3 style="font-size:0.7rem; color: #34d399; margin-bottom: 0.3rem; text-transform: uppercase;">Forensic Incident Logs</h3>
+            <ul id="logList" class="log-list" style="max-height: 110px; overflow-y: auto; background: #000; padding: 0.4rem; border-radius: 4px; border: 1px solid #1e293b;"></ul>
 
-            <div class="gateway-utilities-grid" style="margin-top: 1rem;">
-                <div class="util-btn" style="background: #059669; border-color: #10b981; color:#fff;" onclick="window.print()">Print to Professional PDF</div>
-                <div class="util-btn" style="background: #2563eb; border-color: #3b82f6; color:#fff;" onclick="emailFinalReport()">Email Out Report</div>
+            <div class="gateway-utilities-grid" style="margin-top: 0.8rem;">
+                <div class="util-btn" style="background: #059669; border-color: #10b981; color:#fff;" onclick="window.print()">Print Final Verified PDF</div>
+                <div class="util-btn" style="background: #2563eb; border-color: #3b82f6; color:#fff;" onclick="emailFinalReport()">Email Final Report</div>
             </div>
         </div>
     </div>
 
-    <!-- VOCAL ASSISTANT FIELD PANEL DIRECT SYSTEM DATA HOOKS -->
+    <!-- FIELD AUDIO MEDICAL MATRIX SCREEN -->
     <div id="screenK9Voice" class="screen">
         <div class="map-topnav">
             <div class="nav-arrow" onclick="handleK9VoiceBackNavigation()">←</div>
@@ -651,7 +656,6 @@
                     <div class="med-card" style="border-left: 3px solid #3b82f6;" onclick="playK9VoiceProtocol('eye')">Eye Injuries</div>
                     <div class="med-card" style="border-left: 3px solid #10b981;" onclick="playK9VoiceProtocol('paw')">Paw Injuries</div>
                     
-                    <!-- SEPARATE ADJOINING VET DIRECTORY DISPLAY ICON ACTION SHORTCUT BUTTON LINK -->
                     <div class="med-card vet-emergency-trigger-card" onclick="toggleVetDirectoryPanel()">🚨 Emergency Area Vet Info</div>
                 </div>
 
