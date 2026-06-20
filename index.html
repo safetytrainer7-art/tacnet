@@ -204,7 +204,6 @@
             flex-shrink: 0;
         }
 
-        /* HIGH-VISIBILITY NEON GREEN NAVIGATION ARROWS */
         .nav-arrow { 
             font-size: 2.1rem !important; 
             font-weight: 900 !important; 
@@ -226,7 +225,6 @@
             background: #020617; 
         }
         #map { width: 100%; height: 100%; z-index: 2; }
-        #drawCanvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 3; pointer-events: none; }
         
         .asset-drawer {
             height: 60px;
@@ -249,7 +247,6 @@
             padding-bottom: env(safe-area-inset-bottom); 
         }
 
-        /* MANUAL STEPPING CONTROLLER FOR CONTAINER PERIMETER */
         .perimeter-manual-deck {
             position: absolute;
             top: 12px; left: 8px;
@@ -313,6 +310,7 @@
             color: #fff; font-size: 0.55rem; font-weight: 900;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer;
+            text-transform: uppercase;
         }
         .tool-btn.active { background: #1d4ed8; border-color: #3b82f6; }
         .tool-btn.pen-active { background: #b91c1c; border-color: #f87171; }
@@ -345,7 +343,7 @@
         .asset-chip.selected { background: #1d4ed8; border-color: #38bdf8; }
         
         /* SYMBOLS WITH REMOVAL CAPABILITIES INSCRIPTED */
-        .tac-marker { width: 20px !important; height: 20px !important; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 8px rgba(0,0,0,0.6); pointer-events: auto !important; }
+        .tac-marker { width: 22px !important; height: 22px !important; border-radius: 50%; border: 2px solid #fff; box-shadow: 0 0 8px rgba(0,0,0,0.6); pointer-events: auto !important; }
         .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; }
         .dot.k9, .tac-k9 { background: #00eaff; border: 2px solid #0022ff !important; }
         .dot.le, .tac-le { background: #0022ff; }
@@ -359,6 +357,12 @@
         .dot.cp, .tac-cp { background: #ffff00; border: 2px solid #ff0000 !important; border-radius: 0% !important; }
         .user-gps-dot { background: #f43f5e; box-shadow: 0 0 14px #f43f5e; border: 2px solid #fff !important; }
         .dot.target-pin, .tac-target-pin { background: #ff0000; box-shadow: 0 0 10px #ff0000; border: 2px solid #ffffff !important; }
+        
+        /* NEW CUSTOM FIELD TOKEN CLASSES */
+        .dot.cap-boat, .tac-cap-boat { background: #000000; box-shadow: 0 0 8px #ff5500; border: 2px solid #ff5500 !important; }
+        .dot.victim, .tac-victim { background: #ffffff; box-shadow: 0 0 8px #ffffff; border: 2px solid #000000 !important; }
+        .dot.vsp, .tac-vsp { background: #0022ff; box-shadow: 0 0 8px #ffffff; border: 2px solid #ffffff !important; }
+        .dot.feds, .tac-feds { background: #475569; box-shadow: 0 0 8px #eab308; border: 2px solid #eab308 !important; border-radius: 15% !important; }
 
         .intel-responsibilities-block {
             background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(56, 189, 248, 0.2);
@@ -385,10 +389,11 @@
             animation: flash-strobe 0.25s infinite alternate;
         }
 
+        /* RE-ENGINEERED TRUE NVG BLEND FILTER SCREEN */
         .night-vision-green {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 255, 0, 0.12); z-index: 4; pointer-events: none; display: none;
-            mix-blend-mode: screen; box-shadow: inset 0 0 100px rgba(0, 255, 0, 0.35);
+            background: rgba(0, 255, 30, 0.18); z-index: 999; pointer-events: none; display: none;
+            mix-blend-mode: color-burn; box-shadow: inset 0 0 120px rgba(0, 255, 0, 0.6);
         }
 
         /* RE-DESIGNED REPORTING MATRIX */
@@ -616,15 +621,15 @@
             <div id="telemetryBanner" class="telemetry-alert-banner">🚨 TARGET PIN CAPTURE DETECTED!...</div>
 
             <div id="map"></div>
-            <canvas id="drawCanvas"></canvas>
             
-            <!-- MAGNIFIED HARDWARE TELEMETRY DIRECTIONAL DECK -->
+            <!-- IMMERSIVE NVG BLEND MATRIX CONTAINER LAYER -->
+            <div id="nvgGreenFilter" class="night-vision-green"></div>
+
+            <!-- MAGNIFIED DIRECTIONAL ORIENTATION COMPASS INDICATOR CLUSTER -->
             <div class="compass-deck">
                 <div id="compassArrow" class="compass-arrow"></div>
                 <div>HDG: <span id="headingReadout">000°</span></div>
             </div>
-
-            <div id="nvgGreenFilter" class="night-vision-green"></div>
 
             <!-- STEP BUTTON DECK PER OPERATIONAL SPECIFICATION -->
             <div id="commanderPerimeterDeck" class="perimeter-manual-deck">
@@ -637,20 +642,26 @@
             <!-- COMPACT SIDEBAR OVERLAY TOOL DRAWER -->
             <div class="map-sidebar">
                 <button id="btnPen" class="tool-btn" onclick="toggleRedPen()">PEN</button>
-                <button class="tool-btn" onclick="undoLastLine()">ERASE</button>
+                <button class="tool-btn" onclick="clearDrawings()">ERASE</button>
+                <!-- NEW WHERE AM I SNAP FOCUS SYSTEM CORE CHIP LINK -->
+                <button class="tool-btn" style="color:#f43f5e;" onclick="snapFocusToUserGPS()">FIND ME</button>
                 <button id="btnLock" class="tool-btn" onclick="toggleMapLock()">LOCK</button>
-                <button id="btnNVG" class="tool-btn" style="color:#22c55e;" onclick="cycleNightVision()">NVG</button>
+                <button id="btnNVG" class="tool-btn" style="color:#22c55e;" onclick="toggleNightVisionFilter()">NVG</button>
             </div>
         </div>
 
-        <!-- ASSET DRAWER -->
+        <!-- ASSET DRAWER - EXTENDED TO HOUS COUPLING TASK FORCE TOKENS -->
         <div class="asset-drawer">
             <div id="chip-k9" class="asset-chip" onclick="selectAssetToPlace('k9')"><span class="dot k9"></span>K9 Team</div>
             <div id="chip-le" class="asset-chip" onclick="selectAssetToPlace('le')"><span class="dot le"></span>LE Blue</div>
+            <div id="chip-vsp" class="asset-chip" onclick="selectAssetToPlace('vsp')"><span class="dot vsp"></span>VSP State</div>
+            <div id="chip-feds" class="asset-chip" onclick="selectAssetToPlace('feds')"><span class="dot feds"></span>Feds Gold</div>
             <div id="chip-sar" class="asset-chip" onclick="selectAssetToPlace('sar')"><span class="dot sar"></span>SAR Red</div>
             <div id="chip-civ" class="asset-chip" onclick="selectAssetToPlace('civ')"><span class="dot civ"></span>Civ Green</div>
             <div id="chip-sus" class="asset-chip" onclick="selectAssetToPlace('sus')"><span class="dot sus"></span>Suspect</div>
+            <div id="chip-victim" class="asset-chip" onclick="selectAssetToPlace('victim')"><span class="dot victim"></span>Victim</div>
             <div id="chip-boat" class="asset-chip" onclick="selectAssetToPlace('boat')"><span class="dot boat"></span>Boat</div>
+            <div id="chip-cap-boat" class="asset-chip" onclick="selectAssetToPlace('cap-boat')"><span class="dot cap-boat"></span>Capsized</div>
             <div id="chip-veh" class="asset-chip" onclick="selectAssetToPlace('veh')"><span class="dot veh"></span>Vehicle</div>
             <div id="chip-drone" class="asset-chip" onclick="selectAssetToPlace('drone')"><span class="dot drone"></span>Drone</div>
             <div id="chip-art" class="asset-chip" onclick="selectAssetToPlace('art')"><span class="dot art"></span>Article</div>
@@ -775,7 +786,7 @@
         let isPenActive = false;
         let activeEmergency = false;
         let isDrawing = false;
-        let nvgState = 0; 
+        let nvgState = false; 
         let replayInterval;
         let currentVoiceCategory = "";
         let isUserAuthenticatedSession = false; 
@@ -787,15 +798,14 @@
         let placedMarkers = [];
         let historicalLogs = [];
         let selectedAssetType = null;
-        let drawingLinesStack = [];
-        let currentLineStroke = [];
-
-        const drawCanvas = document.getElementById('drawCanvas');
-        const drawCtx = drawCanvas.getContext('2d');
+        
+        // POINT 1: ANCHORED GEOGRAPHIC VECTOR DRAWING MATRIX ARRAY
+        let activeMapPolylines = [];
+        let currentGeoLinePoints = [];
+        let currentLeafletLine = null;
 
         window.addEventListener('load', () => {
             switchScreen('screenLanding');
-            resizeDrawCanvas();
             logEvent("Platform runtime initialization completely established.");
             setupOrientationCompass();
         });
@@ -809,7 +819,6 @@
                 setTimeout(() => {
                     initRealMap();
                     if(map) map.invalidateSize();
-                    resizeDrawCanvas();
                     trackUserGPS(); 
                 }, 150);
             }
@@ -831,15 +840,6 @@
             document.getElementById('roleCommander').classList.toggle('active', role === 'commander');
         }
 
-        function resizeDrawCanvas() {
-            const wrapper = document.getElementById('mapWrapper');
-            if (wrapper && drawCanvas) {
-                drawCanvas.width = wrapper.clientWidth;
-                drawCanvas.height = wrapper.clientHeight;
-                redrawCanvasStack();
-            }
-        }
-
         function initRealMap() {
             if (map) return; 
             map = L.map('map', { center: mapCenter, zoom: 18, zoomControl: false, attributionControl: false });
@@ -848,6 +848,29 @@
             tacticalPerimeterCircle = L.circle(mapCenter, {
                 color: '#22c55e', fillColor: '#22c55e', fillOpacity: 0.12, weight: 3, radius: perimeterRadiusMeters
             }).addTo(map);
+
+            // GEOGRAPHIC VECTOR CONVERSION MOUSE TRACK CLUSTER FOR MAP SCALING ACCURACY
+            map.on('mousedown', (e) => {
+                if (!isPenActive) return;
+                isDrawing = true;
+                currentGeoLinePoints = [e.latlng];
+                currentLeafletLine = L.polyline(currentGeoLinePoints, { color: '#dc2626', weight: 4, lineCap: 'round' }).addTo(map);
+            });
+
+            map.on('mousemove', (e) => {
+                if (!isDrawing || !isPenActive || !currentLeafletLine) return;
+                currentGeoLinePoints.push(e.latlng);
+                currentLeafletLine.setLatLngs(currentGeoLinePoints);
+            });
+
+            map.on('mouseup', () => {
+                if (!isDrawing) return;
+                isDrawing = false;
+                if (currentLeafletLine) {
+                    activeMapPolylines.push(currentLeafletLine);
+                }
+                currentLeafletLine = null;
+            });
 
             map.on('click', (e) => {
                 if (isPenActive) return; 
@@ -859,7 +882,6 @@
             if (!navigator.geolocation) return;
             if (gpsWatchId) navigator.geolocation.clearWatch(gpsWatchId);
 
-            // FIXED HANDLER FUNCTION TO SAFELY HANDLE BOOT TIMING INTERFACES WITHOUT BROWSER FAILURE
             gpsWatchId = navigator.geolocation.watchPosition((position) => {
                 const uLat = position.coords.latitude; const uLng = position.coords.longitude;
                 const currentCoords = [uLat, uLng];
@@ -876,7 +898,18 @@
                         map.setView(currentCoords, map.getZoom());
                     }
                 }
-            }, (err) => { console.log('GPS Telemetry buffering...'); }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 });
+            }, (err) => { console.log('Buffering GPS matrix telemetry...'); }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 });
+        }
+
+        // POINT 3: WHERE AM I SNAP RE-FOCUS TELEMETRY METHOD BOUND TO GPS CORE
+        function snapFocusToUserGPS() {
+            if (userLocationMarker) {
+                const coords = userLocationMarker.getLatLng();
+                map.setView(coords, 18);
+                logEvent("Focus Lock Engaged: Viewport snapped down to live operator coordinates.");
+            } else {
+                logEvent("Focus Lock Warning: GPS telemetry buffering. Standby.");
+            }
         }
 
         function setupOrientationCompass() {
@@ -999,7 +1032,13 @@
 
         function toggleRedPen() {
             isPenActive = !isPenActive; document.getElementById('btnPen').classList.toggle('pen-active', isPenActive);
-            if(isPenActive) { if(!isMapLocked) toggleMapLock(); drawCanvas.style.pointerEvents = 'auto'; } else { drawCanvas.style.pointerEvents = 'none'; }
+            if (isPenActive) {
+                if(!isMapLocked) toggleMapLock();
+                map.dragging.disable();
+            } else {
+                if(isMapLocked) toggleMapLock();
+                map.dragging.enable();
+            }
         }
 
         function selectAssetToPlace(assetType) {
@@ -1009,7 +1048,7 @@
         }
 
         function executeManualAssetPlacement(lat, lng, assetType) {
-            const htmlIcon = L.divIcon({ className: `tac-marker tac-${assetType}`, iconSize: [20, 20], iconAnchor: [10, 10] });
+            const htmlIcon = L.divIcon({ className: `tac-marker tac-${assetType}`, iconSize: [22, 22], iconAnchor: [11, 11] });
             const marker = L.marker([lat, lng], { icon: htmlIcon, draggable: true }).addTo(map);
             
             marker.on('click', (e) => {
@@ -1055,36 +1094,33 @@
             setTimeout(() => { window.print(); }, 150);
         }
 
-        drawCanvas.addEventListener('mousedown', startLineStroke); drawCanvas.addEventListener('mouseup', endLineStroke); drawCanvas.addEventListener('mousemove', drawLineSegment);
-        drawCanvas.addEventListener('touchstart', (e) => { if(e.touches[0]) startLineStroke(e.touches[0]); }); drawCanvas.addEventListener('touchend', endLineStroke);
-        drawCanvas.addEventListener('touchmove', (e) => { if(e.touches[0]) drawLineSegment(e.touches[0]); });
-
-        function startLineStroke(e) { if (!isPenActive) return; isDrawing = true; currentLineStroke = []; appendSegmentPoint(e); }
-        function drawLineSegment(e) { if (!isDrawing || !isPenActive) return; appendSegmentPoint(e); redrawCanvasStack(); }
-        function appendSegmentPoint(e) {
-            const rect = drawCanvas.getBoundingClientRect();
-            const x = (e.clientX || (e.touches && e.touches[0].clientX)) - rect.left; const y = (e.clientY || (e.touches && e.touches[0].clientY)) - rect.top;
-            currentLineStroke.push({ x: x, y: y });
+        // POINT 1: CLEAR DRAWINGS CONVERTED TO GEOGRAPHIC PURGE CONTROLLER
+        function clearDrawings() { 
+            activeMapPolylines.forEach(line => map.removeLayer(line));
+            activeMapPolylines = [];
+            logEvent("Erase Active: Vector overlays completely purged from map layout.");
         }
-        function endLineStroke() { if (!isDrawing) return; isDrawing = false; if (currentLineStroke.length > 0) drawingLinesStack.push(currentLineStroke); }
-
-        function redrawCanvasStack() {
-            drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height);
-            drawCtx.strokeStyle = '#dc2626'; drawCtx.lineWidth = 3; drawCtx.lineCap = 'round'; drawCtx.lineJoin = 'round';
-            drawingLinesStack.forEach(line => renderLineArray(line));
-            if (isDrawing && currentLineStroke.length > 0) renderLineArray(currentLineStroke);
-        }
-
-        function renderLineArray(line) {
-            if (line.length < 1) return; drawCtx.beginPath(); drawCtx.moveTo(line[0].x, line[0].y);
-            for (let i = 1; i < line.length; i++) drawCtx.lineTo(line[i].x, line[i].y);
-            drawCtx.stroke();
-        }
-
-        function undoLastLine() { if (drawingLinesStack.length > 0) { drawingLinesStack.pop(); redrawCanvasStack(); } }
-        function clearDrawings() { drawingLinesStack = []; if(drawCtx) drawCtx.clearRect(0, 0, drawCanvas.width, drawCanvas.height); }
+        
         function clearMapAssets() { placedMarkers.forEach(m => map.removeLayer(m)); placedMarkers = []; if(persistentTargetPin) { map.removeLayer(persistentTargetPin); persistentTargetPin = null; } }
         
+        // POINT 2: FIXED STYLING BLEND TOGGLE WITH ABSOLUTE CONSOLE OVERRIDE
+        function toggleNightVisionFilter() {
+            nvgState = !nvgState;
+            const filterLayer = document.getElementById('nvgGreenFilter');
+            const nvgBtn = document.getElementById('btnNVG');
+            if(nvgState) {
+                filterLayer.style.display = 'block';
+                nvgBtn.style.background = '#22c55e';
+                nvgBtn.style.color = '#000';
+                logEvent("NVG Active: High-contrast night-vision phosphor screen deployed.");
+            } else {
+                filterLayer.style.display = 'none';
+                nvgBtn.style.background = '';
+                nvgBtn.style.color = '#22c55e';
+                logEvent("NVG Inactive: Tactical screen returned to standard color palette.");
+            }
+        }
+
         function terminateSearch() { 
             clearMapAssets(); clearDrawings(); if(gpsWatchId) navigator.geolocation.clearWatch(gpsWatchId); 
             logEvent("Search officially terminated. System resetting permissions...");
