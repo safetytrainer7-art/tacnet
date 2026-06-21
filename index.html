@@ -272,7 +272,6 @@
         }
         .step-btn:active { background: #1d4ed8; border-color: #3b82f6; }
 
-        /* MAGNIFIED DIRECTIONAL ORIENTATION COMPASS INDICATOR CLUSTER */
         .compass-deck {
             position: absolute;
             bottom: 12px; left: 12px;
@@ -358,7 +357,6 @@
         .user-gps-dot { background: #f43f5e; box-shadow: 0 0 14px #f43f5e; border: 2px solid #fff !important; }
         .dot.target-pin, .tac-target-pin { background: #ff0000; box-shadow: 0 0 10px #ff0000; border: 2px solid #ffffff !important; }
         
-        /* NEW CUSTOM FIELD TOKEN CLASSES */
         .dot.cap-boat, .tac-cap-boat { background: #000000; box-shadow: 0 0 8px #ff5500; border: 2px solid #ff5500 !important; }
         .dot.victim, .tac-victim { background: #ffffff; box-shadow: 0 0 8px #ffffff; border: 2px solid #000000 !important; }
         .dot.vsp, .tac-vsp { background: #0022ff; box-shadow: 0 0 8px #ffffff; border: 2px solid #ffffff !important; }
@@ -389,14 +387,12 @@
             animation: flash-strobe 0.25s infinite alternate;
         }
 
-        /* RE-ENGINEERED TRUE NVG BLEND FILTER SCREEN */
         .night-vision-green {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 255, 30, 0.18); z-index: 999; pointer-events: none; display: none;
             mix-blend-mode: color-burn; box-shadow: inset 0 0 120px rgba(0, 255, 0, 0.6);
         }
 
-        /* RE-DESIGNED REPORTING MATRIX */
         .report-body { flex-grow: 1; padding: 0.75rem; overflow-y: auto; background: #020617; }
         .report-header-block { border-bottom: 2px solid #eab308; padding: 0.65rem; margin-bottom: 0.65rem; }
         
@@ -434,7 +430,6 @@
         }
         .replay-btn { background: #1d4ed8; border: none; color: #fff; padding: 0.45rem 0.55rem; font-weight: 700; font-size: 0.65rem; border-radius: 4px; text-transform: uppercase; }
 
-        /* MULTI-FIELD PRE-REPORT DATA ENTRY CARD */
         .editable-review-card {
             background: rgba(15, 23, 42, 0.75);
             border: 1px solid #334155;
@@ -622,10 +617,8 @@
 
             <div id="map"></div>
             
-            <!-- IMMERSIVE NVG BLEND MATRIX CONTAINER LAYER -->
             <div id="nvgGreenFilter" class="night-vision-green"></div>
 
-            <!-- MAGNIFIED DIRECTIONAL ORIENTATION COMPASS INDICATOR CLUSTER -->
             <div class="compass-deck">
                 <div id="compassArrow" class="compass-arrow"></div>
                 <div>HDG: <span id="headingReadout">000°</span></div>
@@ -643,14 +636,13 @@
             <div class="map-sidebar">
                 <button id="btnPen" class="tool-btn" onclick="toggleRedPen()">PEN</button>
                 <button class="tool-btn" onclick="clearDrawings()">ERASE</button>
-                <!-- NEW WHERE AM I SNAP FOCUS SYSTEM CORE CHIP LINK -->
                 <button class="tool-btn" style="color:#f43f5e;" onclick="snapFocusToUserGPS()">FIND ME</button>
                 <button id="btnLock" class="tool-btn" onclick="toggleMapLock()">LOCK</button>
                 <button id="btnNVG" class="tool-btn" style="color:#22c55e;" onclick="toggleNightVisionFilter()">NVG</button>
             </div>
         </div>
 
-        <!-- ASSET DRAWER - EXTENDED TO HOUS COUPLING TASK FORCE TOKENS -->
+        <!-- ASSET DRAWER -->
         <div class="asset-drawer">
             <div id="chip-k9" class="asset-chip" onclick="selectAssetToPlace('k9')"><span class="dot k9"></span>K9 Team</div>
             <div id="chip-le" class="asset-chip" onclick="selectAssetToPlace('le')"><span class="dot le"></span>LE Blue</div>
@@ -680,7 +672,7 @@
         </div>
     </div>
 
-    <!-- ADJUSTED STRATEGIC LEDGER WORKSPACE -->
+    <!-- STRATEGIC LEDGER WORKSPACE -->
     <div id="screenReport" class="screen">
         <div class="map-topnav" style="height:55px;">
             <div class="nav-arrow" onclick="switchScreen('screenMenu')">←</div>
@@ -799,7 +791,6 @@
         let historicalLogs = [];
         let selectedAssetType = null;
         
-        // POINT 1: ANCHORED GEOGRAPHIC VECTOR DRAWING MATRIX ARRAY
         let activeMapPolylines = [];
         let currentGeoLinePoints = [];
         let currentLeafletLine = null;
@@ -849,7 +840,6 @@
                 color: '#22c55e', fillColor: '#22c55e', fillOpacity: 0.12, weight: 3, radius: perimeterRadiusMeters
             }).addTo(map);
 
-            // GEOGRAPHIC VECTOR CONVERSION MOUSE TRACK CLUSTER FOR MAP SCALING ACCURACY
             map.on('mousedown', (e) => {
                 if (!isPenActive) return;
                 isDrawing = true;
@@ -901,7 +891,6 @@
             }, (err) => { console.log('Buffering GPS matrix telemetry...'); }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 });
         }
 
-        // POINT 3: WHERE AM I SNAP RE-FOCUS TELEMETRY METHOD BOUND TO GPS CORE
         function snapFocusToUserGPS() {
             if (userLocationMarker) {
                 const coords = userLocationMarker.getLatLng();
@@ -960,12 +949,33 @@
             switchScreen('screenSignIn');
         }
 
+        // HARD RESET ALGORITHM: ERASES CLIPBOARD CACHE FOR A TRUE CLEAN MISSION DEPLOYMENT
         function startNewSearch() {
-            clearMapAssets(); clearDrawings();
+            clearMapAssets(); 
+            clearDrawings();
+            
+            // Clean slate memory purges
+            historicalLogs = [];
+            clearInterval(replayInterval);
+            document.getElementById('replayStatus').innerText = "Status: Ready";
+            
+            // Erase textual logs entirely
+            document.getElementById('reportCaseNumber').value = "";
+            document.getElementById('reportOffenseType').value = "";
+            document.getElementById('reportDisposition').value = "";
+            document.getElementById('reportNotes').value = "";
+            
+            const list = document.getElementById('logList');
+            if(list) list.innerHTML = "";
+
             perimeterRadiusMeters = 500; 
-            if (tacticalPerimeterCircle) tacticalPerimeterCircle.setRadius(perimeterRadiusMeters);
+            if (tacticalPerimeterCircle) {
+                tacticalPerimeterCircle.setRadius(perimeterRadiusMeters);
+                if (userLocationMarker) tacticalPerimeterCircle.setLatLng(userLocationMarker.getLatLng());
+            }
             document.getElementById('radiusReadout').innerText = perimeterRadiusMeters + "m";
-            logEvent("Fresh search parameters initialized.");
+            
+            logEvent("Fresh search parameters initialized. All old database history flushed clean.");
             switchScreen('screenMap');
         }
 
@@ -1094,7 +1104,6 @@
             setTimeout(() => { window.print(); }, 150);
         }
 
-        // POINT 1: CLEAR DRAWINGS CONVERTED TO GEOGRAPHIC PURGE CONTROLLER
         function clearDrawings() { 
             activeMapPolylines.forEach(line => map.removeLayer(line));
             activeMapPolylines = [];
@@ -1103,7 +1112,6 @@
         
         function clearMapAssets() { placedMarkers.forEach(m => map.removeLayer(m)); placedMarkers = []; if(persistentTargetPin) { map.removeLayer(persistentTargetPin); persistentTargetPin = null; } }
         
-        // POINT 2: FIXED STYLING BLEND TOGGLE WITH ABSOLUTE CONSOLE OVERRIDE
         function toggleNightVisionFilter() {
             nvgState = !nvgState;
             const filterLayer = document.getElementById('nvgGreenFilter');
@@ -1121,15 +1129,33 @@
             }
         }
 
+        // HARD RESET DISPOSITION ENGINE BOUND TO THE TERMINATE ACTION LOOP
         function terminateSearch() { 
-            clearMapAssets(); clearDrawings(); if(gpsWatchId) navigator.geolocation.clearWatch(gpsWatchId); 
-            logEvent("Search officially terminated. System resetting permissions...");
+            clearMapAssets(); 
+            clearDrawings(); 
+            if(gpsWatchId) navigator.geolocation.clearWatch(gpsWatchId); 
+            
+            // Hard purge system logs on termination block
+            historicalLogs = [];
+            clearInterval(replayInterval);
+            document.getElementById('replayStatus').innerText = "Status: Ready";
+            
+            document.getElementById('reportCaseNumber').value = "";
+            document.getElementById('reportOffenseType').value = "";
+            document.getElementById('reportDisposition').value = "";
+            document.getElementById('reportNotes').value = "";
+            
+            const list = document.getElementById('logList');
+            if(list) list.innerHTML = "";
+
             assignedRole = "searcher";
             isUserAuthenticatedSession = false; 
             document.getElementById('commanderIntelBlock').style.display = 'none';
             document.getElementById('commanderPerimeterDeck').style.display = 'none';
             document.getElementById('commanderControlRow').style.display = 'none';
             document.getElementById('inputName').value = ""; document.getElementById('inputAgency').value = ""; document.getElementById('inputRank').value = "";
+            
+            alert("Search officially terminated. All analytical report memory reset to zero.");
             switchScreen('screenSignIn');
         }
 
