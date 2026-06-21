@@ -36,15 +36,14 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
   late FlutterTts _tts;
   bool _isListening = false;
   
-  // Network Configs
+  // Network Configurations
   late Client _client;
   late Realtime _realtime;
   RealtimeSubscription? _subscription;
   bool _isOnline = false;
 
-  // Map Layer States
-  String _currentMapLayer = "SAT"; // Default view
-  bool _showStreetViewPanorama = false;
+  // Map Layer States - Matches 6yhy.jpg strictly
+  String _currentMapLayer = "SAT"; 
   final TextEditingController _searchController = TextEditingController(text: "Address or Track Phone...");
 
   @override
@@ -90,11 +89,6 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
   void _setMapLayer(String layerType) {
     setState(() {
       _currentMapLayer = layerType;
-      if (layerType == "STREET") {
-        _showStreetViewPanorama = true;
-      } else {
-        _showStreetViewPanorama = false;
-      }
     });
     _tts.speak("$layerType view active.");
   }
@@ -112,13 +106,12 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // Top Header Deck - Matches 6yhy.jpg layout exactly
+            // Top Header Deck - Re-locked to 6yhy.jpg layout exactly
             Container(
               color: const Color(0xFF0D1B2A),
               padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
               child: Row(
                 children: [
-                  // Back Arrow Indicator
                   const Icon(Icons.arrow_back, color: Colors.green, size: 22),
                   const SizedBox(width: 8),
 
@@ -128,10 +121,6 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
 
                   // TERR Terrain Layer Button
                   _buildMapToggleBtn("TERR"),
-                  const SizedBox(width: 4),
-
-                  // RESTORED: STREET view layer toggle button
-                  _buildMapToggleBtn("STREET"),
                   const SizedBox(width: 10),
 
                   // Core Address / Track Phone Input Deck
@@ -190,58 +179,16 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
             Expanded(
               child: Stack(
                 children: [
-                  // Standard Satellite Tracking/Terrain Underlay Grid
                   Container(
                     width: double.infinity,
                     color: const Color(0xFF0F2032),
                     child: Center(
-                      child: _showStreetViewPanorama 
-                        ? const SizedBox.shrink()
-                        : Text(
-                            "TACTICAL MAP WINDOW RUNNING: $_currentMapLayer LAYER",
-                            style: const TextStyle(color: Colors.white38, fontSize: 13, fontStyle: FontStyle.italic),
-                          ),
-                    ),
-                  ),
-
-                  // RESTORED: Live Street View Interactive Projection Overlay
-                  if (_showStreetViewPanorama)
-                    Container(
-                      width: double.infinity,
-                      height: double.infinity,
-                      color: Colors.blackDE,
-                      child: Stack(
-                        children: [
-                          const Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.streetview, color: Color(0xFFD4AF37), size: 48),
-                                SizedBox(height: 10),
-                                Text(
-                                  "STREET VIEW INTERACTIVE PANORAMA LOCK",
-                                  style: TextStyle(color: Color(0xFFD4AF37), fontWeight: FontWeight.bold, fontSize: 14),
-                                ),
-                                SizedBox(height: 4),
-                                Text(
-                                  "Streaming standard web-bridge location overlays cleanly.",
-                                  style: TextStyle(color: Colors.white60, fontSize: 12),
-                                ),
-                              ],
-                            ),
-                          ),
-                          // Close button to snap back to main view immediately
-                          Positioned(
-                            top: 15,
-                            right: 15,
-                            child: IconButton(
-                              icon: const Icon(Icons.cancel, color: Colors.red, size: 28),
-                              onPressed: () => _setMapLayer("SAT"),
-                            ),
-                          )
-                        ],
+                      child: Text(
+                        "TACTICAL MAP WINDOW RUNNING: $_currentMapLayer LAYER",
+                        style: const TextStyle(color: Colors.white38, fontSize: 13, fontStyle: FontStyle.italic),
                       ),
                     ),
+                  ),
 
                   // Left Side Mapping Zoom Matrix Buttons
                   Positioned(
