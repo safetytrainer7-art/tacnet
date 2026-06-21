@@ -48,7 +48,7 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
 
   // Demo Simulation States
   bool _isTraceActive = false;
-  String _trackedNumber = "434-555-0199"; // Default presentation target
+  String _trackedNumber = "434-555-0199"; 
 
   @override
   void initState() {
@@ -97,7 +97,6 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
     _tts.speak("$layerType view active.");
   }
 
-  // FOOLPROOF DEMO TRIGGER
   void _triggerLiveDemo() {
     setState(() {
       _isTraceActive = true;
@@ -162,7 +161,7 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
                   ),
                   const SizedBox(width: 8),
 
-                  // THE BAM BUTTON: Forces the trace overlay to look perfect instantly
+                  // THE BAM BUTTON
                   GestureDetector(
                     onTap: _triggerLiveDemo,
                     child: Container(
@@ -216,7 +215,6 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
 
                   // THE VISUAL DUMMY ASSETS FOR YOUR DEMO
                   if (_isTraceActive) ...[
-                    // Outer 500-meter Shaded Search Perimeter/Radius Circle
                     Center(
                       child: Container(
                         width: 260,
@@ -228,7 +226,6 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
                         ),
                       ),
                     ),
-                    // Core Last Known Position (LKP) Pin
                     Center(
                       child: Container(
                         width: 18,
@@ -242,7 +239,6 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
                         ),
                       ),
                     ),
-                    // Real-Time Data Presentation HUD Banner
                     Positioned(
                       top: 15,
                       left: 50,
