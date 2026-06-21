@@ -31,10 +31,12 @@ class TacnetHomeScreen extends StatefulWidget {
   State<TacnetHomeScreen> createState() => _TacnetHomeScreenState();
 }
 
-class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
+// SingleTickerProviderStateMixin added to run the smooth flashing animation for the GPS dot
+class _TacnetHomeScreenState extends State<TacnetHomeScreen> with SingleTickerProviderStateMixin {
   late stt.SpeechToText _speech;
   late FlutterTts _tts;
-  bool _isListening = false;
+  late AnimationController _pulseController;
+  late Animation<double> _pulseAnimation;
   
   // Network Configurations
   late Client _client;
@@ -46,10 +48,6 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
   String _currentMapLayer = "SAT"; 
   final TextEditingController _searchController = TextEditingController(text: "Address or Track Phone...");
 
-  // Demo Simulation States
-  bool _isTraceActive = false;
-  String _trackedNumber = "434-555-0199"; 
-
   @override
   void initState() {
     super.initState();
@@ -58,6 +56,14 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
     _tts.setLanguage("en-US");
     _tts.setSpeechRate(0.45);
     _initAppwriteNetwork();
+
+    // Setup the automated infinite flashing loop for your lime green GPS tracker
+    _pulseController = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat(); // Keeps it flashing continuously
+    
+    _pulseAnimation = Tween<double>(begin: 4.0, end: 24.0).animate(_pulseController);
   }
 
   void _initAppwriteNetwork() {
@@ -97,23 +103,9 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
     _tts.speak("$layerType view active.");
   }
 
-  void _triggerLiveDemo() {
-    setState(() {
-      _isTraceActive = true;
-    });
-    _tts.speak("P-1 trap and trace active. Target intersection locked.");
-  }
-
-  void _clearMapWorkspace() {
-    setState(() {
-      _isTraceActive = false;
-      _searchController.text = "Address or Track Phone...";
-    });
-    _tts.speak("Tactical workspace cleared.");
-  }
-
   @override
   void dispose() {
+    _pulseController.dispose();
     _subscription?.close();
     _searchController.dispose();
     super.dispose();
@@ -123,221 +115,191 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
+        child: Stack(
           children: [
-            // Top Header Deck
+            // REGRID UPGRADE: The Map Layer is now the absolute base, filling 100% top-to-bottom, left-to-right
             Container(
-              color: const Color(0xFF0D1B2A),
-              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
-              child: Row(
-                children: [
-                  const Icon(Icons.arrow_back, color: Colors.green, size: 22),
-                  const SizedBox(width: 8),
+              width: double.infinity,
+              height: double.infinity,
+              color: const Color(0xFF0F2032), // Simulated base satellite window
+              child: Center(
+                child: Text(
+                  "TACTICAL MAP WINDOW RUNNING: $_currentMapLayer LAYER (FULLSCREEN)",
+                  style: const TextStyle(color: Colors.white24, fontSize: 13, fontStyle: FontStyle.italic),
+                ),
+              ),
+            ),
 
-                  _buildMapToggleBtn("SAT"),
-                  const SizedBox(width: 4),
-                  _buildMapToggleBtn("TERR"),
-                  const SizedBox(width: 10),
-
-                  // Core Address / Track Phone Input Deck
-                  Expanded(
-                    child: Container(
-                      height: 36,
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(4),
-                        border: Border.all(color: const Color(0xFF1C354E)),
+            // REGRID UPGRADE: The Flashing Lime Green GPS Beacon running continuously in the center grid
+            Center(
+              child: AnimatedBuilder(
+                animation: _pulseAnimation,
+                builder: (context, child) {
+                  return Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      // Expanding outer pulse ring
+                      Container(
+                        width: _pulseAnimation.value * 2,
+                        height: _pulseAnimation.value * 2,
+                        decoration: BoxDecoration(
+                          color: const Color(0x3339FF14), // Transparent lime green
+                          shape: BoxShape.circle,
+                          border: Border.all(color: const Color(0xFF39FF14), width: 1.5),
+                        ),
                       ),
-                      child: TextField(
-                        controller: _searchController,
-                        style: const TextStyle(color: Colors.white, fontSize: 13),
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.only(bottom: 12),
+                      // Hard central core lime green tracking dot
+                      Container(
+                        width: 14,
+                        height: 14,
+                        decoration: const BoxDecoration(
+                          color: Color(0xFF39FF14), // Bright Lime Green
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(color: Color(0xFF39FF14), blurRadius: 10, spreadRadius: 2)
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+
+            // FLOATING TOP CONTROL DECK (Immersive Overlay)
+            Positioned(
+              top: 10,
+              left: 10,
+              right: 10,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
+                decoration: BoxDecoration(
+                  color: const Color(0xEE0D1B2A), // Slightly transparent dark tactical backing
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(color: const Color(0xFF1C354E)),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.arrow_back, color: Colors.green, size: 22),
+                    const SizedBox(width: 8),
+                    _buildMapToggleBtn("SAT"),
+                    const SizedBox(width: 4),
+                    _buildMapToggleBtn("TERR"),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Container(
+                        height: 36,
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(color: const Color(0xFF1C354E)),
+                        ),
+                        child: TextField(
+                          controller: _searchController,
+                          style: const TextStyle(color: Colors.white, fontSize: 13),
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.only(bottom: 12),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 8),
-
-                  // THE BAM BUTTON
-                  GestureDetector(
-                    onTap: _triggerLiveDemo,
-                    child: Container(
+                    const SizedBox(width: 8),
+                    Container(
                       height: 36,
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      padding: const EdgeInsets.symmetric(horizontal: 14),
                       decoration: BoxDecoration(
-                        color: Colors.purple.shade700,
-                        borderRadius: BorderRadius.circular(4),
-                        border: Border.all(color: Colors.purpleAccent),
-                      ),
-                      child: const Center(
-                        child: Text("DEMO TRACE", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 11)),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-
-                  // CLEAR MAP System Button
-                  GestureDetector(
-                    onTap: _clearMapWorkspace,
-                    child: Container(
-                      height: 36,
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF1C354E),
+                        color: Colors.green,
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: const Center(
-                        child: Text("CLEAR MAP", style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold)),
+                        child: Text("GO", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 13)),
                       ),
                     ),
+                  ],
+                ),
+              ),
+            ),
+
+            // FLOATING LEFT MATRIX: Perimeter & Manual Zoom
+            Positioned(
+              top: 80,
+              left: 10,
+              child: Column(
+                children: [
+                  _buildSideMapControl("PERIMETER\n500m", height: 38, fontSize: 8),
+                  const SizedBox(height: 6),
+                  _buildSideMapControl("+", fontSize: 18),
+                  const SizedBox(height: 4),
+                  _buildSideMapControl("-", fontSize: 18),
+                ],
+              ),
+            ),
+
+            // FLOATING RIGHT MATRIX: Command Deck Controls
+            Positioned(
+              top: 80,
+              right: 10,
+              child: Column(
+                children: [
+                  _buildSideMapControl("PEN", fontSize: 10),
+                  const SizedBox(height: 6),
+                  _buildSideMapControl("ERASE", fontSize: 10),
+                  const SizedBox(height: 6),
+                  _buildSideMapControl("FIND\nME", fontSize: 9),
+                  const SizedBox(height: 6),
+                  _buildSideMapControl("LOCK", fontSize: 10),
+                  const SizedBox(height: 6),
+                  GestureDetector(
+                    onTap: _toggleOnlineStatus,
+                    child: _buildSideMapControl("NVG", fontSize: 10, isActive: _isOnline),
                   ),
                 ],
               ),
             ),
 
-            // Main Map Presentation Viewport Array
-            Expanded(
-              child: Stack(
-                children: [
-                  Container(
-                    width: double.infinity,
-                    color: const Color(0xFF0F2032),
-                    child: Center(
-                      child: Text(
-                        "TACTICAL MAP WINDOW RUNNING: $_currentMapLayer LAYER",
-                        style: const TextStyle(color: Colors.white38, fontSize: 13, fontStyle: FontStyle.italic),
-                      ),
-                    ),
-                  ),
-
-                  // THE VISUAL DUMMY ASSETS FOR YOUR DEMO
-                  if (_isTraceActive) ...[
-                    Center(
-                      child: Container(
-                        width: 260,
-                        height: 260,
-                        decoration: BoxDecoration(
-                          color: Colors.red.withOpacity(0.15),
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.red, width: 3),
-                        ),
-                      ),
-                    ),
-                    Center(
-                      child: Container(
-                        width: 18,
-                        height: 18,
-                        decoration: const BoxDecoration(
-                          color: Colors.purpleAccent,
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(color: Colors.purple, blurRadius: 12, spreadRadius: 6)
-                          ]
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: 15,
-                      left: 50,
-                      right: 50,
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: const Color(0xEE0A141D),
-                          borderRadius: BorderRadius.circular(6),
-                          border: Border.all(color: Colors.purpleAccent, width: 1.5),
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Row(
-                              children: [
-                                Icon(Icons.radar, color: Colors.purpleAccent, size: 16),
-                                SizedBox(width: 6),
-                                Text("P-1 TRAP & TRACE INITIALIZED", style: TextStyle(color: Colors.purpleAccent, fontWeight: FontWeight.bold, fontSize: 11, letterSpacing: 0.5)),
-                              ],
-                            ),
-                            const Divider(color: Colors.white24, height: 8),
-                            Text("TARGET FILE: $_trackedNumber", style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
-                            const Text("STATUS: INTERCEPTED / DEV OFF", style: TextStyle(color: Colors.red, fontSize: 10, fontWeight: FontWeight.bold)),
-                            const Text("LAST TOWER COORDINATES: 37.5194° N, 79.0201° W", style: TextStyle(color: Colors.white70, fontSize: 10)),
-                          ],
-                        ),
-                      ),
+            // FLOATING LOWER LEFT: Large Compass Heading Tracker Box
+            Positioned(
+              bottom: 155,
+              left: 10,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF0D1B2A),
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(color: const Color(0xFF1C354E), width: 1.5),
+                ),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.navigation, color: Colors.blue, size: 20),
+                    SizedBox(width: 8),
+                    Text(
+                      "HDG: 000°", 
+                      style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
                     ),
                   ],
+                ),
+              ),
+            ),
 
-                  // Left Side Mapping Zoom Matrix Buttons
-                  Positioned(
-                    top: 20,
-                    left: 10,
-                    child: Column(
-                      children: [
-                        _buildSideMapControl("PERIMETER\n500m", height: 38, fontSize: 8),
-                        const SizedBox(height: 6),
-                        _buildSideMapControl("+", fontSize: 18),
-                        const SizedBox(height: 4),
-                        _buildSideMapControl("-", fontSize: 18),
-                      ],
+            // FLOATING BOTTOM MATRIX OVERLAYS (Stacked from Bottom Up)
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Team Target Tracker Color Legend Strip (Floating above system status bar)
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 10),
+                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                    decoration: BoxDecoration(
+                      color: const Color(0xDD0A141D),
+                      borderRadius: BorderRadius.circular(4),
                     ),
-                  ),
-
-                  // Right Side Operational Command Deck Controls
-                  Positioned(
-                    top: 20,
-                    right: 10,
-                    child: Column(
-                      children: [
-                        _buildSideMapControl("PEN", fontSize: 10),
-                        const SizedBox(height: 6),
-                        _buildSideMapControl("ERASE", fontSize: 10),
-                        const SizedBox(height: 6),
-                        _buildSideMapControl("FIND\nME", fontSize: 9),
-                        const SizedBox(height: 6),
-                        _buildSideMapControl("LOCK", fontSize: 10),
-                        const SizedBox(height: 6),
-                        GestureDetector(
-                          onTap: _toggleOnlineStatus,
-                          child: _buildSideMapControl("NVG", fontSize: 10, isActive: _isOnline),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  // Heading Tracker Box
-                  Positioned(
-                    bottom: 80,
-                    left: 10,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF0D1B2A),
-                        borderRadius: BorderRadius.circular(6),
-                        border: Border.all(color: const Color(0xFF1C354E), width: 1.5),
-                      ),
-                      child: const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.navigation, color: Colors.blue, size: 20),
-                          SizedBox(width: 8),
-                          Text(
-                            "HDG: 000°", 
-                            style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  // Bottom Target Tracker Team Color Legend Strip
-                  Positioned(
-                    bottom: 15,
-                    left: 10,
-                    right: 10,
                     child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
@@ -354,45 +316,46 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
                       ),
                     ),
                   ),
-                ],
-              ),
-            ),
+                  const SizedBox(height: 8),
 
-            // Bottom Emergency Deployment Command Bar
-            Container(
-              width: double.infinity,
-              color: Colors.red,
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.warning, color: Colors.white, size: 18),
-                  SizedBox(width: 6),
-                  Text("OFFICER EMERGENCY ALERT", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14, letterSpacing: 1.0)),
-                ],
-              ),
-            ),
-
-            // Master Bottom Navigation Panel Deck
-            Container(
-              color: const Color(0xFF0D1B2A),
-              height: 48,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Container(
-                      color: const Color(0xFF1C354E),
-                      child: const Center(
-                        child: Text("CLEAR NOW", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)),
-                      ),
+                  // Emergency Deployment Warning Panel
+                  Container(
+                    width: double.infinity,
+                    color: Colors.red,
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.warning, color: Colors.white, size: 18),
+                        SizedBox(width: 6),
+                        Text("OFFICER EMERGENCY ALERT", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14, letterSpacing: 1.0)),
+                      ],
                     ),
                   ),
-                  Expanded(
-                    child: Container(
-                      color: Colors.red.shade900,
-                      child: const Center(
-                        child: Text("TERMINATE SEARCH", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)),
-                      ),
+
+                  // Base System Safety Control Bars
+                  Container(
+                    color: const Color(0xFF0D1B2A),
+                    height: 48,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            color: const Color(0xFF1C354E),
+                            child: const Center(
+                              child: Text("CLEAR NOW", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            color: Colors.red.shade900,
+                            child: const Center(
+                              child: Text("TERMINATE SEARCH", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
