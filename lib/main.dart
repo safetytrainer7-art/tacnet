@@ -14,7 +14,7 @@ class TacnetMasterApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'TACNET Mobile',
-      debugShowCheckedBackgroundColor: false,
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,
         scaffoldBackgroundColor: const Color(0xFF0A141D),
@@ -45,6 +45,10 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
   // Map Layer States
   String _currentMapLayer = "SAT"; 
   final TextEditingController _searchController = TextEditingController(text: "Address or Track Phone...");
+
+  // Simulated Trap & Trace Visual States
+  bool _isTraceActive = false;
+  String _trackedNumber = "";
 
   @override
   void initState() {
@@ -93,6 +97,28 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
     _tts.speak("$layerType view active.");
   }
 
+  // EXECUTION: Triggers the visual Last Known Position tracking assets
+  void _executeTargetTrace() {
+    String input = _searchController.text.trim();
+    if (input.isNotEmpty && input != "Address or Track Phone...") {
+      setState(() {
+        _isTraceActive = true;
+        _trackedNumber = input;
+      });
+      _tts.speak("P-1 trap and trace sequence initiated for target entry.");
+    }
+  }
+
+  // CLEAR SYSTEM: Resets the workspace completely
+  void _clearMapWorkspace() {
+    setState(() {
+      _isTraceActive = false;
+      _trackedNumber = "";
+      _searchController.text = "Address or Track Phone...";
+    });
+    _tts.speak("Tactical workspace cleared.");
+  }
+
   @override
   void dispose() {
     _subscription?.close();
@@ -106,7 +132,7 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // Top Header Deck - Matches 6yhy.jpg layout exactly
+            // Top Header Deck
             Container(
               color: const Color(0xFF0D1B2A),
               padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
@@ -115,11 +141,8 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
                   const Icon(Icons.arrow_back, color: Colors.green, size: 22),
                   const SizedBox(width: 8),
 
-                  // SAT Map Layer Button
                   _buildMapToggleBtn("SAT"),
                   const SizedBox(width: 4),
-
-                  // TERR Terrain Layer Button
                   _buildMapToggleBtn("TERR"),
                   const SizedBox(width: 10),
 
@@ -140,35 +163,46 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.only(bottom: 12),
                         ),
+                        onTap: () {
+                          if (_searchController.text == "Address or Track Phone...") {
+                            _searchController.clear();
+                          }
+                        },
                       ),
                     ),
                   ),
                   const SizedBox(width: 8),
 
-                  // GO Action Target Execution Button
-                  Container(
-                    height: 36,
-                    padding: const EdgeInsets.symmetric(horizontal: 14),
-                    decoration: BoxDecoration(
-                      color: Colors.green,
-                      borderRadius: BorderRadius.circular(4),
+                  // GO Action Button - Linked directly to tracking execution
+                  GestureDetector(
+                    onTap: _executeTargetTrace,
+                    child: Container(
+                      height: 36,
+                      padding: const EdgeInsets.symmetric(horizontal: 14),
+                      decoration: BoxDecoration(
+                        color: Colors.green,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: const Center(
+                        child: Text("GO", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 13)),
                     ),
-                    child: const Center(
-                      child: Text("GO", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 13)),
-                    ),
+                  ),
                   ),
                   const SizedBox(width: 4),
 
-                  // CLEAR MAP System Button
-                  Container(
-                    height: 36,
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF1C354E),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: const Center(
-                      child: Text("CLEAR MAP", style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold)),
+                  // CLEAR MAP System Button - Resets view
+                  GestureDetector(
+                    onTap: _clearMapWorkspace,
+                    child: Container(
+                      height: 36,
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF1C354E),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: const Center(
+                        child: Text("CLEAR MAP", style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold)),
+                      ),
                     ),
                   ),
                 ],
@@ -189,6 +223,67 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
                       ),
                     ),
                   ),
+
+                  // VISUAL ASSET OVERLAY: Renders the active bubble, ring, and ping marker
+                  if (_isTraceActive) ...[
+                    // Outer 500-meter Shaded Search Perimeter/Radius Circle
+                    Center(
+                      child: Container(
+                        width: 280,
+                        height: 280,
+                        decoration: BoxDecoration(
+                          color: Colors.red.withOpacity(0.12),
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.red, width: 2.5),
+                        ),
+                      ),
+                    ),
+                    // Core Last Known Position (LKP) Pin
+                    Center(
+                      child: Container(
+                        width: 16,
+                        height: 16,
+                        decoration: const BoxDecoration(
+                          color: Colors.purpleAccent, // Magenta Last Ping Indicator
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(color: Colors.purple, blurRadius: 10, spreadRadius: 4)
+                          ]
+                        ),
+                      ),
+                    ),
+                    // Real-Time Data Presentation HUD Banner
+                    Positioned(
+                      top: 15,
+                      left: 70,
+                      right: 70,
+                      child: Container(
+                        padding: const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: const Color(0xEE0A141D),
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(color: Colors.purpleAccent, width: 1),
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Row(
+                              children: [
+                                Icon(Icons.radar, color: Colors.purpleAccent, size: 16),
+                                SizedBox(width: 6),
+                                Text("P-1 TRAP & TRACE ACTIVE", style: TextStyle(color: Colors.purpleAccent, fontWeight: FontWeight.bold, fontSize: 11)),
+                              ],
+                            ),
+                            const Divider(color: Colors.white12, height: 8),
+                            Text("TARGET FILE: $_trackedNumber", style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold)),
+                            const Text("SIGNAL: LOST / DEV OFF", style: TextStyle(color: Colors.red, fontSize: 10, fontWeight: FontWeight.bold)),
+                            const Text("LKP: 37.5194° N, 79.0201° W", style: TextStyle(color: Colors.white70, fontSize: 10)),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
 
                   // Left Side Mapping Zoom Matrix Buttons
                   Positioned(
@@ -227,12 +322,12 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
                     ),
                   ),
 
-                  // MODIFIED: Heading Tracker Box - Larger and Taller for Quick Reading
+                  // Heading Tracker Box
                   Positioned(
                     bottom: 80,
                     left: 10,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12), // Increased padding for extra height/width
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
                       decoration: BoxDecoration(
                         color: const Color(0xFF0D1B2A),
                         borderRadius: BorderRadius.circular(6),
@@ -241,16 +336,11 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
                       child: const Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.navigation, color: Colors.blue, size: 20), // Made arrow larger
+                          Icon(Icons.navigation, color: Colors.blue, size: 20),
                           SizedBox(width: 8),
                           Text(
                             "HDG: 000°", 
-                            style: TextStyle(
-                              color: Colors.white, 
-                              fontSize: 15, // Bumped text size from 11 to 15
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 0.5
-                            ),
+                            style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
