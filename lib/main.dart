@@ -46,9 +46,9 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
   String _currentMapLayer = "SAT"; 
   final TextEditingController _searchController = TextEditingController(text: "Address or Track Phone...");
 
-  // Simulated Trap & Trace Visual States
+  // Demo Simulation States
   bool _isTraceActive = false;
-  String _trackedNumber = "";
+  String _trackedNumber = "434-555-0199"; // Default presentation target
 
   @override
   void initState() {
@@ -97,23 +97,17 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
     _tts.speak("$layerType view active.");
   }
 
-  // EXECUTION: Triggers the visual Last Known Position tracking assets
-  void _executeTargetTrace() {
-    String input = _searchController.text.trim();
-    if (input.isNotEmpty && input != "Address or Track Phone...") {
-      setState(() {
-        _isTraceActive = true;
-        _trackedNumber = input;
-      });
-      _tts.speak("P-1 trap and trace sequence initiated for target entry.");
-    }
+  // FOOLPROOF DEMO TRIGGER
+  void _triggerLiveDemo() {
+    setState(() {
+      _isTraceActive = true;
+    });
+    _tts.speak("P-1 trap and trace active. Target intersection locked.");
   }
 
-  // CLEAR SYSTEM: Resets the workspace completely
   void _clearMapWorkspace() {
     setState(() {
       _isTraceActive = false;
-      _trackedNumber = "";
       _searchController.text = "Address or Track Phone...";
     });
     _tts.speak("Tactical workspace cleared.");
@@ -163,34 +157,30 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
                           border: InputBorder.none,
                           contentPadding: EdgeInsets.only(bottom: 12),
                         ),
-                        onTap: () {
-                          if (_searchController.text == "Address or Track Phone...") {
-                            _searchController.clear();
-                          }
-                        },
                       ),
                     ),
                   ),
                   const SizedBox(width: 8),
 
-                  // GO Action Button - Linked directly to tracking execution
+                  // THE BAM BUTTON: Forces the trace overlay to look perfect instantly
                   GestureDetector(
-                    onTap: _executeTargetTrace,
+                    onTap: _triggerLiveDemo,
                     child: Container(
                       height: 36,
-                      padding: const EdgeInsets.symmetric(horizontal: 14),
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
                       decoration: BoxDecoration(
-                        color: Colors.green,
+                        color: Colors.purple.shade700,
                         borderRadius: BorderRadius.circular(4),
+                        border: Border.all(color: Colors.purpleAccent),
                       ),
                       child: const Center(
-                        child: Text("GO", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 13)),
+                        child: Text("DEMO TRACE", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 11)),
+                      ),
                     ),
-                  ),
                   ),
                   const SizedBox(width: 4),
 
-                  // CLEAR MAP System Button - Resets view
+                  // CLEAR MAP System Button
                   GestureDetector(
                     onTap: _clearMapWorkspace,
                     child: Container(
@@ -224,30 +214,30 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
                     ),
                   ),
 
-                  // VISUAL ASSET OVERLAY: Renders the active bubble, ring, and ping marker
+                  // THE VISUAL DUMMY ASSETS FOR YOUR DEMO
                   if (_isTraceActive) ...[
                     // Outer 500-meter Shaded Search Perimeter/Radius Circle
                     Center(
                       child: Container(
-                        width: 280,
-                        height: 280,
+                        width: 260,
+                        height: 260,
                         decoration: BoxDecoration(
-                          color: Colors.red.withOpacity(0.12),
+                          color: Colors.red.withOpacity(0.15),
                           shape: BoxShape.circle,
-                          border: Border.all(color: Colors.red, width: 2.5),
+                          border: Border.all(color: Colors.red, width: 3),
                         ),
                       ),
                     ),
                     // Core Last Known Position (LKP) Pin
                     Center(
                       child: Container(
-                        width: 16,
-                        height: 16,
+                        width: 18,
+                        height: 18,
                         decoration: const BoxDecoration(
-                          color: Colors.purpleAccent, // Magenta Last Ping Indicator
+                          color: Colors.purpleAccent,
                           shape: BoxShape.circle,
                           boxShadow: [
-                            BoxShadow(color: Colors.purple, blurRadius: 10, spreadRadius: 4)
+                            BoxShadow(color: Colors.purple, blurRadius: 12, spreadRadius: 6)
                           ]
                         ),
                       ),
@@ -255,14 +245,14 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
                     // Real-Time Data Presentation HUD Banner
                     Positioned(
                       top: 15,
-                      left: 70,
-                      right: 70,
+                      left: 50,
+                      right: 50,
                       child: Container(
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
                           color: const Color(0xEE0A141D),
-                          borderRadius: BorderRadius.circular(4),
-                          border: Border.all(color: Colors.purpleAccent, width: 1),
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(color: Colors.purpleAccent, width: 1.5),
                         ),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
@@ -272,13 +262,13 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
                               children: [
                                 Icon(Icons.radar, color: Colors.purpleAccent, size: 16),
                                 SizedBox(width: 6),
-                                Text("P-1 TRAP & TRACE ACTIVE", style: TextStyle(color: Colors.purpleAccent, fontWeight: FontWeight.bold, fontSize: 11)),
+                                Text("P-1 TRAP & TRACE INITIALIZED", style: TextStyle(color: Colors.purpleAccent, fontWeight: FontWeight.bold, fontSize: 11, letterSpacing: 0.5)),
                               ],
                             ),
-                            const Divider(color: Colors.white12, height: 8),
-                            Text("TARGET FILE: $_trackedNumber", style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold)),
-                            const Text("SIGNAL: LOST / DEV OFF", style: TextStyle(color: Colors.red, fontSize: 10, fontWeight: FontWeight.bold)),
-                            const Text("LKP: 37.5194° N, 79.0201° W", style: TextStyle(color: Colors.white70, fontSize: 10)),
+                            const Divider(color: Colors.white24, height: 8),
+                            Text("TARGET FILE: $_trackedNumber", style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
+                            const Text("STATUS: INTERCEPTED / DEV OFF", style: TextStyle(color: Colors.red, fontSize: 10, fontWeight: FontWeight.bold)),
+                            const Text("LAST TOWER COORDINATES: 37.5194° N, 79.0201° W", style: TextStyle(color: Colors.white70, fontSize: 10)),
                           ],
                         ),
                       ),
