@@ -422,4 +422,4 @@ class _TrapTraceLogScreenState extends State<TrapTraceLogScreen> {
       ),
     );
   }
-}
+)
