@@ -14,7 +14,7 @@ class TacnetMasterApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'TACNET Mobile',
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedBackgroundColor: false,
       theme: ThemeData(
         brightness: Brightness.dark,
         scaffoldBackgroundColor: const Color(0xFF0A141D),
@@ -42,7 +42,7 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
   RealtimeSubscription? _subscription;
   bool _isOnline = false;
 
-  // Map Layer States - Matches 6yhy.jpg strictly
+  // Map Layer States
   String _currentMapLayer = "SAT"; 
   final TextEditingController _searchController = TextEditingController(text: "Address or Track Phone...");
 
@@ -106,7 +106,7 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // Top Header Deck - Re-locked to 6yhy.jpg layout exactly
+            // Top Header Deck - Matches 6yhy.jpg layout exactly
             Container(
               color: const Color(0xFF0D1B2A),
               padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 8.0),
@@ -227,22 +227,31 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
                     ),
                   ),
 
-                  // Heading Tracker Box
+                  // MODIFIED: Heading Tracker Box - Larger and Taller for Quick Reading
                   Positioned(
                     bottom: 80,
                     left: 10,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12), // Increased padding for extra height/width
                       decoration: BoxDecoration(
                         color: const Color(0xFF0D1B2A),
-                        borderRadius: BorderRadius.circular(4),
-                        border: Border.all(color: const Color(0xFF1C354E)),
+                        borderRadius: BorderRadius.circular(6),
+                        border: Border.all(color: const Color(0xFF1C354E), width: 1.5),
                       ),
                       child: const Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.navigation, color: Colors.blue, size: 14),
-                          SizedBox(width: 4),
-                          Text("HDG: 000°", style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold)),
+                          Icon(Icons.navigation, color: Colors.blue, size: 20), // Made arrow larger
+                          SizedBox(width: 8),
+                          Text(
+                            "HDG: 000°", 
+                            style: TextStyle(
+                              color: Colors.white, 
+                              fontSize: 15, // Bumped text size from 11 to 15
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 0.5
+                            ),
+                          ),
                         ],
                       ),
                     ),
