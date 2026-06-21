@@ -35,14 +35,8 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
   late FlutterTts _tts;
   bool _isListening = false;
   
-  // Local Database Vault: Stores mission data right on the device chips
-  final List<Map<String, String>> _localTrapTraceLogs = [
-    {"timestamp": "14:22", "target": "Target-Alpha", "sector": "Sector 4 - Active Ping"},
-    {"timestamp": "14:45", "target": "Target-Alpha", "sector": "Sector 2 - Signal Trace Locked"},
-  ];
-
-  String _operationStatusTitle = "TRAP & TRACE: ACTIVE";
-  String _operationStatusBody = "System running completely offline. Monitoring local tracking arrays.";
+  String _operationStatusTitle = "TACNET: READY";
+  String _operationStatusBody = "System running completely offline. Standby for voice activation.";
 
   @override
   void initState() {
@@ -77,25 +71,21 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
     String cleanCommand = command.toLowerCase();
     
     if (cleanCommand.contains("trace") || cleanCommand.contains("trap")) {
-      setState(() {
-        _operationStatusTitle = "Trap & Trace Triggered";
-        _operationStatusBody = "Voice command recognized. Executing target vector scanning.";
-      });
-      await _tts.speak("Trap and Trace active. Initiating target tracking routine.");
+      await _tts.speak("Trap and Trace active. Deploying secure tracking interface.");
+      _navigateToTrapTrace();
     } else {
       setState(() {
-        _operationStatusTitle = "Command Received";
-        _operationStatusBody = "Processing operation: '$command'";
+        _operationStatusTitle = "Command Decoded";
+        _operationStatusBody = "Operational module request: '$command'";
       });
     }
   }
 
-  void _executeFeatureAction(String featureName) {
-    setState(() {
-      _operationStatusTitle = "$featureName DECK";
-      _operationStatusBody = "Opening secure local module for $featureName. Zero network lag.";
-    });
-    _tts.speak("Opening $featureName module.");
+  void _navigateToTrapTrace() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => TrapTraceLogScreen(tts: _tts)),
+    );
   }
 
   @override
@@ -108,11 +98,9 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Gold Star Insignia
                 const Icon(Icons.star, color: Color(0xFFD4AF37), size: 80),
                 const SizedBox(height: 10),
 
-                // TACNET Heading
                 const Text(
                   "TACNET",
                   textAlign: TextAlign.center,
@@ -125,12 +113,12 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
                 ),
                 const SizedBox(height: 20),
 
-                // Dynamic Live Status Display Screen
+                // Main Operations Display Panel
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(16.0),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF101F30), // Dark Navy Box
+                    color: const Color(0xFF101F30),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(color: const Color(0xFFD4AF37), width: 1.5),
                   ),
@@ -139,7 +127,7 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
                     children: [
                       Row(
                         children: [
-                          const Icon(Icons.radar, color: Colors.red, size: 20),
+                          const Icon(Icons.shield_outlined, color: Color(0xFFD4AF37), size: 20),
                           const SizedBox(width: 8),
                           Text(_operationStatusTitle, style: const TextStyle(color: Color(0xFFD4AF37), fontSize: 18, fontWeight: FontWeight.bold)),
                         ],
@@ -178,20 +166,57 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
                 ),
                 const SizedBox(height: 25),
 
-                // MODULE CARDS - Number One Feature Positioned Top Left
-                _buildModuleCard("TRAP & TRACE", "Cellular tracking, line routing, and signal trace sweeps.", Icons.gps_fixed, isPremium: true),
-                _buildModuleCard("SEARCH OPERATIONS", "K9 deployment logs, grid tracking, and wilderness paths.", Icons.search),
-                _buildModuleCard("TACTICAL MAPPING", "Offline coordinates, waypoint marking, and grid maps.", Icons.map_outlined),
-                _buildModuleCard("CIVIL ENCOUNTERS", "Secure local database storage for field logs.", Icons.assignment_outlined),
+                // Number One Feature — Positioned Top of List, Gold Bordered
+                GestureDetector(
+                  onTap: _navigateToTrapTrace,
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(vertical: 6.0),
+                    padding: const EdgeInsets.all(14.0),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF101F30),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: const Color(0xFFD4AF37), width: 2.0),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.between,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  const Text("TRAP & TRACE", style: TextStyle(color: Color(0xFFD4AF37), fontSize: 18, fontWeight: FontWeight.bold)),
+                                  const SizedBox(width: 8),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                    decoration: BoxDecoration(color: const Color(0xFFD4AF37), borderRadius: BorderRadius.circular(4)),
+                                    child: const Text("P-1", style: TextStyle(color: Colors.black, fontSize: 9, fontWeight: FontWeight.bold)),
+                                  )
+                                ],
+                              ),
+                              const SizedBox(height: 3),
+                              const Text("Cellular tracking log interface and local telemetry storage.", style: TextStyle(color: Colors.white60, fontSize: 12)),
+                            ],
+                          ),
+                        ),
+                        const Icon(Icons.gps_fixed, color: Color(0xFFD4AF37), size: 28),
+                      ],
+                    ),
+                  ),
+                ),
+
+                _buildStandardCard("SEARCH OPERATIONS", "K9 deployment logs, grid tracking, and wilderness paths.", Icons.search),
+                _buildStandardCard("TACTICAL MAPPING", "Offline coordinates, waypoint marking, and grid maps.", Icons.map_outlined),
+                _buildStandardCard("CIVIL ENCOUNTERS", "Secure local database storage for field logs.", Icons.assignment_outlined),
                 const SizedBox(height: 25),
 
-                // Secure Local Lock Light Indicator
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.shield, color: Colors.green, size: 16),
+                    const Icon(Icons.lock, color: Colors.green, size: 16),
                     const SizedBox(width: 6),
-                    const Text("LOCAL DATA INTEGRITY SECURED", style: TextStyle(color: Colors.green, fontSize: 11, fontWeight: FontWeight.bold)),
+                    const Text("LOCAL SECURE ENCRYPTION LOCKED", style: TextStyle(color: Colors.green, fontSize: 11, fontWeight: FontWeight.bold)),
                   ],
                 ),
                 const SizedBox(height: 15),
@@ -211,47 +236,188 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> {
     );
   }
 
-  Widget _buildModuleCard(String title, String subtitle, IconData icon, {bool isPremium = false}) {
-    return GestureDetector(
-      onTap: () => _executeFeatureAction(title),
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 6.0),
-        padding: const EdgeInsets.all(14.0),
-        decoration: BoxDecoration(
-          color: const Color(0xFF101F30),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: isPremium ? const Color(0xFFD4AF37) : const Color(0xFF1C354E), 
-            width: isPremium ? 2.0 : 1.5
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.between,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text(title, style: const TextStyle(color: Color(0xFFD4AF37), fontSize: 18, fontWeight: FontWeight.bold)),
-                      if (isPremium) ...[
-                        const SizedBox(width: 8),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                          decoration: BoxDecoration(color: const Color(0xFFD4AF37), borderRadius: BorderRadius.circular(4)),
-                          child: const Text("P-1", style: TextStyle(color: Colors.black, fontSize: 9, fontWeight: FontWeight.bold)),
-                        )
-                      ]
-                    ],
-                  ),
-                  const SizedBox(height: 3),
-                  Text(subtitle, style: const TextStyle(color: Colors.white60, fontSize: 12)),
-                ],
-              ),
+  Widget _buildStandardCard(String title, String subtitle, IconData icon) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 6.0),
+      padding: const EdgeInsets.all(14.0),
+      decoration: BoxDecoration(
+        color: const Color(0xFF101F30),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: const Color(0xFF1C354E), width: 1.5),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.between,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: const TextStyle(color: Color(0xFFD4AF37), fontSize: 18, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 3),
+                Text(subtitle, style: const TextStyle(color: Colors.white60, fontSize: 12)),
+              ],
             ),
-            Icon(icon, color: const Color(0xFFD4AF37), size: 28),
-          ],
+          ),
+          Icon(icon, color: const Color(0xFFD4AF37), size: 28),
+        ],
+      ),
+    );
+  }
+}
+
+// SECURE SECONDARY TRAP & TRACE MODULE SCREEN
+class TrapTraceLogScreen extends StatefulWidget {
+  final FlutterTts tts;
+  const TrapTraceLogScreen({Key? key, required this.tts}) : super(key: key);
+
+  @override
+  State<TrapTraceLogScreen> createState() => _TrapTraceLogScreenState();
+}
+
+class _TrapTraceLogScreenState extends State<TrapTraceLogScreen> {
+  final TextEditingController _targetController = TextEditingController();
+  final TextEditingController _notesController = TextEditingController();
+  
+  // Hardwired internal ledger running entirely offline
+  final List<Map<String, String>> _traceLedger = [
+    {"time": "11:45:02", "target": "540-555-0199", "carrier": "Verizon Wireless", "signal": "-72 dBm (Strong)"},
+    {"time": "11:46:15", "target": "540-555-0199", "carrier": "Verizon Wireless", "signal": "-75 dBm (Locked)"},
+  ];
+
+  void _commitLocalLog() {
+    if (_targetController.text.isEmpty) return;
+
+    final TimeOfDay now = TimeOfDay.now();
+    final String timestamp = "${now.hour}:${now.minute.toString().padLeft(2, '0')}:00";
+
+    setState(() {
+      _traceLedger.insert(0, {
+        "time": timestamp,
+        "target": _targetController.text,
+        "carrier": "Local Grid Array",
+        "signal": _notesController.text.isEmpty ? "Trace Verification Completed" : _notesController.text,
+      });
+      _targetController.clear();
+      _notesController.clear();
+    });
+    
+    widget.tts.speak("Log record entry secured offline.");
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF101F30),
+        title: const Text("TRAP & TRACE CONTROL", style: TextStyle(color: Color(0xFFD4AF37), fontWeight: FontWeight.bold, fontSize: 18)),
+        iconTheme: const IconThemeData(color: Color(0xFFD4AF37)),
+      ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          with: double.infinity,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                "SECURE LOG INPUT DECK",
+                style: TextStyle(color: Color(0xFFD4AF37), fontSize: 14, fontWeight: FontWeight.bold, letterSpacing: 1.0),
+              ),
+              const SizedBox(height: 12),
+
+              // Target Input Row
+              TextField(
+                controller: _targetController,
+                keyboardType: TextInputType.phone,
+                style: const TextStyle(color: Colors.white),
+                decoration: InputDecoration(
+                  labelText: "TARGET PHONE NUMBER / ID",
+                  labelStyle: const TextStyle(color: Colors.white60, fontSize: 12),
+                  enabledBorder: OutlineInputBorder(borderSide: const BorderSide(color: Color(0xFF1C354E)), borderRadius: BorderRadius.circular(8)),
+                  focusedBorder: OutlineInputBorder(borderSide: const BorderSide(color: Color(0xFFD4AF37)), borderRadius: BorderRadius.circular(8)),
+                  filled: true,
+                  fillColor: const Color(0xFF101F30),
+                ),
+              ),
+              const SizedBox(height: 10),
+
+              // Operational Telemetry Notes
+              TextField(
+                controller: _notesController,
+                style: const TextStyle(color: Colors.white),
+                decoration: InputDecoration(
+                  labelText: "TELEMETRY NOTES / SIGNAL DETAILS",
+                  labelStyle: const TextStyle(color: Colors.white60, fontSize: 12),
+                  enabledBorder: OutlineInputBorder(borderSide: const BorderSide(color: Color(0xFF1C354E)), borderRadius: BorderRadius.circular(8)),
+                  focusedBorder: OutlineInputBorder(borderSide: const BorderSide(color: Color(0xFFD4AF37)), borderRadius: BorderRadius.circular(8)),
+                  filled: true,
+                  fillColor: const Color(0xFF101F30),
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              // Trigger Log Button
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: ElevatedButton(
+                  onPressed: _commitLocalLog,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF162A3F),
+                    side: const BorderSide(color: Color(0xFFD4AF37), width: 1.5),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  ),
+                  child: const Text("CAPTURE LIVE TELEMETRY LOG", style: TextStyle(color: Color(0xFFD4AF37), fontWeight: FontWeight.bold, fontSize: 14)),
+                ),
+              ),
+              const SizedBox(height: 25),
+
+              const Text(
+                "VERIFIED OFFLINE TRANSMISSION LEDGER",
+                style: TextStyle(color: Color(0xFFD4AF37), fontSize: 14, fontWeight: FontWeight.bold, letterSpacing: 1.0),
+              ),
+              const SizedBox(height: 10),
+
+              // Live Trace Ledger Display Box
+              Expanded(
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF101F30),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: const Color(0xFF1C354E)),
+                  ),
+                  child: ListView.separated(
+                    itemCount: _traceLedger.length,
+                    separatorBuilder: (context, index) => const Divider(color: Color(0xFF1C354E), height: 1),
+                    itemBuilder: (context, index) {
+                      var item = _traceLedger[index];
+                      return Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.between,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(item['target']!, style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold)),
+                                const SizedBox(height: 3),
+                                Text("${item['carrier']} • ${item['signal']}", style: const TextStyle(color: Colors.white60, fontSize: 12)),
+                              ],
+                            ),
+                            Text(
+                              item['time']!,
+                              style: const TextStyle(color: Color(0xFFD4AF37), fontSize: 12, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
