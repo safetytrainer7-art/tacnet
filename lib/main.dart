@@ -51,11 +51,11 @@ class _TacnetMainScreenState extends State<TacnetMainScreen> {
   void _initAppwrite() {
     client = Client()
       ..setEndpoint('https://cloud.appwrite.io/v1')
-      ..setProject('6a38e834003e0cc64c31'); // Your master project ID
+      ..setProject('6a38e834003e0cc64c31'); // Your live project ID
     databases = Databases(client);
   }
 
-  // Pure Bulletproof Connection Trigger (Zero complex dependencies)
+  // Streamlined Data Switch (Zero complex web dependencies to prevent crashes)
   void _toggleDataLink(bool turnOn) async {
     setState(() {
       isLinkConnected = turnOn;
@@ -64,7 +64,6 @@ class _TacnetMainScreenState extends State<TacnetMainScreen> {
 
     if (turnOn) {
       try {
-        // Transmits baseline data to prove connection pipeline is green
         await databases.createDocument(
           databaseId: 'tacnet-search-app',
           collectionId: 'tacnet_live_units',
@@ -73,7 +72,7 @@ class _TacnetMainScreenState extends State<TacnetMainScreen> {
             'tacnet_live_units': 'Field-Unit-Alpha',
             'location': '37.525, -79.124',
             'operationalStatus': 'ACTIVE_SEARCH',
-            'lastUpdateTime': '12:00',
+            'lastUpdateTime': '14:00',
           },
         );
         _showSystemMessage("Link Established. Field packet sent to Appwrite.");
@@ -163,7 +162,6 @@ class _TacnetMainScreenState extends State<TacnetMainScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.between,
               children: [
-                // System Call Sign
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                   decoration: BoxDecoration(
@@ -180,7 +178,7 @@ class _TacnetMainScreenState extends State<TacnetMainScreen> {
                 // CONTROL ARRAY SWITCHES
                 Row(
                   children: [
-                    // CONTROLLER A: DATA TRANSMISSION SWITCH
+                    // DATA TRANSMISSION SWITCH
                     GestureDetector(
                       onTap: () => _toggleDataLink(!isLinkConnected),
                       child: Container(
@@ -205,7 +203,7 @@ class _TacnetMainScreenState extends State<TacnetMainScreen> {
                     ),
                     const SizedBox(width: 8),
                     
-                    // CONTROLLER B: INDEPENDENT NIGHT VISION OVERLAY SWITCH
+                    // INDEPENDENT NIGHT VISION OVERLAY SWITCH
                     GestureDetector(
                       onTap: () {
                         setState(() {
