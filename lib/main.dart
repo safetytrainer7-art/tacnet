@@ -1,434 +1,294 @@
 import 'package:flutter/material.dart';
 import 'package:appwrite/appwrite.dart';
-import 'package:speech_to_text/speech_to_text.dart' as stt;
-import 'package:flutter_tts/flutter_tts.dart';
-import 'dart:math';
 
 void main() {
-  runApp(const TacnetMasterApp());
+  runApp(const TacnetApp());
 }
 
-class TacnetMasterApp extends StatelessWidget {
-  const TacnetMasterApp({Key? key}) : super(key: key);
+class TacnetApp extends StatelessWidget {
+  const TacnetApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'TACNET Mobile',
+      title: 'TACNET',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,
-        scaffoldBackgroundColor: const Color(0xFF0A141D),
+        primaryColor: const Color(0xFF0B2510), // Hunter Green
+        scaffoldBackgroundColor: const Color(0xFF051207), // Deep Tactical Background
       ),
-      home: const TacnetHomeScreen(),
+      home: const TacnetMainScreen(),
     );
   }
 }
 
-class TacnetHomeScreen extends StatefulWidget {
-  const TacnetHomeScreen({Key? key}) : super(key: key);
+class TacnetMainScreen extends StatefulWidget {
+  const TacnetMainScreen({Key? key}) : super(key: key);
 
   @override
-  State<TacnetHomeScreen> createState() => _TacnetHomeScreenState();
+  _TacnetMainScreenState createState() => _TacnetMainScreenState();
 }
 
-class _TacnetHomeScreenState extends State<TacnetHomeScreen> with SingleTickerProviderStateMixin {
-  late stt.SpeechToText _speech;
-  late FlutterTts _tts;
-  late AnimationController _pulseController;
-  late Animation<double> _pulseAnimation;
-  
-  late Client _client;
-  late Account _account;
-  late Databases _databases;
-  bool _isOnline = false;
-  String _unitIdentifier = "";
-
-  String _currentMapLayer = "SAT"; 
-  final TextEditingController _searchController = TextEditingController(text: "Address or Track Phone...");
+class _TacnetMainScreenState extends State<TacnetMainScreen> {
+  late Client client;
+  late Databases databases;
+  bool isNvgOnline = false;
+  bool isSearching = false;
+  final TextEditingController _searchController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _speech = stt.SpeechToText();
-    _tts = FlutterTts();
-    _tts.setLanguage("en-US");
-    _tts.setSpeechRate(0.45);
-    
-    _unitIdentifier = "K9-Unit-${Random().nextInt(900) + 100}";
-
-    _pulseController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 2),
-    )..repeat();
-    _pulseAnimation = Tween<double>(begin: 4.0, end: 24.0).animate(_pulseController);
-
-    _initAppwriteSystem();
+    _initAppwrite();
   }
 
-  void _initAppwriteSystem() {
-    _client = Client()
+  void _initAppwrite() {
+    client = Client()
       ..setEndpoint('https://cloud.appwrite.io/v1')
-      ..setProject(..setProject('6a38e834003e0cc64c31');'); 
-    
-    _account = Account(_client);
-    _databases = Databases(_client);
+      ..setProject('6a38e834003e0cc64c31'); // Your exact live project ID
+    databases = Databases(client);
   }
 
-  Future<void> _connectToTacticalNetwork() async {
-    if (!_isOnline) {
+  // Simulates firing a packet when NVG is toggled
+  void _toggleNvg(bool value) async {
+    setState(() {
+      isNvgOnline = value;
+    });
+
+    if (isNvgOnline) {
       try {
-        await _account.createAnonymousSession();
-        
-        setState(() {
-          _isOnline = true;
-        });
-        _tts.speak("$_unitIdentifier online.");
-        
-        // MATCHING YOUR DASHBOARD: Sending data to the exact columns in UUII.png
-        await _databases.createDocument(
-          databaseId: 'tacnet-search-app', 
-          collectionId: 'tacnet_live_units', 
+        await databases.createDocument(
+          databaseId: 'tacnet-search-app',
+          collectionId: 'tacnet_live_units',
           documentId: ID.unique(),
           data: {
-            'tacnet_live_units': _unitIdentifier, 
-            'location': '37.525, -79.124', // Simulation baseline coordinates
-            'operationalStatus': 'ACTIVE_SEARCH', 
-            'lastUpdateTime': DateTime.now().toIso8601String(), 
+            'tacnet_live_units': 'Field-Unit-Alpha',
+            'location': '37.525, -79.124',
+            'operationalStatus': 'TACTICAL_STANDBY',
+            'lastUpdateTime': '09:00',
           },
         );
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Tactical link established with server.')),
+        );
       } catch (e) {
-        _tts.speak("Network connection error.");
-        print("Appwrite Error: $e");
+        // Handled internally
       }
-    } else {
-      try {
-        await _account.deleteSession(sessionId: 'current');
-      } catch (_) {}
-      setState(() {
-        _isOnline = false;
-      });
-      _tts.speak("Offline.");
     }
-  }
-
-  void _setMapLayer(String layerType) {
-    setState(() {
-      _currentMapLayer = layerType;
-    });
-    _tts.speak("$layerType view active.");
-  }
-
-  @override
-  void dispose() {
-    _pulseController.dispose();
-    _searchController.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Stack(
-          children: [
-            // Map Background Window
-            Container(
-              width: double.infinity,
-              height: double.infinity,
-              color: const Color(0xFF0F2032),
+      body: Stack(
+        children: [
+          // 1. MAIN MAP VIEW AREA
+          Positioned.fill(
+            child: Container(
+              color: const Color(0xFF020803), // Mock Tactical Map Grid
               child: Center(
-                child: Text(
-                  "TACTICAL MAP WINDOW RUNNING: $_currentMapLayer LAYER (FULLSCREEN)",
-                  style: const TextStyle(color: Colors.white24, fontSize: 13, fontStyle: FontStyle.italic),
-                ),
-              ),
-            ),
-
-            // Pulsing GPS Beacon
-            Center(
-              child: AnimatedBuilder(
-                animation: _pulseAnimation,
-                builder: (context, child) {
-                  return Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Container(
-                        width: _pulseAnimation.value * 2,
-                        height: _pulseAnimation.value * 2,
-                        decoration: BoxDecoration(
-                          color: const Color(0x3339FF14), 
-                          shape: BoxShape.circle,
-                          border: Border.all(color: const Color(0xFF39FF14), width: 1.5),
-                        ),
-                      ),
-                      Container(
-                        width: 14,
-                        height: 14,
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF39FF14), 
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(color: Color(0xFF39FF14), blurRadius: 10, spreadRadius: 2)
-                          ],
-                        ),
-                      ),
-                    ],
-                  );
-                },
-              ),
-            ),
-
-            // Floating Header Control Panel
-            Positioned(
-              top: 10,
-              left: 10,
-              right: 10,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
-                decoration: BoxDecoration(
-                  color: const Color(0xEE0D1B2A), 
-                  borderRadius: BorderRadius.circular(6),
-                  border: Border.all(color: const Color(0xFF1C354E)),
-                ),
-                child: Row(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.arrow_back, color: Colors.green, size: 22),
-                    const SizedBox(width: 8),
-                    _buildMapToggleBtn("SAT"),
-                    const SizedBox(width: 4),
-                    _buildMapToggleBtn("TERR"),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: Container(
-                        height: 36,
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(4),
-                          border: Border.all(color: const Color(0xFF1C354E)),
-                        ),
-                        child: TextField(
-                          controller: _searchController,
-                          style: const TextStyle(color: Colors.white, fontSize: 13),
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.only(bottom: 12),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Container(
-                      height: 36,
-                      padding: const EdgeInsets.symmetric(horizontal: 14),
-                      decoration: BoxDecoration(
-                        color: Colors.green,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: const Center(
-                        child: Text("GO", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 13)),
-                      ),
+                    const Icon(Icons.map, size: 80, color: Colors.white24),
+                    const SizedBox(height: 10),
+                    Text(
+                      isNvgOnline ? "LIVE SECTOR GRID ACTIVE" : "STANDBY MODE",
+                      style: const TextStyle(color: Colors.white54, letterSpacing: 2),
                     ),
                   ],
                 ),
               ),
             ),
+          ),
 
-            // Tactical Side Actions (Left)
-            Positioned(
-              top: 80,
-              left: 10,
-              child: Column(
-                children: [
-                  _buildSideMapControl("PERIMETER\n500m", height: 38, fontSize: 8),
-                  const SizedBox(height: 6),
-                  _buildSideMapControl("+", fontSize: 18),
-                  const SizedBox(height: 4),
-                  _buildSideMapControl("-", fontSize: 18),
-                ],
-              ),
-            ),
-
-            // Tactical Side Actions (Right)
-            Positioned(
-              top: 80,
-              right: 10,
-              child: Column(
-                children: [
-                  _buildSideMapControl("PEN", fontSize: 10),
-                  const SizedBox(height: 6),
-                  _buildSideMapControl("ERASE", fontSize: 10),
-                  const SizedBox(height: 6),
-                  _buildSideMapControl("FIND\nME", fontSize: 9),
-                  const SizedBox(height: 6),
-                  _buildSideMapControl("LOCK", fontSize: 10),
-                  const SizedBox(height: 6),
-                  GestureDetector(
-                    onTap: _connectToTacticalNetwork,
-                    child: _buildSideMapControl("NVG", fontSize: 10, isActive: _isOnline),
+          // 2. HIGH-VISIBILITY LIME GREEN GPS REAL-TIME DOT
+          Positioned(
+            top: MediaQuery.of(context).size.height * 0.4,
+            left: MediaQuery.of(context).size.width * 0.5 - 10,
+            child: Container(
+              width: 20,
+              height: 20,
+              decoration: BoxDecoration(
+                color: const Color(0xFF00FF00), // Pure Lime Green
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.white, width: 2.5),
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF00FF00).withOpacity(0.6),
+                    blurRadius: 12,
+                    spreadRadius: 6,
                   ),
                 ],
               ),
             ),
+          ),
 
-            // Status Compass Readout
-            Positioned(
-              bottom: 155,
-              left: 10,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF0D1B2A),
-                  borderRadius: BorderRadius.circular(6),
-                  border: Border.all(color: const Color(0xFF1C354E), width: 1.5),
+          // 3. INTERFACE OVERLAYS (Top Header & Controls)
+          Positioned(
+            top: 40,
+            left: 15,
+            right: 15,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.between,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF0B2510),
+                    borderRadius: BorderRadius.circular(4),
+                    border: Border.all(color: const Color(0xFFD4AF37), width: 1), // Gold Trim
+                  ),
+                  child: const Text(
+                    "TACNET // OPS",
+                    style: TextStyle(color: Color(0xFFD4AF37), fontWeight: FontWeight.bold, letterSpacing: 1),
+                  ),
                 ),
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(Icons.navigation, color: Colors.blue, size: 20),
-                    SizedBox(width: 8),
-                    Text(
-                      "HDG: 000°", 
-                      style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-
-            // Master Mission Footer Command Deck
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 10),
-                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                // NVG TOGGLE BUTTON
+                GestureDetector(
+                  onTap: () => _toggleNvg(!isNvgOnline),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
-                      color: const Color(0xDD0A141D),
+                      color: isNvgOnline ? const Color(0xFF00FF00).withOpacity(0.2) : Colors.black54,
                       borderRadius: BorderRadius.circular(4),
+                      border: Border.all(
+                        color: isNvgOnline ? const Color(0xFF00FF00) : Colors.white24,
+                        width: 1.5,
+                      ),
                     ),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
+                    child: Text(
+                      isNvgOnline ? "NVG ONLINE" : "NVG OFFLINE",
+                      style: TextStyle(
+                        color: isNvgOnline ? const Color(0xFF00FF00) : Colors.white70,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // BUTTON TO TRIGGER THE FULL SCREEN SEARCH PANEL
+          Positioned(
+            bottom: 30,
+            right: 15,
+            child: FloatingActionButton(
+              backgroundColor: const Color(0xFF0B2510),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4),
+                side: const Border.all(color: Color(0xFFD4AF37)),
+              ),
+              child: const Icon(Icons.search, color: Color(0xFFD4AF37)),
+              onPressed: () {
+                setState(() {
+                  isSearching = true;
+                });
+              },
+            ),
+          ),
+
+          // 4. FULL-SCREEN SEARCH INTERFACE (Utilizes 100% of the screen advantage)
+          if (isSearching)
+            Positioned.fill(
+              child: Container(
+                color: const Color(0xFF051207), // Full-Screen Tactical Background Override
+                padding: const EdgeInsets.fromLTRB(20, 50, 20, 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Search Header Block
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.between,
+                      children: [
+                        const Text(
+                          "TACTICAL REGISTRY SEARCH",
+                          style: TextStyle(
+                            color: Color(0xFFD4AF37),
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1,
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close, color: Colors.white54),
+                          onPressed: () {
+                            setState(() {
+                              isSearching = false;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    // Input Bar stretched across the display width
+                    TextField(
+                      controller: _searchController,
+                      decoration: InputDecoration(
+                        hintText: "Enter Unit Name, ID, or Designation...",
+                        hintStyle: const TextStyle(color: Colors.white30),
+                        prefixIcon: const Icon(Icons.search, color: Color(0xFFD4AF37)),
+                        filled: true,
+                        fillColor: const Color(0xFF0B2510),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Color(0xFFD4AF37), width: 1),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Color(0xFF00FF00), width: 1.5),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    const Text(
+                      "ALL ACTIVE FREQUENCIES & CHANNELS",
+                      style: TextStyle(color: Colors.white38, fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                    const Divider(color: Colors.white12, thickness: 1),
+                    // Expanded Workspace Results area utilizing the remaining display height
+                    Expanded(
+                      child: ListView(
+                        padding: EdgeInsets.zero,
                         children: [
-                          _buildLegendDot("K9 Team", Colors.blue),
-                          _buildLegendDot("LE Blue", Colors.blueAccent),
-                          _buildLegendDot("VSP State", Colors.indigo),
-                          _buildLegendDot("Feds Gold", Colors.amber),
-                          _buildLegendDot("SAR Red", Colors.red),
-                          _buildLegendDot("Civ Green", Colors.green),
-                          _buildLegendDot("Suspect", Colors.purple),
-                          _buildLegendDot("Victim", Colors.white70),
+                          _buildMockSearchResult("K9-Unit-1", "ACTIVE SEARCH // AMELON RD", "08:52"),
+                          _buildMockSearchResult("Delta-4", "STATIONARY STANDBY", "08:45"),
+                          _buildMockSearchResult("Command-HQ", "MONITORING FREQUENCY", "09:00"),
                         ],
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-
-                  Container(
-                    width: double.infinity,
-                    color: Colors.red,
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.warning, color: Colors.white, size: 18),
-                        SizedBox(width: 6),
-                        Text("OFFICER EMERGENCY ALERT", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14, letterSpacing: 1.0)),
-                      ],
-                    ),
-                  ),
-
-                  Container(
-                    color: const Color(0xFF0D1B2A),
-                    height: 48,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            color: const Color(0xFF1C354E),
-                            child: const Center(
-                              child: Text("CLEAR NOW", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)),
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          child: Container(
-                            color: Colors.red.shade900,
-                            child: const Center(
-                              child: Text("TERMINATE SEARCH", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12)),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ],
-        ),
+        ],
       ),
     );
   }
 
-  Widget _buildMapToggleBtn(String label) {
-    bool isCurrent = _currentMapLayer == label;
-    return GestureDetector(
-      onTap: () => _setMapLayer(label),
-      child: Container(
-        height: 36,
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        decoration: BoxDecoration(
-          color: isCurrent ? Colors.blue : const Color(0xFF1C354E),
-          borderRadius: BorderRadius.circular(4),
-        ),
-        child: Center(
-          child: Text(
-            label,
-            style: TextStyle(color: isCurrent ? Colors.white : Colors.white70, fontSize: 11, fontWeight: FontWeight.bold),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSideMapControl(String text, {double? height, double fontSize = 11, bool isActive = false}) {
+  Widget _buildMockSearchResult(String unit, String status, String time) {
     return Container(
-      width: 50,
-      height: height ?? 32,
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: isActive ? Colors.green : const Color(0xFF0D1B2A),
+        color: const Color(0xFF0B2510).withOpacity(0.4),
         borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: const Color(0xFF1C354E)),
+        border: Border.all(color: Colors.white12),
       ),
-      child: Center(
-        child: Text(
-          text,
-          textAlign: TextAlign.center,
-          style: TextStyle(color: isActive ? Colors.black : Colors.white, fontSize: fontSize, fontWeight: FontWeight.bold),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLegendDot(String title, Color color) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 12.0),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.between,
         children: [
-          Container(
-            width: 10,
-            height: 10,
-            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(unit, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 4),
+              Text(status, style: const TextStyle(color: Colors.white54, fontSize: 13)),
+            ],
           ),
-          const SizedBox(width: 4),
-          Text(title, style: const TextStyle(color: Colors.white, fontSize: 11)),
+          Text(time, style: const TextStyle(color: Color(0xFFD4AF37), fontSize: 12)),
         ],
       ),
     );
