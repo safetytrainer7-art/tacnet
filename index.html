@@ -1,10 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TACNET // OPS</title>
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.0"></script>
     <style>
         body {
             margin: 0;
@@ -236,10 +236,8 @@
 </head>
 <body>
 
-    <!-- Night Vision Filter -->
     <div id="nvg-overlay"></div>
 
-    <!-- HUD Header Panel -->
     <div class="hud-header">
         <div class="callsign">TACNET // OPS</div>
         <div class="controls">
@@ -248,7 +246,6 @@
         </div>
     </div>
 
-    <!-- Main Map Container -->
     <div class="map-container">
         <div class="map-icon">🗺️</div>
         <div id="status-text">SYSTEM READY // STANDBY</div>
@@ -256,10 +253,8 @@
         <div id="tgt-dot" class="target-dot"></div>
     </div>
 
-    <!-- Floating Search Action -->
     <div class="search-trigger" onclick="openSearch()">🔍</div>
 
-    <!-- Expanded Search Panel -->
     <div id="search-panel">
         <div class="search-header">
             <span>TACTICAL REGISTRY SEARCH</span>
@@ -294,6 +289,14 @@
     </div>
 
     <script>
+        // Initialize the Appwrite Backend Pipeline Directly
+        const { Client, Databases, ID } = Appwrite;
+        const client = new Client()
+            .setEndpoint('https://cloud.appwrite.io/v1')
+            .setProject('6a38e834003e0cc64c31'); // Your master project ID
+
+        const databases = new Databases(client);
+
         let linkActive = false;
         let nvgActive = false;
 
@@ -307,14 +310,37 @@
                 btn.innerText = "LINK ONLINE";
                 btn.classList.add('btn-active');
                 status.innerText = "RADIO LINK ACTIVE // TRANSMITTING";
-                sub.innerText = "COORDINATES SECURED // DATA STREAM LIVE";
+                sub.innerText = "CONNECTING TO APPWRITE SERVER...";
                 sub.style.color = "#00FF00";
+
+                // Transmit live baseline packet directly to your Appwrite spreadsheet grid
+                transmitPacket();
             } else {
                 btn.innerText = "LINK OFFLINE";
                 btn.classList.remove('btn-active');
                 status.innerText = "SYSTEM READY // STANDBY";
                 sub.innerText = "GPS POSITION STREAM MUTED";
                 sub.style.color = "rgba(255, 255, 255, 0.38)";
+            }
+        }
+
+        async var transmitPacket() {
+            try {
+                await databases.createDocument(
+                    'tacnet-search-app', // Database ID
+                    'tacnet_live_units', // Collection ID
+                    ID.unique(),
+                    {
+                        'tacnet_live_units': 'Web-Field-Alpha',
+                        'location': '37.525, -79.124',
+                        'operationalStatus': 'ACTIVE_SEARCH',
+                        'lastUpdateTime': new Date().toLocaleTimeString().substring(0, 5)
+                    }
+                );
+                document.getElementById('sub-status').innerText = "COORDINATES SECURED // DATA STREAM LIVE";
+            } catch (error) {
+                document.getElementById('sub-status').innerText = "TRANSMISSION ERROR // SERVER TIMEOUT";
+                document.getElementById('sub-status').style.color = "#ff5252";
             }
         }
 
