@@ -313,7 +313,6 @@
                 sub.innerText = "CONNECTING TO APPWRITE SERVER...";
                 sub.style.color = "#00FF00";
 
-                // Transmit live baseline packet directly to your Appwrite spreadsheet grid
                 transmitPacket();
             } else {
                 btn.innerText = "LINK OFFLINE";
@@ -324,7 +323,7 @@
             }
         }
 
-        async var transmitPacket() {
+        async function transmitPacket() {
             try {
                 await databases.createDocument(
                     'tacnet-search-app', // Database ID
