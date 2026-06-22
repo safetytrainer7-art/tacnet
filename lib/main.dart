@@ -38,14 +38,12 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> with SingleTickerPr
   late AnimationController _pulseController;
   late Animation<double> _pulseAnimation;
   
-  // Core Appwrite Backend Links
   late Client _client;
   late Account _account;
   late Databases _databases;
   bool _isOnline = false;
   String _unitIdentifier = "";
 
-  // Map Layer Configuration
   String _currentMapLayer = "SAT"; 
   final TextEditingController _searchController = TextEditingController(text: "Address or Track Phone...");
 
@@ -57,10 +55,8 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> with SingleTickerPr
     _tts.setLanguage("en-US");
     _tts.setSpeechRate(0.45);
     
-    // Automatically generate a local temporary unit ID (e.g., K9-Unit-452)
     _unitIdentifier = "K9-Unit-${Random().nextInt(900) + 100}";
 
-    // Flashing Beacon Controller
     _pulseController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
@@ -70,52 +66,49 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> with SingleTickerPr
     _initAppwriteSystem();
   }
 
-  // WIRELESS CONNECTION SETUP
   void _initAppwriteSystem() {
     _client = Client()
       ..setEndpoint('https://cloud.appwrite.io/v1')
-      ..setProject('6a37d453000ed7b5eff5'); // Your actual Appwrite Project ID
+      ..setProject('6a37d453000ed7b5eff5'); 
     
     _account = Account(_client);
     _databases = Databases(_client);
   }
 
-  // FOOLPROOF ONE-TAP LOGIN AND LINK
   Future<void> _connectToTacticalNetwork() async {
     if (!_isOnline) {
       try {
-        // Step 1: Log the phone in anonymously with zero passwords needed
         await _account.createAnonymousSession();
         
         setState(() {
           _isOnline = true;
         });
-        _tts.speak("$_unitIdentifier is now active on the tactical network.");
+        _tts.speak("$_unitIdentifier online.");
         
-        // Step 2: Push the initial deployment log straight up to your dashboard console
+        // MATCHING YOUR DASHBOARD: Sending data to the exact columns in UUII.png
         await _databases.createDocument(
-          databaseId: 'tacnet-search-app', // Using your database string
-          collectionId: 'virginia_statutes', // Direct collection pathway
+          databaseId: 'tacnet-search-app', 
+          collectionId: 'tacnet_live_units', 
           documentId: ID.unique(),
           data: {
-            'statute_title': 'UNIT_DEPLOYED',
-            'statute_number': _unitIdentifier,
-            'summary': 'Device actively connected to search perimeter.',
+            'tacnet_live_units': _unitIdentifier, 
+            'location': '37.525, -79.124', // Simulation baseline coordinates
+            'operationalStatus': 'ACTIVE_SEARCH', 
+            'lastUpdateTime': DateTime.now().toIso8601String(), 
           },
         );
       } catch (e) {
-        _tts.speak("Network connection error. Check server access.");
+        _tts.speak("Network connection error.");
         print("Appwrite Error: $e");
       }
     } else {
-      // Disconnect cleanly
       try {
         await _account.deleteSession(sessionId: 'current');
       } catch (_) {}
       setState(() {
         _isOnline = false;
       });
-      _tts.speak("Tactical network disconnected. Offline status.");
+      _tts.speak("Offline.");
     }
   }
 
@@ -139,7 +132,7 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> with SingleTickerPr
       body: SafeArea(
         child: Stack(
           children: [
-            // Full Screen Edge-to-Edge Visual Mapping Window
+            // Map Background Window
             Container(
               width: double.infinity,
               height: double.infinity,
@@ -152,7 +145,7 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> with SingleTickerPr
               ),
             ),
 
-            // Continuous Flashing Lime Green GPS Beacon
+            // Pulsing GPS Beacon
             Center(
               child: AnimatedBuilder(
                 animation: _pulseAnimation,
@@ -186,7 +179,7 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> with SingleTickerPr
               ),
             ),
 
-            // Floating Top Header Deck
+            // Floating Header Control Panel
             Positioned(
               top: 10,
               left: 10,
@@ -242,7 +235,7 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> with SingleTickerPr
               ),
             ),
 
-            // Floating Left Side Control Buttons
+            // Tactical Side Actions (Left)
             Positioned(
               top: 80,
               left: 10,
@@ -257,7 +250,7 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> with SingleTickerPr
               ),
             ),
 
-            // Floating Right Side Strategic Control Buttons
+            // Tactical Side Actions (Right)
             Positioned(
               top: 80,
               right: 10,
@@ -271,7 +264,6 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> with SingleTickerPr
                   const SizedBox(height: 6),
                   _buildSideMapControl("LOCK", fontSize: 10),
                   const SizedBox(height: 6),
-                  // Linked directly to the clean Appwrite connection pipeline
                   GestureDetector(
                     onTap: _connectToTacticalNetwork,
                     child: _buildSideMapControl("NVG", fontSize: 10, isActive: _isOnline),
@@ -280,7 +272,7 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> with SingleTickerPr
               ),
             ),
 
-            // Floating Compass Window
+            // Status Compass Readout
             Positioned(
               bottom: 155,
               left: 10,
@@ -305,7 +297,7 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> with SingleTickerPr
               ),
             ),
 
-            // Bottom Console Overlay Deck
+            // Master Mission Footer Command Deck
             Positioned(
               bottom: 0,
               left: 0,
