@@ -1,0 +1,347 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TACNET // OPS</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #020803;
+            color: #ffffff;
+            font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* Night Vision Overlay */
+        #nvg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 255, 0, 0.15);
+            pointer-events: none;
+            display: none;
+            z-index: 5;
+        }
+
+        /* Top HUD Panel */
+        .hud-header {
+            position: absolute;
+            top: 20px;
+            left: 15px;
+            right: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .callsign {
+            background-color: #0B2510;
+            color: #D4AF37;
+            padding: 8px 14px;
+            border: 1px solid #D4AF37;
+            font-weight: bold;
+            letter-spacing: 1px;
+            border-radius: 4px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            background-color: rgba(0, 0, 0, 0.54);
+            color: #ffffff;
+            border: 1.5px solid rgba(255, 255, 255, 0.24);
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+            font-family: inherit;
+        }
+
+        .btn-active {
+            background-color: rgba(0, 255, 0, 0.2) !important;
+            border-color: #00FF00 !important;
+            color: #00FF00 !important;
+        }
+
+        /* Center Map Area & Target Dot */
+        .map-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .map-icon {
+            font-size: 60px;
+            color: rgba(255, 255, 255, 0.15);
+            margin-bottom: 10px;
+        }
+
+        #status-text {
+            color: rgba(255, 255, 255, 0.54);
+            font-weight: bold;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        #sub-status {
+            color: rgba(255, 255, 255, 0.38);
+            font-size: 13px;
+        }
+
+        .target-dot {
+            width: 16px;
+            height: 16px;
+            background-color: #ff5252;
+            border: 2.5px solid #ffffff;
+            border-radius: 50%;
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 12px 6px rgba(255, 82, 82, 0.6);
+            z-index: 2;
+        }
+
+        .target-dot.nvg-on {
+            background-color: #00FF00;
+            box-shadow: 0 0 12px 6px rgba(0, 255, 0, 0.6);
+        }
+
+        /* Floating Search Button */
+        .search-trigger {
+            position: absolute;
+            bottom: 30px;
+            right: 15px;
+            background-color: #0B2510;
+            border: 1px solid #D4AF37;
+            color: #D4AF37;
+            width: 50px;
+            height: 50px;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 20px;
+            z-index: 10;
+        }
+
+        /* Full Screen Search Panel */
+        #search-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #051207;
+            padding: 50px 20px 20px 20px;
+            box-sizing: border-box;
+            display: none;
+            flex-direction: column;
+            z-index: 20;
+        }
+
+        .search-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #D4AF37;
+            font-weight: bold;
+            font-size: 18px;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        .close-btn {
+            color: rgba(255, 255, 255, 0.54);
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .search-input {
+            width: 100%;
+            background-color: #0B2510;
+            border: 1px solid #D4AF37;
+            color: #ffffff;
+            padding: 12px;
+            box-sizing: border-box;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #00FF00;
+        }
+
+        .registry-title {
+            color: rgba(255, 255, 255, 0.38);
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .divider {
+            border: 0;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.12);
+            margin-bottom: 15px;
+        }
+
+        .result-item {
+            background-color: rgba(11, 37, 16, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 12px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .unit-name {
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .unit-status {
+            color: rgba(255, 255, 255, 0.54);
+            font-size: 13px;
+        }
+
+        .unit-time {
+            color: #D4AF37;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Night Vision Filter -->
+    <div id="nvg-overlay"></div>
+
+    <!-- HUD Header Panel -->
+    <div class="hud-header">
+        <div class="callsign">TACNET // OPS</div>
+        <div class="controls">
+            <button id="link-btn" class="btn" onclick="toggleLink()">LINK OFFLINE</button>
+            <button id="nvg-btn" class="btn" onclick="toggleNvg()">NVG</button>
+        </div>
+    </div>
+
+    <!-- Main Map Container -->
+    <div class="map-container">
+        <div class="map-icon">🗺️</div>
+        <div id="status-text">SYSTEM READY // STANDBY</div>
+        <div id="sub-status">GPS POSITION STREAM MUTED</div>
+        <div id="tgt-dot" class="target-dot"></div>
+    </div>
+
+    <!-- Floating Search Action -->
+    <div class="search-trigger" onclick="openSearch()">🔍</div>
+
+    <!-- Expanded Search Panel -->
+    <div id="search-panel">
+        <div class="search-header">
+            <span>TACTICAL REGISTRY SEARCH</span>
+            <button class="close-btn" onclick="closeSearch()">✕</button>
+        </div>
+        <input type="text" class="search-input" placeholder="Enter Unit Name, ID, or Designation...">
+        <div class="registry-title">ALL ACTIVE FREQUENCIES & CHANNELS</div>
+        <hr class="divider">
+        <div style="flex: 1; overflow-y: auto;">
+            <div class="result-item">
+                <div>
+                    <div class="unit-name">K9-Unit-1</div>
+                    <div class="unit-status">ACTIVE SEARCH // AMELON RD</div>
+                </div>
+                <div class="unit-time">08:52</div>
+            </div>
+            <div class="result-item">
+                <div>
+                    <div class="unit-name">Delta-4</div>
+                    <div class="unit-status">STATIONARY STANDBY</div>
+                </div>
+                <div class="unit-time">08:45</div>
+            </div>
+            <div class="result-item">
+                <div>
+                    <div class="unit-name">Command-HQ</div>
+                    <div class="unit-status">MONITORING FREQUENCY</div>
+                </div>
+                <div class="unit-time">09:00</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let linkActive = false;
+        let nvgActive = false;
+
+        function toggleLink() {
+            linkActive = !linkActive;
+            const btn = document.getElementById('link-btn');
+            const status = document.getElementById('status-text');
+            const sub = document.getElementById('sub-status');
+
+            if (linkActive) {
+                btn.innerText = "LINK ONLINE";
+                btn.classList.add('btn-active');
+                status.innerText = "RADIO LINK ACTIVE // TRANSMITTING";
+                sub.innerText = "COORDINATES SECURED // DATA STREAM LIVE";
+                sub.style.color = "#00FF00";
+            } else {
+                btn.innerText = "LINK OFFLINE";
+                btn.classList.remove('btn-active');
+                status.innerText = "SYSTEM READY // STANDBY";
+                sub.innerText = "GPS POSITION STREAM MUTED";
+                sub.style.color = "rgba(255, 255, 255, 0.38)";
+            }
+        }
+
+        function toggleNvg() {
+            nvgActive = !nvgActive;
+            const btn = document.getElementById('nvg-btn');
+            const overlay = document.getElementById('nvg-overlay');
+            const dot = document.getElementById('tgt-dot');
+
+            if (nvgActive) {
+                btn.classList.add('btn-active');
+                overlay.style.display = 'block';
+                dot.classList.add('nvg-on');
+            } else {
+                btn.classList.remove('btn-active');
+                overlay.style.display = 'none';
+                dot.classList.remove('nvg-on');
+            }
+        }
+
+        function openSearch() {
+            document.getElementById('search-panel').style.display = 'flex';
+        }
+
+        function closeSearch() {
+            document.getElementById('search-panel').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
