@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:appwrite/appwrite.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 import 'package:flutter_tts/flutter_tts.dart';
+import 'dart:math';
 
 void main() {
   runApp(const TacnetMasterApp());
@@ -31,20 +32,20 @@ class TacnetHomeScreen extends StatefulWidget {
   State<TacnetHomeScreen> createState() => _TacnetHomeScreenState();
 }
 
-// SingleTickerProviderStateMixin added to run the smooth flashing animation for the GPS dot
 class _TacnetHomeScreenState extends State<TacnetHomeScreen> with SingleTickerProviderStateMixin {
   late stt.SpeechToText _speech;
   late FlutterTts _tts;
   late AnimationController _pulseController;
   late Animation<double> _pulseAnimation;
   
-  // Network Configurations
+  // Core Appwrite Backend Links
   late Client _client;
-  late Realtime _realtime;
-  RealtimeSubscription? _subscription;
+  late Account _account;
+  late Databases _databases;
   bool _isOnline = false;
+  String _unitIdentifier = "";
 
-  // Map Layer States
+  // Map Layer Configuration
   String _currentMapLayer = "SAT"; 
   final TextEditingController _searchController = TextEditingController(text: "Address or Track Phone...");
 
@@ -55,44 +56,66 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> with SingleTickerPr
     _tts = FlutterTts();
     _tts.setLanguage("en-US");
     _tts.setSpeechRate(0.45);
-    _initAppwriteNetwork();
+    
+    // Automatically generate a local temporary unit ID (e.g., K9-Unit-452)
+    _unitIdentifier = "K9-Unit-${Random().nextInt(900) + 100}";
 
-    // Setup the automated infinite flashing loop for your lime green GPS tracker
+    // Flashing Beacon Controller
     _pulseController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
-    )..repeat(); // Keeps it flashing continuously
-    
+    )..repeat();
     _pulseAnimation = Tween<double>(begin: 4.0, end: 24.0).animate(_pulseController);
+
+    _initAppwriteSystem();
   }
 
-  void _initAppwriteNetwork() {
+  // WIRELESS CONNECTION SETUP
+  void _initAppwriteSystem() {
     _client = Client()
       ..setEndpoint('https://cloud.appwrite.io/v1')
-      ..setProject('6a37d453000ed7b5eff5');
-    _realtime = Realtime(_client);
+      ..setProject('6a37d453000ed7b5eff5'); // Your actual Appwrite Project ID
+    
+    _account = Account(_client);
+    _databases = Databases(_client);
   }
 
-  void _toggleOnlineStatus() {
+  // FOOLPROOF ONE-TAP LOGIN AND LINK
+  Future<void> _connectToTacticalNetwork() async {
     if (!_isOnline) {
       try {
-        _subscription = _realtime.subscribe(['databases.tacnet-search-app.collections.virginia_statutes.documents']);
-        _subscription!.stream.listen((response) {
-          _tts.speak("Team signal coordinates updated.");
-        });
+        // Step 1: Log the phone in anonymously with zero passwords needed
+        await _account.createAnonymousSession();
+        
         setState(() {
           _isOnline = true;
         });
-        _tts.speak("Tactical map synchronization active.");
+        _tts.speak("$_unitIdentifier is now active on the tactical network.");
+        
+        // Step 2: Push the initial deployment log straight up to your dashboard console
+        await _databases.createDocument(
+          databaseId: 'tacnet-search-app', // Using your database string
+          collectionId: 'virginia_statutes', // Direct collection pathway
+          documentId: ID.unique(),
+          data: {
+            'statute_title': 'UNIT_DEPLOYED',
+            'statute_number': _unitIdentifier,
+            'summary': 'Device actively connected to search perimeter.',
+          },
+        );
       } catch (e) {
-        _tts.speak("Connection timeout.");
+        _tts.speak("Network connection error. Check server access.");
+        print("Appwrite Error: $e");
       }
     } else {
-      _subscription?.close();
+      // Disconnect cleanly
+      try {
+        await _account.deleteSession(sessionId: 'current');
+      } catch (_) {}
       setState(() {
         _isOnline = false;
       });
-      _tts.speak("Tactical network disconnected.");
+      _tts.speak("Tactical network disconnected. Offline status.");
     }
   }
 
@@ -106,7 +129,6 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> with SingleTickerPr
   @override
   void dispose() {
     _pulseController.dispose();
-    _subscription?.close();
     _searchController.dispose();
     super.dispose();
   }
@@ -117,11 +139,11 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> with SingleTickerPr
       body: SafeArea(
         child: Stack(
           children: [
-            // REGRID UPGRADE: The Map Layer is now the absolute base, filling 100% top-to-bottom, left-to-right
+            // Full Screen Edge-to-Edge Visual Mapping Window
             Container(
               width: double.infinity,
               height: double.infinity,
-              color: const Color(0xFF0F2032), // Simulated base satellite window
+              color: const Color(0xFF0F2032),
               child: Center(
                 child: Text(
                   "TACTICAL MAP WINDOW RUNNING: $_currentMapLayer LAYER (FULLSCREEN)",
@@ -130,7 +152,7 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> with SingleTickerPr
               ),
             ),
 
-            // REGRID UPGRADE: The Flashing Lime Green GPS Beacon running continuously in the center grid
+            // Continuous Flashing Lime Green GPS Beacon
             Center(
               child: AnimatedBuilder(
                 animation: _pulseAnimation,
@@ -138,22 +160,20 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> with SingleTickerPr
                   return Stack(
                     alignment: Alignment.center,
                     children: [
-                      // Expanding outer pulse ring
                       Container(
                         width: _pulseAnimation.value * 2,
                         height: _pulseAnimation.value * 2,
                         decoration: BoxDecoration(
-                          color: const Color(0x3339FF14), // Transparent lime green
+                          color: const Color(0x3339FF14), 
                           shape: BoxShape.circle,
                           border: Border.all(color: const Color(0xFF39FF14), width: 1.5),
                         ),
                       ),
-                      // Hard central core lime green tracking dot
                       Container(
                         width: 14,
                         height: 14,
                         decoration: const BoxDecoration(
-                          color: Color(0xFF39FF14), // Bright Lime Green
+                          color: Color(0xFF39FF14), 
                           shape: BoxShape.circle,
                           boxShadow: [
                             BoxShadow(color: Color(0xFF39FF14), blurRadius: 10, spreadRadius: 2)
@@ -166,7 +186,7 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> with SingleTickerPr
               ),
             ),
 
-            // FLOATING TOP CONTROL DECK (Immersive Overlay)
+            // Floating Top Header Deck
             Positioned(
               top: 10,
               left: 10,
@@ -174,7 +194,7 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> with SingleTickerPr
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 6.0),
                 decoration: BoxDecoration(
-                  color: const Color(0xEE0D1B2A), // Slightly transparent dark tactical backing
+                  color: const Color(0xEE0D1B2A), 
                   borderRadius: BorderRadius.circular(6),
                   border: Border.all(color: const Color(0xFF1C354E)),
                 ),
@@ -222,7 +242,7 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> with SingleTickerPr
               ),
             ),
 
-            // FLOATING LEFT MATRIX: Perimeter & Manual Zoom
+            // Floating Left Side Control Buttons
             Positioned(
               top: 80,
               left: 10,
@@ -237,7 +257,7 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> with SingleTickerPr
               ),
             ),
 
-            // FLOATING RIGHT MATRIX: Command Deck Controls
+            // Floating Right Side Strategic Control Buttons
             Positioned(
               top: 80,
               right: 10,
@@ -251,15 +271,16 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> with SingleTickerPr
                   const SizedBox(height: 6),
                   _buildSideMapControl("LOCK", fontSize: 10),
                   const SizedBox(height: 6),
+                  // Linked directly to the clean Appwrite connection pipeline
                   GestureDetector(
-                    onTap: _toggleOnlineStatus,
+                    onTap: _connectToTacticalNetwork,
                     child: _buildSideMapControl("NVG", fontSize: 10, isActive: _isOnline),
                   ),
                 ],
               ),
             ),
 
-            // FLOATING LOWER LEFT: Large Compass Heading Tracker Box
+            // Floating Compass Window
             Positioned(
               bottom: 155,
               left: 10,
@@ -284,7 +305,7 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> with SingleTickerPr
               ),
             ),
 
-            // FLOATING BOTTOM MATRIX OVERLAYS (Stacked from Bottom Up)
+            // Bottom Console Overlay Deck
             Positioned(
               bottom: 0,
               left: 0,
@@ -292,7 +313,6 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> with SingleTickerPr
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // Team Target Tracker Color Legend Strip (Floating above system status bar)
                   Container(
                     margin: const EdgeInsets.symmetric(horizontal: 10),
                     padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
@@ -318,7 +338,6 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> with SingleTickerPr
                   ),
                   const SizedBox(height: 8),
 
-                  // Emergency Deployment Warning Panel
                   Container(
                     width: double.infinity,
                     color: Colors.red,
@@ -333,7 +352,6 @@ class _TacnetHomeScreenState extends State<TacnetHomeScreen> with SingleTickerPr
                     ),
                   ),
 
-                  // Base System Safety Control Bars
                   Container(
                     color: const Color(0xFF0D1B2A),
                     height: 48,
