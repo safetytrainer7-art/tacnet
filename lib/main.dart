@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:appwrite/appwrite.dart';
+import 'package:geolocator/geolocator.dart';
+import 'dart:async';
 
 void main() {
   runApp(const TacnetApp());
@@ -35,7 +37,10 @@ class _TacnetMainScreenState extends State<TacnetMainScreen> {
   late Databases databases;
   bool isNvgOnline = false;
   bool isSearching = false;
+  String currentStatusText = "STANDBY MODE";
+  String displayCoordinates = "No GPS Fix";
   final TextEditingController _searchController = TextEditingController();
+  StreamSubscription<Position>? _gpsStreamSubscription;
 
   @override
   void initState() {
@@ -46,36 +51,86 @@ class _TacnetMainScreenState extends State<TacnetMainScreen> {
   void _initAppwrite() {
     client = Client()
       ..setEndpoint('https://cloud.appwrite.io/v1')
-      ..setProject('6a38e834003e0cc64c31'); // Your exact live project ID
+      ..setProject('6a38e834003e0cc64c31'); // Your live project ID
     databases = Databases(client);
   }
 
-  // Simulates firing a packet when NVG is toggled
-  void _toggleNvg(bool value) async {
-    setState(() {
-      isNvgOnline = value;
-    });
-
-    if (isNvgOnline) {
-      try {
-        await databases.createDocument(
-          databaseId: 'tacnet-search-app',
-          collectionId: 'tacnet_live_units',
-          documentId: ID.unique(),
-          data: {
-            'tacnet_live_units': 'Field-Unit-Alpha',
-            'location': '37.525, -79.124',
-            'operationalStatus': 'TACTICAL_STANDBY',
-            'lastUpdateTime': '09:00',
-          },
-        );
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Tactical link established with server.')),
-        );
-      } catch (e) {
-        // Handled internally
+  // Requests location permission and starts streaming real device hardware GPS
+  void _toggleGpsTracking(bool turnOn) async {
+    if (turnOn) {
+      // Step 1: Check hardware permissions
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          _showSystemMessage("GPS Permission Denied by User.");
+          return;
+        }
       }
+
+      if (permission == LocationPermission.deniedForever) {
+        _showSystemMessage("GPS Blocked in Phone Settings.");
+        return;
+      }
+
+      setState(() {
+        isNvgOnline = true;
+        currentStatusText = "LIVE SECTOR GRID ACTIVE";
+      });
+
+      // Step 2: Grab live coordinates from phone hardware chip
+      _gpsStreamSubscription = Geolocator.getPositionStream(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+          distanceFilter: 10, // Updates every 10 meters moved
+        ),
+      ).listen((Position position) {
+        setState(() {
+          displayCoordinates = "${position.latitude.toStringAsFixed(5)}, ${position.longitude.toStringAsFixed(5)}";
+        });
+        
+        // Step 3: Automatically transmit real hardware data to your Appwrite server
+        _sendGpsPacketToServer(position.latitude, position.longitude);
+      });
+    } else {
+      // Turn Off Tracking cleanly
+      _gpsStreamSubscription?.cancel();
+      setState(() {
+        isNvgOnline = false;
+        currentStatusText = "STANDBY MODE";
+        displayCoordinates = "No GPS Fix";
+      });
+      _showSystemMessage("Tactical link disconnected.");
     }
+  }
+
+  // Transmits the live coordinates straight into your Appwrite spreadsheet grid
+  void _sendGpsPacketToServer(double lat, double lng) async {
+    try {
+      await databases.createDocument(
+        databaseId: 'tacnet-search-app',
+        collectionId: 'tacnet_live_units',
+        documentId: ID.unique(),
+        data: {
+          'tacnet_live_units': 'Field-Unit-Alpha',
+          'location': '$lat, $lng', // Real hardware latitude & longitude
+          'operationalStatus': 'ACTIVE_SEARCH',
+          'lastUpdateTime': DateTime.now().toLocal().toString().substring(11, 16),
+        },
+      );
+    } catch (e) {
+      // Failures handled silently in field operations
+    }
+  }
+
+  void _showSystemMessage(String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(msg)));
+  }
+
+  @override
+  void dispose() {
+    _gpsStreamSubscription?.cancel();
+    super.dispose();
   }
 
   @override
@@ -86,7 +141,7 @@ class _TacnetMainScreenState extends State<TacnetMainScreen> {
           // 1. MAIN MAP VIEW AREA
           Positioned.fill(
             child: Container(
-              color: const Color(0xFF020803), // Mock Tactical Map Grid
+              color: const Color(0xFF020803), 
               child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -94,8 +149,13 @@ class _TacnetMainScreenState extends State<TacnetMainScreen> {
                     const Icon(Icons.map, size: 80, color: Colors.white24),
                     const SizedBox(height: 10),
                     Text(
-                      isNvgOnline ? "LIVE SECTOR GRID ACTIVE" : "STANDBY MODE",
-                      style: const TextStyle(color: Colors.white54, letterSpacing: 2),
+                      currentStatusText,
+                      style: const TextStyle(color: Colors.white54, letterSpacing: 2, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      "GPS: $displayCoordinates",
+                      style: const TextStyle(color: Color(0xFF00FF00), fontFamily: 'monospace', fontSize: 14),
                     ),
                   ],
                 ),
@@ -103,7 +163,7 @@ class _TacnetMainScreenState extends State<TacnetMainScreen> {
             ),
           ),
 
-          // 2. HIGH-VISIBILITY LIME GREEN GPS REAL-TIME DOT
+          // 2. REAL-TIME TACTICAL GPS DOT
           Positioned(
             top: MediaQuery.of(context).size.height * 0.4,
             left: MediaQuery.of(context).size.width * 0.5 - 10,
@@ -111,7 +171,7 @@ class _TacnetMainScreenState extends State<TacnetMainScreen> {
               width: 20,
               height: 20,
               decoration: BoxDecoration(
-                color: const Color(0xFF00FF00), // Pure Lime Green
+                color: const Color(0xFF00FF00), // High-Vis Lime Green
                 shape: BoxShape.circle,
                 border: Border.all(color: Colors.white, width: 2.5),
                 boxShadow: [
@@ -145,9 +205,9 @@ class _TacnetMainScreenState extends State<TacnetMainScreen> {
                     style: TextStyle(color: Color(0xFFD4AF37), fontWeight: FontWeight.bold, letterSpacing: 1),
                   ),
                 ),
-                // NVG TOGGLE BUTTON
+                // NVG HARDWARE TOGGLE BUTTON
                 GestureDetector(
-                  onTap: () => _toggleNvg(!isNvgOnline),
+                  onTap: () => _toggleGpsTracking(!isNvgOnline),
                   child: Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
@@ -190,27 +250,21 @@ class _TacnetMainScreenState extends State<TacnetMainScreen> {
             ),
           ),
 
-          // 4. FULL-SCREEN SEARCH INTERFACE (Utilizes 100% of the screen advantage)
+          // 4. FULL-SCREEN SEARCH INTERFACE (Takes full advantage of display size)
           if (isSearching)
             Positioned.fill(
               child: Container(
-                color: const Color(0xFF051207), // Full-Screen Tactical Background Override
+                color: const Color(0xFF051207), 
                 padding: const EdgeInsets.fromLTRB(20, 50, 20, 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Search Header Block
                     Row(
                       mainAxisAlignment: MainAxisAlignment.between,
                       children: [
                         const Text(
                           "TACTICAL REGISTRY SEARCH",
-                          style: TextStyle(
-                            color: Color(0xFFD4AF37),
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1,
-                          ),
+                          style: TextStyle(color: Color(0xFFD4AF37), fontSize: 18, fontWeight: FontWeight.bold, letterSpacing: 1),
                         ),
                         IconButton(
                           icon: const Icon(Icons.close, color: Colors.white54),
@@ -223,7 +277,6 @@ class _TacnetMainScreenState extends State<TacnetMainScreen> {
                       ],
                     ),
                     const SizedBox(height: 20),
-                    // Input Bar stretched across the display width
                     TextField(
                       controller: _searchController,
                       decoration: InputDecoration(
@@ -248,7 +301,6 @@ class _TacnetMainScreenState extends State<TacnetMainScreen> {
                       style: TextStyle(color: Colors.white38, fontSize: 12, fontWeight: FontWeight.bold),
                     ),
                     const Divider(color: Colors.white12, thickness: 1),
-                    // Expanded Workspace Results area utilizing the remaining display height
                     Expanded(
                       child: ListView(
                         padding: EdgeInsets.zero,
