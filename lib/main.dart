@@ -35,9 +35,13 @@ class TacnetMainScreen extends StatefulWidget {
 class _TacnetMainScreenState extends State<TacnetMainScreen> {
   late Client client;
   late Databases databases;
-  bool isNvgOnline = false;
+  
+  // Independent System Toggles
+  bool isNvgOnline = false;      // Handles night vision filter display
+  bool isLinkConnected = false;  // Handles live GPS server data transmission
   bool isSearching = false;
-  String currentStatusText = "STANDBY MODE";
+  
+  String currentStatusText = "SYSTEM READY // STANDBY";
   String displayCoordinates = "No GPS Fix";
   final TextEditingController _searchController = TextEditingController();
   StreamSubscription<Position>? _gpsStreamSubscription;
@@ -55,30 +59,29 @@ class _TacnetMainScreenState extends State<TacnetMainScreen> {
     databases = Databases(client);
   }
 
-  // Requests location permission and starts streaming real device hardware GPS
-  void _toggleGpsTracking(bool turnOn) async {
+  // Brand New Dedicated Function: Manages Live GPS Radio Link
+  void _toggleGpsLink(bool turnOn) async {
     if (turnOn) {
-      // Step 1: Check hardware permissions
       LocationPermission permission = await Geolocator.checkPermission();
       if (permission == LocationPermission.denied) {
         permission = await Geolocator.requestPermission();
         if (permission == LocationPermission.denied) {
-          _showSystemMessage("GPS Permission Denied by User.");
+          _showSystemMessage("GPS Permission Denied.");
           return;
         }
       }
 
       if (permission == LocationPermission.deniedForever) {
-        _showSystemMessage("GPS Blocked in Phone Settings.");
+        _showSystemMessage("GPS Blocked in Device Settings.");
         return;
       }
 
       setState(() {
-        isNvgOnline = true;
-        currentStatusText = "LIVE SECTOR GRID ACTIVE";
+        isLinkConnected = true;
+        currentStatusText = "RADIO LINK ESTABLISHED // TRANSMITTING";
       });
 
-      // Step 2: Grab live coordinates from phone hardware chip
+      // Streams live coordinates from phone hardware sensor
       _gpsStreamSubscription = Geolocator.getPositionStream(
         locationSettings: const LocationSettings(
           accuracy: LocationAccuracy.high,
@@ -89,22 +92,22 @@ class _TacnetMainScreenState extends State<TacnetMainScreen> {
           displayCoordinates = "${position.latitude.toStringAsFixed(5)}, ${position.longitude.toStringAsFixed(5)}";
         });
         
-        // Step 3: Automatically transmit real hardware data to your Appwrite server
+        // Transmits data packet to your Appwrite server
         _sendGpsPacketToServer(position.latitude, position.longitude);
       });
     } else {
-      // Turn Off Tracking cleanly
+      // Disconnect Data Link cleanly
       _gpsStreamSubscription?.cancel();
       setState(() {
-        isNvgOnline = false;
-        currentStatusText = "STANDBY MODE";
+        isLinkConnected = false;
+        currentStatusText = "SYSTEM READY // STANDBY";
         displayCoordinates = "No GPS Fix";
       });
-      _showSystemMessage("Tactical link disconnected.");
+      _showSystemMessage("Radio transmission link terminated.");
     }
   }
 
-  // Transmits the live coordinates straight into your Appwrite spreadsheet grid
+  // Transmits coordinates to your Appwrite spreadsheet grid
   void _sendGpsPacketToServer(double lat, double lng) async {
     try {
       await databases.createDocument(
@@ -113,13 +116,13 @@ class _TacnetMainScreenState extends State<TacnetMainScreen> {
         documentId: ID.unique(),
         data: {
           'tacnet_live_units': 'Field-Unit-Alpha',
-          'location': '$lat, $lng', // Real hardware latitude & longitude
+          'location': '$lat, $lng',
           'operationalStatus': 'ACTIVE_SEARCH',
           'lastUpdateTime': DateTime.now().toLocal().toString().substring(11, 16),
         },
       );
     } catch (e) {
-      // Failures handled silently in field operations
+      // Handled internally during field operations
     }
   }
 
@@ -154,8 +157,12 @@ class _TacnetMainScreenState extends State<TacnetMainScreen> {
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      "GPS: $displayCoordinates",
-                      style: const TextStyle(color: Color(0xFF00FF00), fontFamily: 'monospace', fontSize: 14),
+                      "GPS FIXED: $displayCoordinates",
+                      style: TextStyle(
+                        color: isLinkConnected ? const Color(0xFF00FF00) : Colors.white38, 
+                        fontFamily: 'monospace', 
+                        fontSize: 14
+                      ),
                     ),
                   ],
                 ),
@@ -163,7 +170,17 @@ class _TacnetMainScreenState extends State<TacnetMainScreen> {
             ),
           ),
 
-          // 2. REAL-TIME TACTICAL GPS DOT
+          // 2. NIGHT VISION OVERLAY FILTER (Only activates when NVG button is clicked)
+          if (isNvgOnline)
+            Positioned.fill(
+              child: IgnorePointer(
+                child: Container(
+                  color: const Color(0xFF00FF00).withOpacity(0.15), // Tactical Green Light Lens
+                ),
+              ),
+            ),
+
+          // 3. REAL-TIME TARGET DOT (Stays Red by default, changes to Green only if NVG is on)
           Positioned(
             top: MediaQuery.of(context).size.height * 0.4,
             left: MediaQuery.of(context).size.width * 0.5 - 10,
@@ -171,12 +188,12 @@ class _TacnetMainScreenState extends State<TacnetMainScreen> {
               width: 20,
               height: 20,
               decoration: BoxDecoration(
-                color: const Color(0xFF00FF00), // High-Vis Lime Green
+                color: isNvgOnline ? const Color(0xFF00FF00) : Colors.redAccent, 
                 shape: BoxShape.circle,
                 border: Border.all(color: Colors.white, width: 2.5),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF00FF00).withOpacity(0.6),
+                    color: (isNvgOnline ? const Color(0xFF00FF00) : Colors.redAccent).withOpacity(0.6),
                     blurRadius: 12,
                     spreadRadius: 6,
                   ),
@@ -185,7 +202,7 @@ class _TacnetMainScreenState extends State<TacnetMainScreen> {
             ),
           ),
 
-          // 3. INTERFACE OVERLAYS (Top Header & Controls)
+          // 4. INTERFACE OVERLAYS (Top Header & Multi-Button Control Array)
           Positioned(
             top: 40,
             left: 15,
@@ -193,8 +210,9 @@ class _TacnetMainScreenState extends State<TacnetMainScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.between,
               children: [
+                // Branding Box
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
                   decoration: BoxDecoration(
                     color: const Color(0xFF0B2510),
                     borderRadius: BorderRadius.circular(4),
@@ -205,27 +223,63 @@ class _TacnetMainScreenState extends State<TacnetMainScreen> {
                     style: TextStyle(color: Color(0xFFD4AF37), fontWeight: FontWeight.bold, letterSpacing: 1),
                   ),
                 ),
-                // NVG HARDWARE TOGGLE BUTTON
-                GestureDetector(
-                  onTap: () => _toggleGpsTracking(!isNvgOnline),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
-                      color: isNvgOnline ? const Color(0xFF00FF00).withOpacity(0.2) : Colors.black54,
-                      borderRadius: BorderRadius.circular(4),
-                      border: Border.all(
-                        color: isNvgOnline ? const Color(0xFF00FF00) : Colors.white24,
-                        width: 1.5,
+                
+                // CONTROL SWITCH ARRAY
+                Row(
+                  children: [
+                    // BUTTON A: THE LIVE DATA CONNECTION LINK
+                    GestureDetector(
+                      onTap: () => _toggleGpsLink(!isLinkConnected),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: isLinkConnected ? const Color(0xFF00FF00).withOpacity(0.2) : Colors.black54,
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(
+                            color: isLinkConnected ? const Color(0xFF00FF00) : Colors.white24,
+                            width: 1.5,
+                          ),
+                        ),
+                        child: Text(
+                          isLinkConnected ? "LINK ONLINE" : "LINK OFFLINE",
+                          style: TextStyle(
+                            color: isLinkConnected ? const Color(0xFF00FF00) : Colors.white70,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
+                        ),
                       ),
                     ),
-                    child: Text(
-                      isNvgOnline ? "NVG ONLINE" : "NVG OFFLINE",
-                      style: TextStyle(
-                        color: isNvgOnline ? const Color(0xFF00FF00) : Colors.white70,
-                        fontWeight: FontWeight.bold,
+                    const SizedBox(width: 8),
+                    
+                    // BUTTON B: INDEPENDENT NIGHT VISION LIGHT TOGGLE
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isNvgOnline = !isNvgOnline;
+                        });
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: isNvgOnline ? const Color(0xFF00FF00).withOpacity(0.2) : Colors.black54,
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(
+                            color: isNvgOnline ? const Color(0xFF00FF00) : Colors.white24,
+                            width: 1.5,
+                          ),
+                        ),
+                        child: Text(
+                          "NVG",
+                          style: TextStyle(
+                            color: isNvgOnline ? const Color(0xFF00FF00) : Colors.white70,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
               ],
             ),
@@ -250,7 +304,7 @@ class _TacnetMainScreenState extends State<TacnetMainScreen> {
             ),
           ),
 
-          // 4. FULL-SCREEN SEARCH INTERFACE (Takes full advantage of display size)
+          // 5. FULL-SCREEN TACTICAL SEARCH OVERLAY
           if (isSearching)
             Positioned.fill(
               child: Container(
