@@ -32,7 +32,7 @@
             box-sizing: border-box;
         }
 
-        /* --- STAGE 1: DUAL-LAYER TRIPLE FAILSAFE GATEWAY --- */
+        /* --- STAGE 1: DUAL-LAYER IMAGE & TEXT GATEWAY --- */
         #homepage-screen {
             background-color: #020803;
             background-image: radial-gradient(circle, #091f0d 0%, #020803 100%);
@@ -231,7 +231,7 @@
         .btn {
             background-color: rgba(2, 8, 3, 0.9);
             color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             padding: 6px 10px;
             border-radius: 4px;
             cursor: pointer;
@@ -241,15 +241,25 @@
         }
 
         .btn-active {
-            background-color: rgba(0, 255, 0, 0.2) !important;
+            background-color: rgba(0, 255, 0, 0.3) !important;
             border-color: #00FF00 !important;
             color: #00FF00 !important;
         }
 
-        .btn-danger {
-            background-color: rgba(255, 82, 82, 0.2) !important;
-            border-color: #ff5252 !important;
-            color: #ff5252 !important;
+        /* FIXED HIGH CONTROLS: Ultra High Visibility Crimson Colorization Rules */
+        .btn-high-vis-red {
+            background-color: #900000 !important;
+            border: 1.5px solid #ff3333 !important;
+            color: #ffffff !important;
+            text-shadow: 1px 1px 2px #000000;
+        }
+        
+        .btn-high-vis-active {
+            background-color: #ff0000 !important;
+            border: 1.5px solid #ffffff !important;
+            color: #ffffff !important;
+            font-weight: 900;
+            box-shadow: 0 0 10px #ff0000;
         }
 
         #map-viewport {
@@ -340,50 +350,11 @@
             padding: 3px;
         }
 
-        #k9-medical-console {
-            position: absolute;
-            top: 115px;
-            right: 10px;
-            background-color: rgba(2, 8, 3, 0.92);
-            border: 1px solid #ff5252;
-            padding: 6px;
-            border-radius: 4px;
-            z-index: 1000;
-            width: 145px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .med-title {
-            color: #ff5252;
-            font-size: 9px;
-            font-weight: bold;
-            letter-spacing: 1px;
-            text-align: center;
-            border-bottom: 1px solid rgba(255,82,82,0.3);
-            padding-bottom: 2px;
-        }
-
-        .med-btn {
-            background-color: #020803;
-            color: #ffffff;
-            border: 1px solid rgba(255,255,255,0.15);
-            padding: 4px;
-            font-family: inherit;
-            font-size: 9px;
-            text-align: left;
-            cursor: pointer;
-            border-radius: 2px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
+        /* SCALED HUD RIbBON (Left Alignment Area Cleared Out) */
         .lower-hud-ribbon {
             position: absolute;
             bottom: 15px;
-            left: 10px;
+            left: 70px; /* Offset cleanly to give the brand-new bottom left card breathing room */
             right: 120px; 
             background-color: rgba(2, 8, 3, 0.92);
             border: 1px solid #0B2510;
@@ -415,7 +386,34 @@
             font-weight: bold;
         }
 
-        /* DUAL BOTTOM-RIGHT NAVIGATION SQUARE MODULES */
+        /* THE RE-ENGINEERED BOLD BOTTOM-LEFT STATUS MODULE PANEL */
+        .live-counter-trigger {
+            position: absolute;
+            bottom: 15px;
+            left: 10px;
+            background-color: rgba(2, 8, 3, 0.95);
+            border: 1.5px solid #D4AF37;
+            color: #D4AF37;
+            width: 48px;
+            height: 44px;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 6000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            font-weight: bold;
+            font-size: 10px;
+            text-align: center;
+        }
+        #active-unit-qty-node {
+            font-size: 14px;
+            color: #00FF00;
+            font-weight: 900;
+        }
+
+        /* DUAL BOTTOM-RIGHT NAVIGATION BUTTON METRICS */
         .search-trigger {
             position: absolute;
             bottom: 15px;
@@ -455,7 +453,7 @@
             font-weight: bold;
         }
 
-        /* LEDGER GRAPHIC SCHEMATICS */
+        /* VECTOR LEDGER GLOW DOT METRICS */
         .dot-le { background-color: #0000ff !important; border: 2px solid white; border-radius: 50%; width: 14px; height: 14px; display: block; box-shadow: 0 0 12px #0000ff; }
         .dot-k9 { background-color: #87ceeb !important; border: 2px solid white; border-radius: 50%; width: 14px; height: 14px; display: block; box-shadow: 0 0 12px #87ceeb; }
         .dot-sar { background-color: #ff0000 !important; border: 2px solid white; border-radius: 50%; width: 14px; height: 14px; display: block; box-shadow: 0 0 12px #ff0000; }
@@ -494,7 +492,7 @@
         #roster-results-container { flex: 1; overflow-y: auto; }
         .result-item { background-color: rgba(11, 37, 16, 0.4); border: 1px solid rgba(255, 255, 255, 0.12); padding: 10px; border-radius: 4px; margin-bottom: 8px; font-size: 12px; }
 
-        /* --- STAGE 5: REPORT PRE-PREVIEW MODAL OVERLAY --- */
+        /* --- STAGE 5: REPORT DECK PREVIEW --- */
         #report-panel {
             position: fixed;
             top: 0;
@@ -542,11 +540,54 @@
             background-color: #0B2510;
             color: #00FF00;
         }
+
+        /* --- STAGE 6: BRAND-NEW K9 NOMENCLATURE ENCYCLOPEDIA PANEL OVERLAY --- */
+        #k9-medical-encyclopedia-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #020803;
+            padding: 20px;
+            box-sizing: border-box;
+            display: none;
+            flex-direction: column;
+            z-index: 8500;
+            border: 2px solid #ff5252;
+        }
+
+        .encyclopedia-scroll-frame {
+            flex: 1;
+            overflow-y: auto;
+            background-color: rgba(11, 37, 16, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 15px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .encyclopedia-topic-header {
+            color: #ff5252;
+            font-weight: bold;
+            font-size: 13px;
+            letter-spacing: 1px;
+            margin-top: 15px;
+            border-bottom: 1px dashed rgba(255,82,82,0.4);
+            padding-bottom: 2px;
+            text-transform: uppercase;
+        }
+
+        .encyclopedia-content-text {
+            color: rgba(255,255,255,0.85);
+            margin: 6px 0 15px 0;
+            line-height: 1.6;
+        }
     </style>
 </head>
 <body>
 
-    <!-- STAGE 1: DUAL-LAYER IMAGE & TEXT FALLSAFE GATEWAY -->
+    <!-- STAGE 1: GATEWAY HOMEPAGE -->
     <div id="homepage-screen" class="app-screen" onclick="forceEnterSystemRoster()">
         <div class="text-fallback-box" id="fallback-branding-node">
             <div class="fallback-title">TACNET SYSTEM CORE</div>
@@ -583,8 +624,9 @@
             <div class="controls">
                 <button id="link-btn" class="btn" onclick="toggleLink()">LINK OFFLINE</button>
                 <button id="trace-btn" class="btn" onclick="toggleTrapAndTraceFeature()" style="background-color:rgba(255,0,127,0.15); border-color:#ff007f; color:#ff007f;">TRACE OFF</button>
-                <button id="pen-btn" class="btn" onclick="toggleFreehandPenTool()">PEN: OFF</button>
-                <button id="sos-btn" class="btn btn-danger" onclick="triggerSosAlertSystem()">SOS ALERT</button>
+                <button id="pen-btn" class="btn btn-high-vis-red" onclick="toggleFreehandPenTool()">PEN: OFF</button>
+                <button id="k9-med-portal-btn" class="btn" onclick="openK9MedicalEncyclopedia()" style="background-color:rgba(255,82,82,0.1); border-color:#ff5252; color:#ff5252;">🏥 K9 MEDICAL</button>
+                <button id="sos-btn" class="btn btn-high-vis-red" onclick="triggerSosAlertSystem()">SOS ALERT</button>
                 <button id="nvg-btn" class="btn" onclick="toggleNvg()">NVG</button>
             </div>
         </div>
@@ -618,14 +660,6 @@
             </select>
         </div>
 
-        <div id="k9-medical-console">
-            <div class="med-title">🚨 K9 FIELD FIRST AID</div>
-            <button class="med-btn" onclick="speakMedicalProtocol('heat')">🐾 1. HEAT STROKE</button>
-            <button class="med-btn" onclick="speakMedicalProtocol('bloat')">🐾 2. TORSION CHECK</button>
-            <button class="med-btn" onclick="speakMedicalProtocol('bleed')">🐾 3. ARTERIAL BLEED</button>
-            <button class="med-btn" onclick="speakMedicalProtocol('poison')">🐾 4. TOXIC CORRIDOR</button>
-        </div>
-
         <div id="map-viewport"></div>
 
         <div class="lower-hud-ribbon">
@@ -637,12 +671,18 @@
             </div>
         </div>
 
-        <!-- TWO BOTTOM DETACHED IOS NAV MODULE SQUARES -->
+        <!-- ENHANCED ROSTER QUANTITY INDICATOR MODULE -->
+        <div class="live-counter-trigger" onclick="openSearch()">
+            <div>UNITS</div>
+            <div id="active-unit-qty-node">0</div>
+        </div>
+
+        <!-- NAVIGATION CONTROLS -->
         <div class="report-trigger" onclick="openProfessionalReportDeck()">📋</div>
         <div class="search-trigger" onclick="openSearch()">🔍</div>
     </div>
 
-    <!-- STAGE 4: REGISTRY PANEL OVERLAY -->
+    <!-- STAGE 4: REGISTRY PANEL -->
     <div id="search-panel">
         <div class="search-header-layout">
             <div class="search-nav-group">
@@ -656,18 +696,64 @@
         <div id="roster-results-container"></div>
     </div>
 
-    <!-- STAGE 5: PROFESSIONAL REPORT DECK MODAL PREVIEW -->
+    <!-- STAGE 5: REPORT DECK -->
     <div id="report-panel">
         <div class="search-header-layout" style="margin-bottom:10px;">
             <span style="color:#00FF00; font-weight:bold; font-size:14px; letter-spacing:1px;">TACNET OFFICIAL REPLAY REPORT DECK</span>
             <button class="back-arrow" onclick="closeProfessionalReportDeck()" style="border-color:#00FF00; color:#00FF00;">← CLOSE</button>
         </div>
-        <div class="report-paper" id="print-capture-area">
-            <!-- Dynamic Report Content Spawns Here -->
-        </div>
+        <div class="report-paper" id="print-capture-area"></div>
         <div class="report-btn-group">
             <button class="action-export-btn" onclick="executeSystemPrintReport()">🖨️ PRINT OFFICIAL PDF</button>
             <button class="action-export-btn" onclick="executeEmailReportRedirect()" style="border-color:#D4AF37; color:#D4AF37; background-color:rgba(214,175,55,0.05);">✉️ EMAIL DIRECT REPORT</button>
+        </div>
+    </div>
+
+    <!-- STAGE 6: FULL RESOLUTION K9 MEDICAL NOMENCLATURE SYSTEM OVERLAY -->
+    <div id="k9-medical-encyclopedia-panel">
+        <div class="search-header-layout" style="margin-bottom:12px;">
+            <span style="color:#ff5252; font-weight:bold; font-size:14px; letter-spacing:1.5px;">🐾 FIELD K9 EMERGENCY MEDICAL NOMENCLATURE</span>
+            <button class="back-arrow" onclick="closeK9MedicalEncyclopedia()" style="border-color:#ff5252; color:#ff5252;">← BACK TO GRID</button>
+        </div>
+        <div class="encyclopedia-scroll-frame">
+            
+            <div class="encyclopedia-topic-header">1. Canine CPR Protocol</div>
+            <div class="encyclopedia-content-text">
+                Place the canine asset on a firm surface, right side down (left side facing upward). Locate the cardiac field area directly where the left elbow meets the chest wall frame. Compress chest wall depth by 1/3 to 1/2 thickness at a sustained rhythm of 100 to 120 beats per minute. Coordinate chest wall work with breathing cycles: administer 30 compression strikes followed cleanly by 2 quick rescue breaths sealed directly into the canine's snout vectors.
+            </div>
+
+            <div class="encyclopedia-topic-header">2. Venomous Snake Bite Countermeasures</div>
+            <div class="encyclopedia-content-text">
+                Maintain absolute asset immobilization loop to slow lymphatic circulatory speed. Do not cut the puncture marks or use mechanical suction accessories. Wash the site lane with clean water lines. Remove collar gear immediately to prevent respiratory throat closure if the bite vector is located on the neck or jaw. Clear team lanes and route directly to anti-venom distribution hubs.
+            </div>
+
+            <div class="encyclopedia-topic-header">3. Penetrating Gunshot Wound Trauma</div>
+            <div class="encyclopedia-content-text">
+                Locate wound entry and exit tracts immediately. If an entry breach is in the thoracic chest wall cavity (sucking chest wound), seal the tract immediately with an occlusive chest wrap or clean plastic material to maintain necessary lung box pressure. Apply heavy localized hand compression with gauze lines to staunch bleeding. Do not apply tourniquet straps to body wall structures.
+            </div>
+
+            <div class="encyclopedia-topic-header">4. Critical Heat Exhaustion Matrix</div>
+            <div class="encyclopedia-content-text">
+                Evacuate handler team and canine asset to shade or temperature-controlled areas instantly. Saturate abdomen, groin channels, and paw pads with cool, continuous water flow lanes. Do not pack the canine asset in direct freezing ice layers, as this triggers rapid vasoconstriction. Offer small, controlled amounts of water if the canine is fully conscious. Monitor internal vitals constantly.
+            </div>
+
+            <div class="encyclopedia-topic-header">5. Excessive Arterial Bleeding Control</div>
+            <div class="encyclopedia-content-text">
+                Apply persistent manual hand pressure straight onto the arterial source wound using heavy sterile gauze sheets. Pack deep tissue lac tracts firmly with hemostatic gauze. Wrap site tightly with elastic pressure bands. If severe arterial bleeding breaches extremity structures, prepare a tactical emergency tourniquet band positioned explicitly above the wound point.
+            </div>
+
+            <div class="encyclopedia-topic-header">6. Paw and Eye Injuries</div>
+            <div class="encyclopedia-content-text">
+                <b>Paw Lacerations:</b> Flush the entry pads with sterile saline. Apply a non-adherent dressing pack, wrap securely with protective tactical tape layers, and keep moisture-free to avoid pad separation.<br>
+                <b>Ocular Emergencies:</b> Prevent the canine asset from rubbing the site. Flush the eye socket continuously with sterile eyewash drops to clear foreign particulate. Do not apply localized pressure wraps over the eye globe frame.
+            </div>
+
+            <div class="encyclopedia-topic-header">7. Regional Emergency Veterinary Support Hubs</div>
+            <div class="encyclopedia-content-text">
+                <b>Amherst Veterinary Clinic:</b> 114 Trojan Ln, Madison Heights, VA 24572 // Phone: (434) 946-5632<br>
+                <b>Animal Emergency & Urgent Care Center:</b> 3432 Lakeside Dr, Lynchburg, VA 24501 // Phone: (434) 845-7021 (24-Hour Active Trauma Response)
+            </div>
+
         </div>
     </div>
 
@@ -691,7 +777,6 @@
 
         let trapAndTraceActive = false;
 
-        // AUTOMATIC TRIPLE-FAILSAFE BACKGROUND LOGO HOOK
         window.addEventListener('DOMContentLoaded', function() {
             const imgCheck = new Image();
             imgCheck.src = "IMAGE FOR TAC.png2.jpg";
@@ -763,7 +848,6 @@
             });
         }
 
-        // TRAP AND TRACE suite ACTIVATION CONTROLLER
         function toggleTrapAndTraceFeature() {
             trapAndTraceActive = !trapAndTraceActive;
             const btn = document.getElementById('trace-btn');
@@ -813,9 +897,13 @@
             fieldUnitsArray.push(traceRecordObject);
             transmitAssetToAppwriteServer(traceRecordObject);
             document.getElementById('status-text').innerText = `${traceID} VECTOR LOCKED`;
+            RosterPanelUpdate();
         }
 
-        // PROFESSIONAL PRE-PREVIEW REPORT DECK WRITER
+        // K9 ENCYCLOPEDIA ACCESS INTERFACES
+        function openK9MedicalEncyclopedia() { document.getElementById('k9-medical-encyclopedia-panel').style.display = 'flex'; }
+        function closeK9MedicalEncyclopedia() { document.getElementById('k9-medical-encyclopedia-panel').style.display = 'none'; }
+
         function openProfessionalReportDeck() {
             const paper = document.getElementById('print-capture-area');
             document.getElementById('report-panel').style.display = 'flex';
@@ -826,14 +914,11 @@
             } else {
                 fieldUnitsArray.forEach(unit => {
                     itemsHtml += `
-                        <style>
-                            .print-cell { border-bottom: 1px solid #dddddd; padding: 8px; text-align: left; }
-                        </style>
                         <tr>
-                            <td class="print-cell" style="font-weight:bold;">${unit.uid}</td>
-                            <td class="print-cell">${unit.type}</td>
-                            <td class="print-cell">[ ${unit.coordsStr} ]</td>
-                            <td class="print-cell">${unit.timeLogged}</td>
+                            <td style="border-bottom: 1px solid #dddddd; padding: 8px; font-weight:bold;">${unit.uid}</td>
+                            <td style="border-bottom: 1px solid #dddddd; padding: 8px;">${unit.type}</td>
+                            <td style="border-bottom: 1px solid #dddddd; padding: 8px;">[ ${unit.coordsStr} ]</td>
+                            <td style="border-bottom: 1px solid #dddddd; padding: 8px;">${unit.timeLogged}</td>
                         </tr>`;
                 });
             }
@@ -867,9 +952,6 @@
                         ${itemsHtml}
                     </tbody>
                 </table>
-                <div style="margin-top: 40px; border-top: 1px dashed #777; padding-top: 10px; text-align: center; font-size: 9px; color: #666;">
-                    TACNET EMERGENCY DISPATCH MATRIX REPLAY SYSTEM // OFFICIAL DOCUMENTATION END RECORD
-                </div>
             `;
         }
 
@@ -918,77 +1000,25 @@
             if (freehandPenActive) {
                 if (trapAndTraceActive) toggleTrapAndTraceFeature();
                 btn.innerText = "PEN: ACTIVE";
-                btn.classList.add('btn-active');
+                btn.className = "btn btn-high-vis-active";
                 document.getElementById('status-text').innerText = "FREEHAND DRAW ACTIVE // DRAG SCREEN TO DRAW BOUNDS";
             } else {
                 btn.innerText = "PEN: OFF";
-                btn.classList.remove('btn-active');
+                btn.className = "btn btn-high-vis-red";
                 document.getElementById('status-text').innerText = "TACTICAL LEDGER SYSTEM ONLINE";
             }
         }
 
-        function speakMedicalProtocol(type) {
-            if (!('speechSynthesis' in window)) return;
-            window.speechSynthesis.cancel(); 
-
-            let phrasesArray = [];
-
-            if (type === 'heat') {
-                phrasesArray = [
-                    "Initiating K9 Heat Stroke Protocol.",
-                    "Move handler asset and canine to shade vectors immediately.",
-                    "Apply cool water sheets across inner thighs and abdomen pads.",
-                    "Do not use ice packs directly on body walls.",
-                    "Monitor core temperature limits. Emergency transport standby."
-                ];
-            } else if (type === 'bloat') {
-                phrasesArray = [
-                    "Initiating Gastric Torsion Assessment.",
-                    "Inspect abdominal walls for hard swelling or expansion frames.",
-                    "Check for dry heaving, excessive drooling profiles, or pacing loops.",
-                    "This is an absolute time critical field emergency.",
-                    "Reroute team vectors directly to veterinary medical centers."
-                ];
-            } else if (type === 'bleed') {
-                phrasesArray = [
-                    "Initiating Arterial Hemorrhage Compression Guidance.",
-                    "Apply direct mechanical gauze hand pressure to source wounds.",
-                    "Pack deep cavity laceration lanes with medical gauze lines.",
-                    "Deploy pressure bandage layers over site points.",
-                    "If bleeding breaches wraps, prepare tactical tourniquet bands above injuries."
-                ];
-            } else if (type === 'poison') {
-                phrasesArray = [
-                    "Initiating Toxic Substance Exposure Protocol.",
-                    "Identify ingestion elements. Do not induce vomiting loops unless directed.",
-                    "Flush chemical surface contact patches with continuous water lines.",
-                    "Prepare sample elements for identification labs.",
-                    "Contact toxic control intercept lines immediately."
-                ];
-            }
-
-            phrasesArray.forEach(function(text, index) {
-                const speechSegment = new SpeechSynthesisUtterance(text);
-                speechSegment.rate = 0.95;
-                if (index === phrasesArray.length - 1) {
-                    speechSegment.onend = function() {
-                        document.getElementById('status-text').innerText = "MEDICAL SPEECH GUIDE INSTRUCTIONS COMPLETED";
-                    };
-                }
-                window.speechSynthesis.speak(speechSegment);
-            });
-
-            document.getElementById('status-text').innerText = "VERBAL ASSISTANT STATING MOCK FIELD DIRECTIVES...";
-        }
-
         function triggerSosAlertSystem() {
             document.getElementById('sos-siren-layer').style.display = 'flex';
+            document.getElementById('sos-btn').className = "btn btn-high-vis-active";
             document.getElementById('status-text').innerText = "CRITICAL WARNING: EMERGENCY SOS BROADCASTING LIVE";
             document.getElementById('status-text').style.color = "#ff5252";
         }
 
         function turnOffSosSiren() {
             document.getElementById('sos-siren-layer').style.display = 'none';
+            document.getElementById('sos-btn').className = "btn btn-high-vis-red";
             document.getElementById('status-text').innerText = "TACTICAL LEDGER SYSTEM ONLINE";
             document.getElementById('status-text').style.color = "#D4AF37";
         }
@@ -1079,6 +1109,7 @@
             transmitAssetToAppwriteServer(unitRecordObject);
             
             document.getElementById('status-text').innerText = uniqueUnitID + " REGISTERED IN LEDGER";
+            RosterPanelUpdate();
         }
 
         window.removeIndividualSearcher = function(unitID) {
@@ -1160,6 +1191,9 @@
         function toggleNvg() { document.getElementById('nvg-overlay').style.display = (document.getElementById('nvg-overlay').style.display === 'block') ? 'none' : 'block'; document.getElementById('nvg-btn').classList.toggle('btn-active'); }
 
         function RosterPanelUpdate() {
+            // Update active ledger unit quantity readout text node
+            document.getElementById('active-unit-qty-node').innerText = fieldUnitsArray.length;
+
             const container = document.getElementById('roster-results-container');
             container.innerHTML = '';
             if (fieldUnitsArray.length === 0) { container.innerHTML = '<div class="loading-text">NO FIELD ASSETS CURRENTLY ASSIGNED TO GRID LEDGER</div>'; return; }
