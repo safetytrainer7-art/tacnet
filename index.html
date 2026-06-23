@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -546,16 +547,16 @@
             initializeTacticalSatelliteMap();
         }
 
-        // INITIALIZE HIGH-RESOLUTION REAL SATELLITE IMAGERY ENGINE (FREE OSM TOPO/IMAGERY)
+        // INITIALIZE HIGH-RESOLUTION REAL SATELLITE IMAGERY ENGINE (FIXED MAP PIPELINE LINK)
         function initializeTacticalSatelliteMap() {
             if (tacticalMap !== null) return;
 
             tacticalMap = L.map('map-viewport', { zoomControl: false }).setView([37.525, -79.124], 14);
 
-            // Loads full imagery layers seamlessly
-            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{y}/{x}/{x}', {
+            // FIXED SATELLITE TILE LAYOUT URL PATHWAY ({z}/{y}/{x} format restoration)
+            L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
                 maxZoom: 19,
-                attribution: 'Tiles © Esri — Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+                attribution: 'Tiles © Esri'
             }).addTo(tacticalMap);
 
             // Fetch secondary transparent road layers over satellite view so streets are labeled clearly
