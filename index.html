@@ -20,25 +20,25 @@
             height: 100vh;
         }
 
+        /* HARD VISIBILITY CONTROLS */
         .app-screen {
-            display: none;
             width: 100vw;
             height: 100vh;
-            position: relative;
+            position: absolute;
+            top: 0;
+            left: 0;
             box-sizing: border-box;
         }
 
-        .screen-active {
-            display: flex !important;
-        }
-
-        /* --- STAGE 1: CUSTOM HOMEPAGE --- */
+        /* --- STAGE 1: GATEWAY HOMEPAGE --- */
         #homepage-screen {
+            background-color: #010401;
+            display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background-color: #010401;
             cursor: pointer;
+            z-index: 5000; /* Forces homepage to sit firmly on top */
         }
 
         .hero-image {
@@ -55,20 +55,16 @@
             font-size: 14px;
             font-weight: bold;
             letter-spacing: 3px;
-            animation: blink 2s infinite;
-        }
-
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
         }
 
         /* --- STAGE 2: SIGN-IN ROSTER --- */
         #signin-screen {
+            display: none; /* Hidden beneath homepage until clicked */
             flex-direction: column;
             justify-content: center;
             align-items: center;
             background: radial-gradient(circle, #051609 0%, #010401 100%);
+            z-index: 4000;
         }
 
         .roster-card {
@@ -129,7 +125,9 @@
 
         /* --- STAGE 3: TACTICAL COMMAND DECK --- */
         #tactical-screen {
+            display: none;
             flex-direction: column;
+            z-index: 3000;
         }
 
         #nvg-overlay {
@@ -203,7 +201,6 @@
             z-index: 1;
         }
 
-        /* FIXED INTERFACE: SEARCH AND ADJUSTABLE RADIUS SLIDER CONSOLE */
         .search-address-hud {
             position: absolute;
             top: 75px;
@@ -219,10 +216,7 @@
             border: 1px solid #D4AF37;
         }
 
-        .search-row {
-            display: flex;
-            gap: 6px;
-        }
+        .search-row { display: flex; gap: 6px; }
 
         .address-input {
             flex: 1;
@@ -260,7 +254,6 @@
             cursor: pointer;
         }
 
-        /* --- ASSET DROPDOWN MATRIX HUD --- */
         .asset-deployment-hud {
             position: absolute;
             top: 175px;
@@ -320,7 +313,7 @@
             z-index: 1000;
         }
 
-        /* --- THE FIXED OPERATIONAL LEDGER MARKER DOT CLASSES --- */
+        /* --- RE-VERIFIED OPERATIONAL LEDGER ICON MARKERS --- */
         .dot-le { background-color: #0000ff !important; border: 2px solid white; border-radius: 50%; width: 14px; height: 14px; display: block; box-shadow: 0 0 12px #0000ff; }
         .dot-k9 { background-color: #87ceeb !important; border: 2px solid white; border-radius: 50%; width: 14px; height: 14px; display: block; box-shadow: 0 0 12px #87ceeb; }
         .dot-sar { background-color: #ff0000 !important; border: 2px solid white; border-radius: 50%; width: 14px; height: 14px; display: block; box-shadow: 0 0 12px #ff0000; }
@@ -332,11 +325,9 @@
         .dot-boat { background-color: #000000 !important; border: 2px solid #ffffff; border-radius: 4px; width: 14px; height: 14px; display: block; text-align:center; font-size:10px; line-height:14px; }
         .dot-submerged { background-color: #ffff00 !important; border: 2px solid black; border-radius: 4px; width: 14px; height: 14px; display: block; box-shadow: 0 0 12px #ffff00; }
         .dot-victim { background-color: #a52a2a !important; border: 2px solid white; border-radius: 50%; width: 14px; height: 14px; display: block; box-shadow: 0 0 12px #a52a2a; }
-
-        /* Custom Live Track Phone Marker styles */
         .dot-live-gps { background-color: #00ffff !important; border: 2.5px solid #ffffff; border-radius: 50%; width: 16px; height: 16px; display: block; box-shadow: 0 0 15px #00ffff; }
 
-        /* --- STAGE 4: FULL-SCREEN ROSTER LISTING --- */
+        /* --- STAGE 4: MASTER ROSTER REGISTRY --- */
         #search-panel {
             position: fixed;
             top: 0;
@@ -366,34 +357,5 @@
 </head>
 <body>
 
-    <div id="homepage-screen" class="app-screen screen-active" onclick="navigateToSignIn()">
-        <img src="IMAGE FOR TAC.png2.jpg" alt="TACNET MASTER SCREEN" class="hero-image" onerror="this.style.display='none'; document.getElementById('alt-title').style.display='block';">
-        <div id="alt-title" style="display:none; color:#D4AF37; font-size:24px; font-weight:bold; letter-spacing:3px;">TACNET CENTRAL COMMAND</div>
-        <div class="homepage-footer">CLICK ANYWHERE TO ENTER NETWORK</div>
-    </div>
-
-    <div id="signin-screen" class="app-screen">
-        <div class="roster-card">
-            <div class="roster-header">MULTI-AGENCY DEPLOYMENT ENGINE</div>
-            <div class="form-group">
-                <label>OPERATIONAL UNIT NAME</label>
-                <input type="text" id="input-callsign" class="roster-input" value="COMMAND POST 1" style="text-transform: uppercase;">
-            </div>
-            <button class="auth-btn" onclick="authorizeRoster()">INITIALIZE MASTER SYSTEM</button>
-        </div>
-    </div>
-
-    <div id="tactical-screen" class="app-screen">
-        <div id="nvg-overlay"></div>
-
-        <div class="hud-header">
-            <div class="hud-left">
-                <button class="back-arrow" onclick="navigateToGate()">←</button>
-                <div id="hud-display-banner" class="roster-banner">TACTICAL SYSTEM ACTIVE</div>
-            </div>
-            <div class="controls">
-                <button id="link-btn" class="btn" onclick="toggleLink()">LINK OFFLINE</button>
-                <button id="sos-btn" class="btn btn-danger" onclick="triggerSosAlert()">SOS ALERT</button>
-                <button id="firstaid-btn" class="btn" onclick="playVerbalFirstAid()">FIRST AID PROTOCOL</button>
-                <button id="nvg-btn" class="btn" onclick="toggleNvg()">NVG</button>
-            </div>
+    <div id="homepage-screen" class="app-screen" onclick="forceEnterSystemRoster()">
+        <img src="IMAGE FOR TAC.
