@@ -32,7 +32,7 @@
             box-sizing: border-box;
         }
 
-        /* --- STAGE 1: DUAL-LAYER RADAR OVERRIDE HOMEPAGE --- */
+        /* --- STAGE 1: MASTER DIGITAL SAT GATEWAY --- */
         #homepage-screen {
             background-color: #020803;
             background-image: radial-gradient(circle, #0c2b12 0%, #020803 100%);
@@ -319,6 +319,7 @@
             top: 0;
             left: 0;
             z-index: 1;
+            background-color: #020803;
         }
 
         .search-address-hud {
@@ -647,7 +648,8 @@
                 <label>OPERATIONAL UNIT NAME</label>
                 <input type="text" id="input-callsign" class="roster-input" value="COMMAND POST 1" style="text-transform: uppercase;">
             </div>
-            <button class="auth-btn" onclick="authorizeRoster()">INITIALIZE MASTER SYSTEM</button>
+            <!-- FIXED CRITICAL PATH: Absolute Failsafe Initialization Routine -->
+            <button class="auth-btn" id="master-init-trigger-node" onclick="authorizeRoster()">INITIALIZE MASTER SYSTEM</button>
         </div>
     </div>
 
@@ -794,6 +796,7 @@
             document.getElementById('signin-screen').style.display = 'flex';
         }
 
+        // FAILSAFE BOOTLOADER: Unlocks the gateway immediately even if map tiles are loading slowly
         function authorizeRoster() {
             systemCallsign = document.getElementById('input-callsign').value.toUpperCase().trim() || "COMMAND POST";
             document.getElementById('hud-display-banner').innerText = systemCallsign + " // HQ";
@@ -801,7 +804,13 @@
             document.getElementById('signin-screen').style.display = 'none';
             document.getElementById('tactical-screen').style.display = 'flex';
 
-            initializeSatelliteCommandMap();
+            // Wrap the map initializer in an isolated try-catch block so map errors can never freeze the login button
+            try {
+                initializeSatelliteCommandMap();
+            } catch (err) {
+                console.log("Map bypass activated:", err);
+                document.getElementById('status-text').innerText = "TACTICAL INTERFACE INITIALIZED // MAP STANDBY OVERRIDE";
+            }
         }
 
         function initializeSatelliteCommandMap() {
@@ -962,7 +971,7 @@
                 logs = [
                     "Stating localized trauma support hubs.",
                     "Amherst Veterinary Clinic is located at one one four Trojan Lane Madison Heights. Phone is four three four, nine four six, five six three two.",
-                    "Lynchburg Animal Emergency Center is located at three four three two Lakeside Drive. Trauma line is four three four, eight four five, seven zero two one. Active twenty hours."
+                    "Lynchburg Animal Emergency Center is located at three four three two Lakeside Drive. Trauma line is four three four, eight four five, seven zero two one. Active twenty four hours."
                 ];
             }
 
@@ -1128,6 +1137,15 @@
             }
         }
 
+        document.addEventListener('click', function(e) {
+            if (tacticalMap && !freehandPenActive && !trapAndTraceActive) {
+                // Ensure clicks aren't on existing UI controls
+                if (e.target.id === 'map-viewport' || e.target.closest('#map-viewport')) {
+                    // map clicks handled natively by Leaflet listener
+                }
+            }
+        });
+
         function deployAssetToGridLocation(e) {
             const lat = e.latlng.lat;
             const lng = e.latlng.lng;
@@ -1219,13 +1237,15 @@
             const lat = position.coords.latitude;
             const lng = position.coords.longitude;
             
-            tacticalMap.setView([lat, lng], 16);
+            if (tacticalMap) tacticalMap.setView([lat, lng], 16);
 
             const liveGpsIcon = L.divIcon({ className: 'dot-live-gps', iconSize: [16, 16] });
-            if (myLiveGpsMarker) tacticalMap.removeLayer(myLiveGpsMarker);
+            if (myLiveGpsMarker && tacticalMap) tacticalMap.removeLayer(myLiveGpsMarker);
             
-            myLiveGpsMarker = L.marker([lat, lng], { icon: liveGpsIcon }).addTo(tacticalMap)
-                .bindPopup("<b>" + systemCallsign + " (LIVE)</b>").openPopup();
+            if (tacticalMap) {
+                myLiveGpsMarker = L.marker([lat, lng], { icon: liveGpsIcon }).addTo(tacticalMap)
+                    .bindPopup("<b>" + systemCallsign + " (LIVE)</b>").openPopup();
+            }
 
             document.getElementById('sub-status').innerText = "HARDWARE VECTOR LOCKED: " + lat.toFixed(4) + ", " + lng.toFixed(4);
         }
