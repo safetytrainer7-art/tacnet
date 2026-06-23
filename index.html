@@ -207,7 +207,7 @@
             padding: 8px 14px;
             border: 1px solid #D4AF37;
             font-weight: bold;
-            font-size: 12px;
+            font-size: 11px;
             letter-spacing: 1px;
             border-radius: 4px;
         }
@@ -284,6 +284,7 @@
             box-shadow: 0 0 12px 6px rgba(0, 255, 0, 0.6);
         }
 
+        /* NEW LOGIC: Magnifying glass defaults to hidden (display: none) until link is turned online */
         .search-trigger {
             position: absolute;
             bottom: 30px;
@@ -294,7 +295,7 @@
             width: 50px;
             height: 50px;
             border-radius: 4px;
-            display: flex;
+            display: none; 
             justify-content: center;
             align-items: center;
             cursor: pointer;
@@ -451,9 +452,10 @@
                 </select>
             </div>
 
-            <div class="form-group">
+            <!-- Demo requirement: Passcode visual field left open without hard blocks -->
+            <div class="form-group" style="display: none;">
                 <label>OPERATIONAL PASSCODE</label>
-                <input type="password" id="input-pass" class="roster-input" placeholder="••••">
+                <input type="password" id="input-pass" class="roster-input" value="1234">
             </div>
 
             <button class="auth-btn" onclick="authorizeRoster()">AUTHORIZE ACCESS</button>
@@ -484,18 +486,16 @@
             <div id="tgt-dot" class="target-dot"></div>
         </div>
 
-        <!-- CLICKING THIS BLUE ICON POPS THE LOOKUP ROSTER BOARD OPEN -->
-        <div class="search-trigger" onclick="openSearch()">🔍</div>
+        <!-- MAGNIFYING GLASS: Controlled strictly by the active data connection status now -->
+        <div id="live-search-icon" class="search-trigger" onclick="openSearch()">🔍</div>
 
         <!-- STAGE 4: FULL-SCREEN TACTICAL REGISTRY BOARD -->
         <div id="search-panel">
             <div class="search-header-layout">
                 <div class="search-nav-group">
-                    <!-- NEW: Back arrow allows exit from the search panel instantly -->
                     <button class="back-arrow" onclick="closeSearch()">←</button>
                     <span class="search-main-title">TACTICAL ROSTER PANEL</span>
                 </div>
-                <!-- NEW: Purge roster lets command clear out old tracking ledger rows instantly -->
                 <button class="purge-btn" onclick="purgeServerRoster()">PURGE ACTIVE ROSTER</button>
             </div>
             
@@ -508,7 +508,6 @@
     </div>
 
     <script>
-        // Appwrite Pipeline Initialization
         const { Client, Databases, ID } = Appwrite;
         const client = new Client()
             .setEndpoint('https://nyc.cloud.appwrite.io/v1')
@@ -547,8 +546,8 @@
             sessionData.callsign = callsignInput;
             sessionData.assignment = assignmentInput;
 
-            document.getElementById('hud-display-banner').innerText = `${sessionData.callsign} // [${sessionData.assignment}]`;
-            document.getElementById('input-pass').value = '';
+            // Sharp layout tweak: Reads clearly as ID // STATUS to remove ambiguity
+            document.getElementById('hud-display-banner').innerText = `${sessionData.callsign} // STATUS: ${sessionData.assignment}`;
 
             document.getElementById('signin-screen').classList.remove('screen-active');
             document.getElementById('tactical-screen').classList.add('screen-active');
@@ -565,6 +564,7 @@
             const btn = document.getElementById('link-btn');
             const status = document.getElementById('status-text');
             const sub = document.getElementById('sub-status');
+            const searchIcon = document.getElementById('live-search-icon');
 
             if (linkActive) {
                 btn.innerText = "LINK ONLINE";
@@ -573,6 +573,9 @@
                 sub.innerText = "CONNECTING TO APPWRITE SERVER...";
                 sub.style.color = "#00FF00";
 
+                // NEW LOGIC: Snap the icon open only when successfully broadcasting online
+                searchIcon.style.display = 'flex';
+
                 transmitPacket();
             } else {
                 btn.innerText = "LINK OFFLINE";
@@ -580,6 +583,9 @@
                 status.innerText = "SYSTEM READY // STANDBY";
                 sub.innerText = "GPS POSITION STREAM MUTED";
                 sub.style.color = "rgba(255, 255, 255, 0.38)";
+
+                // NEW LOGIC: Securely hide the back door panel when the link is offline
+                searchIcon.style.display = 'none';
             }
         }
 
@@ -605,7 +611,6 @@
             }
         }
 
-        // Fetch Live Database Roster Elements Dynamically
         async function openSearch() {
             const container = document.getElementById('roster-results-container');
             document.getElementById('search-panel').style.display = 'flex';
@@ -646,7 +651,6 @@
             document.getElementById('search-panel').style.display = 'none';
         }
 
-        // MASTER PURGE ACTION: Drops old operational data to clean up the workspace
         async function purgeServerRoster() {
             const verification = confirm("WARNING: You are about to clear ALL active tracking units from the server ledger. Proceed?");
             if (!verification) return;
@@ -655,15 +659,12 @@
             container.innerHTML = '<div class="loading-text" style="color: #ff5252;">WIPING SERVER ROSTER LEDGER...</div>';
 
             try {
-                // Fetch whatever rows currently live on the server
                 const response = await databases.listDocuments('tacnet-search-app', 'tacnet_live_units');
                 
-                // Clear each document out step by step
                 for (let doc of response.documents) {
                     await databases.deleteDocument('tacnet-search-app', 'tacnet_live_units', doc.$id);
                 }
 
-                // Re-poll the screen layout to display the empty clean state
                 openSearch();
 
             } catch (error) {
