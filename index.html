@@ -2,12 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TACNET // CENTRAL COMMAND MATRIX</title>
-    <!-- Include the Official Appwrite Web SDK Platform -->
     <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.0"></script>
     
-    <!-- LEAFLET GPS MAP ENGINE STYLES & SCRIPTS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -20,6 +18,7 @@
             font-family: 'Courier New', Courier, monospace;
             overflow: hidden;
             height: 100vh;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .app-screen {
@@ -31,7 +30,7 @@
             box-sizing: border-box;
         }
 
-        /* --- STAGE 1: TEXT-ONLY INTERACTIVE GATEWAY --- */
+        /* --- STAGE 1: TEXT-ONLY GATEWAY --- */
         #homepage-screen {
             background-color: #020803;
             background-image: radial-gradient(circle, #091f0d 0%, #020803 100%);
@@ -44,41 +43,42 @@
         }
 
         .text-fallback-box {
-            border: 3px double #D4AF37;
-            background-color: rgba(11, 37, 16, 0.9);
-            padding: 40px;
+            border: 2px solid #D4AF37;
+            background-color: rgba(11, 37, 16, 0.95);
+            padding: 25px;
             text-align: center;
-            border-radius: 8px;
-            box-shadow: 0 0 30px rgba(214, 175, 55, 0.3);
-            max-width: 80%;
+            border-radius: 4px;
+            box-shadow: 0 0 25px rgba(214, 175, 55, 0.3);
+            width: 80%;
+            max-width: 400px;
         }
 
         .fallback-title {
             color: #D4AF37;
-            font-size: 32px;
+            font-size: 24px;
             font-weight: bold;
-            letter-spacing: 5px;
-            margin-bottom: 15px;
-            text-shadow: 0 0 10px rgba(214, 175, 55, 0.5);
+            letter-spacing: 3px;
+            margin-bottom: 10px;
         }
 
         .fallback-sub {
             color: #ffffff;
-            font-size: 14px;
-            letter-spacing: 2px;
-            margin-bottom: 30px;
+            font-size: 12px;
+            letter-spacing: 1.5px;
+            margin-bottom: 20px;
             opacity: 0.8;
         }
 
         .homepage-footer {
             color: #D4AF37;
-            font-size: 16px;
+            font-size: 13px;
             font-weight: bold;
-            letter-spacing: 3px;
+            letter-spacing: 2px;
             border: 1px solid #D4AF37;
-            padding: 10px 20px;
+            padding: 8px 16px;
             background-color: #020803;
             border-radius: 4px;
+            display: inline-block;
         }
 
         /* --- STAGE 2: SIGN-IN ROSTER --- */
@@ -92,23 +92,23 @@
         }
 
         .roster-card {
-            width: 350px;
-            max-width: 90%;
+            width: 85%;
+            max-width: 340px;
             border: 1px solid #D4AF37;
             background-color: rgba(11, 37, 16, 0.95);
-            padding: 25px;
+            padding: 20px;
             border-radius: 4px;
         }
 
         .roster-header {
             text-align: center;
             color: #D4AF37;
-            font-size: 18px;
+            font-size: 15px;
             font-weight: bold;
-            letter-spacing: 2px;
-            margin-bottom: 20px;
+            letter-spacing: 1.5px;
+            margin-bottom: 15px;
             border-bottom: 1px solid rgba(214, 175, 55, 0.3);
-            padding-bottom: 10px;
+            padding-bottom: 8px;
         }
 
         .form-group {
@@ -120,7 +120,7 @@
 
         .form-group label {
             color: rgba(255, 255, 255, 0.7);
-            font-size: 11px;
+            font-size: 10px;
             font-weight: bold;
         }
 
@@ -128,9 +128,9 @@
             background-color: #020803;
             border: 1px solid rgba(214, 175, 55, 0.5);
             color: #ffffff;
-            padding: 10px;
+            padding: 8px;
             font-family: inherit;
-            font-size: 13px;
+            font-size: 12px;
             border-radius: 4px;
         }
 
@@ -139,12 +139,12 @@
             background-color: #020803;
             color: #D4AF37;
             border: 1.5px solid #D4AF37;
-            padding: 12px;
-            font-size: 14px;
+            padding: 10px;
+            font-size: 13px;
             font-weight: bold;
             font-family: inherit;
             cursor: pointer;
-            margin-top: 15px;
+            margin-top: 10px;
         }
 
         /* --- STAGE 3: TACTICAL COMMAND DECK --- */
@@ -179,7 +179,7 @@
             animation: flashSiren 0.8s infinite alternate;
             justify-content: center;
             align-items: center;
-            border: 15px solid #ff5252;
+            border: 10px solid #ff5252;
             box-sizing: border-box;
         }
 
@@ -191,19 +191,19 @@
         .sos-banner-text {
             color: #ffffff;
             background-color: #000000;
-            padding: 15px 30px;
-            font-size: 20px;
+            padding: 12px 24px;
+            font-size: 16px;
             font-weight: bold;
             border: 2px solid #ff5252;
-            letter-spacing: 3px;
-            box-shadow: 0 0 20px #ff5252;
+            letter-spacing: 2px;
+            text-align: center;
         }
 
         .hud-header {
             position: absolute;
-            top: 15px;
-            left: 15px;
-            right: 15px;
+            top: 10px;
+            left: 10px;
+            right: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -214,26 +214,27 @@
             background-color: rgba(2, 8, 3, 0.9);
             color: #D4AF37;
             border: 1px solid #D4AF37;
-            padding: 8px 14px;
+            padding: 6px 12px;
             cursor: pointer;
             font-weight: bold;
             border-radius: 4px;
+            font-size: 12px;
         }
 
         .controls {
             display: flex;
-            gap: 6px;
+            gap: 4px;
         }
 
         .btn {
             background-color: rgba(2, 8, 3, 0.9);
             color: #ffffff;
-            border: 1.5px solid rgba(255, 255, 255, 0.24);
-            padding: 8px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            padding: 6px 10px;
             border-radius: 4px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 11px;
+            font-size: 10px;
             font-family: inherit;
         }
 
@@ -258,31 +259,32 @@
             z-index: 1;
         }
 
+        /* IOS ADJUSTED SATELLITE HUD PANELETTES */
         .search-address-hud {
             position: absolute;
-            top: 75px;
-            left: 15px;
-            right: 15px;
+            top: 50px;
+            left: 10px;
+            right: 10px;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 5px;
             z-index: 1000;
-            background-color: rgba(2, 8, 3, 0.9);
-            padding: 10px;
+            background-color: rgba(2, 8, 3, 0.92);
+            padding: 8px;
             border-radius: 4px;
             border: 1px solid #D4AF37;
         }
 
-        .search-row { display: flex; gap: 6px; }
+        .search-row { display: flex; gap: 4px; }
 
         .address-input {
             flex: 1;
             background-color: #020803;
             border: 1px solid #D4AF37;
             color: #ffffff;
-            padding: 10px;
+            padding: 8px;
             font-family: inherit;
-            font-size: 12px;
+            font-size: 11px;
             border-radius: 4px;
         }
 
@@ -290,17 +292,18 @@
             background-color: #0B2510;
             color: #D4AF37;
             border: 1px solid #D4AF37;
-            padding: 0 16px;
+            padding: 0 12px;
             font-weight: bold;
             cursor: pointer;
             border-radius: 4px;
+            font-size: 11px;
         }
 
         .slider-row {
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 11px;
+            gap: 8px;
+            font-size: 10px;
             color: #D4AF37;
             font-weight: bold;
         }
@@ -309,20 +312,22 @@
             flex: 1;
             accent-color: #00ff00;
             cursor: pointer;
+            height: 14px;
         }
 
         .asset-deployment-hud {
             position: absolute;
-            top: 175px;
-            left: 15px;
-            background-color: rgba(2, 8, 3, 0.95);
+            top: 115px;
+            left: 10px;
+            background-color: rgba(2, 8, 3, 0.92);
             border: 1px solid #D4AF37;
-            padding: 8px;
+            padding: 6px;
             border-radius: 4px;
             z-index: 1000;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 4px;
+            max-width: 145px;
         }
 
         .asset-select {
@@ -330,78 +335,93 @@
             color: #ffffff;
             border: 1px solid rgba(214, 175, 55, 0.5);
             font-family: inherit;
-            font-size: 11px;
-            padding: 4px;
+            font-size: 10px;
+            padding: 3px;
         }
 
+        /* IOS RESIZED COMPACT MEDICAL DASHBOARD CARD */
         #k9-medical-console {
             position: absolute;
-            top: 175px;
-            right: 15px;
-            background-color: rgba(2, 8, 3, 0.95);
+            top: 115px;
+            right: 10px;
+            background-color: rgba(2, 8, 3, 0.92);
             border: 1px solid #ff5252;
-            padding: 12px;
+            padding: 6px;
             border-radius: 4px;
             z-index: 1000;
-            width: 220px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            width: 145px;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 4px;
         }
 
         .med-title {
             color: #ff5252;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: bold;
-            letter-spacing: 1.5px;
+            letter-spacing: 1px;
             text-align: center;
             border-bottom: 1px solid rgba(255,82,82,0.3);
-            padding-bottom: 4px;
-            margin-bottom: 4px;
+            padding-bottom: 2px;
         }
 
         .med-btn {
             background-color: #020803;
             color: #ffffff;
-            border: 1px solid rgba(255,255,255,0.25);
-            padding: 6px;
+            border: 1px solid rgba(255,255,255,0.15);
+            padding: 4px;
             font-family: inherit;
-            font-size: 10px;
+            font-size: 9px;
             text-align: left;
             cursor: pointer;
-            border-radius: 3px;
-        }
-
-        .med-btn:hover {
-            border-color: #ff5252;
-            background-color: rgba(255,82,82,0.1);
+            border-radius: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .lower-hud-ribbon {
             position: absolute;
-            bottom: 25px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(2, 8, 3, 0.9);
+            bottom: 15px;
+            left: 10px;
+            right: 70px; /* Leave clean structural clearance room for the bottom right square clicker */
+            background-color: rgba(2, 8, 3, 0.92);
             border: 1px solid #0B2510;
-            border-left: 4px solid #D4AF37;
-            padding: 8px 15px;
+            border-left: 3px solid #D4AF37;
+            padding: 6px 10px;
             border-radius: 4px;
             z-index: 1000;
-            text-align: center;
-            min-width: 300px;
+            box-sizing: border-box;
         }
 
-        #status-text { font-size: 12px; font-weight: bold; letter-spacing: 1px; }
-        #sub-status { color: rgba(255, 255, 255, 0.5); font-size: 11px; margin-top: 2px; }
+        #status-text { font-size: 11px; font-weight: bold; letter-spacing: 0.5px; }
+        #sub-status { color: rgba(255, 255, 255, 0.5); font-size: 9px; margin-top: 1px; }
 
+        /* THE RESET AND TERMINATION BUTTON STRIP */
+        .ribbon-action-row {
+            margin-top: 4px;
+            display: flex;
+            gap: 4px;
+        }
+        .action-mini-btn {
+            background-color: #020803;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #ffffff;
+            font-size: 9px;
+            padding: 3px 6px;
+            font-family: inherit;
+            cursor: pointer;
+            border-radius: 2px;
+            font-weight: bold;
+        }
+
+        /* RE-FIXED FOOTPRINT FOR OPEN ROSTER MAGNIFIER SQUARE BUTTON */
         .search-trigger {
             position: absolute;
-            bottom: 25px;
-            right: 15px;
-            background-color: rgba(11, 37, 16, 0.9);
-            border: 1px solid #D4AF37;
+            bottom: 15px;
+            right: 10px;
+            background-color: rgba(11, 37, 16, 0.95);
+            border: 1.5px solid #D4AF37;
             color: #D4AF37;
             width: 48px;
             height: 48px;
@@ -411,10 +431,11 @@
             align-items: center;
             cursor: pointer;
             font-size: 18px;
-            z-index: 1000;
+            z-index: 6000; /* Shift depth to peak over all layers cleanly */
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
 
-        /* LEDGER VECTOR DOT CODES */
+        /* LEDGER VISUAL MARKERS ACCORDING TO TRUE MATRIX SPEC */
         .dot-le { background-color: #0000ff !important; border: 2px solid white; border-radius: 50%; width: 14px; height: 14px; display: block; box-shadow: 0 0 12px #0000ff; }
         .dot-k9 { background-color: #87ceeb !important; border: 2px solid white; border-radius: 50%; width: 14px; height: 14px; display: block; box-shadow: 0 0 12px #87ceeb; }
         .dot-sar { background-color: #ff0000 !important; border: 2px solid white; border-radius: 50%; width: 14px; height: 14px; display: block; box-shadow: 0 0 12px #ff0000; }
@@ -428,7 +449,7 @@
         .dot-victim { background-color: #a52a2a !important; border: 2px solid white; border-radius: 50%; width: 14px; height: 14px; display: block; box-shadow: 0 0 12px #a52a2a; }
         .dot-live-gps { background-color: #00ffff !important; border: 2.5px solid #ffffff; border-radius: 50%; width: 16px; height: 16px; display: block; box-shadow: 0 0 15px #00ffff; }
 
-        /* --- STAGE 4: REGISTRY --- */
+        /* --- STAGE 4: REGISTRY DECK OVERLAY --- */
         #search-panel {
             position: fixed;
             top: 0;
@@ -436,24 +457,23 @@
             width: 100vw;
             height: 100vh;
             background-color: #051207;
-            padding: 30px 20px 20px 20px;
+            padding: 20px 15px;
             box-sizing: border-box;
             display: none;
             flex-direction: column;
-            z-index: 2000;
-            border: 4px solid #0B2510;
+            z-index: 7000;
         }
 
-        .search-header-layout { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-        .search-nav-group { display: flex; align-items: center; gap: 15px; }
-        .search-main-title { color: #D4AF37; font-weight: bold; font-size: 18px; letter-spacing: 2px; }
-        .purge-btn { background-color: rgba(255, 82, 82, 0.1); color: #ff5252; border: 1px solid #ff5252; padding: 6px 12px; font-family: inherit; font-size: 11px; cursor: pointer; }
-        .registry-title { color: rgba(255, 255, 255, 0.38); font-size: 12px; font-weight: bold; margin-bottom: 10px; }
-        .divider { border: 0; height: 1px; background: rgba(255, 255, 255, 0.12); margin-bottom: 15px; }
+        .search-header-layout { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .search-nav-group { display: flex; align-items: center; gap: 10px; }
+        .search-main-title { color: #D4AF37; font-weight: bold; font-size: 14px; letter-spacing: 1px; }
+        .purge-btn { background-color: rgba(255, 82, 82, 0.1); color: #ff5252; border: 1px solid #ff5252; padding: 4px 8px; font-family: inherit; font-size: 10px; cursor: pointer; }
+        .registry-title { color: rgba(255, 255, 255, 0.38); font-size: 11px; font-weight: bold; margin-bottom: 8px; }
+        .divider { border: 0; height: 1px; background: rgba(255, 255, 255, 0.12); margin-bottom: 10px; }
         #roster-results-container { flex: 1; overflow-y: auto; }
-        .result-item { background-color: rgba(11, 37, 16, 0.4); border: 1px solid rgba(255, 255, 255, 0.12); padding: 12px; border-radius: 4px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .unit-name { font-weight: bold; margin-bottom: 4px; }
-        .unit-status { color: rgba(255, 255, 255, 0.54); font-size: 13px; }
+        .result-item { background-color: rgba(11, 37, 16, 0.4); border: 1px solid rgba(255, 255, 255, 0.12); padding: 10px; border-radius: 4px; margin-bottom: 8px; font-size: 12px; }
+        .unit-name { font-weight: bold; margin-bottom: 2px; }
+        .unit-status { color: rgba(255, 255, 255, 0.54); font-size: 11px; }
     </style>
 </head>
 <body>
@@ -487,12 +507,11 @@
         <div class="hud-header">
             <div class="hud-left">
                 <button class="back-arrow" onclick="navigateToGate()">←</button>
-                <div id="hud-display-banner" class="roster-banner">TACTICAL SYSTEM ACTIVE</div>
+                <div id="hud-display-banner" class="roster-banner" style="font-size:10px; font-weight:bold; color:#D4AF37;">TACTICAL SYSTEM ACTIVE</div>
             </div>
             <div class="controls">
                 <button id="link-btn" class="btn" onclick="toggleLink()">LINK OFFLINE</button>
                 <button id="pen-btn" class="btn" onclick="toggleFreehandPenTool()">PEN: OFF</button>
-                <button id="undo-pen-btn" class="btn" onclick="undoLastDrawLineSegment()" style="background-color:rgba(212,175,55,0.15); border-color:#D4AF37; color:#D4AF37;">UNDO LINE</button>
                 <button id="sos-btn" class="btn btn-danger" onclick="triggerSosAlertSystem()">SOS ALERT</button>
                 <button id="nvg-btn" class="btn" onclick="toggleNvg()">NVG</button>
             </div>
@@ -511,12 +530,12 @@
         </div>
 
         <div class="asset-deployment-hud">
-            <span style="font-size:9px; font-weight:bold; color:#D4AF37;">LEDGER ASSET KEY:</span>
+            <span style="font-size:8px; font-weight:bold; color:#D4AF37; letter-spacing:0.5px;">LEDGER ASSET KEY:</span>
             <select id="asset-type-selector" class="asset-select">
                 <option value="LE">🔵 LAW ENFORCEMENT</option>
                 <option value="K9">💎 K9 & HANDLER TEAM</option>
                 <option value="SAR">🔴 SAR RESPONSE TEAM</option>
-                <option value="CIVILIAN">🟢 CIVILIAN VOLUNTEERS</option>
+                <option value="CIVILIAN">🟢 civilian VOLUNTEERS</option>
                 <option value="SUSPECT">🟣 TARGET SUSPECT</option>
                 <option value="VEHICLE">⚫ VEHICLE ASSET</option>
                 <option value="DRONE">⚪ AIR DRONE UNIT</option>
@@ -529,10 +548,10 @@
 
         <div id="k9-medical-console">
             <div class="med-title">🚨 K9 FIELD FIRST AID</div>
-            <button class="med-btn" onclick="speakMedicalProtocol('heat')">🐾 1. HEAT STROKE PROTOCOL</button>
-            <button class="med-btn" onclick="speakMedicalProtocol('bloat')">🐾 2. TORSION / BLOAT CHECK</button>
-            <button class="med-btn" onclick="speakMedicalProtocol('bleed')">🐾 3. SEVERE ARTERIAL BLEED</button>
-            <button class="med-btn" onclick="speakMedicalProtocol('poison')">🐾 4. TOXIC INGESTION CORRIDOR</button>
+            <button class="med-btn" onclick="speakMedicalProtocol('heat')">🐾 1. HEAT STROKE</button>
+            <button class="med-btn" onclick="speakMedicalProtocol('bloat')">🐾 2. TORSION CHECK</button>
+            <button class="med-btn" onclick="speakMedicalProtocol('bleed')">🐾 3. ARTERIAL BLEED</button>
+            <button class="med-btn" onclick="speakMedicalProtocol('poison')">🐾 4. TOXIC CORRIDOR</button>
         </div>
 
         <div id="map-viewport"></div>
@@ -540,6 +559,10 @@
         <div class="lower-hud-ribbon">
             <div id="status-text" style="color:#D4AF37;">TACTICAL LEDGER SYSTEM ONLINE</div>
             <div id="sub-status">CHOOSE ASSET FROM LEFT KEY, THEN TAP MAP TO POSITION UNITS</div>
+            <div class="ribbon-action-row">
+                <button class="action-mini-btn" onclick="undoLastDrawLineSegment()" style="border-color:#D4AF37; color:#D4AF37;">UNDO LINE</button>
+                <button class="action-mini-btn" onclick="terminateSearchGridReset()" style="border-color:#ff5252; color:#ff5252;">TERMINATE MISSION / RESET GRID</button>
+            </div>
         </div>
 
         <div class="search-trigger" onclick="openSearch()">🔍</div>
@@ -574,8 +597,6 @@
 
         let freehandPenActive = false;
         let activeDrawLinePath = null;
-        
-        // Tracking array specifically tasked to monitor line vectors cleanly for targeted deletion
         let userDrawnLinesArray = [];
 
         function forceEnterSystemRoster() {
@@ -601,7 +622,7 @@
                 dragging: true 
             }).setView([37.525, -79.124], 14);
 
-            // UPGRADED: High-Contrast Drop-Dead Gorgeous Tree Top Mapping Matrix Injection
+            // REGRID QUALITY RE-VERIFIED Satellite Imagery Base Tile Pipeline
             L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
                 maxZoom: 19,
                 attribution: 'Esri'
@@ -633,7 +654,6 @@
             });
         }
 
-        // Targeted Eraser Operation: Disposes of only the single, most recent line segment
         function undoLastDrawLineSegment() {
             if (userDrawnLinesArray.length === 0) {
                 document.getElementById('status-text').innerText = "DRAWING DECK ALREADY EMPTY";
@@ -641,7 +661,19 @@
             }
             const lastLine = userDrawnLinesArray.pop();
             tacticalMap.removeLayer(lastLine);
-            document.getElementById('status-text').innerText = "LAST CORRIDOR VECTOR REMOVED FROM GRID";
+            document.getElementById('status-text').innerText = "LAST LINE SEGMENT REMOVED FROM GRID";
+        }
+
+        // PHYSICAL RESET BUTTON ACTION: Intelligently wipes current scene vectors completely clean
+        function terminateSearchGridReset() {
+            if (!confirm("Terminate current search and clear map board vectors?")) return;
+            fieldUnitsArray.forEach(u => tacticalMap.removeLayer(u.markerRef));
+            fieldUnitsArray = [];
+            userDrawnLinesArray.forEach(line => tacticalMap.removeLayer(line));
+            userDrawnLinesArray = [];
+            if (activePerimeterCircle) { tacticalMap.removeLayer(activePerimeterCircle); activePerimeterCircle = null; }
+            RosterPanelUpdate();
+            document.getElementById('status-text').innerText = "MISSION TERMINATED // GRID SCENE RESET COMPLETE";
         }
 
         function handleFreehandMouseDrawingMove(e) {
@@ -656,7 +688,7 @@
             if (freehandPenActive) {
                 btn.innerText = "PEN: ACTIVE";
                 btn.classList.add('btn-active');
-                document.getElementById('status-text').innerText = "FREEHAND DRAW ACTIVE // LEFT-CLICK AND DRAG MAP CORRIDOR";
+                document.getElementById('status-text').innerText = "FREEHAND DRAW ACTIVE // DRAG SCREEN TO DRAW BOUNDS";
             } else {
                 btn.innerText = "PEN: OFF";
                 btn.classList.remove('btn-active');
@@ -893,27 +925,4 @@
 
         function openSearch() { document.getElementById('search-panel').style.display = 'flex'; RosterPanelUpdate(); }
         function closeSearch() { document.getElementById('search-panel').style.display = 'none'; }
-        function toggleNvg() { document.getElementById('nvg-overlay').style.display = (document.getElementById('nvg-overlay').style.display === 'block') ? 'none' : 'block'; document.getElementById('nvg-btn').classList.toggle('btn-active'); }
-
-        function RosterPanelUpdate() {
-            const container = document.getElementById('roster-results-container');
-            container.innerHTML = '';
-            if (fieldUnitsArray.length === 0) { container.innerHTML = '<div class="loading-text">NO FIELD ASSETS CURRENTLY ASSIGNED TO GRID LEDGER</div>'; return; }
-            fieldUnitsArray.forEach(unit => {
-                container.insertAdjacentHTML('beforeend', '<div class="result-item"><div><div class="unit-name" style="color:#D4AF37;">' + unit.uid + ' // ' + unit.textLabel + '</div><div class="unit-status">FIELD COORDINATE VECTOR: [ ' + unit.coordsStr + ' ]</div></div></div>');
-            });
-        }
-
-        function purgeFullRosterLedger() {
-            if (!confirm("Execute full purge clearance of all search units?")) return;
-            fieldUnitsArray.forEach(u => tacticalMap.removeLayer(u.markerRef));
-            fieldUnitsArray = [];
-            userDrawnLinesArray.forEach(line => tacticalMap.removeLayer(line));
-            userDrawnLinesArray = [];
-            if (activePerimeterCircle) { tacticalMap.removeLayer(activePerimeterCircle); activePerimeterCircle = null; }
-            RosterPanelUpdate();
-            document.getElementById('status-text').innerText = "GRID CLEAR // LEDGER EMPTY";
-        }
-    </script>
-</body>
-</html>
+        function toggleNvg() { document.getElementById('nvg-overlay').style.display = (document.getElementById('nvg-overlay').style.
