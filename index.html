@@ -6,6 +6,11 @@
     <title>TACNET // CENTRAL COMMAND</title>
     <!-- Include the Official Appwrite Web SDK Platform -->
     <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.0"></script>
+    
+    <!-- FREE OPEN-SOURCE GPS MAP ENGINE STYLES & SCRIPTS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
     <style>
         body {
             margin: 0;
@@ -161,16 +166,17 @@
             flex-direction: column;
         }
 
+        /* Tactical Night Vision Layer Over the Live Map */
         #nvg-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background-color: rgba(0, 255, 0, 0.15);
+            background-color: rgba(0, 255, 0, 0.12);
             pointer-events: none;
             display: none;
-            z-index: 5;
+            z-index: 999; /* Forces NVG completely over the map view */
         }
 
         .hud-header {
@@ -181,7 +187,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            z-index: 10;
+            z-index: 1000; /* Stays above map entries */
         }
 
         .hud-left {
@@ -191,7 +197,7 @@
         }
 
         .back-arrow {
-            background-color: rgba(0, 0, 0, 0.54);
+            background-color: rgba(2, 8, 3, 0.85);
             color: #D4AF37;
             border: 1px solid #D4AF37;
             border-radius: 4px;
@@ -210,6 +216,7 @@
             font-size: 11px;
             letter-spacing: 1px;
             border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
         }
 
         .controls {
@@ -218,7 +225,7 @@
         }
 
         .btn {
-            background-color: rgba(0, 0, 0, 0.54);
+            background-color: rgba(2, 8, 3, 0.85);
             color: #ffffff;
             border: 1.5px solid rgba(255, 255, 255, 0.24);
             padding: 8px 12px;
@@ -227,6 +234,7 @@
             font-weight: bold;
             font-size: 12px;
             font-family: inherit;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
         }
 
         .btn-active {
@@ -235,72 +243,63 @@
             color: #00FF00 !important;
         }
 
-        .map-container {
+        /* THE LIVE GPS SATELLITE MAP CONTAINER */
+        #map-viewport {
             width: 100vw;
             height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            position: relative;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
         }
 
-        .map-icon {
-            font-size: 60px;
-            color: rgba(255, 255, 255, 0.15);
-            margin-bottom: 10px;
+        /* Lower Tactical HUD Ribbon */
+        .lower-hud-ribbon {
+            position: absolute;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(2, 8, 3, 0.85);
+            border: 1px solid #0B2510;
+            border-left: 4px solid #D4AF37;
+            padding: 10px 20px;
+            border-radius: 4px;
+            z-index: 1000;
+            text-align: center;
+            min-width: 260px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
         }
 
         #status-text {
-            color: rgba(255, 255, 255, 0.54);
+            color: #ffffff;
+            font-size: 12px;
             font-weight: bold;
-            letter-spacing: 2px;
-            margin-bottom: 5px;
-            text-align: center;
+            letter-spacing: 1.5px;
+            margin-bottom: 3px;
         }
 
         #sub-status {
-            color: rgba(255, 255, 255, 0.38);
-            font-size: 13px;
-            text-align: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 11px;
         }
 
-        .target-dot {
-            width: 16px;
-            height: 16px;
-            background-color: #ff5252;
-            border: 2.5px solid #ffffff;
-            border-radius: 50%;
-            position: absolute;
-            top: 45%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            box-shadow: 0 0 12px 6px rgba(255, 82, 82, 0.6);
-            z-index: 2;
-        }
-
-        .target-dot.nvg-on {
-            background-color: #00FF00;
-            box-shadow: 0 0 12px 6px rgba(0, 255, 0, 0.6);
-        }
-
-        /* NEW LOGIC: Magnifying glass defaults to hidden (display: none) until link is turned online */
         .search-trigger {
             position: absolute;
-            bottom: 30px;
+            bottom: 25px;
             right: 15px;
-            background-color: #0B2510;
+            background-color: rgba(11, 37, 16, 0.9);
             border: 1px solid #D4AF37;
             color: #D4AF37;
-            width: 50px;
-            height: 50px;
+            width: 48px;
+            height: 48px;
             border-radius: 4px;
             display: none; 
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            font-size: 20px;
-            z-index: 10;
+            font-size: 18px;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
         }
 
         /* --- STAGE 4: FULL-SCREEN TACTICAL REGISTRY --- */
@@ -315,7 +314,7 @@
             box-sizing: border-box;
             display: none;
             flex-direction: column;
-            z-index: 20;
+            z-index: 2000;
             border: 4px solid #0B2510;
         }
 
@@ -452,20 +451,16 @@
                 </select>
             </div>
 
-            <!-- Demo requirement: Passcode visual field left open without hard blocks -->
-            <div class="form-group" style="display: none;">
-                <label>OPERATIONAL PASSCODE</label>
-                <input type="password" id="input-pass" class="roster-input" value="1234">
-            </div>
-
             <button class="auth-btn" onclick="authorizeRoster()">AUTHORIZE ACCESS</button>
         </div>
     </div>
 
-    <!-- STAGE 3: HUNTER GREEN TACTICAL COMMAND SCREEN -->
+    <!-- STAGE 3: HUNTER GREEN TACTICAL COMMAND DECK WITH REAL MAP -->
     <div id="tactical-screen" class="app-screen">
+        <!-- NVG Filter Layer -->
         <div id="nvg-overlay"></div>
 
+        <!-- Top Status Display Header -->
         <div class="hud-header">
             <div class="hud-left">
                 <button class="back-arrow" onclick="navigateToGate()">←</button>
@@ -479,14 +474,16 @@
             </div>
         </div>
 
-        <div class="map-container">
-            <div class="map-icon">🗺️</div>
+        <!-- THE ACTUAL INTERACTIVE SATELLITE/STREET MAP TARGET FIELD -->
+        <div id="map-viewport"></div>
+
+        <!-- Lower Status Panel Ribbon -->
+        <div class="lower-hud-ribbon">
             <div id="status-text">SYSTEM READY // STANDBY</div>
             <div id="sub-status">GPS POSITION STREAM MUTED</div>
-            <div id="tgt-dot" class="target-dot"></div>
         </div>
 
-        <!-- MAGNIFYING GLASS: Controlled strictly by the active data connection status now -->
+        <!-- Roster Database Drawer Trigger -->
         <div id="live-search-icon" class="search-trigger" onclick="openSearch()">🔍</div>
 
         <!-- STAGE 4: FULL-SCREEN TACTICAL REGISTRY BOARD -->
@@ -501,9 +498,7 @@
             
             <div class="registry-title">LIVE ACTIVE ASSETS IN DATABASE MAP LEDGER</div>
             <hr class="divider">
-            <div id="roster-results-container">
-                <!-- Live database records get drawn right here -->
-            </div>
+            <div id="roster-results-container"></div>
         </div>
     </div>
 
@@ -517,6 +512,10 @@
 
         let linkActive = false;
         let nvgActive = false;
+        
+        // Map Tracking Variables
+        let tacticalMap = null;
+        let currentMarker = null;
 
         let sessionData = {
             agency: '',
@@ -546,11 +545,29 @@
             sessionData.callsign = callsignInput;
             sessionData.assignment = assignmentInput;
 
-            // Sharp layout tweak: Reads clearly as ID // STATUS to remove ambiguity
             document.getElementById('hud-display-banner').innerText = `${sessionData.callsign} // STATUS: ${sessionData.assignment}`;
 
             document.getElementById('signin-screen').classList.remove('screen-active');
             document.getElementById('tactical-screen').classList.add('screen-active');
+
+            // Fire up and initialize the free interactive map immediately upon dashboard entry
+            initializeTacticalMap();
+        }
+
+        // Initialize the free OpenStreetMap viewport
+        function initializeTacticalMap() {
+            if (tacticalMap !== null) return; // Prevent double loads
+
+            // Default viewport centers over central Virginia area (Amherst County coords)
+            tacticalMap = L.map('map-viewport', {
+                zoomControl: false // Hide default controls to preserve tactical look
+            }).setView([37.525, -79.124], 13);
+
+            // Fetch free street map tile graphics beautifully
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(tacticalMap);
         }
 
         function navigateToGate() {
@@ -570,26 +587,64 @@
                 btn.innerText = "LINK ONLINE";
                 btn.classList.add('btn-active');
                 status.innerText = "RADIO LINK ACTIVE // TRANSMITTING";
-                sub.innerText = "CONNECTING TO APPWRITE SERVER...";
+                sub.innerText = "LOCATING SAT TARGET...";
                 sub.style.color = "#00FF00";
-
-                // NEW LOGIC: Snap the icon open only when successfully broadcasting online
                 searchIcon.style.display = 'flex';
 
-                transmitPacket();
+                // Taps the phone's native GPS array directly
+                navigator.geolocation.getCurrentPosition(handleGpsSuccess, handleGpsError, {
+                    enableHighAccuracy: true
+                });
             } else {
                 btn.innerText = "LINK OFFLINE";
                 btn.classList.remove('btn-active');
                 status.innerText = "SYSTEM READY // STANDBY";
                 sub.innerText = "GPS POSITION STREAM MUTED";
-                sub.style.color = "rgba(255, 255, 255, 0.38)";
-
-                // NEW LOGIC: Securely hide the back door panel when the link is offline
+                sub.style.color = "rgba(255, 255, 255, 0.5)";
                 searchIcon.style.display = 'none';
+
+                // Remove live marker pin when dropping offline
+                if (currentMarker) {
+                    tacticalMap.removeLayer(currentMarker);
+                    currentMarker = null;
+                }
             }
         }
 
-        async function transmitPacket() {
+        // Triggers the moment the hardware locks onto space satellites
+        function handleGpsSuccess(position) {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            const coordsString = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+
+            document.getElementById('sub-status').innerText = `GPS LINK LOCKED // COORDS: ${coordsString}`;
+
+            // Pan the beautiful live map straight to where the user is physically standing!
+            tacticalMap.setView([lat, lng], 15);
+
+            // Drop a bold marker pin exactly on their coordinates
+            if (currentMarker) tacticalMap.removeLayer(currentMarker);
+            currentMarker = L.marker([lat, lng]).addTo(tacticalMap)
+                .bindPopup(`<b>${sessionData.callsign}</b><br>${sessionData.name}<br>${sessionData.agency}`)
+                .openPopup();
+
+            // Ship the real satellite location coordinates directly over to Appwrite!
+            transmitPacket(coordsString);
+        }
+
+        function handleGpsError(error) {
+            // Fallback coordinate structure if location permissions are denied on device
+            document.getElementById('sub-status').innerText = "SAT POSITION TIMEOUT // USING FIXED RADAR MOCK";
+            document.getElementById('sub-status').style.color = "#ff5252";
+            
+            tacticalMap.setView([37.525, -79.124], 14);
+            if (currentMarker) tacticalMap.removeLayer(currentMarker);
+            currentMarker = L.marker([37.525, -79.124]).addTo(tacticalMap).bindPopup("<b>MOCK TARGET CONTEXT</b>").openPopup();
+            
+            transmitPacket('37.525, -79.124');
+        }
+
+        async function transmitPacket(coordinates) {
             try {
                 const comprehensiveCallsign = `${sessionData.callsign} (${sessionData.name}) [${sessionData.agency}]`;
 
@@ -599,15 +654,13 @@
                     ID.unique(),
                     {
                         'tacnet_live_units': comprehensiveCallsign,
-                        'location': '37.525, -79.124',
+                        'location': coordinates,
                         'operationalStatus': `ASSIGNMENT: ${sessionData.assignment}`,
                         'lastUpdateTime': new Date().toLocaleTimeString().substring(0, 5)
                     }
                 );
-                document.getElementById('sub-status').innerText = "COORDINATES SECURED // DATA STREAM LIVE";
             } catch (error) {
-                document.getElementById('sub-status').innerText = "TRANSMISSION ERROR // SERVER TIMEOUT";
-                document.getElementById('sub-status').style.color = "#ff5252";
+                console.log("Appwrite tracking upload failed.");
             }
         }
 
@@ -617,11 +670,7 @@
             container.innerHTML = '<div class="loading-text">POLLING SECURE BACKEND SATELLITE NETWORK...</div>';
 
             try {
-                const response = await databases.listDocuments(
-                    'tacnet-search-app',
-                    'tacnet_live_units'
-                );
-
+                const response = await databases.listDocuments('tacnet-search-app', 'tacnet_live_units');
                 container.innerHTML = '';
 
                 if (response.documents.length === 0) {
@@ -641,7 +690,6 @@
                     `;
                     container.insertAdjacentHTML('beforeend', itemHtml);
                 });
-
             } catch (error) {
                 container.innerHTML = '<div class="loading-text" style="color: #ff5252;">ROSTER FETCH FAILURE // ACCESS DENIED</div>';
             }
@@ -660,13 +708,10 @@
 
             try {
                 const response = await databases.listDocuments('tacnet-search-app', 'tacnet_live_units');
-                
                 for (let doc of response.documents) {
                     await databases.deleteDocument('tacnet-search-app', 'tacnet_live_units', doc.$id);
                 }
-
                 openSearch();
-
             } catch (error) {
                 alert("DATABASE WIPE SYSTEM FAILURE: Check operational admin credentials.");
                 openSearch();
@@ -677,16 +722,13 @@
             nvgActive = !nvgActive;
             const btn = document.getElementById('nvg-btn');
             const overlay = document.getElementById('nvg-overlay');
-            const dot = document.getElementById('tgt-dot');
 
             if (nvgActive) {
                 btn.classList.add('btn-active');
                 overlay.style.display = 'block';
-                dot.classList.add('nvg-on');
             } else {
                 btn.classList.remove('btn-active');
                 overlay.style.display = 'none';
-                dot.classList.remove('nvg-on');
             }
         }
     </script>
