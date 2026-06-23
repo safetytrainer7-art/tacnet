@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TACNET // CENTRAL COMMAND MATRIX</title>
+    <!-- Include the Official Appwrite Web SDK Platform -->
     <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.0"></script>
     
+    <!-- LEAFLET GPS MAP ENGINE STYLES & SCRIPTS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -30,7 +32,7 @@
             box-sizing: border-box;
         }
 
-        /* --- STAGE 1: MASTER DIGITAL SAT GATEWAY --- */
+        /* --- STAGE 1: DUAL-LAYER RADAR OVERRIDE HOMEPAGE --- */
         #homepage-screen {
             background-color: #020803;
             background-image: radial-gradient(circle, #0c2b12 0%, #020803 100%);
@@ -624,6 +626,7 @@
 </head>
 <body>
 
+    <!-- STAGE 1: OVERRIDE HOMEPAGE -->
     <div id="homepage-screen" class="app-screen" onclick="forceEnterSystemRoster()">
         <div class="satellite-display-deck">
             <div class="orbit-graphic-container">
@@ -636,6 +639,7 @@
         </div>
     </div>
 
+    <!-- STAGE 2: SIGN-IN ROSTER -->
     <div id="signin-screen" class="app-screen">
         <div class="roster-card">
             <div class="roster-header">MULTI-AGENCY DEPLOYMENT ENGINE</div>
@@ -647,6 +651,7 @@
         </div>
     </div>
 
+    <!-- STAGE 3: COMMAND DECK PANEL -->
     <div id="tactical-screen" class="app-screen">
         <div id="nvg-overlay"></div>
         
@@ -708,15 +713,18 @@
             </div>
         </div>
 
+        <!-- COUNTER LINK -->
         <div class="live-counter-trigger" onclick="openSearch()">
             <div>UNITS</div>
             <div id="active-unit-qty-node">0</div>
         </div>
 
+        <!-- NAVIGATION CONTROLS -->
         <div class="report-trigger" onclick="openProfessionalReportDeck()">📋</div>
         <div class="search-trigger" onclick="openSearch()">🔍</div>
     </div>
 
+    <!-- STAGE 4: REGISTRY PANEL -->
     <div id="search-panel">
         <div class="search-header-layout">
             <div class="search-nav-group">
@@ -730,6 +738,7 @@
         <div id="roster-results-container"></div>
     </div>
 
+    <!-- STAGE 5: REPORT DECK -->
     <div id="report-panel">
         <div class="search-header-layout" style="margin-bottom:10px;">
             <span style="color:#00FF00; font-weight:bold; font-size:14px; letter-spacing:1px;">TACNET OFFICIAL REPLAY REPORT DECK</span>
@@ -742,6 +751,7 @@
         </div>
     </div>
 
+    <!-- STAGE 6: VERBAL TRAUMA DISPATCH -->
     <div id="k9-voice-medical-panel">
         <div class="search-header-layout">
             <span style="color:#D4AF37; font-weight:bold; font-size:13px; letter-spacing:1px;">🚨 HANDS-FREE K9 AUDIO EMERGENCY NOMENCLATURE</span>
@@ -952,7 +962,7 @@
                 logs = [
                     "Stating localized trauma support hubs.",
                     "Amherst Veterinary Clinic is located at one one four Trojan Lane Madison Heights. Phone is four three four, nine four six, five six three two.",
-                    "Lynchburg Animal Emergency Center is located at three four three two Lakeside Drive. Trauma line is four three four, eight four five, seven zero two one. Active twenty four hours."
+                    "Lynchburg Animal Emergency Center is located at three four three two Lakeside Drive. Trauma line is four three four, eight four five, seven zero two one. Active twenty hours."
                 ];
             }
 
@@ -1083,7 +1093,7 @@
             if (!addressQuery) return;
 
             try {
-                const response = await fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + openProfessionalReportDeck(addressQuery));
+                const response = await fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(addressQuery));
                 const data = await response.json();
 
                 if (data && data.length > 0) {
@@ -1140,4 +1150,130 @@
             const htmlIconString = selectedAssetType === 'BOAT' ? '⚓' : '';
             const tacticalDivIcon = L.divIcon({ className: cssMarkerClass, html: htmlIconString, iconSize: [14, 14] });
 
-            const newFieldMarker = L.marker([lat, lng],
+            const newFieldMarker = L.marker([lat, lng], { icon: tacticalDivIcon, draggable: true }).addTo(tacticalMap);
+            
+            const popupContentHtml = `
+                <div style="color:#020803; font-family:monospace; font-size:11px;">
+                    <b>${uniqueUnitID}</b><br>${selectedText}<br>
+                    <hr style="margin:4px 0;">
+                    <button onclick="removeIndividualSearcher('${uniqueUnitID}')" style="background:#ff5252; color:white; border:none; padding:4px; font-size:9px; cursor:pointer; font-weight:bold; width:100%;">REMOVE UNIT</button>
+                </div>
+            `;
+            newFieldMarker.bindPopup(popupContentHtml);
+
+            const unitRecordObject = {
+                uid: uniqueUnitID,
+                markerRef: newFieldMarker,
+                type: selectedText,
+                textLabel: selectedText,
+                coordsStr: lat.toFixed(4) + ", " + lng.toFixed(4),
+                timeLogged: new Date().toLocaleTimeString().substring(0, 5)
+            };
+
+            fieldUnitsArray.push(unitRecordObject);
+            transmitAssetToAppwriteServer(unitRecordObject);
+            
+            document.getElementById('status-text').innerText = uniqueUnitID + " REGISTERED IN LEDGER";
+            RosterPanelUpdate();
+        }
+
+        window.removeIndividualSearcher = function(unitID) {
+            const index = fieldUnitsArray.findIndex(u => u.uid === unitID);
+            if (index !== -1) {
+                if (fieldUnitsArray[index].markerRef) tacticalMap.removeLayer(fieldUnitsArray[index].markerRef);
+                if (fieldUnitsArray[index].radarRef) tacticalMap.removeLayer(fieldUnitsArray[index].radarRef);
+                fieldUnitsArray.splice(index, 1);
+                document.getElementById('status-text').innerText = unitID + " EXTRACTED FROM BOARD";
+                RosterPanelUpdate();
+            }
+        };
+
+        function toggleLink() {
+            linkActive = !linkActive;
+            const btn = document.getElementById('link-btn');
+            const status = document.getElementById('status-text');
+
+            if (linkActive) {
+                btn.innerText = "LINK ONLINE";
+                btn.classList.add('btn-active');
+                status.innerText = "LIVE GPS FIELD TRACKING ACTIVE";
+                status.style.color = "#00ff00";
+
+                if (navigator.geolocation) {
+                    watchId = navigator.geolocation.watchPosition(handleLiveHardwareGps, handleGpsError, {
+                        enableHighAccuracy: true
+                    });
+                }
+            } else {
+                btn.innerText = "LINK OFFLINE";
+                btn.classList.remove('btn-active');
+                status.innerText = "TACTICAL LEDGER SYSTEM ONLINE";
+                status.style.color = "#D4AF37";
+
+                if (watchId) navigator.geolocation.clearWatch(watchId);
+                if (myLiveGpsMarker) { tacticalMap.removeLayer(myLiveGpsMarker); myLiveGpsMarker = null; }
+            }
+        }
+
+        function handleLiveHardwareGps(position) {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            
+            tacticalMap.setView([lat, lng], 16);
+
+            const liveGpsIcon = L.divIcon({ className: 'dot-live-gps', iconSize: [16, 16] });
+            if (myLiveGpsMarker) tacticalMap.removeLayer(myLiveGpsMarker);
+            
+            myLiveGpsMarker = L.marker([lat, lng], { icon: liveGpsIcon }).addTo(tacticalMap)
+                .bindPopup("<b>" + systemCallsign + " (LIVE)</b>").openPopup();
+
+            document.getElementById('sub-status').innerText = "HARDWARE VECTOR LOCKED: " + lat.toFixed(4) + ", " + lng.toFixed(4);
+        }
+
+        function handleGpsError() {
+            document.getElementById('sub-status').innerText = "SAT LINK INTERRUPTED // TABLE OVERRIDE ACTIVE";
+        }
+
+        async function transmitAssetToAppwriteServer(unit) {
+            try {
+                await databases.createDocument('tacnet-search-app', 'tacnet_live_units', ID.unique(), {
+                    'tacnet_live_units': unit.uid + " - " + unit.textLabel,
+                    'location': unit.coordsStr,
+                    'operationalStatus': 'DEPLOYED SWEEP ZONE',
+                    'lastUpdateTime': unit.timeLogged
+                });
+            } catch(e){}
+        }
+
+        function navigateToGate() {
+            if (linkActive) toggleLink();
+            document.getElementById('tactical-screen').style.display = 'none';
+            document.getElementById('homepage-screen').style.display = 'flex';
+        }
+
+        function openSearch() { document.getElementById('search-panel').style.display = 'flex'; RosterPanelUpdate(); }
+        function closeSearch() { document.getElementById('search-panel').style.display = 'none'; }
+        function toggleNvg() { document.getElementById('nvg-overlay').style.display = (document.getElementById('nvg-overlay').style.display === 'block') ? 'none' : 'block'; document.getElementById('nvg-btn').classList.toggle('btn-active'); }
+
+        function RosterPanelUpdate() {
+            document.getElementById('active-unit-qty-node').innerText = fieldUnitsArray.length;
+            const container = document.getElementById('roster-results-container');
+            container.innerHTML = '';
+            if (fieldUnitsArray.length === 0) { container.innerHTML = '<div class="loading-text">NO FIELD ASSETS ASSIGNED</div>'; return; }
+            fieldUnitsArray.forEach(unit => {
+                container.insertAdjacentHTML('beforeend', '<div class="result-item"><div><div class="unit-name" style="color:#D4AF37;">' + unit.uid + ' // ' + unit.textLabel + '</div><div class="unit-status">VECTOR: [ ' + unit.coordsStr + ' ]</div></div></div>');
+            });
+        }
+
+        function purgeFullRosterLedger() {
+            if (!confirm("Execute full purge clearance?")) return;
+            fieldUnitsArray.forEach(u => { if (u.markerRef) tacticalMap.removeLayer(u.markerRef); if (u.radarRef) tacticalMap.removeLayer(u.radarRef); });
+            fieldUnitsArray = [];
+            userDrawnLinesArray.forEach(line => tacticalMap.removeLayer(line));
+            userDrawnLinesArray = [];
+            if (activePerimeterCircle) { tacticalMap.removeLayer(activePerimeterCircle); activePerimeterCircle = null; }
+            RosterPanelUpdate();
+        }
+    </script>
+</body>
+</html>
