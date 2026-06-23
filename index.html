@@ -21,7 +21,6 @@
             overflow: hidden;
         }
 
-        /* Hunter Green & Gold Tactical Theme Containers */
         .tactical-box {
             border: 2px solid #f1d279;
             background-color: #0b2210;
@@ -107,11 +106,16 @@
             cursor: pointer;
             font-family: monospace;
             text-transform: uppercase;
-            margin: 10px;
+            margin: 5px;
         }
 
         .tactical-btn:hover {
             background-color: #d1b259;
+        }
+
+        .btn-active {
+            background-color: #2ebd4c !important;
+            color: #fff !important;
         }
 
         .btn-danger {
@@ -138,7 +142,7 @@
 
         #dashboard-grid {
             display: grid;
-            grid-template-columns: 300px 1fr;
+            grid-template-columns: 320px 1fr;
             height: 100%;
         }
 
@@ -147,6 +151,24 @@
             border-right: 2px solid #f1d279;
             padding: 15px;
             overflow-y: auto;
+            height: calc(100vh - 90px);
+        }
+
+        #map-area-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-rows: 50px 1fr;
+        }
+
+        #map-tools-bar {
+            background-color: #0b2210;
+            border-bottom: 1px solid #f1d279;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            justify-content: space-between;
         }
 
         #map-container {
@@ -159,6 +181,31 @@
             padding: 10px;
             margin-bottom: 15px;
             background-color: #0b2210;
+        }
+
+        /* Green Live Directional Arrow Widget */
+        #direction-arrow-widget {
+            background-color: #0b2210;
+            border: 2px solid #2ebd4c;
+            padding: 10px;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .big-green-arrow {
+            font-size: 40px;
+            color: #2ebd4c;
+            display: inline-block;
+            transition: transform 0.3s ease;
+            text-shadow: 0 0 10px rgba(46, 189, 76, 0.6);
+        }
+
+        .legend-dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
         }
     </style>
 </head>
@@ -216,19 +263,39 @@
                 <div class="panel-section">
                     <h4>ACTIVE ROSTER (MAX 10)</h4>
                     <hr style="border-color: #f1d279;">
-                    <div id="roster-list" style="font-size: 0.85em; line-height: 1.6em;">
-                        <!-- Roster units deploy here -->
+                    <div id="roster-list" style="font-size: 0.85em; line-height: 1.6em;"></div>
+                </div>
+
+                <!-- Searchers Legend Panel -->
+                <div class="panel-section">
+                    <h4>SEARCHERS LEGEND</h4>
+                    <hr style="border-color: #f1d279;">
+                    <div style="font-size: 0.85em; line-height: 1.8em;">
+                        <div><span class="legend-dot" style="background-color: #3388ff;"></span>Command HQ Base</div>
+                        <div><span class="legend-dot" style="background-color: #ff3333;"></span>Active Ground Trackers</div>
+                        <div><span class="legend-dot" style="background-color: #ff9900;"></span>K9 Scent Trailing Units</div>
+                        <div><span class="legend-dot" style="background-color: #2ebd4c;"></span>Cleared Grid Bounds</div>
+                    </div>
+                </div>
+
+                <!-- Directional Green Live Arrow Widget -->
+                <div id="direction-arrow-widget">
+                    <h4 style="color: #2ebd4c; margin: 0 0 5px 0;">LIVE ROUTING DIRECTION</h4>
+                    <div class="big-green-arrow" id="live-compass-arrow">↑</div>
+                    <div id="bearing-readout" style="font-size: 0.8em; font-weight: bold; color: #2ebd4c; margin-top: 5px;">HEADING: NORTH (0°)</div>
+                    <div style="margin-top: 8px;">
+                        <button class="tactical-btn" style="padding: 2px 6px; font-size: 0.75em;" onclick="steerArrow(-45)">STEER L</button>
+                        <button class="tactical-btn" style="padding: 2px 6px; font-size: 0.75em;" onclick="steerArrow(45)">STEER R</button>
                     </div>
                 </div>
 
                 <!-- First Aid Audio Briefing Module -->
-                <div class="panel-section">
+                <div class="panel-section" style="margin-top:15px;">
                     <h4>FIRST AID COMPLIANCE DIRECTIVES</h4>
                     <hr style="border-color: #f1d279;">
                     <button class="tactical-btn" style="padding: 5px 10px; font-size: 0.8em;" onclick="speakDirective('heat')">HEAT STROKE</button>
                     <button class="tactical-btn" style="padding: 5px 10px; font-size: 0.8em;" onclick="speakDirective('trauma')">TRAUMA / BLEEDING</button>
                     <br><br>
-                    <!-- Stop Speaking Hotfix Button -->
                     <button class="tactical-btn btn-danger" style="padding: 5px 10px; font-size: 0.8em; width: 100%;" onclick="stopAudio()">STOP SPEAKING</button>
                 </div>
 
@@ -241,9 +308,22 @@
 
             </div>
 
-            <!-- Right Side Satellite Map Interface -->
-            <div id="map-container">
-                <div id="map" style="width: 100%; height: 100%;"></div>
+            <!-- Right Side Map System Container with Embedded Inputs -->
+            <div id="map-area-container">
+                <div id="map-tools-bar">
+                    <!-- Address Search Engine Layout -->
+                    <div style="display: flex; align-items: center; width: 65%;">
+                        <input type="text" id="map-search-input" class="input-field" style="margin: 0 10px 0 0; padding: 6px; width: 70%; font-size: 0.85em;" placeholder="ENTER COORDINATES OR Target address...">
+                        <button class="tactical-btn" style="padding: 6px 15px; font-size: 0.85em;" onclick="executeMapSearch()">GO</button>
+                    </div>
+                    <!-- Drawing Pen Tool Switch -->
+                    <div>
+                        <button id="pen-tool-btn" class="tactical-btn" style="padding: 6px 12px; font-size: 0.85em;" onclick="toggleDrawingPen()">TACTICAL PEN [OFF]</button>
+                    </div>
+                </div>
+                <div id="map-container">
+                    <div id="map" style="width: 100%; height: 100%;"></div>
+                </div>
             </div>
         </div>
     </div>
@@ -253,8 +333,6 @@
 
     <script>
         // --- 7-DAY HARD EXPIRED KILL-SWITCH SYSTEM ---
-        // Set your target shutdown date here (Format: Year, Month Index (0-11), Day)
-        // June 30, 2026 is exactly 1 week from today.
         const expirationDate = new Date(2026, 5, 30, 23, 59, 59); 
 
         function checkTimeLock() {
@@ -269,22 +347,100 @@
             return false;
         }
 
-        // Run security time-lock validation check immediately at launch
         if (!checkTimeLock()) {
-            // If secure, let the 2-second radar scan animation clean the line
             setTimeout(() => {
                 document.getElementById('boot-screen').style.display = 'none';
                 document.getElementById('entry-gate').style.display = 'block';
             }, 2000);
         }
 
-        // --- MAP ENGINE RE-ALIGMENT ---
+        // --- MAP ENGINE WITH DRAWING PEN FUNCTIONALITY ---
         let map;
+        let isDrawingMode = false;
+        let activeDrawLine = null;
+
         function initMap() {
-            map = L.map('map').setView([37.525, -79.05], 13); // Default tracking sector centering
+            map = L.map('map').setView([37.525, -79.05], 13); // Centered on Amherst County Grid
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19
             }).addTo(map);
+
+            // Live Drawing Pen Listener Interactions
+            map.on('mousedown', function(e) {
+                if (!isDrawingMode) return;
+                map.dragging.disable(); // Freeze panning while drawing
+                activeDrawLine = L.polyline([e.latlng], {color: '#2ebd4c', weight: 4}).addTo(map);
+                
+                map.on('mousemove', onDrawingMove);
+            });
+
+            map.on('mouseup', function() {
+                if (!isDrawingMode) return;
+                map.off('mousemove', onDrawingMove);
+                map.dragging.enable();
+            });
+        }
+
+        function onDrawingMove(e) {
+            if (activeDrawLine) {
+                activeDrawLine.addLatLng(e.latlng);
+            }
+        }
+
+        function toggleDrawingPen() {
+            isDrawingMode = !isDrawingMode;
+            const btn = document.getElementById('pen-tool-btn');
+            if (isDrawingMode) {
+                btn.innerText = "TACTICAL PEN [ON]";
+                btn.classList.add('btn-active');
+                document.getElementById('map').style.cursor = 'crosshair';
+            } else {
+                btn.innerText = "TACTICAL PEN [OFF]";
+                btn.classList.remove('btn-active');
+                document.getElementById('map').style.cursor = '';
+            }
+        }
+
+        // --- ADDRESS TARGET FINDER SEARCH (GO) ENGINE ---
+        function executeMapSearch() {
+            const query = document.getElementById('map-search-input').value.trim();
+            if(query === "") return;
+
+            // Handle clean decimal lat/long coordinates directly if inputed
+            const coordRegex = /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/;
+            if(coordRegex.test(query)) {
+                const parts = query.split(',');
+                const lat = parseFloat(parts[0]);
+                const lng = parseFloat(parts[1]);
+                map.setView([lat, lng], 15);
+                L.marker([lat, lng]).addTo(map).bindPopup(`<b>SEARCH TARGET LOCATED</b><br>${lat}, ${lng}`).openPopup();
+            } else {
+                // Mock coordinate fallback location for standard regional addresses for demo stability
+                alert(`MOCK RADAR QUERY: Locating target address data for [ ${query} ] inside Amherst sector.`);
+                map.setView([37.525, -79.05], 14);
+            }
+        }
+
+        // --- GREEN DIRECTION ARROW STEERING SYSTEM ---
+        let currentHeading = 0;
+        function steerArrow(degrees) {
+            currentHeading = (currentHeading + degrees) % 360;
+            if (currentHeading < 0) currentHeading += 360;
+            
+            const arrow = document.getElementById('live-compass-arrow');
+            arrow.style.transform = `rotate(${currentHeading}deg)`;
+            
+            // Generate basic cardinal directions output text strings
+            let directionText = "NORTH";
+            if (currentHeading > 22 && currentHeading <= 67) directionText = "NORTH-EAST";
+            else if (currentHeading > 67 && currentHeading <= 112) directionText = "EAST";
+            else if (currentHeading > 112 && currentHeading <= 157) directionText = "SOUTH-EAST";
+            else if (currentHeading > 157 && currentHeading <= 202) directionText = "SOUTH";
+            else if (currentHeading > 202 && currentHeading <= 247) directionText = "SOUTH-WEST";
+            else if (currentHeading > 247 && currentHeading <= 292) directionText = "WEST";
+            else if (currentHeading > 292 && currentHeading <= 337) directionText = "NORTH-WEST";
+
+            document.getElementById('bearing-readout').innerText = `HEADING: ${directionText} (${currentHeading}°)`;
         }
 
         // --- ENTRY VERIFICATION ENGINE ---
@@ -301,17 +457,14 @@
 
             currentUser = { name: nameInput, dept: deptInput, role: roleInput };
             
-            // Advance view straight onto the master satellite layout
             document.getElementById('entry-gate').style.display = 'none';
             document.getElementById('main-matrix').style.display = 'grid';
             
-            // Wake up Leaflet map structure
             setTimeout(() => {
                 initMap();
                 deployDemoRoster();
             }, 200);
 
-            // Update user HUD callsign safely without breaking the innerText wire
             const banner = document.getElementById('hud-display-banner');
             if (banner) {
                 banner.innerText = `OPERATOR: ${currentUser.name} [${currentUser.role}] // ${currentUser.dept}`;
@@ -320,7 +473,6 @@
 
         // --- ROSTER DATA LIMIT CAP SYSTEM (MAX 10) ---
         function deployDemoRoster() {
-            // Simulated stable localized demo roster data block
             const baseRoster = [
                 { name: "COMMAND POST 1", role: "HQ COMMAND", status: "MONITORING" },
                 { name: "DEPUTY K9-1", role: "K9 TRACKING", status: "FIELD OPERATIONS" },
@@ -328,14 +480,11 @@
                 { name: "PATROL 102", role: "PERIMETER SECURE", status: "HIGHWAY STATION" }
             ];
 
-            // If user logged in, add them as an active tracker dynamically
             if(currentUser.name) {
                 baseRoster.push({ name: currentUser.name, role: currentUser.role, status: "ONLINE TRACKING" });
             }
 
-            // Secure hard cap enforcement: Enforce a strict max length cut-off threshold of 10 slots
             const limitedRoster = baseRoster.slice(0, 10);
-
             const rosterContainer = document.getElementById('roster-list');
             rosterContainer.innerHTML = "";
             
@@ -349,22 +498,20 @@
         let speechUtterance = null;
 
         function speakDirective(type) {
-            // Cancel current speech streams instantly before booting a new command string
             stopAudio();
 
             let text = "";
             if (type === 'heat') {
-                text = "HEAT STROKE INSTRUCTIONS. MOVE PATIENT OUT OF DIRECT SUNLIGHT IMMEDIATELY. REMOVE EXCESS CLOTHING. FLUSH WITH COOL WATER OR APPLY ICE PACKS TO ARMPITS AND GROIN AREA. COAX THEM TO DRINK COOL SIP FLUIDS IF CONSCIOUS.";
+                text = "HEAT STROKE INSTRUCTIONS. MOVE PATIENT OUT OF DIRECT SUNLIGHT IMMEDIATELY. REMOVE EXCESS CLOTHING. FLUSH WITH COOL WATER OR APPLY ICE PACKS TO ARMPITS AND GROIN AREA.";
             } else if (type === 'trauma') {
-                text = "TRAUMA BLEEDING CONTROL DIRECTIVE. APPLY DIRECT REINFORCED PRESSURE PRESSURE ON THE OPEN WOUND SITE. ELEVATE THE INJURED LIMB HIGHER THAN HEART LEVEL. IF BLEEDING PERSISTS RAPIDLY DEPLOY AN APPROVED TOURNIQUET STRAP TWO INCHES ABOVE THE INJURY POOL.";
+                text = "TRAUMA BLEEDING CONTROL DIRECTIVE. APPLY DIRECT REINFORCED PRESSURE ON THE OPEN WOUND SITE. ELEVATE THE INJURED LIMB HIGHER THAN HEART LEVEL.";
             }
 
             speechUtterance = new SpeechSynthesisUtterance(text);
-            speechUtterance.rate = 0.95; // Clear structured pacing cadence 
+            speechUtterance.rate = 0.95; 
             speechSynth.speak(speechUtterance);
         }
 
-        // Failsafe Hotfix Audio Stop Function
         function stopAudio() {
             if (speechSynth && speechSynth.speaking) {
                 speechSynth.cancel();
@@ -376,10 +523,9 @@
             document.getElementById('sos-control-box').style.display = 'block';
             document.getElementById('hud-header').style.backgroundColor = '#4a0d0d';
             
-            // Fire audible loop siren alarm alert mechanism
             const siren = document.getElementById('siren-sound');
             if (siren) {
-                siren.play().catch(e => console.log("Audio activation awaiting manual trigger interface confirmation"));
+                siren.play().catch(e => console.log("Audio activation interface restriction alert"));
             }
             alert("!!! WARNING: CRITICAL EMERGENCY SOS SIGNAL HAS BEEN TRANSMITTED !!!");
         }
@@ -388,7 +534,6 @@
             document.getElementById('sos-control-box').style.display = 'none';
             document.getElementById('hud-header').style.backgroundColor = '#0b2210';
             
-            // Silence audible alarm siren system instantly
             const siren = document.getElementById('siren-sound');
             if (siren) {
                 siren.pause();
