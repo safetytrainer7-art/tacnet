@@ -801,7 +801,7 @@
         // FAILSAFE BOOTLOADER: Unlocks the gateway immediately even if map tiles are loading slowly
         function authorizeRoster() {
             systemCallsign = document.getElementById('input-callsign').value.toUpperCase().trim() || "COMMAND POST";
-            document.getElementById('hud-display-banner').innerText = systemCallsign + " // HQ";
+        
             
             document.getElementById('signin-screen').style.display = 'none';
             document.getElementById('tactical-screen').style.display = 'flex';
