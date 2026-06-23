@@ -1,1 +1,400 @@
-github.com/safetytrainer7-art/tacnet](https://github.com/safetytrainer7-art/tacnet
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>TACNET // CENTRAL COMMAND MATRIX</title>
+    <!-- Include the Official Appwrite Web SDK Platform -->
+    <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.0"></script>
+
+    <!-- LEAFLET GPS MAP ENGINE STYLES & SCRIPTS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <style>
+        body {
+            background-color: #020803;
+            color: #f1d279;
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        /* Hunter Green & Gold Tactical Theme Containers */
+        .tactical-box {
+            border: 2px solid #f1d279;
+            background-color: #0b2210;
+            padding: 20px;
+            border-radius: 4px;
+            box-shadow: 0 0 15px rgba(241, 210, 121, 0.2);
+        }
+
+        /* Radar Scanner Boot Screen */
+        #boot-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #07170a;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .radar-circle {
+            width: 120px;
+            height: 120px;
+            border: 3px solid #f1d279;
+            border-radius: 50%;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .radar-sweep {
+            width: 100%;
+            height: 100%;
+            background: conic-gradient(from 0deg, rgba(241,210,121,0.4) 0deg, transparent 90deg);
+            border-radius: 50%;
+            animation: sweep 2s linear infinite;
+        }
+
+        @keyframes sweep {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Expiration Overlay Screen */
+        #lockout-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #0a0101;
+            color: #ff4d4d;
+            border: 4px solid #ff4d4d;
+            z-index: 10000;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* Entry Gate Interface */
+        #entry-gate {
+            display: none;
+            max-width: 450px;
+            margin: 10% auto;
+            text-align: center;
+        }
+
+        .input-field {
+            background-color: #020803;
+            border: 1px solid #f1d279;
+            color: #f1d279;
+            padding: 10px;
+            width: 80%;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+
+        .tactical-btn {
+            background-color: #f1d279;
+            color: #020803;
+            border: none;
+            padding: 12px 24px;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: monospace;
+            text-transform: uppercase;
+            margin: 10px;
+        }
+
+        .tactical-btn:hover {
+            background-color: #d1b259;
+        }
+
+        .btn-danger {
+            background-color: #9c2424;
+            color: white;
+        }
+        .btn-danger:hover { background-color: #7a1a1a; }
+
+        /* Main Dashboard & HUD Layout */
+        #main-matrix {
+            display: none;
+            height: 100vh;
+            grid-template-rows: 60px 1fr;
+        }
+
+        #hud-header {
+            background-color: #0b2210;
+            border-bottom: 2px solid #f1d279;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        #dashboard-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            height: 100%;
+        }
+
+        #control-panel {
+            background-color: #07170a;
+            border-right: 2px solid #f1d279;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        #map-container {
+            width: 100%;
+            height: 100%;
+        }
+
+        .panel-section {
+            border: 1px solid #f1d279;
+            padding: 10px;
+            margin-bottom: 15px;
+            background-color: #0b2210;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. TIME LOCK SYSTEM DISCONNECT (7-DAY EXPIRATION) -->
+    <div id="lockout-screen">
+        <h1>[ SYSTEM ACCESS REVOKED ]</h1>
+        <p style="font-size: 1.2em; width: 80%;">
+            TACNET EVALUATION PERIOD HAS EXPIRED.<br>
+            ALL MULTI-AGENCY FIELD NETWORK OPERATIONS ARE DISCONNECTED.<br><br>
+            CONTACT SYSTEM ADMINISTRATOR FOR LICENSING AND RE-DEPLOYMENT.
+        </p>
+    </div>
+
+    <!-- 2. RADAR SCANNER BOOT SCREEN -->
+    <div id="boot-screen">
+        <div class="radar-circle"><div class="radar-sweep"></div></div>
+        <h3 id="boot-text">INITIALIZING TACNET LINK V2.0...</h3>
+    </div>
+
+    <!-- 3. MULTI-AGENCY INITIALIZATION GATEWAY -->
+    <div id="entry-gate" class="tactical-box">
+        <h2>MULTI-AGENCY DEPLOYMENT ENGINE</h2>
+        <hr style="border-color: #f1d279;">
+        <p>ENTER DEPLOYMENT CREDENTIALS:</p>
+        
+        <input type="text" id="officer-name" class="input-field" placeholder="OPERATOR / SEARCHER NAME" autocomplete="off">
+        <input type="text" id="officer-dept" class="input-field" placeholder="AGENCY / DEPARTMENT" autocomplete="off">
+        
+        <select id="officer-role" class="input-field">
+            <option value="SEARCHER">ROLE: FIELD SEARCHER</option>
+            <option value="K9 OPERATOR">ROLE: K9 OPERATOR</option>
+            <option value="PATROL">ROLE: PATROL UNIT</option>
+            <option value="CAPTAIN">ROLE: COMMAND CAPTAIN</option>
+            <option value="SUPPORT">ROLE: LOGISTICS / SUPPORT</option>
+        </select>
+        <br><br>
+        <button class="tactical-btn" onclick="verifyAndInitialize()">INITIALIZE MASTER SYSTEM</button>
+    </div>
+
+    <!-- 4. MASTER SATELLITE COMMAND COMMAND DECK -->
+    <div id="main-matrix">
+        <div id="hud-header">
+            <div style="font-weight: bold; font-size: 1.2em;">TACNET // MULTI-AGENCY CORE</div>
+            <div id="hud-display-banner">GRID STATUS: ACTIVE</div>
+            <div><button class="tactical-btn btn-danger" id="sos-btn" onclick="triggerSOS()">SOS EMERGENCY</button></div>
+        </div>
+
+        <div id="dashboard-grid">
+            <!-- Left Side Control Console -->
+            <div id="control-panel">
+                
+                <!-- Active Deployment Roster (Capped at 10) -->
+                <div class="panel-section">
+                    <h4>ACTIVE ROSTER (MAX 10)</h4>
+                    <hr style="border-color: #f1d279;">
+                    <div id="roster-list" style="font-size: 0.85em; line-height: 1.6em;">
+                        <!-- Roster units deploy here -->
+                    </div>
+                </div>
+
+                <!-- First Aid Audio Briefing Module -->
+                <div class="panel-section">
+                    <h4>FIRST AID COMPLIANCE DIRECTIVES</h4>
+                    <hr style="border-color: #f1d279;">
+                    <button class="tactical-btn" style="padding: 5px 10px; font-size: 0.8em;" onclick="speakDirective('heat')">HEAT STROKE</button>
+                    <button class="tactical-btn" style="padding: 5px 10px; font-size: 0.8em;" onclick="speakDirective('trauma')">TRAUMA / BLEEDING</button>
+                    <br><br>
+                    <!-- Stop Speaking Hotfix Button -->
+                    <button class="tactical-btn btn-danger" style="padding: 5px 10px; font-size: 0.8em; width: 100%;" onclick="stopAudio()">STOP SPEAKING</button>
+                </div>
+
+                <!-- Emergency SOS Control Panel -->
+                <div class="panel-section" id="sos-control-box" style="display: none; border-color: #ff4d4d;">
+                    <h4 style="color: #ff4d4d; margin: 0;">!!! EMERGENCY SIGNAL ACTIVE !!!</h4>
+                    <p style="font-size: 0.8em; margin: 5px 0;">BROADCASTING ALARM AUDIO TO ALL UNITS.</p>
+                    <button class="tactical-btn" style="background-color: #fff; color: #000; width: 100%;" onclick="resetSOS()">RESET SOS ALARM</button>
+                </div>
+
+            </div>
+
+            <!-- Right Side Satellite Map Interface -->
+            <div id="map-container">
+                <div id="map" style="width: 100%; height: 100%;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AUDIO SOUND EFFECTS ELEMENTS -->
+    <audio id="siren-sound" loop src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg"></audio>
+
+    <script>
+        // --- 7-DAY HARD EXPIRED KILL-SWITCH SYSTEM ---
+        // Set your target shutdown date here (Format: Year, Month Index (0-11), Day)
+        // June 30, 2026 is exactly 1 week from today.
+        const expirationDate = new Date(2026, 5, 30, 23, 59, 59); 
+
+        function checkTimeLock() {
+            const currentTime = new Date();
+            if (currentTime > expirationDate) {
+                document.getElementById('boot-screen').style.display = 'none';
+                document.getElementById('entry-gate').style.display = 'none';
+                document.getElementById('main-matrix').style.display = 'none';
+                document.getElementById('lockout-screen').style.display = 'flex';
+                return true;
+            }
+            return false;
+        }
+
+        // Run security time-lock validation check immediately at launch
+        if (!checkTimeLock()) {
+            // If secure, let the 2-second radar scan animation clean the line
+            setTimeout(() => {
+                document.getElementById('boot-screen').style.display = 'none';
+                document.getElementById('entry-gate').style.display = 'block';
+            }, 2000);
+        }
+
+        // --- MAP ENGINE RE-ALIGMENT ---
+        let map;
+        function initMap() {
+            map = L.map('map').setView([37.525, -79.05], 13); // Default tracking sector centering
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19
+            }).addTo(map);
+        }
+
+        // --- ENTRY VERIFICATION ENGINE ---
+        let currentUser = {};
+        function verifyAndInitialize() {
+            const nameInput = document.getElementById('officer-name').value.trim();
+            const deptInput = document.getElementById('officer-dept').value.trim();
+            const roleInput = document.getElementById('officer-role').value;
+
+            if (nameInput === "" || deptInput === "") {
+                alert("ACCESS DENIED: OPERATIONAL NAME AND AGENCY BLANKS MUST BE FILLED.");
+                return;
+            }
+
+            currentUser = { name: nameInput, dept: deptInput, role: roleInput };
+            
+            // Advance view straight onto the master satellite layout
+            document.getElementById('entry-gate').style.display = 'none';
+            document.getElementById('main-matrix').style.display = 'grid';
+            
+            // Wake up Leaflet map structure
+            setTimeout(() => {
+                initMap();
+                deployDemoRoster();
+            }, 200);
+
+            // Update user HUD callsign safely without breaking the innerText wire
+            const banner = document.getElementById('hud-display-banner');
+            if (banner) {
+                banner.innerText = `OPERATOR: ${currentUser.name} [${currentUser.role}] // ${currentUser.dept}`;
+            }
+        }
+
+        // --- ROSTER DATA LIMIT CAP SYSTEM (MAX 10) ---
+        function deployDemoRoster() {
+            // Simulated stable localized demo roster data block
+            const baseRoster = [
+                { name: "COMMAND POST 1", role: "HQ COMMAND", status: "MONITORING" },
+                { name: "DEPUTY K9-1", role: "K9 TRACKING", status: "FIELD OPERATIONS" },
+                { name: "SEARCH UNIT 4", role: "GROUND SEARCH", status: "GRID ALPHA" },
+                { name: "PATROL 102", role: "PERIMETER SECURE", status: "HIGHWAY STATION" }
+            ];
+
+            // If user logged in, add them as an active tracker dynamically
+            if(currentUser.name) {
+                baseRoster.push({ name: currentUser.name, role: currentUser.role, status: "ONLINE TRACKING" });
+            }
+
+            // Secure hard cap enforcement: Enforce a strict max length cut-off threshold of 10 slots
+            const limitedRoster = baseRoster.slice(0, 10);
+
+            const rosterContainer = document.getElementById('roster-list');
+            rosterContainer.innerHTML = "";
+            
+            limitedRoster.forEach((unit, idx) => {
+                rosterContainer.innerHTML += `<div><strong>[${idx+1}] ${unit.name}</strong> - ${unit.role}<br><span style="color: #8ce095;">• ${unit.status}</span></div><hr style="border-color:rgba(241,210,121,0.1); margin: 5px 0;">`;
+            });
+        }
+
+        // --- FIRST AID TEXT-TO-SPEECH AUDIO CONTROL ENGINE ---
+        let speechSynth = window.speechSynthesis;
+        let speechUtterance = null;
+
+        function speakDirective(type) {
+            // Cancel current speech streams instantly before booting a new command string
+            stopAudio();
+
+            let text = "";
+            if (type === 'heat') {
+                text = "HEAT STROKE INSTRUCTIONS. MOVE PATIENT OUT OF DIRECT SUNLIGHT IMMEDIATELY. REMOVE EXCESS CLOTHING. FLUSH WITH COOL WATER OR APPLY ICE PACKS TO ARMPITS AND GROIN AREA. COAX THEM TO DRINK COOL SIP FLUIDS IF CONSCIOUS.";
+            } else if (type === 'trauma') {
+                text = "TRAUMA BLEEDING CONTROL DIRECTIVE. APPLY DIRECT REINFORCED PRESSURE PRESSURE ON THE OPEN WOUND SITE. ELEVATE THE INJURED LIMB HIGHER THAN HEART LEVEL. IF BLEEDING PERSISTS RAPIDLY DEPLOY AN APPROVED TOURNIQUET STRAP TWO INCHES ABOVE THE INJURY POOL.";
+            }
+
+            speechUtterance = new SpeechSynthesisUtterance(text);
+            speechUtterance.rate = 0.95; // Clear structured pacing cadence 
+            speechSynth.speak(speechUtterance);
+        }
+
+        // Failsafe Hotfix Audio Stop Function
+        function stopAudio() {
+            if (speechSynth && speechSynth.speaking) {
+                speechSynth.cancel();
+            }
+        }
+
+        // --- EMERGENCY SOS BROADCAST SIREN LOGIC ---
+        function triggerSOS() {
+            document.getElementById('sos-control-box').style.display = 'block';
+            document.getElementById('hud-header').style.backgroundColor = '#4a0d0d';
+            
+            // Fire audible loop siren alarm alert mechanism
+            const siren = document.getElementById('siren-sound');
+            if (siren) {
+                siren.play().catch(e => console.log("Audio activation awaiting manual trigger interface confirmation"));
+            }
+            alert("!!! WARNING: CRITICAL EMERGENCY SOS SIGNAL HAS BEEN TRANSMITTED !!!");
+        }
+
+        function resetSOS() {
+            document.getElementById('sos-control-box').style.display = 'none';
+            document.getElementById('hud-header').style.backgroundColor = '#0b2210';
+            
+            // Silence audible alarm siren system instantly
+            const siren = document.getElementById('siren-sound');
+            if (siren) {
+                siren.pause();
+                siren.currentTime = 0;
+            }
+        }
+    </script>
+</body>
+</html>
