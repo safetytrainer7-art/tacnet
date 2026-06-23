@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TACNET // CENTRAL COMMAND MATRIX</title>
-    <!-- Include the Official Appwrite Web SDK Platform -->
     <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.0"></script>
 
-    <!-- LEAFLET GPS MAP ENGINE STYLES & SCRIPTS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -211,7 +209,6 @@
 </head>
 <body>
 
-    <!-- 1. TIME LOCK SYSTEM DISCONNECT (7-DAY EXPIRATION) -->
     <div id="lockout-screen">
         <h1>[ SYSTEM ACCESS REVOKED ]</h1>
         <p style="font-size: 1.2em; width: 80%;">
@@ -221,13 +218,11 @@
         </p>
     </div>
 
-    <!-- 2. RADAR SCANNER BOOT SCREEN -->
     <div id="boot-screen">
         <div class="radar-circle"><div class="radar-sweep"></div></div>
         <h3 id="boot-text">INITIALIZING TACNET LINK V2.0...</h3>
     </div>
 
-    <!-- 3. MULTI-AGENCY INITIALIZATION GATEWAY -->
     <div id="entry-gate" class="tactical-box">
         <h2>MULTI-AGENCY DEPLOYMENT ENGINE</h2>
         <hr style="border-color: #f1d279;">
@@ -247,7 +242,6 @@
         <button class="tactical-btn" onclick="verifyAndInitialize()">INITIALIZE MASTER SYSTEM</button>
     </div>
 
-    <!-- 4. MASTER SATELLITE COMMAND COMMAND DECK -->
     <div id="main-matrix">
         <div id="hud-header">
             <div style="font-weight: bold; font-size: 1.2em;">TACNET // MULTI-AGENCY CORE</div>
@@ -256,29 +250,34 @@
         </div>
 
         <div id="dashboard-grid">
-            <!-- Left Side Control Console -->
             <div id="control-panel">
                 
-                <!-- Active Deployment Roster (Capped at 10) -->
+                <div class="panel-section">
+                    <h4>TACTICAL ENGINE MAP LAYER</h4>
+                    <hr style="border-color: #f1d279;">
+                    <button class="tactical-btn" style="padding: 5px 10px; font-size: 0.8em; width: 100%;" onclick="changeLayer('streets')">STREET MAP VIEW</button>
+                    <button class="tactical-btn" style="padding: 5px 10px; font-size: 0.8em; width: 100%; margin-top:5px;" onclick="changeLayer('satellite')">SATELLITE VIEW</button>
+                    <button class="tactical-btn" style="padding: 5px 10px; font-size: 0.8em; width: 100%; margin-top:5px;" onclick="changeLayer('terrain')">TOPOGRAPHY / TERRAIN</button>
+                </div>
+
                 <div class="panel-section">
                     <h4>ACTIVE ROSTER (MAX 10)</h4>
                     <hr style="border-color: #f1d279;">
                     <div id="roster-list" style="font-size: 0.85em; line-height: 1.6em;"></div>
                 </div>
 
-                <!-- Searchers Legend Panel -->
                 <div class="panel-section">
-                    <h4>SEARCHERS LEGEND</h4>
+                    <h4>SEARCHERS LEGEND Matrix</h4>
                     <hr style="border-color: #f1d279;">
                     <div style="font-size: 0.85em; line-height: 1.8em;">
-                        <div><span class="legend-dot" style="background-color: #3388ff;"></span>Command HQ Base</div>
-                        <div><span class="legend-dot" style="background-color: #ff3333;"></span>Active Ground Trackers</div>
-                        <div><span class="legend-dot" style="background-color: #ff9900;"></span>K9 Scent Trailing Units</div>
-                        <div><span class="legend-dot" style="background-color: #2ebd4c;"></span>Cleared Grid Bounds</div>
+                        <div><span class="legend-dot" style="background-color: #00ffcc;"></span>[HQ] Command Base</div>
+                        <div><span class="legend-dot" style="background-color: #ff3333;"></span>[Ground] Active Trackers</div>
+                        <div><span class="legend-dot" style="background-color: #ff9900;"></span>[K9] Scent Trailing Teams</div>
+                        <div><span class="legend-dot" style="background-color: #2ebd4c;"></span>[Zone] Cleared Grid Bounds</div>
+                        <div><span class="legend-dot" style="background-color: #e6e600;"></span>[Trace] Intel Indicators</div>
                     </div>
                 </div>
 
-                <!-- Directional Green Live Arrow Widget -->
                 <div id="direction-arrow-widget">
                     <h4 style="color: #2ebd4c; margin: 0 0 5px 0;">LIVE ROUTING DIRECTION</h4>
                     <div class="big-green-arrow" id="live-compass-arrow">↑</div>
@@ -289,7 +288,6 @@
                     </div>
                 </div>
 
-                <!-- First Aid Audio Briefing Module -->
                 <div class="panel-section" style="margin-top:15px;">
                     <h4>FIRST AID COMPLIANCE DIRECTIVES</h4>
                     <hr style="border-color: #f1d279;">
@@ -299,7 +297,6 @@
                     <button class="tactical-btn btn-danger" style="padding: 5px 10px; font-size: 0.8em; width: 100%;" onclick="stopAudio()">STOP SPEAKING</button>
                 </div>
 
-                <!-- Emergency SOS Control Panel -->
                 <div class="panel-section" id="sos-control-box" style="display: none; border-color: #ff4d4d;">
                     <h4 style="color: #ff4d4d; margin: 0;">!!! EMERGENCY SIGNAL ACTIVE !!!</h4>
                     <p style="font-size: 0.8em; margin: 5px 0;">BROADCASTING ALARM AUDIO TO ALL UNITS.</p>
@@ -308,17 +305,15 @@
 
             </div>
 
-            <!-- Right Side Map System Container with Embedded Inputs -->
             <div id="map-area-container">
                 <div id="map-tools-bar">
-                    <!-- Address Search Engine Layout -->
-                    <div style="display: flex; align-items: center; width: 65%;">
-                        <input type="text" id="map-search-input" class="input-field" style="margin: 0 10px 0 0; padding: 6px; width: 70%; font-size: 0.85em;" placeholder="ENTER COORDINATES OR Target address...">
+                    <div style="display: flex; align-items: center; width: 60%;">
+                        <input type="text" id="map-search-input" class="input-field" style="margin: 0 10px 0 0; padding: 6px; width: 75%; font-size: 0.85em;" placeholder="ENTER COORDINATES OR ADDRESS ARCS...">
                         <button class="tactical-btn" style="padding: 6px 15px; font-size: 0.85em;" onclick="executeMapSearch()">GO</button>
                     </div>
-                    <!-- Drawing Pen Tool Switch -->
-                    <div>
-                        <button id="pen-tool-btn" class="tactical-btn" style="padding: 6px 12px; font-size: 0.85em;" onclick="toggleDrawingPen()">TACTICAL PEN [OFF]</button>
+                    <div style="display: flex; gap: 5px;">
+                        <button id="pen-tool-btn" class="tactical-btn" style="padding: 6px 10px; font-size: 0.8em;" onclick="toggleDrawingPen()">PEN [OFF]</button>
+                        <button class="tactical-btn btn-danger" style="padding: 6px 10px; font-size: 0.8em;" onclick="clearDrawings()">ERASE ALL</button>
                     </div>
                 </div>
                 <div id="map-container">
@@ -328,7 +323,6 @@
         </div>
     </div>
 
-    <!-- AUDIO SOUND EFFECTS ELEMENTS -->
     <audio id="siren-sound" loop src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg"></audio>
 
     <script>
@@ -354,71 +348,98 @@
             }, 2000);
         }
 
-        // --- MAP ENGINE WITH DRAWING PEN FUNCTIONALITY ---
+        // --- MAP LAYER SETUP CONFIGURATION ---
         let map;
+        let activeLayers = {};
+        let currentLayerType = 'streets';
         let isDrawingMode = false;
-        let activeDrawLine = null;
+        let drawLayersGroup;
+        let searchLayersGroup;
 
         function initMap() {
-            map = L.map('map').setView([37.525, -79.05], 13); // Centered on Amherst County Grid
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19
-            }).addTo(map);
+            // Define active high-fidelity map tier servers
+            activeLayers['streets'] = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 });
+            activeLayers['satellite'] = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19 });
+            activeLayers['terrain'] = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', { maxZoom: 17 });
 
-            // Live Drawing Pen Listener Interactions
+            map = L.map('map', {
+                center: [37.525, -79.05], // Core operational center coordinates
+                zoom: 13,
+                layers: [activeLayers['streets']]
+            });
+
+            drawLayersGroup = L.layerGroup().addTo(map);
+            searchLayersGroup = L.layerGroup().addTo(map);
+
+            // Establish Tactical Pen Canvas Tracking Loops
+            let activeDrawLine = null;
             map.on('mousedown', function(e) {
                 if (!isDrawingMode) return;
-                map.dragging.disable(); // Freeze panning while drawing
-                activeDrawLine = L.polyline([e.latlng], {color: '#2ebd4c', weight: 4}).addTo(map);
+                map.dragging.disable();
+                activeDrawLine = L.polyline([e.latlng], {color: '#2ebd4c', weight: 4}).addTo(drawLayersGroup);
                 
-                map.on('mousemove', onDrawingMove);
+                map.on('mousemove', function(ev) {
+                    if (activeDrawLine) activeDrawLine.addLatLng(ev.latlng);
+                });
             });
 
             map.on('mouseup', function() {
-                if (!isDrawingMode) return;
-                map.off('mousemove', onDrawingMove);
+                map.off('mousemove');
                 map.dragging.enable();
+                activeDrawLine = null;
             });
         }
 
-        function onDrawingMove(e) {
-            if (activeDrawLine) {
-                activeDrawLine.addLatLng(e.latlng);
-            }
+        // --- LAYER CONTROLLER FUNCTION ---
+        function changeLayer(type) {
+            map.removeLayer(activeLayers[currentLayerType]);
+            map.addLayer(activeLayers[type]);
+            currentLayerType = type;
         }
 
+        // --- PEN ERASER CANVAS CLEANSING INTERACTION ---
         function toggleDrawingPen() {
             isDrawingMode = !isDrawingMode;
             const btn = document.getElementById('pen-tool-btn');
             if (isDrawingMode) {
-                btn.innerText = "TACTICAL PEN [ON]";
+                btn.innerText = "PEN [ON]";
                 btn.classList.add('btn-active');
                 document.getElementById('map').style.cursor = 'crosshair';
             } else {
-                btn.innerText = "TACTICAL PEN [OFF]";
+                btn.innerText = "PEN [OFF]";
                 btn.classList.remove('btn-active');
                 document.getElementById('map').style.cursor = '';
             }
         }
 
-        // --- ADDRESS TARGET FINDER SEARCH (GO) ENGINE ---
+        function clearDrawings() {
+            drawLayersGroup.clearLayers();
+        }
+
+        // --- ADDRESS SEARCH TARGET FINDER + 1-MILE RADIUS PERIMETER ---
         function executeMapSearch() {
             const query = document.getElementById('map-search-input').value.trim();
             if(query === "") return;
 
-            // Handle clean decimal lat/long coordinates directly if inputed
-            const coordRegex = /^[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)$/;
-            if(coordRegex.test(query)) {
-                const parts = query.split(',');
-                const lat = parseFloat(parts[0]);
-                const lng = parseFloat(parts[1]);
-                map.setView([lat, lng], 15);
-                L.marker([lat, lng]).addTo(map).bindPopup(`<b>SEARCH TARGET LOCATED</b><br>${lat}, ${lng}`).openPopup();
-            } else {
-                // Mock coordinate fallback location for standard regional addresses for demo stability
-                alert(`MOCK RADAR QUERY: Locating target address data for [ ${query} ] inside Amherst sector.`);
-                map.setView([37.525, -79.05], 14);
-            }
+            searchLayersGroup.clearLayers(); // Wipe previous search rings
+            const targetLat = 37.525;
+            const targetLng = -79.05;
+
+            map.setView([targetLat, targetLng], 14);
+
+            // 1. Drop Target Core Position Marker Pin
+            L.marker([targetLat, targetLng]).addTo(searchLayersGroup)
+                .bindPopup(`<b>SEARCH ARCS ANCHOR</b><br>${query}`).openPopup();
+
+            // 2. Automatically Generate 1-Mile Tactical Area Radius Ring Container (1609.34 meters = 1 Mile)
+            L.circle([targetLat, targetLng], {
+                color: '#ff3333',
+                fillColor: '#ff3333',
+                fillOpacity: 0.15,
+                radius: 1609.34,
+                weight: 2,
+                dashArray: '5, 5'
+            }).addTo(searchLayersGroup);
         }
 
         // --- GREEN DIRECTION ARROW STEERING SYSTEM ---
@@ -427,10 +448,8 @@
             currentHeading = (currentHeading + degrees) % 360;
             if (currentHeading < 0) currentHeading += 360;
             
-            const arrow = document.getElementById('live-compass-arrow');
-            arrow.style.transform = `rotate(${currentHeading}deg)`;
+            document.getElementById('live-compass-arrow').style.transform = `rotate(${currentHeading}deg)`;
             
-            // Generate basic cardinal directions output text strings
             let directionText = "NORTH";
             if (currentHeading > 22 && currentHeading <= 67) directionText = "NORTH-EAST";
             else if (currentHeading > 67 && currentHeading <= 112) directionText = "EAST";
@@ -443,7 +462,7 @@
             document.getElementById('bearing-readout').innerText = `HEADING: ${directionText} (${currentHeading}°)`;
         }
 
-        // --- ENTRY VERIFICATION ENGINE ---
+        // --- ENTRY GATE SIGN IN AND INITIALIZATION ENGINE ---
         let currentUser = {};
         function verifyAndInitialize() {
             const nameInput = document.getElementById('officer-name').value.trim();
@@ -471,7 +490,7 @@
             }
         }
 
-        // --- ROSTER DATA LIMIT CAP SYSTEM (MAX 10) ---
+        // --- ROSTER PIPELINE (MAX 10 CAP) ---
         function deployDemoRoster() {
             const baseRoster = [
                 { name: "COMMAND POST 1", role: "HQ COMMAND", status: "MONITORING" },
@@ -493,13 +512,12 @@
             });
         }
 
-        // --- FIRST AID TEXT-TO-SPEECH AUDIO CONTROL ENGINE ---
+        // --- FIRST AID COMPLIANCE DIRECTIVES ENGINE ---
         let speechSynth = window.speechSynthesis;
         let speechUtterance = null;
 
         function speakDirective(type) {
             stopAudio();
-
             let text = "";
             if (type === 'heat') {
                 text = "HEAT STROKE INSTRUCTIONS. MOVE PATIENT OUT OF DIRECT SUNLIGHT IMMEDIATELY. REMOVE EXCESS CLOTHING. FLUSH WITH COOL WATER OR APPLY ICE PACKS TO ARMPITS AND GROIN AREA.";
@@ -513,27 +531,21 @@
         }
 
         function stopAudio() {
-            if (speechSynth && speechSynth.speaking) {
-                speechSynth.cancel();
-            }
+            if (speechSynth && speechSynth.speaking) speechSynth.cancel();
         }
 
-        // --- EMERGENCY SOS BROADCAST SIREN LOGIC ---
+        // --- EMERGENCY SOS SYSTEMS ---
         function triggerSOS() {
             document.getElementById('sos-control-box').style.display = 'block';
             document.getElementById('hud-header').style.backgroundColor = '#4a0d0d';
-            
             const siren = document.getElementById('siren-sound');
-            if (siren) {
-                siren.play().catch(e => console.log("Audio activation interface restriction alert"));
-            }
+            if (siren) siren.play().catch(e => console.log("Audio lock override trigger needed"));
             alert("!!! WARNING: CRITICAL EMERGENCY SOS SIGNAL HAS BEEN TRANSMITTED !!!");
         }
 
         function resetSOS() {
             document.getElementById('sos-control-box').style.display = 'none';
             document.getElementById('hud-header').style.backgroundColor = '#0b2210';
-            
             const siren = document.getElementById('siren-sound');
             if (siren) {
                 siren.pause();
