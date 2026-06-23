@@ -302,6 +302,7 @@
             z-index: 10;
         }
 
+        /* --- STAGE 4: FULL-SCREEN TACTICAL REGISTRY --- */
         #search-panel {
             position: fixed;
             top: 0;
@@ -309,30 +310,52 @@
             width: 100vw;
             height: 100vh;
             background-color: #051207;
-            padding: 50px 20px 20px 20px;
+            padding: 30px 20px 20px 20px;
             box-sizing: border-box;
             display: none;
             flex-direction: column;
             z-index: 20;
+            border: 4px solid #0B2510;
         }
 
-        .search-header {
+        .search-header-layout {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .search-nav-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .search-main-title {
             color: #D4AF37;
             font-weight: bold;
             font-size: 18px;
-            letter-spacing: 1px;
-            margin-bottom: 20px;
+            letter-spacing: 2px;
         }
 
-        .close-btn {
-            color: rgba(255, 255, 255, 0.54);
-            background: none;
-            border: none;
-            font-size: 24px;
+        .purge-btn {
+            background-color: rgba(255, 82, 82, 0.1);
+            color: #ff5252;
+            border: 1px solid #ff5252;
+            padding: 6px 12px;
+            font-family: inherit;
+            font-size: 11px;
+            font-weight: bold;
             cursor: pointer;
+            border-radius: 4px;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+        }
+
+        .purge-btn:hover {
+            background-color: #ff5252;
+            color: #ffffff;
+            box-shadow: 0 0 10px rgba(255, 82, 82, 0.4);
         }
 
         .registry-title {
@@ -340,6 +363,7 @@
             font-size: 12px;
             font-weight: bold;
             margin-bottom: 10px;
+            letter-spacing: 1px;
         }
 
         .divider {
@@ -460,17 +484,25 @@
             <div id="tgt-dot" class="target-dot"></div>
         </div>
 
+        <!-- CLICKING THIS BLUE ICON POPS THE LOOKUP ROSTER BOARD OPEN -->
         <div class="search-trigger" onclick="openSearch()">🔍</div>
 
+        <!-- STAGE 4: FULL-SCREEN TACTICAL REGISTRY BOARD -->
         <div id="search-panel">
-            <div class="search-header">
-                <span>TACTICAL REGISTRY SEARCH</span>
-                <button class="close-btn" onclick="closeSearch()">✕</button>
+            <div class="search-header-layout">
+                <div class="search-nav-group">
+                    <!-- NEW: Back arrow allows exit from the search panel instantly -->
+                    <button class="back-arrow" onclick="closeSearch()">←</button>
+                    <span class="search-main-title">TACTICAL ROSTER PANEL</span>
+                </div>
+                <!-- NEW: Purge roster lets command clear out old tracking ledger rows instantly -->
+                <button class="purge-btn" onclick="purgeServerRoster()">PURGE ACTIVE ROSTER</button>
             </div>
-            <div class="registry-title">LIVE ACTIVE ASSETS IN DATABASE</div>
+            
+            <div class="registry-title">LIVE ACTIVE ASSETS IN DATABASE MAP LEDGER</div>
             <hr class="divider">
             <div id="roster-results-container">
-                <!-- Live data rows will get painted directly in here -->
+                <!-- Live database records get drawn right here -->
             </div>
         </div>
     </div>
@@ -573,27 +605,25 @@
             }
         }
 
-        // NEW FEATURE: Fetch Live Database Roster Elements Dynamically
+        // Fetch Live Database Roster Elements Dynamically
         async function openSearch() {
             const container = document.getElementById('roster-results-container');
             document.getElementById('search-panel').style.display = 'flex';
             container.innerHTML = '<div class="loading-text">POLLING SECURE BACKEND SATELLITE NETWORK...</div>';
 
             try {
-                // Poll Appwrite directly for the latest 25 tactical records
                 const response = await databases.listDocuments(
                     'tacnet-search-app',
                     'tacnet_live_units'
                 );
 
-                container.innerHTML = ''; // Wipe out loading message
+                container.innerHTML = '';
 
                 if (response.documents.length === 0) {
                     container.innerHTML = '<div class="loading-text">NO ACTIVE TRANSMISSIONS FOUND IN LEDGER</div>';
                     return;
                 }
 
-                // Loop through whatever rows exist inside Appwrite and display them cleanly
                 response.documents.forEach(doc => {
                     const itemHtml = `
                         <div class="result-item">
@@ -614,6 +644,32 @@
 
         function closeSearch() {
             document.getElementById('search-panel').style.display = 'none';
+        }
+
+        // MASTER PURGE ACTION: Drops old operational data to clean up the workspace
+        async function purgeServerRoster() {
+            const verification = confirm("WARNING: You are about to clear ALL active tracking units from the server ledger. Proceed?");
+            if (!verification) return;
+
+            const container = document.getElementById('roster-results-container');
+            container.innerHTML = '<div class="loading-text" style="color: #ff5252;">WIPING SERVER ROSTER LEDGER...</div>';
+
+            try {
+                // Fetch whatever rows currently live on the server
+                const response = await databases.listDocuments('tacnet-search-app', 'tacnet_live_units');
+                
+                // Clear each document out step by step
+                for (let doc of response.documents) {
+                    await databases.deleteDocument('tacnet-search-app', 'tacnet_live_units', doc.$id);
+                }
+
+                // Re-poll the screen layout to display the empty clean state
+                openSearch();
+
+            } catch (error) {
+                alert("DATABASE WIPE SYSTEM FAILURE: Check operational admin credentials.");
+                openSearch();
+            }
         }
 
         function toggleNvg() {
