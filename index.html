@@ -32,7 +32,7 @@
             box-sizing: border-box;
         }
 
-        /* --- STAGE 1: DUAL-LAYER IMAGE & TEXT GATEWAY --- */
+        /* --- STAGE 1: GATEWAY HOMEPAGE --- */
         #homepage-screen {
             background-color: #020803;
             background-image: radial-gradient(circle, #091f0d 0%, #020803 100%);
@@ -42,6 +42,25 @@
             align-items: center;
             cursor: pointer;
             z-index: 5000;
+        }
+
+        .hero-image-frame {
+            border: 2px solid #D4AF37;
+            padding: 8px;
+            background-color: #020803;
+            box-shadow: 0 0 30px rgba(214, 175, 55, 0.3);
+            border-radius: 4px;
+            max-width: 85%;
+            max-height: 70vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero-image {
+            max-width: 100%;
+            max-height: 68vh;
+            object-fit: contain;
         }
 
         .text-fallback-box {
@@ -81,6 +100,7 @@
             background-color: #020803;
             border-radius: 4px;
             display: inline-block;
+            margin-top: 15px;
         }
 
         /* --- STAGE 2: SIGN-IN ROSTER --- */
@@ -207,9 +227,16 @@
             left: 10px;
             right: 10px;
             display: flex;
+            flex-direction: column;
+            gap: 6px;
+            z-index: 1000;
+        }
+
+        .hud-top-row {
+            display: flex;
             justify-content: space-between;
             align-items: center;
-            z-index: 1000;
+            width: 100%;
         }
 
         .back-arrow {
@@ -220,70 +247,56 @@
             cursor: pointer;
             font-weight: bold;
             border-radius: 4px;
-            font-size: 12px;
+            font-size: 11px;
         }
 
-        .controls {
+        /* UNIFORM CONTROL WRAPPERS */
+        .controls-grid {
             display: flex;
+            flex-wrap: wrap;
             gap: 4px;
+            justify-content: flex-end;
         }
 
+        /* STANDARDIZED BUTTON SCHEMATIC: Consistent Gold Layout */
         .btn {
-            background-color: rgba(2, 8, 3, 0.9);
-            color: #ffffff;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background-color: rgba(2, 8, 3, 0.92);
+            color: #D4AF37;
+            border: 1.5px solid #D4AF37;
             padding: 6px 10px;
             border-radius: 4px;
             cursor: pointer;
             font-weight: bold;
             font-size: 10px;
             font-family: inherit;
+            letter-spacing: 0.5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.4);
         }
 
         .btn-active {
-            background-color: rgba(0, 255, 0, 0.3) !important;
+            background-color: #0B2510 !important;
             border-color: #00FF00 !important;
             color: #00FF00 !important;
+            box-shadow: 0 0 8px rgba(0,255,0,0.3);
         }
 
-        /* FIXED HIGH CONTROLS: Ultra High Visibility Crimson Colorization Rules */
-        .btn-high-vis-red {
+        .btn-alert-active {
             background-color: #900000 !important;
-            border: 1.5px solid #ff3333 !important;
+            border-color: #ff5252 !important;
             color: #ffffff !important;
-            text-shadow: 1px 1px 2px #000000;
-        }
-        
-        .btn-high-vis-active {
-            background-color: #ff0000 !important;
-            border: 1.5px solid #ffffff !important;
-            color: #ffffff !important;
-            font-weight: 900;
-            box-shadow: 0 0 10px #ff0000;
-        }
-
-        #map-viewport {
-            width: 100vw;
-            height: 100vh;
-            position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 1;
+            box-shadow: 0 0 12px #ff5252;
         }
 
         .search-address-hud {
-            position: absolute;
-            top: 50px;
-            left: 10px;
-            right: 10px;
             display: flex;
             flex-direction: column;
             gap: 5px;
-            z-index: 1000;
             background-color: rgba(2, 8, 3, 0.92);
             padding: 8px;
             border-radius: 4px;
             border: 1px solid #D4AF37;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .search-row { display: flex; gap: 4px; }
@@ -328,7 +341,7 @@
 
         .asset-deployment-hud {
             position: absolute;
-            top: 115px;
+            top: 135px;
             left: 10px;
             background-color: rgba(2, 8, 3, 0.92);
             border: 1px solid #D4AF37;
@@ -350,11 +363,10 @@
             padding: 3px;
         }
 
-        /* SCALED HUD RIbBON (Left Alignment Area Cleared Out) */
         .lower-hud-ribbon {
             position: absolute;
             bottom: 15px;
-            left: 70px; /* Offset cleanly to give the brand-new bottom left card breathing room */
+            left: 70px; 
             right: 120px; 
             background-color: rgba(2, 8, 3, 0.92);
             border: 1px solid #0B2510;
@@ -386,7 +398,6 @@
             font-weight: bold;
         }
 
-        /* THE RE-ENGINEERED BOLD BOTTOM-LEFT STATUS MODULE PANEL */
         .live-counter-trigger {
             position: absolute;
             bottom: 15px;
@@ -413,7 +424,6 @@
             font-weight: 900;
         }
 
-        /* DUAL BOTTOM-RIGHT NAVIGATION BUTTON METRICS */
         .search-trigger {
             position: absolute;
             bottom: 15px;
@@ -453,7 +463,7 @@
             font-weight: bold;
         }
 
-        /* VECTOR LEDGER GLOW DOT METRICS */
+        /* GRAPHIC LEDGER STYLES */
         .dot-le { background-color: #0000ff !important; border: 2px solid white; border-radius: 50%; width: 14px; height: 14px; display: block; box-shadow: 0 0 12px #0000ff; }
         .dot-k9 { background-color: #87ceeb !important; border: 2px solid white; border-radius: 50%; width: 14px; height: 14px; display: block; box-shadow: 0 0 12px #87ceeb; }
         .dot-sar { background-color: #ff0000 !important; border: 2px solid white; border-radius: 50%; width: 14px; height: 14px; display: block; box-shadow: 0 0 12px #ff0000; }
@@ -468,7 +478,7 @@
         .dot-live-gps { background-color: #00ffff !important; border: 2.5px solid #ffffff; border-radius: 50%; width: 16px; height: 16px; display: block; box-shadow: 0 0 15px #00ffff; }
         .dot-trace { background-color: #ff007f !important; border: 2px solid #ffffff; border-radius: 4px; width: 12px; height: 12px; display: block; box-shadow: 0 0 15px #ff007f; }
 
-        /* --- STAGE 4: REGISTRY PANEL --- */
+        /* --- STAGE 4: REGISTRY --- */
         #search-panel {
             position: fixed;
             top: 0;
@@ -492,7 +502,7 @@
         #roster-results-container { flex: 1; overflow-y: auto; }
         .result-item { background-color: rgba(11, 37, 16, 0.4); border: 1px solid rgba(255, 255, 255, 0.12); padding: 10px; border-radius: 4px; margin-bottom: 8px; font-size: 12px; }
 
-        /* --- STAGE 5: REPORT DECK PREVIEW --- */
+        /* --- STAGE 5: REPORT DECK --- */
         #report-panel {
             position: fixed;
             top: 0;
@@ -541,8 +551,8 @@
             color: #00FF00;
         }
 
-        /* --- STAGE 6: BRAND-NEW K9 NOMENCLATURE ENCYCLOPEDIA PANEL OVERLAY --- */
-        #k9-medical-encyclopedia-panel {
+        /* --- STAGE 6: HANDS-FREE VOICE ASSIST PROTOCOL INTERFACE MODAL --- */
+        #k9-voice-medical-panel {
             position: fixed;
             top: 0;
             left: 0;
@@ -554,34 +564,34 @@
             display: none;
             flex-direction: column;
             z-index: 8500;
-            border: 2px solid #ff5252;
+            border: 2px solid #D4AF37;
         }
 
-        .encyclopedia-scroll-frame {
+        .voice-menu-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
             flex: 1;
             overflow-y: auto;
-            background-color: rgba(11, 37, 16, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            padding: 15px;
-            border-radius: 4px;
-            font-size: 12px;
-        }
-
-        .encyclopedia-topic-header {
-            color: #ff5252;
-            font-weight: bold;
-            font-size: 13px;
-            letter-spacing: 1px;
             margin-top: 15px;
-            border-bottom: 1px dashed rgba(255,82,82,0.4);
-            padding-bottom: 2px;
-            text-transform: uppercase;
         }
 
-        .encyclopedia-content-text {
-            color: rgba(255,255,255,0.85);
-            margin: 6px 0 15px 0;
-            line-height: 1.6;
+        .voice-dispatch-btn {
+            background-color: rgba(11, 37, 16, 0.4);
+            border: 1.5px solid #D4AF37;
+            color: #ffffff;
+            padding: 14px;
+            font-family: inherit;
+            font-size: 12px;
+            text-align: left;
+            cursor: pointer;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        .voice-dispatch-btn:hover {
+            background-color: #0B2510;
+            border-color: #00FF00;
         }
     </style>
 </head>
@@ -589,11 +599,10 @@
 
     <!-- STAGE 1: GATEWAY HOMEPAGE -->
     <div id="homepage-screen" class="app-screen" onclick="forceEnterSystemRoster()">
-        <div class="text-fallback-box" id="fallback-branding-node">
-            <div class="fallback-title">TACNET SYSTEM CORE</div>
-            <div class="fallback-sub">CENTRAL SATELLITE COMMAND MATRIX</div>
-            <div class="homepage-footer">CLICK ANYWHERE TO ENTER APP COMMAND POST</div>
+        <div class="hero-image-frame" id="image-container-node">
+            <img src="IMAGE FOR TAC.png2.jpg" alt="TACNET LOGO" class="hero-image" onerror="handleMissingPhotoLayout()">
         </div>
+        <div class="homepage-footer" id="gate-action-footer">CLICK ANYWHERE TO ENTER COMMAND POST</div>
     </div>
 
     <!-- STAGE 2: SIGN-IN ROSTER -->
@@ -617,29 +626,29 @@
         </div>
 
         <div class="hud-header">
-            <div class="hud-left">
+            <div class="hud-top-row">
                 <button class="back-arrow" onclick="navigateToGate()">←</button>
-                <div id="hud-display-banner" class="roster-banner" style="font-size:10px; font-weight:bold; color:#D4AF37;">TACTICAL SYSTEM ACTIVE</div>
+                <div class="controls-grid">
+                    <button id="link-btn" class="btn" onclick="toggleLink()">LINK OFFLINE</button>
+                    <button id="trace-btn" class="btn" onclick="toggleTrapAndTraceFeature()">TRACE OFF</button>
+                    <button id="pen-btn" class="btn" onclick="toggleFreehandPenTool()">PEN: OFF</button>
+                    <button id="undo-pen-btn" class="btn" onclick="undoLastDrawLineSegment()">UNDO SEGMENT</button>
+                    <button id="k9-med-portal-btn" class="btn" onclick="openK9VoiceMedicalCenter()">🏥 K9 MEDICAL</button>
+                    <button id="sos-btn" class="btn" onclick="triggerSosAlertSystem()">SOS ALERT</button>
+                    <button id="nvg-btn" class="btn" onclick="toggleNvg()">NVG</button>
+                </div>
             </div>
-            <div class="controls">
-                <button id="link-btn" class="btn" onclick="toggleLink()">LINK OFFLINE</button>
-                <button id="trace-btn" class="btn" onclick="toggleTrapAndTraceFeature()" style="background-color:rgba(255,0,127,0.15); border-color:#ff007f; color:#ff007f;">TRACE OFF</button>
-                <button id="pen-btn" class="btn btn-high-vis-red" onclick="toggleFreehandPenTool()">PEN: OFF</button>
-                <button id="k9-med-portal-btn" class="btn" onclick="openK9MedicalEncyclopedia()" style="background-color:rgba(255,82,82,0.1); border-color:#ff5252; color:#ff5252;">🏥 K9 MEDICAL</button>
-                <button id="sos-btn" class="btn btn-high-vis-red" onclick="triggerSosAlertSystem()">SOS ALERT</button>
-                <button id="nvg-btn" class="btn" onclick="toggleNvg()">NVG</button>
-            </div>
-        </div>
 
-        <div class="search-address-hud">
-            <div class="search-row">
-                <input type="text" id="address-field" class="address-input" placeholder="Enter Target Address or Landmark...">
-                <button class="go-btn" onclick="searchTargetCorridor()">GO</button>
-            </div>
-            <div class="slider-row">
-                <span>RADIUS PERIMETER:</span>
-                <input type="range" id="perimeter-slider" class="radius-slider" min="200" max="3000" value="800" oninput="updatePerimeterRadiusSize(this.value)">
-                <span id="radius-value-display">800m</span>
+            <div class="search-address-hud">
+                <div class="search-row">
+                    <input type="text" id="address-field" class="address-input" placeholder="Enter Target Address or Landmark...">
+                    <button class="go-btn" onclick="searchTargetCorridor()">GO</button>
+                </div>
+                <div class="slider-row">
+                    <span>RADIUS PERIMETER:</span>
+                    <input type="range" id="perimeter-slider" class="radius-slider" min="200" max="3000" value="800" oninput="updatePerimeterRadiusSize(this.value)">
+                    <span id="radius-value-display">800m</span>
+                </div>
             </div>
         </div>
 
@@ -666,18 +675,17 @@
             <div id="status-text" style="color:#D4AF37;">TACTICAL LEDGER SYSTEM ONLINE</div>
             <div id="sub-status">CHOOSE ASSET FROM LEFT KEY, THEN TAP MAP TO POSITION UNITS</div>
             <div class="ribbon-action-row">
-                <button class="action-mini-btn" onclick="undoLastDrawLineSegment()" style="border-color:#D4AF37; color:#D4AF37;">UNDO LINE</button>
                 <button class="action-mini-btn" onclick="terminateSearchGridReset()" style="border-color:#ff5252; color:#ff5252;">TERMINATE MISSION / RESET GRID</button>
             </div>
         </div>
 
-        <!-- ENHANCED ROSTER QUANTITY INDICATOR MODULE -->
+        <!-- COUNTER LINK -->
         <div class="live-counter-trigger" onclick="openSearch()">
             <div>UNITS</div>
             <div id="active-unit-qty-node">0</div>
         </div>
 
-        <!-- NAVIGATION CONTROLS -->
+        <!-- CONTROLS NAVIGATION MODULES -->
         <div class="report-trigger" onclick="openProfessionalReportDeck()">📋</div>
         <div class="search-trigger" onclick="openSearch()">🔍</div>
     </div>
@@ -704,56 +712,26 @@
         </div>
         <div class="report-paper" id="print-capture-area"></div>
         <div class="report-btn-group">
-            <button class="action-export-btn" onclick="executeSystemPrintReport()">🖨️ PRINT OFFICIAL PDF</button>
+            <button class="action-export-btn" onclick="executeSystemPrintReport()">𖤵 PRINT OFFICIAL PDF</button>
             <button class="action-export-btn" onclick="executeEmailReportRedirect()" style="border-color:#D4AF37; color:#D4AF37; background-color:rgba(214,175,55,0.05);">✉️ EMAIL DIRECT REPORT</button>
         </div>
     </div>
 
-    <!-- STAGE 6: FULL RESOLUTION K9 MEDICAL NOMENCLATURE SYSTEM OVERLAY -->
-    <div id="k9-medical-encyclopedia-panel">
-        <div class="search-header-layout" style="margin-bottom:12px;">
-            <span style="color:#ff5252; font-weight:bold; font-size:14px; letter-spacing:1.5px;">🐾 FIELD K9 EMERGENCY MEDICAL NOMENCLATURE</span>
-            <button class="back-arrow" onclick="closeK9MedicalEncyclopedia()" style="border-color:#ff5252; color:#ff5252;">← BACK TO GRID</button>
+    <!-- STAGE 6: HANDS-FREE VERBAL DISPATCH MEDICAL SUITE -->
+    <div id="k9-voice-medical-panel">
+        <div class="search-header-layout">
+            <span style="color:#D4AF37; font-weight:bold; font-size:13px; letter-spacing:1px;">🚨 HANDS-FREE K9 AUDIO EMERGENCY NOMENCLATURE</span>
+            <button class="back-arrow" onclick="closeK9VoiceMedicalCenter()" style="border-color:#D4AF37; color:#D4AF37;">← BACK TO GRID</button>
         </div>
-        <div class="encyclopedia-scroll-frame">
-            
-            <div class="encyclopedia-topic-header">1. Canine CPR Protocol</div>
-            <div class="encyclopedia-content-text">
-                Place the canine asset on a firm surface, right side down (left side facing upward). Locate the cardiac field area directly where the left elbow meets the chest wall frame. Compress chest wall depth by 1/3 to 1/2 thickness at a sustained rhythm of 100 to 120 beats per minute. Coordinate chest wall work with breathing cycles: administer 30 compression strikes followed cleanly by 2 quick rescue breaths sealed directly into the canine's snout vectors.
-            </div>
-
-            <div class="encyclopedia-topic-header">2. Venomous Snake Bite Countermeasures</div>
-            <div class="encyclopedia-content-text">
-                Maintain absolute asset immobilization loop to slow lymphatic circulatory speed. Do not cut the puncture marks or use mechanical suction accessories. Wash the site lane with clean water lines. Remove collar gear immediately to prevent respiratory throat closure if the bite vector is located on the neck or jaw. Clear team lanes and route directly to anti-venom distribution hubs.
-            </div>
-
-            <div class="encyclopedia-topic-header">3. Penetrating Gunshot Wound Trauma</div>
-            <div class="encyclopedia-content-text">
-                Locate wound entry and exit tracts immediately. If an entry breach is in the thoracic chest wall cavity (sucking chest wound), seal the tract immediately with an occlusive chest wrap or clean plastic material to maintain necessary lung box pressure. Apply heavy localized hand compression with gauze lines to staunch bleeding. Do not apply tourniquet straps to body wall structures.
-            </div>
-
-            <div class="encyclopedia-topic-header">4. Critical Heat Exhaustion Matrix</div>
-            <div class="encyclopedia-content-text">
-                Evacuate handler team and canine asset to shade or temperature-controlled areas instantly. Saturate abdomen, groin channels, and paw pads with cool, continuous water flow lanes. Do not pack the canine asset in direct freezing ice layers, as this triggers rapid vasoconstriction. Offer small, controlled amounts of water if the canine is fully conscious. Monitor internal vitals constantly.
-            </div>
-
-            <div class="encyclopedia-topic-header">5. Excessive Arterial Bleeding Control</div>
-            <div class="encyclopedia-content-text">
-                Apply persistent manual hand pressure straight onto the arterial source wound using heavy sterile gauze sheets. Pack deep tissue lac tracts firmly with hemostatic gauze. Wrap site tightly with elastic pressure bands. If severe arterial bleeding breaches extremity structures, prepare a tactical emergency tourniquet band positioned explicitly above the wound point.
-            </div>
-
-            <div class="encyclopedia-topic-header">6. Paw and Eye Injuries</div>
-            <div class="encyclopedia-content-text">
-                <b>Paw Lacerations:</b> Flush the entry pads with sterile saline. Apply a non-adherent dressing pack, wrap securely with protective tactical tape layers, and keep moisture-free to avoid pad separation.<br>
-                <b>Ocular Emergencies:</b> Prevent the canine asset from rubbing the site. Flush the eye socket continuously with sterile eyewash drops to clear foreign particulate. Do not apply localized pressure wraps over the eye globe frame.
-            </div>
-
-            <div class="encyclopedia-topic-header">7. Regional Emergency Veterinary Support Hubs</div>
-            <div class="encyclopedia-content-text">
-                <b>Amherst Veterinary Clinic:</b> 114 Trojan Ln, Madison Heights, VA 24572 // Phone: (434) 946-5632<br>
-                <b>Animal Emergency & Urgent Care Center:</b> 3432 Lakeside Dr, Lynchburg, VA 24501 // Phone: (434) 845-7021 (24-Hour Active Trauma Response)
-            </div>
-
+        <div style="font-size:10px; color:rgba(255,255,255,0.6); line-height:1.4; margin-top:5px;">TAP OPTION TO TRANSMIT SPOKEN FIELD FIRST AID STEPS TO ASSIGNING OFFICERS:</div>
+        <div class="voice-menu-grid">
+            <button class="voice-dispatch-btn" onclick="speakTraumaDirectives('cpr')">🐾 1. START CANINE C.P.R. SPEECH DIRECTIVES</button>
+            <button class="voice-dispatch-btn" onclick="speakTraumaDirectives('snake')">🐾 2. START VENOMOUS SNAKE BITE DISPATCH</button>
+            <button class="voice-dispatch-btn" onclick="speakTraumaDirectives('gunshot')">🐾 3. START thoracic GUNSHOT WOUND TRAUMA</button>
+            <button class="voice-dispatch-btn" onclick="speakTraumaDirectives('heat')">🐾 4. START CRITICAL HEAT EXHAUSTION MITIGATION</button>
+            <button class="voice-dispatch-btn" onclick="speakTraumaDirectives('bleed')">🐾 5. START ARTERIAL HEMORRHAGE HEMOSTATIC PACKING</button>
+            <button class="voice-dispatch-btn" onclick="speakTraumaDirectives('paw')">🐾 6. START PAW AND EYE EMERGENCY CLEANING</button>
+            <button class="voice-dispatch-btn" onclick="speakTraumaDirectives('vet')">🐾 7. SPEAK NEAREST METRO EMERGENCY VET DIRECTORIES</button>
         </div>
     </div>
 
@@ -777,18 +755,16 @@
 
         let trapAndTraceActive = false;
 
-        window.addEventListener('DOMContentLoaded', function() {
-            const imgCheck = new Image();
-            imgCheck.src = "IMAGE FOR TAC.png2.jpg";
-            imgCheck.onload = function() {
-                document.getElementById('fallback-branding-node').innerHTML = `
-                    <div style="border:3px double #D4AF37; padding:8px; background-color:#020803; border-radius:6px; box-shadow:0 0 35px rgba(212,175,55,0.25); max-width:85%; max-height:70vh; display:flex; justify-content:center; align-items:center;">
-                        <img src="IMAGE FOR TAC.png2.jpg" alt="TACNET LOGO" style="max-width:100%; max-height:65vh; object-fit:contain;">
-                    </div>
-                    <div class="homepage-footer" style="margin-top:20px;">CLICK ANYWHERE TO ENTER COMMAND POST</div>
-                `;
-            };
-        });
+        function handleMissingPhotoLayout() {
+            const frame = document.getElementById('image-container-node');
+            if (frame) {
+                frame.innerHTML = `
+                    <div class="text-fallback-box">
+                        <div class="fallback-title">TACNET SYSTEM CORE</div>
+                        <div class="fallback-sub">CENTRAL SATELLITE COMMAND MATRIX</div>
+                    </div>`;
+            }
+        }
 
         function forceEnterSystemRoster() {
             document.getElementById('homepage-screen').style.display = 'none';
@@ -900,9 +876,82 @@
             RosterPanelUpdate();
         }
 
-        // K9 ENCYCLOPEDIA ACCESS INTERFACES
-        function openK9MedicalEncyclopedia() { document.getElementById('k9-medical-encyclopedia-panel').style.display = 'flex'; }
-        function closeK9MedicalEncyclopedia() { document.getElementById('k9-medical-encyclopedia-panel').style.display = 'none'; }
+        function openK9VoiceMedicalCenter() { document.getElementById('k9-voice-medical-panel').style.display = 'flex'; }
+        function closeK9VoiceMedicalCenter() { document.getElementById('k9-voice-medical-panel').style.display = 'none'; if(window.speechSynthesis) window.speechSynthesis.cancel(); }
+
+        /* HANDS-FREE VERBAL DICTIONARY DISPATCH DIRECTIVES AUDIO LOOP */
+        function speakTraumaDirectives(condition) {
+            if (!('speechSynthesis' in window)) return;
+            window.speechSynthesis.cancel();
+
+            let logs = [];
+
+            if (condition === 'cpr') {
+                logs = [
+                    "Initiating hands free canine CPR procedures.",
+                    "Position the K9 asset right side down on a stable surface.",
+                    "Locate cardiac floor field exactly where left elbow matches the ribs.",
+                    "Compress chest cage wall thickness by one third depth.",
+                    "Maintain continuous cadence speed at one hundred beats per minute.",
+                    "Deliver thirty compression thrusts directly followed by two rescue breaths mouth to snout."
+                ];
+            } else if (condition === 'snake') {
+                logs = [
+                    "Initiating venomous snake bite dispatch guidance.",
+                    "Enforce immediate asset immobilization loop to slow circulation velocity.",
+                    "Do not lance incision marks or utilize extraction pumps.",
+                    "Cleanse target bite lanes with freshwater lines.",
+                    "Remove collars instantly to block threat of neck swelling airway restriction.",
+                    "Coordinate emergency transport to trauma centers housing anti venom stores."
+                ];
+            } else if (condition === 'gunshot') {
+                logs = [
+                    "Initiating penetrating gunshot wound trauma protocol.",
+                    "Locate chest cavity entry and exit pathways immediately.",
+                    "If wound has a sucking atmospheric breach, seal site instantly with occlusive sheets.",
+                    "Pack internal tissue cavity lanes with clean gauze lines.",
+                    "Apply firm sustained compression directly over source bleed points with palm force."
+                ];
+            } else if (condition === 'heat') {
+                logs = [
+                    "Initiating heat exhaustion counter actions.",
+                    "Move handler asset and canine to shade structures or air conditioned trucks instantly.",
+                    "Saturate underbelly walls groin lanes and foot pads with cool flowing water streams.",
+                    "Do not submerge canine body walls in freezing ice sheets to prevent vascular crash.",
+                    "Provide minimal water volumes to throat if fully responsive."
+                ];
+            } else if (condition === 'bleed') {
+                logs = [
+                    "Initiating catastrophic hemorrhage trauma loop.",
+                    "Pack arterial bleeding tracts firmly with hemostatic gauze strips.",
+                    "Apply sustained localized hand compression directly onto wound core.",
+                    "Wrap dressing zones tightly with pressure bandage wraps.",
+                    "If massive bleeding breaches limb systems prepare tactical tourniquet application points above injuries."
+                ];
+            } else if (condition === 'paw') {
+                logs = [
+                    "Initiating paw pad and eye wash guidelines.",
+                    "Flush wounded target pads with sterile saline streams to clear sand.",
+                    "Wrap pads cleanly in protective tape lines to shield vulnerable membranes.",
+                    "For eye impacts do not place compression bandages over globe.",
+                    "Flush ocular fields continuously with eyewash fluid lines to drop external dust elements."
+                ];
+            } else if (condition === 'vet') {
+                logs = [
+                    "Stating localized trauma support hubs.",
+                    "Amherst Veterinary Clinic is located at one one four Trojan Lane Madison Heights. Phone is four three four, nine four six, five six three two.",
+                    "Lynchburg Animal Emergency Center is located at three four three two Lakeside Drive. Trauma line is four three four, eight four five, seven zero two one. Active twenty four hours."
+                ];
+            }
+
+            logs.forEach(text => {
+                const phraseNode = new SpeechSynthesisUtterance(text);
+                phraseNode.rate = 0.92;
+                window.speechSynthesis.speak(phraseNode);
+            });
+            
+            document.getElementById('status-text').innerText = "AUDIO ASSISTANT TRANSMITTING PROTOCOL STATEMENTS VERBALLY...";
+        }
 
         function openProfessionalReportDeck() {
             const paper = document.getElementById('print-capture-area');
@@ -910,7 +959,7 @@
             
             let itemsHtml = '';
             if (fieldUnitsArray.length === 0) {
-                itemsHtml = `<tr><td colspan="4" style="padding:8px; text-align:center; color:#777;">NO FIELD REPLAY DATA RECORDS REGISTERED IN ACTIVE OPERATION TACTICAL GRID.</td></tr>`;
+                itemsHtml = `<tr><td colspan="4" style="padding:8px; text-align:center; color:#777;">NO ACTIVE FIELD ENTRIES TO RECORD.</td></tr>`;
             } else {
                 fieldUnitsArray.forEach(unit => {
                     itemsHtml += `
@@ -925,42 +974,36 @@
 
             paper.innerHTML = `
                 <div style="border-bottom: 3px double #000000; padding-bottom: 10px; margin-bottom: 15px; text-align: center;">
-                    <h2 style="margin: 0; font-size: 18px; text-transform: uppercase; letter-spacing: 1px;">TACNET SEARCH & REPLAY LOGISTICAL REPORT</h2>
-                    <div style="font-size: 11px; color: #555; margin-top: 4px;">MANAGEMENT CONTROL CENTER // MULTI-AGENCY INCIDENT RUN SHEET</div>
+                    <h2 style="margin: 0; font-size: 18px; text-transform: uppercase; letter-spacing: 1px;">TACNET INCIDENT SUMMARY TACTICAL RUN SHEET</h2>
                 </div>
                 <table style="width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 20px;">
                     <tr>
-                        <td style="width: 25%;"><b>COMMAND HQ:</b></td><td>${systemCallsign} // METRO MATRIX</td>
+                        <td style="width: 25%;"><b>COMMAND HQ:</b></td><td>${systemCallsign}</td>
                         <td style="width: 25%;"><b>LOG DATE:</b></td><td>${new Date().toLocaleDateString()}</td>
                     </tr>
                     <tr>
-                        <td><b>MISSION STATUS:</b></td><td style="color: green; font-weight: bold;">ACTIVE OPERATIONS RUN</td>
-                        <td><b>TOTAL UNITS IN GRID:</b></td><td><b>${fieldUnitsArray.length} PLACED</b></td>
+                        <td><b>TOTAL GRID ASSETS:</b></td><td><b>${fieldUnitsArray.length} DEPLOYED</b></td>
                     </tr>
                 </table>
-                <h4 style="margin: 10px 0 5px 0; border-bottom: 1px solid #000000; padding-bottom: 3px; text-transform: uppercase; font-size: 11px;">REGISTERED ASSET ENTRY & COORDINATE LEDGER</h4>
                 <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
                     <thead>
                         <tr style="background-color: #f2f2f2;">
-                            <th style="padding: 8px; text-align: left; border-bottom: 2px solid #000;">UNIT CALLSIGN</th>
-                            <th style="padding: 8px; text-align: left; border-bottom: 2px solid #000;">ASSET TYPE CLASS</th>
-                            <th style="padding: 8px; text-align: left; border-bottom: 2px solid #000;">COORDINATE VECTOR MAP</th>
-                            <th style="padding: 8px; text-align: left; border-bottom: 2px solid #000;">TIMESTAMP</th>
+                            <th style="padding: 8px; text-align: left; border-bottom: 2px solid #000;">UNIT ID</th>
+                            <th style="padding: 8px; text-align: left; border-bottom: 2px solid #000;">CLASS</th>
+                            <th style="padding: 8px; text-align: left; border-bottom: 2px solid #000;">COORDINATES</th>
+                            <th style="padding: 8px; text-align: left; border-bottom: 2px solid #000;">TIME</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        ${itemsHtml}
-                    </tbody>
-                </table>
-            `;
+                    <tbody>${itemsHtml}</tbody>
+                </table>`;
         }
 
         function closeProfessionalReportDeck() { document.getElementById('report-panel').style.display = 'none'; }
         function executeSystemPrintReport() { window.print(); }
         function executeEmailReportRedirect() {
-            let bodyText = `TACNET INCIDENT SUMMARY RUN REPORT%0D%0ACOMMAND HQ: ${systemCallsign}%0D%0A%0D%0AActive Assets Placed in Log Deck:%0D%0A`;
-            fieldUnitsArray.forEach(u => { bodyText += `- ${u.uid} [${u.type}] Vector Location: ${u.coordsStr} at ${u.timeLogged}%0D%0A`; });
-            window.location.href = `mailto:?subject=TACNET METRO INCIDENT REPORT REPLAY&body=${bodyText}`;
+            let bodyText = `TACNET REPORT RUN SHEET%0D%0ACOMMAND HQ: ${systemCallsign}%0D%0A%0D%0A`;
+            fieldUnitsArray.forEach(u => { bodyText += `- ${u.uid} [${u.type}] Vector: ${u.coordsStr} at ${u.timeLogged}%0D%0A`; });
+            window.location.href = `mailto:?subject=TACNET SYSTEM LOG&body=${bodyText}`;
         }
 
         function undoLastDrawLineSegment() {
@@ -1000,25 +1043,25 @@
             if (freehandPenActive) {
                 if (trapAndTraceActive) toggleTrapAndTraceFeature();
                 btn.innerText = "PEN: ACTIVE";
-                btn.className = "btn btn-high-vis-active";
+                btn.classList.add('btn-active');
                 document.getElementById('status-text').innerText = "FREEHAND DRAW ACTIVE // DRAG SCREEN TO DRAW BOUNDS";
             } else {
                 btn.innerText = "PEN: OFF";
-                btn.className = "btn btn-high-vis-red";
+                btn.classList.remove('btn-active');
                 document.getElementById('status-text').innerText = "TACTICAL LEDGER SYSTEM ONLINE";
             }
         }
 
         function triggerSosAlertSystem() {
             document.getElementById('sos-siren-layer').style.display = 'flex';
-            document.getElementById('sos-btn').className = "btn btn-high-vis-active";
+            document.getElementById('sos-btn').classList.add('btn-alert-active');
             document.getElementById('status-text').innerText = "CRITICAL WARNING: EMERGENCY SOS BROADCASTING LIVE";
             document.getElementById('status-text').style.color = "#ff5252";
         }
 
         function turnOffSosSiren() {
             document.getElementById('sos-siren-layer').style.display = 'none';
-            document.getElementById('sos-btn').className = "btn btn-high-vis-red";
+            document.getElementById('sos-btn').classList.remove('btn-alert-active');
             document.getElementById('status-text').innerText = "TACTICAL LEDGER SYSTEM ONLINE";
             document.getElementById('status-text').style.color = "#D4AF37";
         }
@@ -1191,29 +1234,23 @@
         function toggleNvg() { document.getElementById('nvg-overlay').style.display = (document.getElementById('nvg-overlay').style.display === 'block') ? 'none' : 'block'; document.getElementById('nvg-btn').classList.toggle('btn-active'); }
 
         function RosterPanelUpdate() {
-            // Update active ledger unit quantity readout text node
             document.getElementById('active-unit-qty-node').innerText = fieldUnitsArray.length;
-
             const container = document.getElementById('roster-results-container');
             container.innerHTML = '';
-            if (fieldUnitsArray.length === 0) { container.innerHTML = '<div class="loading-text">NO FIELD ASSETS CURRENTLY ASSIGNED TO GRID LEDGER</div>'; return; }
+            if (fieldUnitsArray.length === 0) { container.innerHTML = '<div class="loading-text">NO FIELD ASSETS ASSIGNED</div>'; return; }
             fieldUnitsArray.forEach(unit => {
-                container.insertAdjacentHTML('beforeend', '<div class="result-item"><div><div class="unit-name" style="color:#D4AF37;">' + unit.uid + ' // ' + unit.textLabel + '</div><div class="unit-status">FIELD COORDINATE VECTOR: [ ' + unit.coordsStr + ' ]</div></div></div>');
+                container.insertAdjacentHTML('beforeend', '<div class="result-item"><div><div class="unit-name" style="color:#D4AF37;">' + unit.uid + ' // ' + unit.textLabel + '</div><div class="unit-status">VECTOR: [ ' + unit.coordsStr + ' ]</div></div></div>');
             });
         }
 
         function purgeFullRosterLedger() {
-            if (!confirm("Execute full purge clearance of all search units?")) return;
-            fieldUnitsArray.forEach(u => {
-                if (u.markerRef) tacticalMap.removeLayer(u.markerRef);
-                if (u.radarRef) tacticalMap.removeLayer(u.radarRef);
-            });
+            if (!confirm("Execute full purge clearance?")) return;
+            fieldUnitsArray.forEach(u => { if (u.markerRef) tacticalMap.removeLayer(u.markerRef); if (u.radarRef) tacticalMap.removeLayer(u.radarRef); });
             fieldUnitsArray = [];
             userDrawnLinesArray.forEach(line => tacticalMap.removeLayer(line));
             userDrawnLinesArray = [];
             if (activePerimeterCircle) { tacticalMap.removeLayer(activePerimeterCircle); activePerimeterCircle = null; }
             RosterPanelUpdate();
-            document.getElementById('status-text').innerText = "GRID CLEAR // LEDGER EMPTY";
         }
     </script>
 </body>
