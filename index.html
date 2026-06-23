@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TACNET // OPS</title>
+    <title>TACNET // CENTRAL COMMAND</title>
+    <!-- Include the Official Appwrite Web SDK Platform -->
     <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.0"></script>
     <style>
         body {
@@ -16,7 +17,150 @@
             height: 100vh;
         }
 
-        /* Night Vision Overlay */
+        /* Screen Management */
+        .app-screen {
+            display: none;
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        .screen-active {
+            display: flex !important;
+        }
+
+        /* --- STAGE 1: CUSTOM HOMEPAGE --- */
+        #homepage-screen {
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #010401;
+            cursor: pointer;
+        }
+
+        .hero-image {
+            max-width: 90%;
+            max-height: 70vh;
+            border: 2px solid #D4AF37;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
+            border-radius: 4px;
+            object-fit: contain;
+        }
+
+        .homepage-footer {
+            margin-top: 25px;
+            color: #D4AF37;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* --- STAGE 2: TACTICAL SIGN-IN ROSTER --- */
+        #signin-screen {
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle, #051609 0%, #010401 100%);
+            border: 4px solid #0B2510;
+        }
+
+        .roster-card {
+            width: 340px;
+            max-width: 85%;
+            border: 1px solid #D4AF37;
+            background-color: rgba(11, 37, 16, 0.85);
+            padding: 30px;
+            border-radius: 4px;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
+        }
+
+        .roster-header {
+            text-align: center;
+            color: #D4AF37;
+            font-size: 20px;
+            font-weight: bold;
+            letter-spacing: 3px;
+            margin-bottom: 25px;
+            border-bottom: 1px solid rgba(214, 175, 55, 0.3);
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-group label {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .roster-input {
+            background-color: #020803;
+            border: 1px solid rgba(214, 175, 55, 0.5);
+            color: #ffffff;
+            padding: 10px;
+            font-family: inherit;
+            font-size: 13px;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .roster-input:focus {
+            outline: none;
+            border-color: #00FF00;
+            box-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
+        }
+
+        select.roster-input {
+            color: #ffffff;
+            cursor: pointer;
+        }
+
+        select.roster-input option {
+            background-color: #0B2510;
+            color: #ffffff;
+        }
+
+        .auth-btn {
+            width: 100%;
+            background-color: #020803;
+            color: #D4AF37;
+            border: 1.5px solid #D4AF37;
+            padding: 12px;
+            font-size: 14px;
+            font-weight: bold;
+            font-family: inherit;
+            cursor: pointer;
+            border-radius: 4px;
+            letter-spacing: 2px;
+            margin-top: 15px;
+            transition: all 0.3s;
+        }
+
+        .auth-btn:hover {
+            background-color: #D4AF37;
+            color: #020803;
+            box-shadow: 0 0 15px #D4AF37;
+        }
+
+        /* --- STAGE 3: HUNTER GREEN TACTICAL DECK --- */
+        #tactical-screen {
+            flex-direction: column;
+        }
+
         #nvg-overlay {
             position: fixed;
             top: 0;
@@ -29,7 +173,6 @@
             z-index: 5;
         }
 
-        /* Top HUD Panel */
         .hud-header {
             position: absolute;
             top: 20px;
@@ -41,12 +184,30 @@
             z-index: 10;
         }
 
-        .callsign {
+        .hud-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .back-arrow {
+            background-color: rgba(0, 0, 0, 0.54);
+            color: #D4AF37;
+            border: 1px solid #D4AF37;
+            border-radius: 4px;
+            padding: 8px 14px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .roster-banner {
             background-color: #0B2510;
             color: #D4AF37;
             padding: 8px 14px;
             border: 1px solid #D4AF37;
             font-weight: bold;
+            font-size: 12px;
             letter-spacing: 1px;
             border-radius: 4px;
         }
@@ -74,7 +235,6 @@
             color: #00FF00 !important;
         }
 
-        /* Center Map Area & Target Dot */
         .map-container {
             width: 100vw;
             height: 100vh;
@@ -96,11 +256,13 @@
             font-weight: bold;
             letter-spacing: 2px;
             margin-bottom: 5px;
+            text-align: center;
         }
 
         #sub-status {
             color: rgba(255, 255, 255, 0.38);
             font-size: 13px;
+            text-align: center;
         }
 
         .target-dot {
@@ -122,7 +284,6 @@
             box-shadow: 0 0 12px 6px rgba(0, 255, 0, 0.6);
         }
 
-        /* Floating Search Button */
         .search-trigger {
             position: absolute;
             bottom: 30px;
@@ -141,7 +302,6 @@
             z-index: 10;
         }
 
-        /* Full Screen Search Panel */
         #search-panel {
             position: fixed;
             top: 0;
@@ -188,11 +348,6 @@
             margin-bottom: 20px;
         }
 
-        .search-input:focus {
-            outline: none;
-            border-color: #00FF00;
-        }
-
         .registry-title {
             color: rgba(255, 255, 255, 0.38);
             font-size: 12px;
@@ -236,69 +391,172 @@
 </head>
 <body>
 
-    <div id="nvg-overlay"></div>
+    <!-- STAGE 1: CUSTOM BRANDING HOMEPAGE -->
+    <div id="homepage-screen" class="app-screen screen-active" onclick="navigateToSignIn()">
+        <!-- Pulls your custom branding photo seamlessly -->
+        <img src="IMAGE FOR TAC.png2.jpg" alt="TACNET SYSTEM DESIGN" class="hero-image" onerror="this.style.display='none'; document.getElementById('alt-title').style.display='block';">
+        <div id="alt-title" style="display:none; color:#D4AF37; font-size:28px; font-weight:bold; letter-spacing:4px; text-align:center;">TACNET DATABASE</div>
+        <div class="homepage-footer">CLICK ANYWHERE TO ENTER NETWORK</div>
+    </div>
 
-    <div class="hud-header">
-        <div class="callsign">TACNET // OPS</div>
-        <div class="controls">
-            <button id="link-btn" class="btn" onclick="toggleLink()">LINK OFFLINE</button>
-            <button id="nvg-btn" class="btn" onclick="toggleNvg()">NVG</button>
+    <!-- STAGE 2: TACTICAL SIGN-IN ROSTER -->
+    <div id="signin-screen" class="app-screen">
+        <div class="roster-card">
+            <div class="roster-header">MUTLI-AGENCY ROSTER</div>
+            
+            <div class="form-group">
+                <label>AGENCY / DEPARTMENT</label>
+                <input type="text" id="input-agency" class="roster-input" placeholder="e.g., SHERIFF'S OFFICE" value="AMHERST CO SO">
+            </div>
+
+            <div class="form-group">
+                <label>OFFICER FULL NAME</label>
+                <input type="text" id="input-name" class="roster-input" placeholder="e.g., DEPUTY J. DOE">
+            </div>
+
+            <div class="form-group">
+                <label>UNIT CALL SIGN (ID)</label>
+                <input type="text" id="input-callsign" class="roster-input" placeholder="e.g., K9-1, CAR-4" style="text-transform: uppercase;">
+            </div>
+
+            <div class="form-group">
+                <label>ACTIVE DUTY ASSIGNMENT</label>
+                <select id="input-assignment" class="roster-input">
+                    <option value="TRACKING">TRACKING TEAM / K9</option>
+                    <option value="PERIMETER">PERIMETER POST</option>
+                    <option value="COMMAND">COMMAND STRUCTURE</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>OPERATIONAL PASSCODE</label>
+                <input type="password" id="input-pass" class="roster-input" placeholder="••••">
+            </div>
+
+            <button class="auth-btn" onclick="authorizeRoster()">AUTHORIZE ACCESS</button>
         </div>
     </div>
 
-    <div class="map-container">
-        <div class="map-icon">🗺️</div>
-        <div id="status-text">SYSTEM READY // STANDBY</div>
-        <div id="sub-status">GPS POSITION STREAM MUTED</div>
-        <div id="tgt-dot" class="target-dot"></div>
-    </div>
+    <!-- STAGE 3: HUNTER GREEN TACTICAL COMMAND SCREEN -->
+    <div id="tactical-screen" class="app-screen">
+        <div id="nvg-overlay"></div>
 
-    <div class="search-trigger" onclick="openSearch()">🔍</div>
-
-    <div id="search-panel">
-        <div class="search-header">
-            <span>TACTICAL REGISTRY SEARCH</span>
-            <button class="close-btn" onclick="closeSearch()">✕</button>
+        <div class="hud-header">
+            <div class="hud-left">
+                <button class="back-arrow" onclick="navigateToGate()">←</button>
+                <div id="hud-display-banner" class="roster-banner">
+                    OFFLINE // STANDBY
+                </div>
+            </div>
+            <div class="controls">
+                <button id="link-btn" class="btn" onclick="toggleLink()">LINK OFFLINE</button>
+                <button id="nvg-btn" class="btn" onclick="toggleNvg()">NVG</button>
+            </div>
         </div>
-        <input type="text" class="search-input" placeholder="Enter Unit Name, ID, or Designation...">
-        <div class="registry-title">ALL ACTIVE FREQUENCIES & CHANNELS</div>
-        <hr class="divider">
-        <div style="flex: 1; overflow-y: auto;">
-            <div class="result-item">
-                <div>
-                    <div class="unit-name">K9-Unit-1</div>
-                    <div class="unit-status">ACTIVE SEARCH // AMELON RD</div>
-                </div>
-                <div class="unit-time">08:52</div>
+
+        <div class="map-container">
+            <div class="map-icon">🗺️</div>
+            <div id="status-text">SYSTEM READY // STANDBY</div>
+            <div id="sub-status">GPS POSITION STREAM MUTED</div>
+            <div id="tgt-dot" class="target-dot"></div>
+        </div>
+
+        <div class="search-trigger" onclick="openSearch()">🔍</div>
+
+        <div id="search-panel">
+            <div class="search-header">
+                <span>TACTICAL REGISTRY SEARCH</span>
+                <button class="close-btn" onclick="closeSearch()">✕</button>
             </div>
-            <div class="result-item">
-                <div>
-                    <div class="unit-name">Delta-4</div>
-                    <div class="unit-status">STATIONARY STANDBY</div>
+            <input type="text" class="search-input" placeholder="Enter Unit Name, ID, or Designation...">
+            <div class="registry-title">ALL ACTIVE FREQUENCIES & CHANNELS</div>
+            <hr class="divider">
+            <div style="flex: 1; overflow-y: auto;">
+                <div class="result-item">
+                    <div>
+                        <div class="unit-name">K9-Unit-1</div>
+                        <div class="unit-status">ACTIVE SEARCH // AMELON RD</div>
+                    </div>
+                    <div class="unit-time">08:52</div>
                 </div>
-                <div class="unit-time">08:45</div>
-            </div>
-            <div class="result-item">
-                <div>
-                    <div class="unit-name">Command-HQ</div>
-                    <div class="unit-status">MONITORING FREQUENCY</div>
+                <div class="result-item">
+                    <div>
+                        <div class="unit-name">Delta-4</div>
+                        <div class="unit-status">STATIONARY STANDBY</div>
+                    </div>
+                    <div class="unit-time">08:45</div>
                 </div>
-                <div class="unit-time">09:00</div>
+                <div class="result-item">
+                    <div>
+                        <div class="unit-name">Command-HQ</div>
+                        <div class="unit-status">MONITORING FREQUENCY</div>
+                    </div>
+                    <div class="unit-time">09:00</div>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Initialize the Appwrite Backend Pipeline Directly
+        // Appwrite Pipeline Initialization
         const { Client, Databases, ID } = Appwrite;
         const client = new Client()
             .setEndpoint('https://nyc.cloud.appwrite.io/v1')
-            .setProject('6a38e834003e0cc64c31'); // Your master project ID
+            .setProject('6a38e834003e0cc64c31'); 
 
         const databases = new Databases(client);
 
         let linkActive = false;
         let nvgActive = false;
+
+        // Active Session Storage
+        let sessionData = {
+            agency: '',
+            name: '',
+            callsign: '',
+            assignment: ''
+        };
+
+        // Navigation Controllers
+        function navigateToSignIn() {
+            document.getElementById('homepage-screen').classList.remove('screen-active');
+            document.getElementById('signin-screen').classList.add('screen-active');
+        }
+
+        function authorizeRoster() {
+            // Pull data entries from form input fields
+            const callsignInput = document.getElementById('input-callsign').value.toUpperCase().trim();
+            const nameInput = document.getElementById('input-name').value.trim();
+            const agencyInput = document.getElementById('input-agency').value.trim();
+            const assignmentInput = document.getElementById('input-assignment').value;
+
+            if (!callsignInput || !nameInput) {
+                alert("ROSTER ERROR: Officer Name and Unit Call Sign are required fields.");
+                return;
+            }
+
+            // Seal identity into system memory
+            sessionData.agency = agencyInput || "UNKNOWN DEPT";
+            sessionData.name = nameInput;
+            sessionData.callsign = callsignInput;
+            sessionData.assignment = assignmentInput;
+
+            // Set HUD display text profile
+            document.getElementById('hud-display-banner').innerText = `${sessionData.callsign} // [${sessionData.assignment}]`;
+
+            // Clear password box for security
+            document.getElementById('input-pass').value = '';
+
+            // Flip screen states directly over to command deck
+            document.getElementById('signin-screen').classList.remove('screen-active');
+            document.getElementById('tactical-screen').classList.add('screen-active');
+        }
+
+        function navigateToGate() {
+            if (linkActive) toggleLink();
+            document.getElementById('tactical-screen').classList.remove('screen-active');
+            document.getElementById('homepage-screen').classList.add('screen-active');
+        }
 
         function toggleLink() {
             linkActive = !linkActive;
@@ -325,14 +583,17 @@
 
         async function transmitPacket() {
             try {
+                // Combine details beautifully into the row tracking column string
+                const comprehensiveCallsign = `${sessionData.callsign} (${sessionData.name}) [${sessionData.agency}]`;
+
                 await databases.createDocument(
-                    'tacnet-search-app', // Database ID
-                    'tacnet_live_units', // Collection ID
+                    'tacnet-search-app', 
+                    'tacnet_live_units', 
                     ID.unique(),
                     {
-                        'tacnet_live_units': 'Web-Field-Alpha',
+                        'tacnet_live_units': comprehensiveCallsign,
                         'location': '37.525, -79.124',
-                        'operationalStatus': 'ACTIVE_SEARCH',
+                        'operationalStatus': `ASSIGNMENT: ${sessionData.assignment}`,
                         'lastUpdateTime': new Date().toLocaleTimeString().substring(0, 5)
                     }
                 );
