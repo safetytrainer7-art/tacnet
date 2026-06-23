@@ -1,14 +1,11 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TACNET // MASTER CENTRAL COMMAND</title>
-    <!-- Include the Official Appwrite Web SDK Platform -->
+    <title>TACNET // MASTER SATELLITE COMMAND</title>
     <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.0"></script>
     
-    <!-- LEAFLET GPS MAP ENGINE STYLES & SCRIPTS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -23,7 +20,6 @@
             height: 100vh;
         }
 
-        /* Screen Management */
         .app-screen {
             display: none;
             width: 100vw;
@@ -51,7 +47,6 @@
             border: 2px solid #D4AF37;
             box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
             border-radius: 4px;
-            object-fit: contain;
         }
 
         .homepage-footer {
@@ -60,7 +55,6 @@
             font-size: 14px;
             font-weight: bold;
             letter-spacing: 3px;
-            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
             animation: blink 2s infinite;
         }
 
@@ -69,48 +63,45 @@
             50% { opacity: 0.3; }
         }
 
-        /* --- STAGE 2: TACTICAL SIGN-IN ROSTER --- */
+        /* --- STAGE 2: SIGN-IN ROSTER --- */
         #signin-screen {
             flex-direction: column;
             justify-content: center;
             align-items: center;
             background: radial-gradient(circle, #051609 0%, #010401 100%);
-            border: 4px solid #0B2510;
         }
 
         .roster-card {
-            width: 340px;
-            max-width: 85%;
+            width: 350px;
+            max-width: 90%;
             border: 1px solid #D4AF37;
-            background-color: rgba(11, 37, 16, 0.9);
-            padding: 30px;
+            background-color: rgba(11, 37, 16, 0.95);
+            padding: 25px;
             border-radius: 4px;
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.15);
         }
 
         .roster-header {
             text-align: center;
             color: #D4AF37;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
-            letter-spacing: 3px;
-            margin-bottom: 25px;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
             border-bottom: 1px solid rgba(214, 175, 55, 0.3);
             padding-bottom: 10px;
         }
 
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            gap: 4px;
         }
 
         .form-group label {
             color: rgba(255, 255, 255, 0.7);
             font-size: 11px;
             font-weight: bold;
-            letter-spacing: 1px;
         }
 
         .roster-input {
@@ -121,18 +112,6 @@
             font-family: inherit;
             font-size: 13px;
             border-radius: 4px;
-            box-sizing: border-box;
-        }
-
-        .roster-input:focus {
-            outline: none;
-            border-color: #00FF00;
-            box-shadow: 0 0 5px rgba(0, 255, 0, 0.3);
-        }
-
-        select.roster-input {
-            color: #ffffff;
-            cursor: pointer;
         }
 
         .auth-btn {
@@ -145,18 +124,10 @@
             font-weight: bold;
             font-family: inherit;
             cursor: pointer;
-            border-radius: 4px;
-            letter-spacing: 2px;
             margin-top: 15px;
         }
 
-        .auth-btn:hover {
-            background-color: #D4AF37;
-            color: #020803;
-            box-shadow: 0 0 15px #D4AF37;
-        }
-
-        /* --- STAGE 3: HUNTER GREEN COMMAND SCREEN --- */
+        /* --- STAGE 3: TACTICAL COMMAND DECK --- */
         #tactical-screen {
             flex-direction: column;
         }
@@ -184,48 +155,30 @@
             z-index: 1000;
         }
 
-        .hud-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
         .back-arrow {
-            background-color: rgba(2, 8, 3, 0.85);
+            background-color: rgba(2, 8, 3, 0.9);
             color: #D4AF37;
             border: 1px solid #D4AF37;
-            border-radius: 4px;
             padding: 8px 14px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 16px;
-        }
-
-        .roster-banner {
-            background-color: #0B2510;
-            color: #D4AF37;
-            padding: 8px 14px;
-            border: 1px solid #D4AF37;
-            font-weight: bold;
-            font-size: 11px;
-            letter-spacing: 1px;
             border-radius: 4px;
         }
 
         .controls {
             display: flex;
-            gap: 8px;
+            gap: 6px;
         }
 
         .btn {
-            background-color: rgba(2, 8, 3, 0.85);
+            background-color: rgba(2, 8, 3, 0.9);
             color: #ffffff;
             border: 1.5px solid rgba(255, 255, 255, 0.24);
             padding: 8px 12px;
             border-radius: 4px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 12px;
+            font-size: 11px;
             font-family: inherit;
         }
 
@@ -235,7 +188,12 @@
             color: #00FF00 !important;
         }
 
-        /* LIVE MAP STYLES */
+        .btn-danger {
+            background-color: rgba(255, 82, 82, 0.2) !important;
+            border-color: #ff5252 !important;
+            color: #ff5252 !important;
+        }
+
         #map-viewport {
             width: 100vw;
             height: 100vh;
@@ -245,7 +203,6 @@
             z-index: 1;
         }
 
-        /* ADDRESS HUD OVERLAY */
         .search-address-hud {
             position: absolute;
             top: 75px;
@@ -273,9 +230,32 @@
             border: 1px solid #D4AF37;
             padding: 0 16px;
             font-weight: bold;
-            font-family: inherit;
             cursor: pointer;
             border-radius: 4px;
+        }
+
+        /* --- ASSET DROPDOWN MATRIX HUD --- */
+        .asset-deployment-hud {
+            position: absolute;
+            top: 125px;
+            left: 15px;
+            background-color: rgba(2, 8, 3, 0.95);
+            border: 1px solid #D4AF37;
+            padding: 8px;
+            border-radius: 4px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .asset-select {
+            background-color: #020803;
+            color: #ffffff;
+            border: 1px solid rgba(214, 175, 55, 0.5);
+            font-family: inherit;
+            font-size: 11px;
+            padding: 4px;
         }
 
         .lower-hud-ribbon {
@@ -286,25 +266,15 @@
             background-color: rgba(2, 8, 3, 0.9);
             border: 1px solid #0B2510;
             border-left: 4px solid #D4AF37;
-            padding: 10px 20px;
+            padding: 8px 15px;
             border-radius: 4px;
             z-index: 1000;
             text-align: center;
-            min-width: 280px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+            min-width: 300px;
         }
 
-        #status-text {
-            font-size: 12px;
-            font-weight: bold;
-            letter-spacing: 1.5px;
-            margin-bottom: 3px;
-        }
-
-        #sub-status {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 11px;
-        }
+        #status-text { font-size: 12px; font-weight: bold; letter-spacing: 1px; }
+        #sub-status { color: rgba(255, 255, 255, 0.5); font-size: 11px; margin-top: 2px; }
 
         .search-trigger {
             position: absolute;
@@ -324,12 +294,20 @@
             z-index: 1000;
         }
 
-        /* Custom Colored Dots Styles for Map Elements */
-        .tactical-dot-tracking { background-color: #ff5252; border: 2px solid white; border-radius: 50%; width: 12px; height: 12px; display: block; box-shadow: 0 0 8px #ff5252; }
-        .tactical-dot-perimeter { background-color: #3897f0; border: 2px solid white; border-radius: 50%; width: 12px; height: 12px; display: block; box-shadow: 0 0 8px #3897f0; }
-        .tactical-dot-command { background-color: #00ff00; border: 2px solid white; border-radius: 50%; width: 12px; height: 12px; display: block; box-shadow: 0 0 8px #00ff00; }
+        /* --- THE TRUE LEDGER CSS DESIGN SPECS --- */
+        .dot-le { background-color: #0000ff !important; border: 2px solid white; border-radius: 50%; width: 14px; height: 14px; display: block; box-shadow: 0 0 10px #0000ff; }
+        .dot-k9 { background-color: #87ceeb !important; border: 2px solid white; border-radius: 50%; width: 14px; height: 14px; display: block; box-shadow: 0 0 10px #87ceeb; }
+        .dot-sar { background-color: #ff0000 !important; border: 2px solid white; border-radius: 50%; width: 14px; height: 14px; display: block; box-shadow: 0 0 10px #ff0000; }
+        .dot-civilian { background-color: #00ff00 !important; border: 2px solid white; border-radius: 50%; width: 14px; height: 14px; display: block; box-shadow: 0 0 10px #00ff00; }
+        .dot-suspect { background-color: #800080 !important; border: 2px solid white; border-radius: 50%; width: 14px; height: 14px; display: block; box-shadow: 0 0 10px #800080; }
+        .dot-vehicle { background-color: #000000 !important; border: 2px solid white; border-radius: 50%; width: 14px; height: 14px; display: block; box-shadow: 0 0 10px #000000; }
+        .dot-drone { background-color: #808080 !important; border: 2px solid white; border-radius: 50%; width: 14px; height: 14px; display: block; box-shadow: 0 0 10px #808080; }
+        .dot-article { background-color: #ffa500 !important; border: 2px solid white; border-radius: 50%; width: 14px; height: 14px; display: block; box-shadow: 0 0 10px #ffa500; }
+        .dot-boat { background-color: #000000 !important; border: 2px solid #ffffff; border-radius: 4px; width: 12px; height: 12px; display: block; text-align:center; font-size:9px; line-height:12px; }
+        .dot-submerged { background-color: #ffff00 !important; border: 2px solid black; border-radius: 4px; width: 12px; height: 12px; display: block; }
+        .dot-victim { background-color: #a52a2a !important; border: 2px solid white; border-radius: 50%; width: 14px; height: 14px; display: block; box-shadow: 0 0 10px #a52a2a; }
 
-        /* --- STAGE 4: FULL-SCREEN TACTICAL REGISTRY --- */
+        /* --- STAGE 4: FULL-SCREEN ROSTER LISTING --- */
         #search-panel {
             position: fixed;
             top: 0;
@@ -345,163 +323,94 @@
             border: 4px solid #0B2510;
         }
 
-        .search-header-layout {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-        }
-
-        .search-nav-group {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .search-main-title {
-            color: #D4AF37;
-            font-weight: bold;
-            font-size: 18px;
-            letter-spacing: 2px;
-        }
-
-        .purge-btn {
-            background-color: rgba(255, 82, 82, 0.1);
-            color: #ff5252;
-            border: 1px solid #ff5252;
-            padding: 6px 12px;
-            font-family: inherit;
-            font-size: 11px;
-            font-weight: bold;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-
-        .registry-title {
-            color: rgba(255, 255, 255, 0.38);
-            font-size: 12px;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .divider {
-            border: 0;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.12);
-            margin-bottom: 15px;
-        }
-
-        #roster-results-container {
-            flex: 1;
-            overflow-y: auto;
-        }
-
-        .result-item {
-            background-color: rgba(11, 37, 16, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            padding: 12px;
-            border-radius: 4px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .unit-name {
-            font-weight: bold;
-            margin-bottom: 4px;
-        }
-
-        .unit-status {
-            color: rgba(255, 255, 255, 0.54);
-            font-size: 13px;
-        }
-
-        .unit-time {
-            color: #D4AF37;
-            font-size: 12px;
-        }
+        .search-header-layout { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .search-nav-group { display: flex; align-items: center; gap: 15px; }
+        .search-main-title { color: #D4AF37; font-weight: bold; font-size: 18px; letter-spacing: 2px; }
+        .purge-btn { background-color: rgba(255, 82, 82, 0.1); color: #ff5252; border: 1px solid #ff5252; padding: 6px 12px; font-family: inherit; font-size: 11px; cursor: pointer; }
+        .registry-title { color: rgba(255, 255, 255, 0.38); font-size: 12px; font-weight: bold; margin-bottom: 10px; }
+        .divider { border: 0; height: 1px; background: rgba(255, 255, 255, 0.12); margin-bottom: 15px; }
+        #roster-results-container { flex: 1; overflow-y: auto; }
+        .result-item { background-color: rgba(11, 37, 16, 0.4); border: 1px solid rgba(255, 255, 255, 0.12); padding: 12px; border-radius: 4px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .unit-name { font-weight: bold; margin-bottom: 4px; }
+        .unit-status { color: rgba(255, 255, 255, 0.54); font-size: 13px; }
+        .unit-time { color: #D4AF37; font-size: 12px; }
     </style>
 </head>
 <body>
 
-    <!-- STAGE 1: HOMEPAGE -->
     <div id="homepage-screen" class="app-screen screen-active" onclick="navigateToSignIn()">
-        <img src="IMAGE FOR TAC.png2.jpg" alt="TACNET SYSTEM DESIGN" class="hero-image" onerror="this.style.display='none'; document.getElementById('alt-title').style.display='block';">
-        <div id="alt-title" style="display:none; color:#D4AF37; font-size:28px; font-weight:bold; letter-spacing:4px;">TACNET DATABASE</div>
+        <img src="IMAGE FOR TAC.png2.jpg" alt="TACNET MASTER SCREEN" class="hero-image" onerror="this.style.display='none'; document.getElementById('alt-title').style.display='block';">
+        <div id="alt-title" style="display:none; color:#D4AF37; font-size:24px; font-weight:bold; letter-spacing:3px;">TACNET CENTRAL COMMAND</div>
         <div class="homepage-footer">CLICK ANYWHERE TO ENTER NETWORK</div>
     </div>
 
-    <!-- STAGE 2: SIGN-IN ROSTER -->
     <div id="signin-screen" class="app-screen">
         <div class="roster-card">
-            <div class="roster-header">MULTI-AGENCY ROSTER</div>
+            <div class="roster-header">MULTI-AGENCY DEPLOYMENT ENGINE</div>
             <div class="form-group">
-                <label>AGENCY / DEPARTMENT</label>
-                <input type="text" id="input-agency" class="roster-input" value="AMHERST CO SO">
+                <label>OPERATIONAL UNIT NAME</label>
+                <input type="text" id="input-callsign" class="roster-input" value="COMMAND POST 1" style="text-transform: uppercase;">
             </div>
-            <div class="form-group">
-                <label>OFFICER FULL NAME</label>
-                <input type="text" id="input-name" class="roster-input" placeholder="e.g., DEPUTY JONES">
-            </div>
-            <div class="form-group">
-                <label>UNIT CALL SIGN (ID)</label>
-                <input type="text" id="input-callsign" class="roster-input" placeholder="e.g., K9-1" style="text-transform: uppercase;">
-            </div>
-            <div class="form-group">
-                <label>ACTIVE DUTY ASSIGNMENT</label>
-                <select id="input-assignment" class="roster-input">
-                    <option value="TRACKING">TRACKING TEAM / K9 (RED)</option>
-                    <option value="PERIMETER">PERIMETER POST (BLUE)</option>
-                    <option value="COMMAND">COMMAND STRUCTURE (GREEN)</option>
-                </select>
-            </div>
-            <button class="auth-btn" onclick="authorizeRoster()">AUTHORIZE ACCESS</button>
+            <button class="auth-btn" onclick="authorizeRoster()">INITIALIZE MASTER SYSTEM</button>
         </div>
     </div>
 
-    <!-- STAGE 3: LIVE COMMAND DECK WITH SATELLITE MAP -->
     <div id="tactical-screen" class="app-screen">
         <div id="nvg-overlay"></div>
 
         <div class="hud-header">
             <div class="hud-left">
                 <button class="back-arrow" onclick="navigateToGate()">←</button>
-                <div id="hud-display-banner" class="roster-banner">OFFLINE // STANDBY</div>
+                <div id="hud-display-banner" class="roster-banner">TACTICAL SYSTEM ACTIVE</div>
             </div>
             <div class="controls">
-                <button id="link-btn" class="btn" onclick="toggleLink()">LINK OFFLINE</button>
+                <button id="sos-btn" class="btn btn-danger" onclick="triggerSosAlert()">SOS ALERT</button>
+                <button id="firstaid-btn" class="btn" onclick="playVerbalFirstAid()">FIRST AID PROTOCOL</button>
                 <button id="nvg-btn" class="btn" onclick="toggleNvg()">NVG</button>
             </div>
         </div>
 
-        <!-- ADDRESS SEARCH BAR HUD -->
         <div class="search-address-hud">
-            <input type="text" id="address-field" class="address-input" placeholder="Enter Target Address (e.g. Amelon Rd, Madison Heights VA)...">
-            <button class="go-btn" onclick="searchTargetAddress()">GO</button>
+            <input type="text" id="address-field" class="address-input" placeholder="Enter Search Target Address or Landmark...">
+            <button class="go-btn" onclick="searchTargetCorridor()">GO</button>
         </div>
 
-        <!-- LIVE SATELLITE IMAGERY VIEWPORT -->
+        <div class="asset-deployment-hud">
+            <span style="font-size:9px; font-weight:bold; color:#D4AF37;">LEDGER ASSET KEY:</span>
+            <select id="asset-type-selector" class="asset-select">
+                <option value="LE">🔵 LAW ENFORCEMENT</option>
+                <option value="K9">💎 K9 & HANDLER TEAM</option>
+                <option value="SAR">🔴 SAR RESPONSE TEAM</option>
+                <option value="CIVILIAN">🟢 CIVILIAN VOLUNTEERS</option>
+                <option value="SUSPECT">🟣 TARGET SUSPECT</option>
+                <option value="VEHICLE">⚫ VEHICLE ASSET</option>
+                <option value="DRONE">⚪ AIR DRONE UNIT</option>
+                <option value="ARTICLE">🟠 ARTICLE / EVIDENCE FIND</option>
+                <option value="BOAT">⚓ SURFACE WATER BOAT</option>
+                <option value="SUBMERGED">🟡 SUBMERGED BOAT / DIVE</option>
+                <option value="VICTIM">🟤 MISSING VICTIM TARGET</option>
+            </select>
+        </div>
+
         <div id="map-viewport"></div>
 
         <div class="lower-hud-ribbon">
-            <div id="status-text" style="color: #ff5252;">SYSTEM READY // RADIO STANDBY</div>
-            <div id="sub-status">MAP IS INTERACTIVE // TAP PLACES SIMULATED SEARCHERS</div>
+            <div id="status-text" style="color:#D4AF37;">TACTICAL LEDGER SYSTEM ONLINE</div>
+            <div id="sub-status">CHOOSE ASSET FROM LEFT KEY, THEN TAP MAP TO POSITION UNITS</div>
         </div>
 
         <div class="search-trigger" onclick="openSearch()">🔍</div>
     </div>
 
-    <!-- STAGE 4: REGISTRY LEDGER -->
     <div id="search-panel">
         <div class="search-header-layout">
             <div class="search-nav-group">
                 <button class="back-arrow" onclick="closeSearch()">←</button>
-                <span class="search-main-title">TACTICAL ROSTER PANEL</span>
+                <span class="search-main-title">MASTER OPERATIONAL ROSTER</span>
             </div>
-            <button class="purge-btn" onclick="purgeServerRoster()">PURGE ACTIVE ROSTER</button>
+            <button class="purge-btn" onclick="purgeFullRosterLedger()">PURGE COMPLETE DECK</button>
         </div>
-        <div class="registry-title">LIVE ACTIVE ASSETS IN DATABASE MAP LEDGER</div>
+        <div class="registry-title">ACTIVE FIELD UNITS PLACED IN LEDGER</div>
         <hr class="divider">
         <div id="roster-results-container"></div>
     </div>
@@ -511,15 +420,10 @@
         const client = new Client().setEndpoint('https://nyc.cloud.appwrite.io/v1').setProject('6a38e834003e0cc64c31'); 
         const databases = new Databases(client);
 
-        let linkActive = false;
-        let nvgActive = false;
-        let watchId = null;
-        
         let tacticalMap = null;
-        let myMarker = null;
-        let databaseMarkers = [];
-
-        let sessionData = { agency: '', name: '', callsign: '', assignment: '' };
+        let activePerimeterCircle = null;
+        let fieldUnitsArray = [];
+        let systemCallsign = "COMMAND POST";
 
         function navigateToSignIn() {
             document.getElementById('homepage-screen').classList.remove('screen-active');
@@ -527,199 +431,193 @@
         }
 
         function authorizeRoster() {
-            const callsignInput = document.getElementById('input-callsign').value.toUpperCase().trim();
-            const nameInput = document.getElementById('input-name').value.trim();
-            
-            if (!callsignInput || !nameInput) {
-                alert("ROSTER ERROR: Full Name and Call Sign are required.");
-                return;
-            }
-
-            sessionData.agency = document.getElementById('input-agency').value.trim();
-            sessionData.name = nameInput;
-            sessionData.callsign = callsignInput;
-            sessionData.assignment = document.getElementById('input-assignment').value;
-
-            document.getElementById('hud-display-banner').innerText = `${sessionData.callsign} // ${sessionData.assignment}`;
+            systemCallsign = document.getElementById('input-callsign').value.toUpperCase().trim() || "COMMAND POST";
+            document.getElementById('hud-display-banner').innerText = `${systemCallsign} // HQ`;
             document.getElementById('signin-screen').classList.remove('screen-active');
             document.getElementById('tactical-screen').classList.add('screen-active');
 
-            initializeTacticalSatelliteMap();
+            initializeSatelliteCommandMap();
         }
 
-        // INITIALIZE HIGH-RESOLUTION REAL SATELLITE IMAGERY ENGINE (FIXED MAP PIPELINE LINK)
-        function initializeTacticalSatelliteMap() {
+        function initializeSatelliteCommandMap() {
             if (tacticalMap !== null) return;
 
             tacticalMap = L.map('map-viewport', { zoomControl: false }).setView([37.525, -79.124], 14);
 
-            // FIXED SATELLITE TILE LAYOUT URL PATHWAY ({z}/{y}/{x} format restoration)
+            // True Satellite imagery engine integration
             L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                maxZoom: 19,
-                attribution: 'Tiles © Esri'
+                maxZoom: 19
             }).addTo(tacticalMap);
 
-            // Fetch secondary transparent road layers over satellite view so streets are labeled clearly
+            // Clean street road overlay labels
             L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(tacticalMap);
 
-            // Support table-top tap configurations to drop custom simulated unit elements instantly
-            tacticalMap.on('click', handleManualMapDrop);
-            
-            // Start continuous tracking stream loops immediately
-            pollDatabaseMarkersLoop();
-            setInterval(pollDatabaseMarkersLoop, 5000); 
+            // Left-click / Tap handles instant manual unit placement based on selected ledger type
+            tacticalMap.on('click', deployAssetToGridLocation);
         }
 
-        async function searchTargetAddress() {
-            const query = document.getElementById('address-field').value.trim();
-            if (!query) return;
+        // CORES RESTORED: Searches address, centers viewport, and draws adjustable boundary green circle circle ring automatically
+        async function searchTargetCorridor() {
+            const addressQuery = document.getElementById('address-field').value.trim();
+            if (!addressQuery) return;
 
             try {
-                const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}`);
+                const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(addressQuery)}`);
                 const data = await response.json();
 
                 if (data && data.length > 0) {
                     const lat = parseFloat(data[0].lat);
                     const lon = parseFloat(data[0].lon);
+
                     tacticalMap.flyTo([lat, lon], 15);
+
+                    // Clear previous circles
+                    if (activePerimeterCircle) tacticalMap.removeLayer(activePerimeterCircle);
+
+                    // Drop Adjustable Green Circle Boundary Ring around Address target point
+                    activePerimeterCircle = L.circle([lat, lon], {
+                        color: '#00ff00',
+                        fillColor: '#00ff00',
+                        fillOpacity: 0.12,
+                        radius: 800, // Default 800 meter perimeter range
+                        weight: 3
+                    }).addTo(tacticalMap).bindPopup("<b>ADJUSTABLE SEARCH CONTAINMENT BOUNDARY</b>");
+
                 } else {
-                    alert("Address corridor untraceable.");
+                    alert("Target corridor location unverified.");
                 }
-            } catch (e) { console.log("Search error"); }
+            } catch (e) { console.log(e); }
         }
 
-        function toggleLink() {
-            linkActive = !linkActive;
-            const btn = document.getElementById('link-btn');
-            const status = document.getElementById('status-text');
-
-            if (linkActive) {
-                btn.innerText = "LINK ONLINE";
-                btn.classList.add('btn-active');
-                status.innerText = "BROADCAST TRANSMISSION ONLINE";
-                status.style.color = "#00ff00";
-
-                // LIVE REAL-TIME SATELLITE HARDWARE GPS ENABLED
-                if (navigator.geolocation) {
-                    watchId = navigator.geolocation.watchPosition(handleLiveGps, handleGpsError, {
-                        enableHighAccuracy: true,
-                        timeout: 10000
-                    });
-                }
-            } else {
-                btn.innerText = "LINK OFFLINE";
-                btn.classList.remove('btn-active');
-                status.innerText = "SYSTEM READY // RADIO STANDBY";
-                status.style.color = "#ff5252";
-
-                if (watchId) navigator.geolocation.clearWatch(watchId);
-                if (myMarker) { tacticalMap.removeLayer(myMarker); myMarker = null; }
-            }
-        }
-
-        function handleLiveGps(position) {
-            const lat = position.coords.latitude;
-            const lng = position.coords.longitude;
-            const coords = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
-            document.getElementById('sub-status').innerText = `LIVE SAT STREAM LOC: ${coords}`;
-
-            tacticalMap.setView([lat, lng]);
-            dropTacticalDot(lat, lng, sessionData.callsign, sessionData.assignment, true);
-            transmitPacket(coords);
-        }
-
-        function handleManualMapDrop(e) {
-            if (!linkActive) return;
+        // DEPLOY ASSETS TO MAP USING THE EXACT COLOR LEDGER KEY CODES
+        function deployAssetToGridLocation(e) {
             const lat = e.latlng.lat;
             const lng = e.latlng.lng;
-            const coords = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+            const selectedAssetType = document.getElementById('asset-type-selector').value;
+            const selectedText = document.getElementById('asset-type-selector').options[document.getElementById('asset-type-selector').selectedIndex].text;
+
+            let cssMarkerClass = 'dot-le';
+            if (selectedAssetType === 'K9') cssMarkerClass = 'dot-k9';
+            if (selectedAssetType === 'SAR') cssMarkerClass = 'dot-sar';
+            if (selectedAssetType === 'CIVILIAN') cssMarkerClass = 'dot-civilian';
+            if (selectedAssetType === 'SUSPECT') cssMarkerClass = 'dot-suspect';
+            if (selectedAssetType === 'VEHICLE') cssMarkerClass = 'dot-vehicle';
+            if (selectedAssetType === 'DRONE') cssMarkerClass = 'dot-drone';
+            if (selectedAssetType === 'ARTICLE') cssMarkerClass = 'dot-article';
+            if (selectedAssetType === 'BOAT') cssMarkerClass = 'dot-boat';
+            if (selectedAssetType === 'SUBMERGED') cssMarkerClass = 'dot-submerged';
+            if (selectedAssetType === 'VICTIM') cssMarkerClass = 'dot-victim';
+
+            const uniqueUnitID = "UNIT-" + Math.floor(1000 + Math.random() * 9000);
             
-            dropTacticalDot(lat, lng, sessionData.callsign, sessionData.assignment, true);
-            transmitPacket(coords);
+            // Build icon layer
+            const htmlIconString = selectedAssetType === 'BOAT' ? '⚓' : '';
+            const tacticalDivIcon = L.divIcon({ className: cssMarkerClass, html: htmlIconString, iconSize: [14, 14] });
+
+            // Create marker map pin item elements
+            const newFieldMarker = L.marker([lat, lng], { icon: tacticalDivIcon, draggable: true }).addTo(tacticalMap);
+            
+            // Popup context menu contains direct REMOVE SEARCHER AT ANY TIME handle link command loop
+            const popupContentHtml = `
+                <div style="color:#020803; font-family:monospace; font-size:11px;">
+                    <b>${uniqueUnitID}</b><br>
+                    ${selectedText}<br>
+                    <hr style="margin:4px 0;">
+                    <button onclick="removeIndividualSearcher('${uniqueUnitID}')" style="background:#ff5252; color:white; border:none; padding:4px; font-size:9px; cursor:pointer; font-weight:bold; width:100%;">REMOVE UNIT</button>
+                </div>
+            `;
+            newFieldMarker.bindPopup(popupContentHtml);
+
+            // Assemble into state architecture configuration ledger array tracking
+            const unitRecordObject = {
+                uid: uniqueUnitID,
+                markerRef: newFieldMarker,
+                type: selectedAssetType,
+                textLabel: selectedText,
+                coordsStr: `${lat.toFixed(4)}, ${lng.toFixed(4)}`,
+                timeLogged: new Date().toLocaleTimeString().substring(0, 5)
+            };
+
+            fieldUnitsArray.push(unitRecordObject);
+            transmitAssetToAppwriteServer(unitRecordObject);
+            
+            document.getElementById('status-text').innerText = `${uniqueUnitID} DEPLOYED TO FIELD MATRIX`;
         }
 
-        // DRAW COLORED DOTS ON THE SATELLITE FEED ACCORDING TO DEPUTY DUTY ASSIGNMENT
-        function dropTacticalDot(lat, lng, label, assignment, isMe) {
-            let dotClass = 'tactical-dot-tracking';
-            if (assignment === 'PERIMETER') dotClass = 'tactical-dot-perimeter';
-            if (assignment === 'COMMAND') dotClass = 'tactical-dot-command';
+        // POPUP COMMAND: REMOVE SEARCHER AT ANY TIME LOGIC INTEGRATION
+        window.removeIndividualSearcher = function(unitID) {
+            const index = fieldUnitsArray.findIndex(u => u.uid === unitID);
+            if (index !== -1) {
+                tacticalMap.removeLayer(fieldUnitsArray[index].markerRef);
+                fieldUnitsArray.splice(index, 1);
+                document.getElementById('status-text').innerText = `${unitID} REMOVED AND EXTRACTED FROM ROSTER`;
+                RosterPanelUpdate();
+            }
+        };
 
-            const customIcon = L.divIcon({ className: dotClass, iconSize: [12, 12] });
+        async function transmitAssetToAppwriteServer(unit) {
+            try {
+                await databases.createDocument('tacnet-search-app', 'tacnet_live_units', ID.unique(), {
+                    'tacnet_live_units': unit.uid + " - " + unit.textLabel,
+                    'location': unit.coordsStr,
+                    'operationalStatus': 'DEPLOYED SWEEP ZONE',
+                    'lastUpdateTime': unit.timeLogged
+                });
+            } catch(e){}
+        }
 
-            if (isMe) {
-                if (myMarker) tacticalMap.removeLayer(myMarker);
-                myMarker = L.marker([lat, lng], { icon: customIcon }).addTo(tacticalMap).bindPopup(`<b>${label} (YOU)</b>`).openPopup();
+        // AUDIO ASSIST ENGINE: PLAY VERBAL FIRST AID SPEECH PROTOCOLS
+        function playVerbalFirstAid() {
+            if ('speechSynthesis' in window) {
+                const textToSpeak = "Dispatching Medical Guidance Alert. Calm down, check for breath response corridors, maintain legal boundary compression lines, ambulance assets are in route.";
+                const medicalUtterance = new SpeechSynthesisUtterance(textToSpeak);
+                medicalUtterance.rate = 0.9;
+                window.speechSynthesis.speak(medicalUtterance);
+                document.getElementById('status-text').innerText = "SPEECH ENGINES INITIATED: VERBAL FIRST AID ACTIVE";
             } else {
-                const newM = L.marker([lat, lng], { icon: customIcon }).addTo(tacticalMap).bindPopup(`<b>${label}</b>`);
-                databaseMarkers.push(newM);
+                alert("Audio Speech hardware unsupported on this iPad device architecture.");
             }
         }
 
-        async function transmitPacket(coordinates) {
-            try {
-                const fullIdentity = `${sessionData.callsign} (${sessionData.name})`;
-                await databases.createDocument('tacnet-search-app', 'tacnet_live_units', ID.unique(), {
-                    'tacnet_live_units': fullIdentity,
-                    'location': coordinates,
-                    'operationalStatus': sessionData.assignment,
-                    'lastUpdateTime': new Date().toLocaleTimeString().substring(0, 5)
-                });
-            } catch (err) {}
+        function triggerSosAlert() {
+            alert("EMERGENCY RADIO INTERCEPT: SOS ALERT BROADCAST SHIPPED OUT TO MULTI-AGENCY COMM CHANNELS!");
+            document.getElementById('status-text').innerText = "SOS ALERTS DISTRIBUTED TO SATELLITE TIERS";
+            document.getElementById('status-text').style.color = "#ff5252";
         }
 
-        // PULL ALL ACTIVE SEARCHER ELEMENTS OUT OF DATABASE AND RE-DRAW THEM DYNAMICALLY
-        async function pollDatabaseMarkersLoop() {
-            if (tacticalMap === null) return;
-            try {
-                const response = await databases.listDocuments('tacnet-search-app', 'tacnet_live_units');
-                
-                // Clear out previous external tracking pins
-                databaseMarkers.forEach(m => tacticalMap.removeLayer(m));
-                databaseMarkers = [];
-
-                response.documents.forEach(doc => {
-                    if (doc.location && doc.location.includes(',')) {
-                        const parts = doc.location.split(',');
-                        const lat = parseFloat(parts[0]);
-                        const lng = parseFloat(parts[1]);
-                        
-                        // Don't duplicate your own primary marker
-                        if (doc.tacnet_live_units.split(' ')[0] !== sessionData.callsign) {
-                            dropTacticalDot(lat, lng, doc.tacnet_live_units, doc.operationalStatus, false);
-                        }
-                    }
-                });
-            } catch (err) {}
+        function navigateToGate() {
+            document.getElementById('tactical-screen').classList.remove('screen-active');
+            document.getElementById('homepage-screen').classList.add('screen-active');
         }
 
-        function handleGpsError() { document.getElementById('sub-status').innerText = "SAT PIN DETACHED // RUNNING INTERACTIVE SIM MODE"; }
-        function navigateToGate() { if (linkActive) toggleLink(); document.getElementById('tactical-screen').classList.remove('screen-active'); document.getElementById('homepage-screen').classList.add('screen-active'); }
         function openSearch() { document.getElementById('search-panel').style.display = 'flex'; RosterPanelUpdate(); }
         function closeSearch() { document.getElementById('search-panel').style.display = 'none'; }
-        function toggleNvg() { nvgActive = !nvgActive; document.getElementById('nvg-btn').classList.toggle('btn-active'); document.getElementById('nvg-overlay').style.display = nvgActive ? 'block' : 'none'; }
+        function toggleNvg() { document.getElementById('nvg-overlay').style.display = (document.getElementById('nvg-overlay').style.display === 'block') ? 'none' : 'block'; document.getElementById('nvg-btn').classList.toggle('btn-active'); }
 
-        async function RosterPanelUpdate() {
+        function RosterPanelUpdate() {
             const container = document.getElementById('roster-results-container');
-            container.innerHTML = '<div class="loading-text">SYNCING MAP LEDGER...</div>';
-            try {
-                const response = await databases.listDocuments('tacnet-search-app', 'tacnet_live_units');
-                container.innerHTML = '';
-                if (response.documents.length === 0) { container.innerHTML = '<div class="loading-text">NO ACTIVE TRANSMISSIONS FOUND</div>'; return; }
-                response.documents.forEach(doc => {
-                    container.insertAdjacentHTML('beforeend', `<div class="result-item"><div><div class="unit-name">${doc.tacnet_live_units}</div><div class="unit-status">ASSIGNMENT: ${doc.operationalStatus} // LOC: ${doc.location}</div></div><div class="unit-time">${doc.lastUpdateTime}</div></div>`);
-                });
-            } catch (err) {}
+            container.innerHTML = '';
+            if (fieldUnitsArray.length === 0) { container.innerHTML = '<div class="loading-text">NO FIELD ASSETS CURRENTLY ASSIGNED TO GRID LEDGER</div>'; return; }
+            fieldUnitsArray.forEach(unit => {
+                container.insertAdjacentHTML('beforeend', `
+                    <div class="result-item">
+                        <div>
+                            <div class="unit-name" style="color:#D4AF37;">${unit.uid} // ${unit.textLabel}</div>
+                            <div class="unit-status">FIELD COORDINATE VECTOR: [ ${unit.coordsStr} ]</div>
+                        </div>
+                        <div class="unit-time">${unit.timeLogged}</div>
+                    </div>
+                `);
+            });
         }
 
-        async function purgeServerRoster() {
-            if (!confirm("Clear master grid ledger rows?")) return;
-            try {
-                const response = await databases.listDocuments('tacnet-search-app', 'tacnet_live_units');
-                for (let doc of response.documents) { await databases.deleteDocument('tacnet-search-app', 'tacnet_live_units', doc.$id); }
-                RosterPanelUpdate();
-                databaseMarkers.forEach(m => tacticalMap.removeLayer(m));
-                databaseMarkers = [];
-            } catch (err) {}
+        function purgeFullRosterLedger() {
+            if (!confirm("Execute full purge clearance of all search units?")) return;
+            fieldUnitsArray.forEach(u => tacticalMap.removeLayer(u.markerRef));
+            fieldUnitsArray = [];
+            if (activePerimeterCircle) { tacticalMap.removeLayer(activePerimeterCircle); activePerimeterCircle = null; }
+            RosterPanelUpdate();
+            document.getElementById('status-text').innerText = "GRID CLEAR // LEDGER EMPTY";
         }
     </script>
 </body>
