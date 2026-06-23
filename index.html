@@ -1,12 +1,13 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TACNET // CENTRAL COMMAND MATRIX</title>
+    <!-- Include the Official Appwrite Web SDK Platform -->
     <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.0"></script>
     
+    <!-- LEAFLET GPS MAP ENGINE STYLES & SCRIPTS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -31,7 +32,7 @@
             box-sizing: border-box;
         }
 
-        /* --- STAGE 1: DUAL-LAYER GATEWAY --- */
+        /* --- STAGE 1: DUAL-LAYER TRIPLE FAILSAFE GATEWAY --- */
         #homepage-screen {
             background-color: #020803;
             background-image: radial-gradient(circle, #091f0d 0%, #020803 100%);
@@ -383,7 +384,7 @@
             position: absolute;
             bottom: 15px;
             left: 10px;
-            right: 70px; 
+            right: 120px; 
             background-color: rgba(2, 8, 3, 0.92);
             border: 1px solid #0B2510;
             border-left: 3px solid #D4AF37;
@@ -414,6 +415,7 @@
             font-weight: bold;
         }
 
+        /* DUAL BOTTOM-RIGHT NAVIGATION SQUARE MODULES */
         .search-trigger {
             position: absolute;
             bottom: 15px;
@@ -421,19 +423,39 @@
             background-color: rgba(11, 37, 16, 0.95);
             border: 1.5px solid #D4AF37;
             color: #D4AF37;
-            width: 48px;
-            height: 48px;
+            width: 44px;
+            height: 44px;
             border-radius: 4px;
             display: flex; 
             justify-content: center;
             align-items: center;
             cursor: pointer;
-            font-size: 18px;
+            font-size: 16px;
             z-index: 6000;
             box-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
 
-        /* MASTER LEDGER ICON COLOR SCHEMATIC */
+        .report-trigger {
+            position: absolute;
+            bottom: 15px;
+            right: 60px;
+            background-color: rgba(11, 37, 16, 0.95);
+            border: 1.5px solid #00FF00;
+            color: #00FF00;
+            width: 44px;
+            height: 44px;
+            border-radius: 4px;
+            display: flex; 
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 16px;
+            z-index: 6000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            font-weight: bold;
+        }
+
+        /* LEDGER GRAPHIC SCHEMATICS */
         .dot-le { background-color: #0000ff !important; border: 2px solid white; border-radius: 50%; width: 14px; height: 14px; display: block; box-shadow: 0 0 12px #0000ff; }
         .dot-k9 { background-color: #87ceeb !important; border: 2px solid white; border-radius: 50%; width: 14px; height: 14px; display: block; box-shadow: 0 0 12px #87ceeb; }
         .dot-sar { background-color: #ff0000 !important; border: 2px solid white; border-radius: 50%; width: 14px; height: 14px; display: block; box-shadow: 0 0 12px #ff0000; }
@@ -448,7 +470,7 @@
         .dot-live-gps { background-color: #00ffff !important; border: 2.5px solid #ffffff; border-radius: 50%; width: 16px; height: 16px; display: block; box-shadow: 0 0 15px #00ffff; }
         .dot-trace { background-color: #ff007f !important; border: 2px solid #ffffff; border-radius: 4px; width: 12px; height: 12px; display: block; box-shadow: 0 0 15px #ff007f; }
 
-        /* --- STAGE 4: REGISTRY --- */
+        /* --- STAGE 4: REGISTRY PANEL --- */
         #search-panel {
             position: fixed;
             top: 0;
@@ -471,12 +493,60 @@
         .divider { border: 0; height: 1px; background: rgba(255, 255, 255, 0.12); margin-bottom: 10px; }
         #roster-results-container { flex: 1; overflow-y: auto; }
         .result-item { background-color: rgba(11, 37, 16, 0.4); border: 1px solid rgba(255, 255, 255, 0.12); padding: 10px; border-radius: 4px; margin-bottom: 8px; font-size: 12px; }
-        .unit-name { font-weight: bold; margin-bottom: 2px; }
-        .unit-status { color: rgba(255, 255, 255, 0.54); font-size: 11px; }
+
+        /* --- STAGE 5: REPORT PRE-PREVIEW MODAL OVERLAY --- */
+        #report-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #020803;
+            padding: 20px;
+            box-sizing: border-box;
+            display: none;
+            flex-direction: column;
+            z-index: 8000;
+            overflow-y: auto;
+            border: 3px double #00FF00;
+        }
+
+        .report-paper {
+            background-color: #ffffff;
+            color: #000000;
+            padding: 25px;
+            font-family: Arial, sans-serif;
+            border-radius: 2px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            flex: 1;
+            overflow-y: auto;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .report-btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .action-export-btn {
+            flex: 1;
+            padding: 12px;
+            font-family: inherit;
+            font-weight: bold;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            border: 1px solid #00FF00;
+            background-color: #0B2510;
+            color: #00FF00;
+        }
     </style>
 </head>
 <body>
 
+    <!-- STAGE 1: DUAL-LAYER IMAGE & TEXT FALLSAFE GATEWAY -->
     <div id="homepage-screen" class="app-screen" onclick="forceEnterSystemRoster()">
         <div class="text-fallback-box" id="fallback-branding-node">
             <div class="fallback-title">TACNET SYSTEM CORE</div>
@@ -485,6 +555,7 @@
         </div>
     </div>
 
+    <!-- STAGE 2: SIGN-IN ROSTER -->
     <div id="signin-screen" class="app-screen">
         <div class="roster-card">
             <div class="roster-header">MULTI-AGENCY DEPLOYMENT ENGINE</div>
@@ -496,6 +567,7 @@
         </div>
     </div>
 
+    <!-- STAGE 3: COMMAND DECK PANEL -->
     <div id="tactical-screen" class="app-screen">
         <div id="nvg-overlay"></div>
         
@@ -565,9 +637,12 @@
             </div>
         </div>
 
+        <!-- TWO BOTTOM DETACHED IOS NAV MODULE SQUARES -->
+        <div class="report-trigger" onclick="openProfessionalReportDeck()">📋</div>
         <div class="search-trigger" onclick="openSearch()">🔍</div>
     </div>
 
+    <!-- STAGE 4: REGISTRY PANEL OVERLAY -->
     <div id="search-panel">
         <div class="search-header-layout">
             <div class="search-nav-group">
@@ -579,6 +654,21 @@
         <div class="registry-title">ACTIVE FIELD UNITS PLACED IN LEDGER</div>
         <hr class="divider">
         <div id="roster-results-container"></div>
+    </div>
+
+    <!-- STAGE 5: PROFESSIONAL REPORT DECK MODAL PREVIEW -->
+    <div id="report-panel">
+        <div class="search-header-layout" style="margin-bottom:10px;">
+            <span style="color:#00FF00; font-weight:bold; font-size:14px; letter-spacing:1px;">TACNET OFFICIAL REPLAY REPORT DECK</span>
+            <button class="back-arrow" onclick="closeProfessionalReportDeck()" style="border-color:#00FF00; color:#00FF00;">← CLOSE</button>
+        </div>
+        <div class="report-paper" id="print-capture-area">
+            <!-- Dynamic Report Content Spawns Here -->
+        </div>
+        <div class="report-btn-group">
+            <button class="action-export-btn" onclick="executeSystemPrintReport()">🖨️ PRINT OFFICIAL PDF</button>
+            <button class="action-export-btn" onclick="executeEmailReportRedirect()" style="border-color:#D4AF37; color:#D4AF37; background-color:rgba(214,175,55,0.05);">✉️ EMAIL DIRECT REPORT</button>
+        </div>
     </div>
 
     <script>
@@ -599,25 +689,19 @@
         let activeDrawLinePath = null;
         let userDrawnLinesArray = [];
 
-        // Trap and Trace State Variables
         let trapAndTraceActive = false;
-        let interceptSectorRings = [];
 
-        // AUTOMATIC HIGH-VISIBILITY LOGO HOOK INJECTION
+        // AUTOMATIC TRIPLE-FAILSAFE BACKGROUND LOGO HOOK
         window.addEventListener('DOMContentLoaded', function() {
             const imgCheck = new Image();
             imgCheck.src = "IMAGE FOR TAC.png2.jpg";
             imgCheck.onload = function() {
-                // If photo is present, inject it smoothly inside the safe frame
                 document.getElementById('fallback-branding-node').innerHTML = `
                     <div style="border:3px double #D4AF37; padding:8px; background-color:#020803; border-radius:6px; box-shadow:0 0 35px rgba(212,175,55,0.25); max-width:85%; max-height:70vh; display:flex; justify-content:center; align-items:center;">
                         <img src="IMAGE FOR TAC.png2.jpg" alt="TACNET LOGO" style="max-width:100%; max-height:65vh; object-fit:contain;">
                     </div>
                     <div class="homepage-footer" style="margin-top:20px;">CLICK ANYWHERE TO ENTER COMMAND POST</div>
                 `;
-            };
-            imgCheck.onerror = function() {
-                console.log("Using text fallback strategy.");
             };
         });
 
@@ -679,7 +763,7 @@
             });
         }
 
-        // ADVANCED TRAP AND TRACE OPERATIONAL CORE LOOP
+        // TRAP AND TRACE suite ACTIVATION CONTROLLER
         function toggleTrapAndTraceFeature() {
             trapAndTraceActive = !trapAndTraceActive;
             const btn = document.getElementById('trace-btn');
@@ -687,7 +771,7 @@
                 if (freehandPenActive) toggleFreehandPenTool();
                 btn.innerText = "TRACE ACTIVE";
                 btn.classList.add('btn-active');
-                document.getElementById('status-text').innerText = "TRAP & TRACE CELL INTERCEPT LOCK ACTIVE // TAP GRID TO LOCK PINGS";
+                document.getElementById('status-text').innerText = "TRAP & TRACE CONTROL INTERCEPT LIVE // TAP GRID TO LOCK PINGS";
                 document.getElementById('status-text').style.color = "#ff007f";
             } else {
                 btn.innerText = "TRACE OFF";
@@ -705,7 +789,6 @@
             const traceIcon = L.divIcon({ className: 'dot-trace', iconSize: [12, 12] });
             const traceMarker = L.marker([lat, lng], { icon: traceIcon }).addTo(tacticalMap);
 
-            // Draw real-time triangulation radar lines around the trace point
             const radarRing = L.circle([lat, lng], {
                 color: '#ff007f',
                 fillColor: '#ff007f',
@@ -715,19 +798,13 @@
                 dashArray: '4, 4'
             }).addTo(tacticalMap);
 
-            traceMarker.bindPopup(`
-                <div style="color:#020803; font-family:monospace; font-size:11px;">
-                    <b>${traceID}</b><br>
-                    CELL TOWERS DETECTED<br>
-                    VECTOR: ${lat.toFixed(4)}, ${lng.toFixed(4)}
-                </div>
-            `);
+            traceMarker.bindPopup(`<b>${traceID}</b><br>CELL VECTOR TRACE TARGET`);
 
             const traceRecordObject = {
                 uid: traceID,
                 markerRef: traceMarker,
                 radarRef: radarRing,
-                type: 'TRACE',
+                type: 'CELL INTERCEPT TRACE',
                 textLabel: 'CELL VECTOR TRACE TARGET',
                 coordsStr: lat.toFixed(4) + ", " + lng.toFixed(4),
                 timeLogged: new Date().toLocaleTimeString().substring(0, 5)
@@ -735,8 +812,73 @@
 
             fieldUnitsArray.push(traceRecordObject);
             transmitAssetToAppwriteServer(traceRecordObject);
+            document.getElementById('status-text').innerText = `${traceID} VECTOR LOCKED`;
+        }
+
+        // PROFESSIONAL PRE-PREVIEW REPORT DECK WRITER
+        function openProfessionalReportDeck() {
+            const paper = document.getElementById('print-capture-area');
+            document.getElementById('report-panel').style.display = 'flex';
             
-            document.getElementById('status-text').innerText = `${traceID} TRIANGULATION COMPLETED`;
+            let itemsHtml = '';
+            if (fieldUnitsArray.length === 0) {
+                itemsHtml = `<tr><td colspan="4" style="padding:8px; text-align:center; color:#777;">NO FIELD REPLAY DATA RECORDS REGISTERED IN ACTIVE OPERATION TACTICAL GRID.</td></tr>`;
+            } else {
+                fieldUnitsArray.forEach(unit => {
+                    itemsHtml += `
+                        <style>
+                            .print-cell { border-bottom: 1px solid #dddddd; padding: 8px; text-align: left; }
+                        </style>
+                        <tr>
+                            <td class="print-cell" style="font-weight:bold;">${unit.uid}</td>
+                            <td class="print-cell">${unit.type}</td>
+                            <td class="print-cell">[ ${unit.coordsStr} ]</td>
+                            <td class="print-cell">${unit.timeLogged}</td>
+                        </tr>`;
+                });
+            }
+
+            paper.innerHTML = `
+                <div style="border-bottom: 3px double #000000; padding-bottom: 10px; margin-bottom: 15px; text-align: center;">
+                    <h2 style="margin: 0; font-size: 18px; text-transform: uppercase; letter-spacing: 1px;">TACNET SEARCH & REPLAY LOGISTICAL REPORT</h2>
+                    <div style="font-size: 11px; color: #555; margin-top: 4px;">MANAGEMENT CONTROL CENTER // MULTI-AGENCY INCIDENT RUN SHEET</div>
+                </div>
+                <table style="width: 100%; border-collapse: collapse; font-size: 11px; margin-bottom: 20px;">
+                    <tr>
+                        <td style="width: 25%;"><b>COMMAND HQ:</b></td><td>${systemCallsign} // METRO MATRIX</td>
+                        <td style="width: 25%;"><b>LOG DATE:</b></td><td>${new Date().toLocaleDateString()}</td>
+                    </tr>
+                    <tr>
+                        <td><b>MISSION STATUS:</b></td><td style="color: green; font-weight: bold;">ACTIVE OPERATIONS RUN</td>
+                        <td><b>TOTAL UNITS IN GRID:</b></td><td><b>${fieldUnitsArray.length} PLACED</b></td>
+                    </tr>
+                </table>
+                <h4 style="margin: 10px 0 5px 0; border-bottom: 1px solid #000000; padding-bottom: 3px; text-transform: uppercase; font-size: 11px;">REGISTERED ASSET ENTRY & COORDINATE LEDGER</h4>
+                <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
+                    <thead>
+                        <tr style="background-color: #f2f2f2;">
+                            <th style="padding: 8px; text-align: left; border-bottom: 2px solid #000;">UNIT CALLSIGN</th>
+                            <th style="padding: 8px; text-align: left; border-bottom: 2px solid #000;">ASSET TYPE CLASS</th>
+                            <th style="padding: 8px; text-align: left; border-bottom: 2px solid #000;">COORDINATE VECTOR MAP</th>
+                            <th style="padding: 8px; text-align: left; border-bottom: 2px solid #000;">TIMESTAMP</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${itemsHtml}
+                    </tbody>
+                </table>
+                <div style="margin-top: 40px; border-top: 1px dashed #777; padding-top: 10px; text-align: center; font-size: 9px; color: #666;">
+                    TACNET EMERGENCY DISPATCH MATRIX REPLAY SYSTEM // OFFICIAL DOCUMENTATION END RECORD
+                </div>
+            `;
+        }
+
+        function closeProfessionalReportDeck() { document.getElementById('report-panel').style.display = 'none'; }
+        function executeSystemPrintReport() { window.print(); }
+        function executeEmailReportRedirect() {
+            let bodyText = `TACNET INCIDENT SUMMARY RUN REPORT%0D%0ACOMMAND HQ: ${systemCallsign}%0D%0A%0D%0AActive Assets Placed in Log Deck:%0D%0A`;
+            fieldUnitsArray.forEach(u => { bodyText += `- ${u.uid} [${u.type}] Vector Location: ${u.coordsStr} at ${u.timeLogged}%0D%0A`; });
+            window.location.href = `mailto:?subject=TACNET METRO INCIDENT REPORT REPLAY&body=${bodyText}`;
         }
 
         function undoLastDrawLineSegment() {
@@ -927,7 +1069,7 @@
             const unitRecordObject = {
                 uid: uniqueUnitID,
                 markerRef: newFieldMarker,
-                type: selectedAssetType,
+                type: selectedText,
                 textLabel: selectedText,
                 coordsStr: lat.toFixed(4) + ", " + lng.toFixed(4),
                 timeLogged: new Date().toLocaleTimeString().substring(0, 5)
