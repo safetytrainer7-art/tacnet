@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TACNET // MASTER SATELLITE COMMAND DECK</title>
+    <title>TACNET // CENTRAL COMMAND MATRIX</title>
     <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.0"></script>
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -141,7 +141,7 @@
             z-index: 999;
         }
 
-        /* HARD VISUAL ALERT SIREN SYSTEM OVERLAY */
+        /* FLASHING SIREN OVERLAY SCREEN */
         #sos-siren-layer {
             position: fixed;
             top: 0;
@@ -310,7 +310,7 @@
             padding: 4px;
         }
 
-        /* --- RESTORED: VISUAL K9 FIRST AID PROTOCOLS INTERFACE CARD --- */
+        /* K9 FIRST AID SCREEN CARD CONTAINER */
         #k9-medical-console {
             position: absolute;
             top: 175px;
@@ -391,7 +391,7 @@
             z-index: 1000;
         }
 
-        /* ASSET MARKER DOT LEDGER DEFINITIONS */
+        /* LEDGER TARGET MARKER DOT DEFINITIONS */
         .dot-le { background-color: #0000ff !important; border: 2px solid white; border-radius: 50%; width: 14px; height: 14px; display: block; box-shadow: 0 0 12px #0000ff; }
         .dot-k9 { background-color: #87ceeb !important; border: 2px solid white; border-radius: 50%; width: 14px; height: 14px; display: block; box-shadow: 0 0 12px #87ceeb; }
         .dot-sar { background-color: #ff0000 !important; border: 2px solid white; border-radius: 50%; width: 14px; height: 14px; display: block; box-shadow: 0 0 12px #ff0000; }
@@ -405,7 +405,7 @@
         .dot-victim { background-color: #a52a2a !important; border: 2px solid white; border-radius: 50%; width: 14px; height: 14px; display: block; box-shadow: 0 0 12px #a52a2a; }
         .dot-live-gps { background-color: #00ffff !important; border: 2.5px solid #ffffff; border-radius: 50%; width: 16px; height: 16px; display: block; box-shadow: 0 0 15px #00ffff; }
 
-        /* --- STAGE 4: MASTER ROSTER REGISTRY --- */
+        /* --- STAGE 4: REGISTRY PANEL --- */
         #search-panel {
             position: fixed;
             top: 0;
@@ -428,41 +428,4 @@
         .registry-title { color: rgba(255, 255, 255, 0.38); font-size: 12px; font-weight: bold; margin-bottom: 10px; }
         .divider { border: 0; height: 1px; background: rgba(255, 255, 255, 0.12); margin-bottom: 15px; }
         #roster-results-container { flex: 1; overflow-y: auto; }
-        .result-item { background-color: rgba(11, 37, 16, 0.4); border: 1px solid rgba(255, 255, 255, 0.12); padding: 12px; border-radius: 4px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .unit-name { font-weight: bold; margin-bottom: 4px; }
-        .unit-status { color: rgba(255, 255, 255, 0.54); font-size: 13px; }
-    </style>
-</head>
-<body>
-
-    <div id="homepage-screen" class="app-screen" onclick="forceEnterSystemRoster()">
-        <img src="IMAGE FOR TAC.png2.jpg" alt="TACNET MASTER SCREEN" class="hero-image" onerror="this.style.display='none'; document.getElementById('alt-title').style.display='block';">
-        <div id="alt-title" style="display:none; color:#D4AF37; font-size:24px; font-weight:bold; letter-spacing:3px;">TACNET CENTRAL COMMAND</div>
-        <div class="homepage-footer">CLICK ANYWHERE ON SCREEN TO ENTER MATRIX</div>
-    </div>
-
-    <div id="signin-screen" class="app-screen">
-        <div class="roster-card">
-            <div class="roster-header">MULTI-AGENCY DEPLOYMENT ENGINE</div>
-            <div class="form-group">
-                <label>OPERATIONAL UNIT NAME</label>
-                <input type="text" id="input-callsign" class="roster-input" value="COMMAND POST 1" style="text-transform: uppercase;">
-            </div>
-            <button class="auth-btn" onclick="authorizeRoster()">INITIALIZE MASTER SYSTEM</button>
-        </div>
-    </div>
-
-    <div id="tactical-screen" class="app-screen">
-        <div id="nvg-overlay"></div>
-        
-        <div id="sos-siren-layer" onclick="turnOffSosSiren()">
-            <div class="sos-banner-text">EMERGENCY SOS INTERCEPT // CLICK TO MUTE DETECTS</div>
-        </div>
-
-        <div class="hud-header">
-            <div class="hud-left">
-                <button class="back-arrow" onclick="navigateToGate()">←</button>
-                <div id="hud-display-banner" class="roster-banner">TACTICAL SYSTEM ACTIVE</div>
-            </div>
-            <div class="controls">
-                <button id="link-btn" class="btn" onclick
+        .result-item { background-color: rgba(11, 37, 16
