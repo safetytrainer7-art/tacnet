@@ -30,7 +30,7 @@
             box-sizing: border-box;
         }
 
-        /* --- STAGE 1: TEXT-ONLY GATEWAY --- */
+        /* --- STAGE 1: DUAL-LAYER GATEWAY --- */
         #homepage-screen {
             background-color: #020803;
             background-image: radial-gradient(circle, #091f0d 0%, #020803 100%);
@@ -259,7 +259,6 @@
             z-index: 1;
         }
 
-        /* IOS ADJUSTED SATELLITE HUD PANELETTES */
         .search-address-hud {
             position: absolute;
             top: 50px;
@@ -339,7 +338,6 @@
             padding: 3px;
         }
 
-        /* IOS RESIZED COMPACT MEDICAL DASHBOARD CARD */
         #k9-medical-console {
             position: absolute;
             top: 115px;
@@ -384,7 +382,7 @@
             position: absolute;
             bottom: 15px;
             left: 10px;
-            right: 70px; /* Leave clean structural clearance room for the bottom right square clicker */
+            right: 70px; 
             background-color: rgba(2, 8, 3, 0.92);
             border: 1px solid #0B2510;
             border-left: 3px solid #D4AF37;
@@ -397,12 +395,12 @@
         #status-text { font-size: 11px; font-weight: bold; letter-spacing: 0.5px; }
         #sub-status { color: rgba(255, 255, 255, 0.5); font-size: 9px; margin-top: 1px; }
 
-        /* THE RESET AND TERMINATION BUTTON STRIP */
         .ribbon-action-row {
             margin-top: 4px;
             display: flex;
             gap: 4px;
         }
+        
         .action-mini-btn {
             background-color: #020803;
             border: 1px solid rgba(255,255,255,0.2);
@@ -415,7 +413,6 @@
             font-weight: bold;
         }
 
-        /* RE-FIXED FOOTPRINT FOR OPEN ROSTER MAGNIFIER SQUARE BUTTON */
         .search-trigger {
             position: absolute;
             bottom: 15px;
@@ -431,11 +428,11 @@
             align-items: center;
             cursor: pointer;
             font-size: 18px;
-            z-index: 6000; /* Shift depth to peak over all layers cleanly */
+            z-index: 6000;
             box-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
 
-        /* LEDGER VISUAL MARKERS ACCORDING TO TRUE MATRIX SPEC */
+        /* MASTER LEDGER ICON COLOR SCHEMATIC */
         .dot-le { background-color: #0000ff !important; border: 2px solid white; border-radius: 50%; width: 14px; height: 14px; display: block; box-shadow: 0 0 12px #0000ff; }
         .dot-k9 { background-color: #87ceeb !important; border: 2px solid white; border-radius: 50%; width: 14px; height: 14px; display: block; box-shadow: 0 0 12px #87ceeb; }
         .dot-sar { background-color: #ff0000 !important; border: 2px solid white; border-radius: 50%; width: 14px; height: 14px; display: block; box-shadow: 0 0 12px #ff0000; }
@@ -448,8 +445,9 @@
         .dot-submerged { background-color: #ffff00 !important; border: 2px solid black; border-radius: 4px; width: 14px; height: 14px; display: block; box-shadow: 0 0 12px #ffff00; }
         .dot-victim { background-color: #a52a2a !important; border: 2px solid white; border-radius: 50%; width: 14px; height: 14px; display: block; box-shadow: 0 0 12px #a52a2a; }
         .dot-live-gps { background-color: #00ffff !important; border: 2.5px solid #ffffff; border-radius: 50%; width: 16px; height: 16px; display: block; box-shadow: 0 0 15px #00ffff; }
+        .dot-trace { background-color: #ff007f !important; border: 2px solid #ffffff; border-radius: 4px; width: 12px; height: 12px; display: block; box-shadow: 0 0 15px #ff007f; }
 
-        /* --- STAGE 4: REGISTRY DECK OVERLAY --- */
+        /* --- STAGE 4: REGISTRY --- */
         #search-panel {
             position: fixed;
             top: 0;
@@ -479,7 +477,7 @@
 <body>
 
     <div id="homepage-screen" class="app-screen" onclick="forceEnterSystemRoster()">
-        <div class="text-fallback-box">
+        <div class="text-fallback-box" id="fallback-branding-node">
             <div class="fallback-title">TACNET SYSTEM CORE</div>
             <div class="fallback-sub">CENTRAL SATELLITE COMMAND MATRIX</div>
             <div class="homepage-footer">CLICK ANYWHERE TO ENTER APP COMMAND POST</div>
@@ -511,6 +509,7 @@
             </div>
             <div class="controls">
                 <button id="link-btn" class="btn" onclick="toggleLink()">LINK OFFLINE</button>
+                <button id="trace-btn" class="btn" onclick="toggleTrapAndTraceFeature()" style="background-color:rgba(255,0,127,0.15); border-color:#ff007f; color:#ff007f;">TRACE OFF</button>
                 <button id="pen-btn" class="btn" onclick="toggleFreehandPenTool()">PEN: OFF</button>
                 <button id="sos-btn" class="btn btn-danger" onclick="triggerSosAlertSystem()">SOS ALERT</button>
                 <button id="nvg-btn" class="btn" onclick="toggleNvg()">NVG</button>
@@ -535,7 +534,7 @@
                 <option value="LE">🔵 LAW ENFORCEMENT</option>
                 <option value="K9">💎 K9 & HANDLER TEAM</option>
                 <option value="SAR">🔴 SAR RESPONSE TEAM</option>
-                <option value="CIVILIAN">🟢 civilian VOLUNTEERS</option>
+                <option value="CIVILIAN">🟢 CIVILIAN VOLUNTEERS</option>
                 <option value="SUSPECT">🟣 TARGET SUSPECT</option>
                 <option value="VEHICLE">⚫ VEHICLE ASSET</option>
                 <option value="DRONE">⚪ AIR DRONE UNIT</option>
@@ -599,6 +598,28 @@
         let activeDrawLinePath = null;
         let userDrawnLinesArray = [];
 
+        // Trap and Trace State Variables
+        let trapAndTraceActive = false;
+        let interceptSectorRings = [];
+
+        // AUTOMATIC HIGH-VISIBILITY LOGO HOOK INJECTION
+        window.addEventListener('DOMContentLoaded', function() {
+            const imgCheck = new Image();
+            imgCheck.src = "IMAGE FOR TAC.png2.jpg";
+            imgCheck.onload = function() {
+                // If photo is present, inject it smoothly inside the safe frame
+                document.getElementById('fallback-branding-node').innerHTML = `
+                    <div style="border:3px double #D4AF37; padding:8px; background-color:#020803; border-radius:6px; box-shadow:0 0 35px rgba(212,175,55,0.25); max-width:85%; max-height:70vh; display:flex; justify-content:center; align-items:center;">
+                        <img src="IMAGE FOR TAC.png2.jpg" alt="TACNET LOGO" style="max-width:100%; max-height:65vh; object-fit:contain;">
+                    </div>
+                    <div class="homepage-footer" style="margin-top:20px;">CLICK ANYWHERE TO ENTER COMMAND POST</div>
+                `;
+            };
+            imgCheck.onerror = function() {
+                console.log("Using text fallback strategy.");
+            };
+        });
+
         function forceEnterSystemRoster() {
             document.getElementById('homepage-screen').style.display = 'none';
             document.getElementById('signin-screen').style.display = 'flex';
@@ -622,7 +643,6 @@
                 dragging: true 
             }).setView([37.525, -79.124], 14);
 
-            // REGRID QUALITY RE-VERIFIED Satellite Imagery Base Tile Pipeline
             L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
                 maxZoom: 19,
                 attribution: 'Esri'
@@ -650,8 +670,72 @@
 
             tacticalMap.on('click', function(e) {
                 if (freehandPenActive) return; 
-                deployAssetToGridLocation(e);
+                if (trapAndTraceActive) {
+                    deployTracePingToSector(e);
+                } else {
+                    deployAssetToGridLocation(e);
+                }
             });
+        }
+
+        // ADVANCED TRAP AND TRACE OPERATIONAL CORE LOOP
+        function toggleTrapAndTraceFeature() {
+            trapAndTraceActive = !trapAndTraceActive;
+            const btn = document.getElementById('trace-btn');
+            if (trapAndTraceActive) {
+                if (freehandPenActive) toggleFreehandPenTool();
+                btn.innerText = "TRACE ACTIVE";
+                btn.classList.add('btn-active');
+                document.getElementById('status-text').innerText = "TRAP & TRACE CELL INTERCEPT LOCK ACTIVE // TAP GRID TO LOCK PINGS";
+                document.getElementById('status-text').style.color = "#ff007f";
+            } else {
+                btn.innerText = "TRACE OFF";
+                btn.classList.remove('btn-active');
+                document.getElementById('status-text').innerText = "TACTICAL LEDGER SYSTEM ONLINE";
+                document.getElementById('status-text').style.color = "#D4AF37";
+            }
+        }
+
+        function deployTracePingToSector(e) {
+            const lat = e.latlng.lat;
+            const lng = e.latlng.lng;
+            const traceID = "TRACE-PING-" + Math.floor(1000 + Math.random() * 9000);
+
+            const traceIcon = L.divIcon({ className: 'dot-trace', iconSize: [12, 12] });
+            const traceMarker = L.marker([lat, lng], { icon: traceIcon }).addTo(tacticalMap);
+
+            // Draw real-time triangulation radar lines around the trace point
+            const radarRing = L.circle([lat, lng], {
+                color: '#ff007f',
+                fillColor: '#ff007f',
+                fillOpacity: 0.05,
+                radius: 400,
+                weight: 1.5,
+                dashArray: '4, 4'
+            }).addTo(tacticalMap);
+
+            traceMarker.bindPopup(`
+                <div style="color:#020803; font-family:monospace; font-size:11px;">
+                    <b>${traceID}</b><br>
+                    CELL TOWERS DETECTED<br>
+                    VECTOR: ${lat.toFixed(4)}, ${lng.toFixed(4)}
+                </div>
+            `);
+
+            const traceRecordObject = {
+                uid: traceID,
+                markerRef: traceMarker,
+                radarRef: radarRing,
+                type: 'TRACE',
+                textLabel: 'CELL VECTOR TRACE TARGET',
+                coordsStr: lat.toFixed(4) + ", " + lng.toFixed(4),
+                timeLogged: new Date().toLocaleTimeString().substring(0, 5)
+            };
+
+            fieldUnitsArray.push(traceRecordObject);
+            transmitAssetToAppwriteServer(traceRecordObject);
+            
+            document.getElementById('status-text').innerText = `${traceID} TRIANGULATION COMPLETED`;
         }
 
         function undoLastDrawLineSegment() {
@@ -664,15 +748,18 @@
             document.getElementById('status-text').innerText = "LAST LINE SEGMENT REMOVED FROM GRID";
         }
 
-        // PHYSICAL RESET BUTTON ACTION: Intelligently wipes current scene vectors completely clean
         function terminateSearchGridReset() {
             if (!confirm("Terminate current search and clear map board vectors?")) return;
-            fieldUnitsArray.forEach(u => tacticalMap.removeLayer(u.markerRef));
+            fieldUnitsArray.forEach(u => {
+                if (u.markerRef) tacticalMap.removeLayer(u.markerRef);
+                if (u.radarRef) tacticalMap.removeLayer(u.radarRef);
+            });
             fieldUnitsArray = [];
             userDrawnLinesArray.forEach(line => tacticalMap.removeLayer(line));
             userDrawnLinesArray = [];
             if (activePerimeterCircle) { tacticalMap.removeLayer(activePerimeterCircle); activePerimeterCircle = null; }
             RosterPanelUpdate();
+            if (trapAndTraceActive) toggleTrapAndTraceFeature();
             document.getElementById('status-text').innerText = "MISSION TERMINATED // GRID SCENE RESET COMPLETE";
         }
 
@@ -686,6 +773,7 @@
             freehandPenActive = !freehandPenActive;
             const btn = document.getElementById('pen-btn');
             if (freehandPenActive) {
+                if (trapAndTraceActive) toggleTrapAndTraceFeature();
                 btn.innerText = "PEN: ACTIVE";
                 btn.classList.add('btn-active');
                 document.getElementById('status-text').innerText = "FREEHAND DRAW ACTIVE // DRAG SCREEN TO DRAW BOUNDS";
@@ -853,7 +941,8 @@
         window.removeIndividualSearcher = function(unitID) {
             const index = fieldUnitsArray.findIndex(u => u.uid === unitID);
             if (index !== -1) {
-                tacticalMap.removeLayer(fieldUnitsArray[index].markerRef);
+                if (fieldUnitsArray[index].markerRef) tacticalMap.removeLayer(fieldUnitsArray[index].markerRef);
+                if (fieldUnitsArray[index].radarRef) tacticalMap.removeLayer(fieldUnitsArray[index].radarRef);
                 fieldUnitsArray.splice(index, 1);
                 document.getElementById('status-text').innerText = unitID + " EXTRACTED FROM BOARD";
                 RosterPanelUpdate();
@@ -925,4 +1014,30 @@
 
         function openSearch() { document.getElementById('search-panel').style.display = 'flex'; RosterPanelUpdate(); }
         function closeSearch() { document.getElementById('search-panel').style.display = 'none'; }
-        function toggleNvg() { document.getElementById('nvg-overlay').style.display = (document.getElementById('nvg-overlay').style.
+        function toggleNvg() { document.getElementById('nvg-overlay').style.display = (document.getElementById('nvg-overlay').style.display === 'block') ? 'none' : 'block'; document.getElementById('nvg-btn').classList.toggle('btn-active'); }
+
+        function RosterPanelUpdate() {
+            const container = document.getElementById('roster-results-container');
+            container.innerHTML = '';
+            if (fieldUnitsArray.length === 0) { container.innerHTML = '<div class="loading-text">NO FIELD ASSETS CURRENTLY ASSIGNED TO GRID LEDGER</div>'; return; }
+            fieldUnitsArray.forEach(unit => {
+                container.insertAdjacentHTML('beforeend', '<div class="result-item"><div><div class="unit-name" style="color:#D4AF37;">' + unit.uid + ' // ' + unit.textLabel + '</div><div class="unit-status">FIELD COORDINATE VECTOR: [ ' + unit.coordsStr + ' ]</div></div></div>');
+            });
+        }
+
+        function purgeFullRosterLedger() {
+            if (!confirm("Execute full purge clearance of all search units?")) return;
+            fieldUnitsArray.forEach(u => {
+                if (u.markerRef) tacticalMap.removeLayer(u.markerRef);
+                if (u.radarRef) tacticalMap.removeLayer(u.radarRef);
+            });
+            fieldUnitsArray = [];
+            userDrawnLinesArray.forEach(line => tacticalMap.removeLayer(line));
+            userDrawnLinesArray = [];
+            if (activePerimeterCircle) { tacticalMap.removeLayer(activePerimeterCircle); activePerimeterCircle = null; }
+            RosterPanelUpdate();
+            document.getElementById('status-text').innerText = "GRID CLEAR // LEDGER EMPTY";
+        }
+    </script>
+</body>
+</html>
