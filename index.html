@@ -156,7 +156,7 @@
             box-shadow: 0 0 15px #D4AF37;
         }
 
-        /* --- STAGE 3: HUNTER GREEN TACTICAL DECK --- */
+        /* --- STAGE 3: HUNTER GREEN TACTICAL COMMAND SCREEN --- */
         #tactical-screen {
             flex-direction: column;
         }
@@ -335,19 +335,6 @@
             cursor: pointer;
         }
 
-        .search-input {
-            width: 100%;
-            background-color: #0B2510;
-            border: 1px solid #D4AF37;
-            color: #ffffff;
-            padding: 12px;
-            box-sizing: border-box;
-            border-radius: 4px;
-            font-family: inherit;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-
         .registry-title {
             color: rgba(255, 255, 255, 0.38);
             font-size: 12px;
@@ -360,6 +347,11 @@
             height: 1px;
             background: rgba(255, 255, 255, 0.12);
             margin-bottom: 15px;
+        }
+
+        #roster-results-container {
+            flex: 1;
+            overflow-y: auto;
         }
 
         .result-item {
@@ -376,6 +368,7 @@
         .unit-name {
             font-weight: bold;
             margin-bottom: 4px;
+            color: #ffffff;
         }
 
         .unit-status {
@@ -387,13 +380,19 @@
             color: #D4AF37;
             font-size: 12px;
         }
+        
+        .loading-text {
+            color: rgba(255, 255, 255, 0.38);
+            text-align: center;
+            font-size: 13px;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
 
     <!-- STAGE 1: CUSTOM BRANDING HOMEPAGE -->
     <div id="homepage-screen" class="app-screen screen-active" onclick="navigateToSignIn()">
-        <!-- Pulls your custom branding photo seamlessly -->
         <img src="IMAGE FOR TAC.png2.jpg" alt="TACNET SYSTEM DESIGN" class="hero-image" onerror="this.style.display='none'; document.getElementById('alt-title').style.display='block';">
         <div id="alt-title" style="display:none; color:#D4AF37; font-size:28px; font-weight:bold; letter-spacing:4px; text-align:center;">TACNET DATABASE</div>
         <div class="homepage-footer">CLICK ANYWHERE TO ENTER NETWORK</div>
@@ -402,7 +401,7 @@
     <!-- STAGE 2: TACTICAL SIGN-IN ROSTER -->
     <div id="signin-screen" class="app-screen">
         <div class="roster-card">
-            <div class="roster-header">MUTLI-AGENCY ROSTER</div>
+            <div class="roster-header">MULTI-AGENCY ROSTER</div>
             
             <div class="form-group">
                 <label>AGENCY / DEPARTMENT</label>
@@ -468,31 +467,10 @@
                 <span>TACTICAL REGISTRY SEARCH</span>
                 <button class="close-btn" onclick="closeSearch()">✕</button>
             </div>
-            <input type="text" class="search-input" placeholder="Enter Unit Name, ID, or Designation...">
-            <div class="registry-title">ALL ACTIVE FREQUENCIES & CHANNELS</div>
+            <div class="registry-title">LIVE ACTIVE ASSETS IN DATABASE</div>
             <hr class="divider">
-            <div style="flex: 1; overflow-y: auto;">
-                <div class="result-item">
-                    <div>
-                        <div class="unit-name">K9-Unit-1</div>
-                        <div class="unit-status">ACTIVE SEARCH // AMELON RD</div>
-                    </div>
-                    <div class="unit-time">08:52</div>
-                </div>
-                <div class="result-item">
-                    <div>
-                        <div class="unit-name">Delta-4</div>
-                        <div class="unit-status">STATIONARY STANDBY</div>
-                    </div>
-                    <div class="unit-time">08:45</div>
-                </div>
-                <div class="result-item">
-                    <div>
-                        <div class="unit-name">Command-HQ</div>
-                        <div class="unit-status">MONITORING FREQUENCY</div>
-                    </div>
-                    <div class="unit-time">09:00</div>
-                </div>
+            <div id="roster-results-container">
+                <!-- Live data rows will get painted directly in here -->
             </div>
         </div>
     </div>
@@ -509,7 +487,6 @@
         let linkActive = false;
         let nvgActive = false;
 
-        // Active Session Storage
         let sessionData = {
             agency: '',
             name: '',
@@ -517,14 +494,12 @@
             assignment: ''
         };
 
-        // Navigation Controllers
         function navigateToSignIn() {
             document.getElementById('homepage-screen').classList.remove('screen-active');
             document.getElementById('signin-screen').classList.add('screen-active');
         }
 
         function authorizeRoster() {
-            // Pull data entries from form input fields
             const callsignInput = document.getElementById('input-callsign').value.toUpperCase().trim();
             const nameInput = document.getElementById('input-name').value.trim();
             const agencyInput = document.getElementById('input-agency').value.trim();
@@ -535,19 +510,14 @@
                 return;
             }
 
-            // Seal identity into system memory
             sessionData.agency = agencyInput || "UNKNOWN DEPT";
             sessionData.name = nameInput;
             sessionData.callsign = callsignInput;
             sessionData.assignment = assignmentInput;
 
-            // Set HUD display text profile
             document.getElementById('hud-display-banner').innerText = `${sessionData.callsign} // [${sessionData.assignment}]`;
-
-            // Clear password box for security
             document.getElementById('input-pass').value = '';
 
-            // Flip screen states directly over to command deck
             document.getElementById('signin-screen').classList.remove('screen-active');
             document.getElementById('tactical-screen').classList.add('screen-active');
         }
@@ -583,7 +553,6 @@
 
         async function transmitPacket() {
             try {
-                // Combine details beautifully into the row tracking column string
                 const comprehensiveCallsign = `${sessionData.callsign} (${sessionData.name}) [${sessionData.agency}]`;
 
                 await databases.createDocument(
@@ -604,6 +573,49 @@
             }
         }
 
+        // NEW FEATURE: Fetch Live Database Roster Elements Dynamically
+        async function openSearch() {
+            const container = document.getElementById('roster-results-container');
+            document.getElementById('search-panel').style.display = 'flex';
+            container.innerHTML = '<div class="loading-text">POLLING SECURE BACKEND SATELLITE NETWORK...</div>';
+
+            try {
+                // Poll Appwrite directly for the latest 25 tactical records
+                const response = await databases.listDocuments(
+                    'tacnet-search-app',
+                    'tacnet_live_units'
+                );
+
+                container.innerHTML = ''; // Wipe out loading message
+
+                if (response.documents.length === 0) {
+                    container.innerHTML = '<div class="loading-text">NO ACTIVE TRANSMISSIONS FOUND IN LEDGER</div>';
+                    return;
+                }
+
+                // Loop through whatever rows exist inside Appwrite and display them cleanly
+                response.documents.forEach(doc => {
+                    const itemHtml = `
+                        <div class="result-item">
+                            <div>
+                                <div class="unit-name">${doc.tacnet_live_units || 'UNKNOWN UNIT'}</div>
+                                <div class="unit-status">${doc.operationalStatus || 'STATUS PENDING'} // LOC: ${doc.location || '0.0, 0.0'}</div>
+                            </div>
+                            <div class="unit-time">${doc.lastUpdateTime || '--:--'}</div>
+                        </div>
+                    `;
+                    container.insertAdjacentHTML('beforeend', itemHtml);
+                });
+
+            } catch (error) {
+                container.innerHTML = '<div class="loading-text" style="color: #ff5252;">ROSTER FETCH FAILURE // ACCESS DENIED</div>';
+            }
+        }
+
+        function closeSearch() {
+            document.getElementById('search-panel').style.display = 'none';
+        }
+
         function toggleNvg() {
             nvgActive = !nvgActive;
             const btn = document.getElementById('nvg-btn');
@@ -619,14 +631,6 @@
                 overlay.style.display = 'none';
                 dot.classList.remove('nvg-on');
             }
-        }
-
-        function openSearch() {
-            document.getElementById('search-panel').style.display = 'flex';
-        }
-
-        function closeSearch() {
-            document.getElementById('search-panel').style.display = 'none';
         }
     </script>
 </body>
