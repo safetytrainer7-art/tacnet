@@ -31,8 +31,6 @@
             background-color: #020208;
         }
         
-        /* FIX: Restores screenLanding as the sole default first page view */
-        #screenLanding { display: flex !important; z-index: 20; }
         .screen.active { display: flex !important; z-index: 30; }
 
         /* BACKDROP CORE CONFIGURATIONS */
@@ -40,7 +38,7 @@
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(rgba(2, 6, 23, 0.65), rgba(15, 23, 42, 0.9)), 
-                        url('IMAGE FOR TAC.png2.jpg');
+                        url('IMAGE FOR TAC.png');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -72,14 +70,10 @@
         }
 
         .homepage-branding-img {
-            max-width: 90%;
-            max-height: 50%;
+            width: 100%;
+            height: 100%;
             object-fit: contain;
             display: block;
-            color: #eab308;
-            font-weight: 800;
-            text-align: center;
-            padding: 1rem;
         }
 
         .graphic-link-wrapper {
@@ -356,7 +350,7 @@
             cursor: pointer;
             text-transform: uppercase;
         }
-        .tool-btn.active { background: #1d4ed8; border-color: #3b82f6; }
+        .tool-btn.active { background: #1d4ed8; border-color: #3b82f6; color: #fff; }
         .tool-btn.pen-active { background: #b91c1c; border-color: #f87171; }
 
         .map-toggle-btn { padding: 0.5rem 0.4rem; font-size: 0.65rem; background: #334155; border: 1px solid #475569; color: #cbd5e1; font-weight: 800; border-radius: 4px; text-transform: uppercase; }
@@ -381,7 +375,7 @@
         /* COMPACT POSITIONING CORRECTION TO PREVENT VIEWPORT INTERFERENCE */
         .trap-trace-hud {
             position: absolute;
-            top: 8px; left: 85px; /* Offset cleanly to sit flush next to the satellite system row */
+            top: 8px; left: 85px; 
             width: auto;
             max-width: 175px;
             background: rgba(2, 2, 8, 0.9);
@@ -617,20 +611,13 @@
         <div id="prevDocLogs" style="font-family:monospace; font-size:0.7rem; line-height:1.4;"></div>
     </div>
 
-    <!-- HOMEPAGE HUB ENTRY SCREEN (RESTORED MAIN STARTUP LOGIC FLUIDITY) -->
+    <!-- HOMEPAGE HUB ENTRY SCREEN (FIXED GRAPHIC ROUTING PATH) -->
     <div id="screenLanding" class="screen">
         <div class="landing-backdrop-pure">
             <div class="homepage-branding-container">
-                <!-- Image Tag with Fallback styled textual layouts if file is buffering or missing on GitHub Pages -->
-                <img class="homepage-branding-img" src="IMAGE FOR TAC.png2.jpg" alt="TACNET MULTI-AGENCY PLATFORM">
+                <!-- IMAGE PATH RESTORED DIRECTLY TO MATCH YOUR ACTIVE GRAPHIC SYSTEM FILENAMES -->
+                <img class="homepage-branding-img" src="IMAGE FOR TAC.png" alt="TACNET MULTI-AGENCY PLATFORM">
                 
-                <!-- Explicit Creator Branding Text Matrix -->
-                <div style="text-align: center; width: 100%; margin-top: 1rem;">
-                    <p style="color: #64748b; font-size: 0.75rem; text-transform: uppercase; font-weight: 800; letter-spacing: 2px;">— APP CREATOR —</p>
-                    <p style="color: #eab308; font-size: 1.4rem; margin: 0.2rem 0; text-transform: uppercase; letter-spacing: 2px; font-weight: 900;">EARL WOOD</p>
-                    <p style="color: #cbd5e1; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;">DEPUTY SHERIFF RETIRED VIRGINIA</p>
-                </div>
-
                 <div class="graphic-link-wrapper" onclick="switchScreen('screenSignIn')">
                     <div class="advance-prompt-box">
                         <p class="advance-prompt-text">[ Tap Screen to Advance ]</p>
@@ -640,7 +627,7 @@
         </div>
     </div>
 
-    <!-- SECURE FIELD GATEWAY PANEL -->
+    <!-- SECURE FIELD GATEWAY PANEL (RESTORED ADMINISTRATOR CREDITS FOOTER) -->
     <div id="screenSignIn" class="screen">
         <div class="backdrop"></div>
         <div style="z-index: 5; margin-top: 1.5rem; display: flex; flex-direction: column; align-items: center;">
@@ -683,8 +670,11 @@
             </div>
         </div>
 
-        <div class="creator-credits" style="padding: 0.5rem; height: auto; border-top: none; background: transparent; box-shadow: none;">
-            <div class="creator-name" style="font-size: 0.75rem; color:#94a3b8;">TACNET VERIFIED INTERFACE AUTHENTICATION</div>
+        <!-- RESTORED: Custom Gold-Branded Law Enforcement Creator Deck Footer Rows -->
+        <div class="creator-credits" style="position: absolute; bottom: 0; background: rgba(2, 2, 10, 0.95);">
+            <p class="creator-gold-label">— APP CREATOR —</p>
+            <p class="creator-name">EARL WOOD</p>
+            <p class="creator-title">DEPUTY SHERIFF RETIRED VIRGINIA</p>
         </div>
     </div>
 
@@ -933,7 +923,7 @@
         let traceHUDInterval = null;
 
         window.addEventListener('load', () => {
-            // FIX: Correctly forces the Landing Page view layout hierarchy setup upon system startup
+            // JavaScript native engine triggers the landing homepage as the default initial starting panel view
             switchScreen('screenLanding');
             logEvent("Platform runtime initialization completely established.");
             setupOrientationCompass();
