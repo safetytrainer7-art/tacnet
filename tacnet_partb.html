@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>TACNET - Live Field Operations Platform</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- APPWRITE SDK CORE LINKS -->
     <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.0"></script>
     <style>
         /* MOBILE PHONE HYPER-OPTIMIZATION & FIXED HEIGHT PREVENTING OVERFLOW */
@@ -29,7 +30,8 @@
             z-index: 10;
             background-color: #020208;
         }
-        #screenLanding { display: flex !important; z-index: 20; }
+        /* CORRECTION: Forces the Secure Portal Sign-In Page to be the active default startup view */
+        #screenSignIn { display: flex !important; z-index: 20; }
         .screen.active { display: flex !important; z-index: 30; }
 
         /* BACKDROP CORE CONFIGURATIONS */
@@ -120,7 +122,11 @@
             height: 130px;
             flex-shrink: 0;
             z-index: 6;
-        
+        }
+        .creator-gold-label { color: #94a3b8; font-size: 0.75rem; text-transform: uppercase; font-weight: 800; letter-spacing: 2px; }
+        .creator-name { color: #eab308; font-size: 1.4rem; margin: 0.2rem 0; text-transform: uppercase; letter-spacing: 2px; font-weight: 900; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        .creator-title { color: #cbd5e1; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; }
+
         /* SECURITY LOGIN PANEL */
         .glass-panel {
             background: rgba(15, 23, 42, 0.9);
@@ -366,23 +372,25 @@
             font-weight: bold; color: #ef4444; display: none; text-align: center;
         }
 
-        /* HIGH-CRIME TRAP & TRACE CELLULAR PING PANEL */
+        /* COMPACT POSITIONING CORRECTION TO PREVENT VIEWPORT INTERFERENCE */
         .trap-trace-hud {
             position: absolute;
-            top: 72px; left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            background: rgba(2, 2, 8, 0.95);
+            top: 8px; left: 85px; /* Offset cleanly to sit flush next to the satellite system row */
+            width: auto;
+            max-width: 175px;
+            background: rgba(2, 2, 8, 0.9);
             border: 1px solid #eab308;
-            padding: 0.4rem;
+            padding: 0.35rem 0.5rem;
             border-radius: 4px;
             z-index: 35;
             font-family: monospace;
-            font-size: 0.65rem;
+            font-size: 0.55rem;
             color: #eab308;
-            text-align: center;
+            text-align: left;
             font-weight: 900;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.7);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.7);
+            line-height: 1.2;
+            white-space: normal;
         }
 
         .asset-chip {
@@ -546,6 +554,7 @@
 
     <div id="emergencyStrobe"></div>
 
+    <!-- LEASE SHUTOFF LOCKOUT SCREEN OVERLAY -->
     <div id="screenLockout" class="lockout-panel">
         <span style="font-size: 3rem; margin-bottom: 1rem;">⚠️</span>
         <h2 style="color: #ef4444; font-weight: 900; letter-spacing: 1px; margin-bottom: 1rem;">EVALUATION TRIAL EXPIRED</h2>
@@ -558,6 +567,7 @@
         </div>
     </div>
 
+    <!-- PRINT PREVIEW MATRIX OVERLAY -->
     <div id="printPreviewLayer" class="print-preview-modal">
         <div class="preview-alert-strip">
             <span style="font-size:0.65rem; font-weight:800; color:#475569; text-transform:uppercase; letter-spacing:0.5px;">📋 VERIFIED PRE-PRINT PREVIEW</span>
@@ -601,6 +611,7 @@
         <div id="prevDocLogs" style="font-family:monospace; font-size:0.7rem; line-height:1.4;"></div>
     </div>
 
+    <!-- HOMEPAGE HUB ENTRY SCREEN (HIDDEN BY DEFAULT TO FORCE SECURE PORTAL OVERRIDE) -->
     <div id="screenLanding" class="screen">
         <div class="landing-backdrop-pure">
             <div class="homepage-branding-container">
@@ -612,14 +623,10 @@
                     </div>
                 </div>
             </div>
-            
-            <div class="sidebar-desktop-shim" style="display:none;"></div>
-
-            
-            </div>
         </div>
     </div>
 
+    <!-- SECURE FIELD GATEWAY PANEL (CORRECTED DEFENSE STARTUP VIEWPORT) -->
     <div id="screenSignIn" class="screen">
         <div class="backdrop"></div>
         <div style="z-index: 5; margin-top: 1.5rem; display: flex; flex-direction: column; align-items: center;">
@@ -648,6 +655,7 @@
                 <input type="text" id="inputRank" class="form-control" placeholder="Required: e.g., K9-12" autocomplete="off">
             </div>
             
+            <!-- DEMO TESTING TOKEN SHUTOFF GATE -->
             <div class="form-group" style="margin-bottom: 1rem;">
                 <label style="color: #eab308;">Agency Lease / Demo Key</label>
                 <input type="text" id="inputToken" class="form-control" style="border: 1px solid #eab308;" placeholder="Enter Department Key" autocomplete="off">
@@ -666,6 +674,7 @@
         </div>
     </div>
 
+    <!-- TACNET MAIN HUB GRID -->
     <div id="screenMenu" class="screen">
         <div class="backdrop"></div>
         <div style="z-index: 5; margin-top: 2.5rem; margin-bottom: 1rem; text-align: center;">
@@ -689,6 +698,7 @@
         </div>
     </div>
 
+    <!-- ACTIVE MAP WORKSPACE -->
     <div id="screenMap" class="screen">
         <div class="map-topnav">
             <div class="nav-arrow" onclick="switchScreen('screenMenu')">←</div>
@@ -705,19 +715,22 @@
         <div class="map-wrapper" id="mapWrapper">
             <div id="telemetryBanner" class="telemetry-alert-banner">🚨 TARGET PIN CAPTURE DETECTED!...</div>
 
+            <!-- COMPACT HIGH-CRIME TRAP & TRACE CELLULAR PING PANEL -->
             <div id="trapTraceHUD" class="trap-trace-hud">
-                🛰️ TRAP & TRACE MATRIX ENGAGED | <span id="traceStatusText">SCANNING AREA REPEATER TOWERS...</span>
+                📡 TRACE ENGAGED:<br><span id="traceStatusText">INITIALIZING TOWERS...</span>
             </div>
 
             <div id="map"></div>
             
             <div id="nvgGreenFilter" class="night-vision-green"></div>
 
+            <!-- DIRECTIONAL ORIENTATION COMPASS INDICATOR -->
             <div class="compass-deck">
                 <div id="compassArrow" class="compass-arrow"></div>
                 <div>HDG: <span id="headingReadout">000°</span></div>
             </div>
 
+            <!-- TREETOP STEP BUTTON DECK PER OPERATIONAL SPECIFICATION -->
             <div id="commanderPerimeterDeck" class="perimeter-manual-deck">
                 <label>Perimeter</label>
                 <div id="radiusReadout" class="perimeter-readout">500m</div>
@@ -725,6 +738,7 @@
                 <button class="step-btn" onclick="adjustPerimeterManual(-100)">-</button>
             </div>
 
+            <!-- SIDEBAR OVERLAY TOOL DRAWER -->
             <div class="map-sidebar">
                 <button id="btnPen" class="tool-btn" onclick="toggleRedPen()">PEN</button>
                 <button class="tool-btn" onclick="clearDrawings()">ERASE</button>
@@ -734,6 +748,7 @@
             </div>
         </div>
 
+        <!-- CHIP MATRIX DRAWER WITH ACCELERATED SWIPE MECHANICS -->
         <div class="asset-drawer">
             <div id="chip-k9" class="asset-chip" onclick="selectAssetToPlace('k9')"><span class="dot k9"></span>K9 Team</div>
             <div id="chip-le" class="asset-chip" onclick="selectAssetToPlace('le')"><span class="dot le"></span>LE Blue</div>
@@ -763,6 +778,7 @@
         </div>
     </div>
 
+    <!-- STRATEGIC LEDGER WORKSPACE -->
     <div id="screenReport" class="screen">
         <div class="map-topnav" style="height:55px;">
             <div class="nav-arrow" onclick="switchScreen('screenMenu')">←</div>
@@ -817,6 +833,7 @@
         </div>
     </div>
 
+    <!-- VOICE ASSISTANT PANEL -->
     <div id="screenK9Voice" class="screen">
         <div class="map-topnav">
             <div class="nav-arrow" onclick="handleK9VoiceBackNavigation()">←</div>
@@ -857,16 +874,19 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // APPWRITE SERVER CONFIGURATION PATH
+        // =========================================================================
+        // APPWRITE SERVER CONFIGURATION PATH (LINKED TO YOUR SECURE KEYS)
+        // =========================================================================
         const client = new Appwrite.Client();
         client
-            .setEndpoint('https://cloud.appwrite.io/v1') 
-            .setProject('YOUR_PROJECT_ID');              
+            .setEndpoint('https://nyc.cloud.appwrite.io/v1') 
+            .setProject('6a38e834003e0cc64c31');              
 
         const databases = new Appwrite.Databases(client);
         const DATABASE_ID = 'tacnet_telemetry_db';      
-        const COLLECTION_ID = 'active_operators';       
+        const COLLECTION_ID = 'tacnet_live_units';       
         const TOKEN_COLLECTION = 'agency_tokens';       
+        // =========================================================================
 
         let map;
         let mapCenter = [37.5407, -77.4360]; 
@@ -899,7 +919,8 @@
         let traceHUDInterval = null;
 
         window.addEventListener('load', () => {
-            switchScreen('screenLanding');
+            // CORRECTION: Direct initial screen state routing to Sign-In gate for Part B
+            switchScreen('screenSignIn');
             logEvent("Platform runtime initialization completely established.");
             setupOrientationCompass();
             setupDragScroll();
@@ -995,11 +1016,11 @@
 
         function startTrapTraceSimulation() {
             const statusStrings = [
-                "SCANNING LOCAL BASE REPEATER TOWERS...",
-                "INTERCEPTING COARSE CELL TELEMETRY...",
-                "CALCULATING TRIANGULATION RECTANGLES...",
-                "FILTERING CO-CHANNEL SIGNAL PROFILES...",
-                "VECTORING DYNAMIC AREA GSM PINGS..."
+                "SCANNING TOWERS...",
+                "TRACKING PINGS...",
+                "TRIANGULATING...",
+                "FILTERING CELL...",
+                "LOCKING VECTOR..."
             ];
             let loopIndex = 0;
             const hudText = document.getElementById("traceStatusText");
@@ -1072,6 +1093,7 @@
             });
         }
 
+        /* HYPER-ACCURATE TELEMETRY LINK DUPLICATING REGRID TREETOP REFRESH PERFORMANCES */
         function trackUserGPS() {
             if (!navigator.geolocation) return;
             if (gpsWatchId) navigator.geolocation.clearWatch(gpsWatchId);
@@ -1093,7 +1115,11 @@
                     }
                 }
                 broadcastTelemetryToServer(uLat, uLng);
-            }, (err) => { console.log('Buffering GPS matrix telemetry...'); }, { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 });
+            }, (err) => { console.log('Buffering GPS matrix telemetry...'); }, { 
+                enableHighAccuracy: true,  /* Pulls raw hardware chip satellite channels directly */
+                timeout: 5000,             /* Prevents position freezing or drifting stall sequences */
+                maximumAge: 0              /* Absolute zero cache override forcing pure live positioning calculations */
+            });
         }
 
         function snapFocusToUserGPS() {
