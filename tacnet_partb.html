@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>TACNET - Live Field Operations Platform</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <!-- APPWRITE SDK CORE LINKS -->
     <script src="https://cdn.jsdelivr.net/npm/appwrite@14.0.0"></script>
     <style>
         /* MOBILE PHONE HYPER-OPTIMIZATION & FIXED HEIGHT PREVENTING OVERFLOW */
@@ -31,6 +30,8 @@
             background-color: #020208;
         }
         
+        /* RESTORES HOMEPAGE STANDALONE VIEWPORTS */
+        #screenLanding { display: flex !important; z-index: 20; }
         .screen.active { display: flex !important; z-index: 30; }
 
         /* BACKDROP CORE CONFIGURATIONS */
@@ -38,7 +39,7 @@
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(rgba(2, 6, 23, 0.65), rgba(15, 23, 42, 0.9)), 
-                       
+                        url('IMAGE FOR TAC.png');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -64,7 +65,6 @@
             overflow: hidden;
             background: #000;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
         }
@@ -554,7 +554,6 @@
 
     <div id="emergencyStrobe"></div>
 
-    <!-- LEASE SHUTOFF LOCKOUT SCREEN OVERLAY -->
     <div id="screenLockout" class="lockout-panel">
         <span style="font-size: 3rem; margin-bottom: 1rem;">⚠️</span>
         <h2 style="color: #ef4444; font-weight: 900; letter-spacing: 1px; margin-bottom: 1rem;">EVALUATION TRIAL EXPIRED</h2>
@@ -567,7 +566,6 @@
         </div>
     </div>
 
-    <!-- PRINT PREVIEW MATRIX OVERLAY -->
     <div id="printPreviewLayer" class="print-preview-modal">
         <div class="preview-alert-strip">
             <span style="font-size:0.65rem; font-weight:800; color:#475569; text-transform:uppercase; letter-spacing:0.5px;">📋 VERIFIED PRE-PRINT PREVIEW</span>
@@ -611,11 +609,9 @@
         <div id="prevDocLogs" style="font-family:monospace; font-size:0.7rem; line-height:1.4;"></div>
     </div>
 
-    <!-- HOMEPAGE HUB ENTRY SCREEN (FIXED GRAPHIC ROUTING PATH) -->
     <div id="screenLanding" class="screen">
         <div class="landing-backdrop-pure">
             <div class="homepage-branding-container">
-                <!-- IMAGE PATH RESTORED DIRECTLY TO MATCH YOUR ACTIVE GRAPHIC SYSTEM FILENAMES -->
                 <img class="homepage-branding-img" src="IMAGE FOR TAC.png" alt="TACNET MULTI-AGENCY PLATFORM">
                 
                 <div class="graphic-link-wrapper" onclick="switchScreen('screenSignIn')">
@@ -627,7 +623,6 @@
         </div>
     </div>
 
-    <!-- SECURE FIELD GATEWAY PANEL (RESTORED ADMINISTRATOR CREDITS FOOTER) -->
     <div id="screenSignIn" class="screen">
         <div class="backdrop"></div>
         <div style="z-index: 5; margin-top: 1.5rem; display: flex; flex-direction: column; align-items: center;">
@@ -656,7 +651,6 @@
                 <input type="text" id="inputRank" class="form-control" placeholder="Required: e.g., K9-12" autocomplete="off">
             </div>
             
-            <!-- DEMO TESTING TOKEN SHUTOFF GATE -->
             <div class="form-group" style="margin-bottom: 1rem;">
                 <label style="color: #eab308;">Agency Lease / Demo Key</label>
                 <input type="text" id="inputToken" class="form-control" style="border: 1px solid #eab308;" placeholder="Enter Department Key" autocomplete="off">
@@ -670,7 +664,6 @@
             </div>
         </div>
 
-        <!-- RESTORED: Custom Gold-Branded Law Enforcement Creator Deck Footer Rows -->
         <div class="creator-credits" style="position: absolute; bottom: 0; background: rgba(2, 2, 10, 0.95);">
             <p class="creator-gold-label">— APP CREATOR —</p>
             <p class="creator-name">EARL WOOD</p>
@@ -678,7 +671,6 @@
         </div>
     </div>
 
-    <!-- TACNET MAIN HUB GRID -->
     <div id="screenMenu" class="screen">
         <div class="backdrop"></div>
         <div style="z-index: 5; margin-top: 2.5rem; margin-bottom: 1rem; text-align: center;">
@@ -702,7 +694,6 @@
         </div>
     </div>
 
-    <!-- ACTIVE MAP WORKSPACE -->
     <div id="screenMap" class="screen">
         <div class="map-topnav">
             <div class="nav-arrow" onclick="switchScreen('screenMenu')">←</div>
@@ -719,7 +710,6 @@
         <div class="map-wrapper" id="mapWrapper">
             <div id="telemetryBanner" class="telemetry-alert-banner">🚨 TARGET PIN CAPTURE DETECTED!...</div>
 
-            <!-- COMPACT HIGH-CRIME TRAP & TRACE CELLULAR PING PANEL -->
             <div id="trapTraceHUD" class="trap-trace-hud">
                 📡 TRACE ENGAGED:<br><span id="traceStatusText">INITIALIZING TOWERS...</span>
             </div>
@@ -728,13 +718,11 @@
             
             <div id="nvgGreenFilter" class="night-vision-green"></div>
 
-            <!-- DIRECTIONAL ORIENTATION COMPASS INDICATOR -->
             <div class="compass-deck">
                 <div id="compassArrow" class="compass-arrow"></div>
                 <div>HDG: <span id="headingReadout">000°</span></div>
             </div>
 
-            <!-- TREETOP STEP BUTTON DECK PER OPERATIONAL SPECIFICATION -->
             <div id="commanderPerimeterDeck" class="perimeter-manual-deck">
                 <label>Perimeter</label>
                 <div id="radiusReadout" class="perimeter-readout">500m</div>
@@ -742,7 +730,6 @@
                 <button class="step-btn" onclick="adjustPerimeterManual(-100)">-</button>
             </div>
 
-            <!-- SIDEBAR OVERLAY TOOL DRAWER -->
             <div class="map-sidebar">
                 <button id="btnPen" class="tool-btn" onclick="toggleRedPen()">PEN</button>
                 <button class="tool-btn" onclick="clearDrawings()">ERASE</button>
@@ -752,7 +739,6 @@
             </div>
         </div>
 
-        <!-- CHIP MATRIX DRAWER WITH ACCELERATED SWIPE MECHANICS -->
         <div class="asset-drawer">
             <div id="chip-k9" class="asset-chip" onclick="selectAssetToPlace('k9')"><span class="dot k9"></span>K9 Team</div>
             <div id="chip-le" class="asset-chip" onclick="selectAssetToPlace('le')"><span class="dot le"></span>LE Blue</div>
@@ -782,7 +768,6 @@
         </div>
     </div>
 
-    <!-- STRATEGIC LEDGER WORKSPACE -->
     <div id="screenReport" class="screen">
         <div class="map-topnav" style="height:55px;">
             <div class="nav-arrow" onclick="switchScreen('screenMenu')">←</div>
@@ -837,7 +822,6 @@
         </div>
     </div>
 
-    <!-- VOICE ASSISTANT PANEL -->
     <div id="screenK9Voice" class="screen">
         <div class="map-topnav">
             <div class="nav-arrow" onclick="handleK9VoiceBackNavigation()">←</div>
@@ -923,7 +907,7 @@
         let traceHUDInterval = null;
 
         window.addEventListener('load', () => {
-            // JavaScript native engine triggers the landing homepage as the default initial starting panel view
+            // Native switch system correctly establishes screenLanding structure first on execution
             switchScreen('screenLanding');
             logEvent("Platform runtime initialization completely established.");
             setupOrientationCompass();
@@ -1129,323 +1113,3 @@
         function snapFocusToUserGPS() {
             if (userLocationMarker) {
                 const coords = userLocationMarker.getLatLng();
-                map.setView(coords, 18);
-                logEvent("Focus Lock Engaged: Viewport snapped down to live operator coordinates.");
-            } else {
-                logEvent("Focus Lock Warning: GPS telemetry buffering. Standby.");
-            }
-        }
-
-        function setupOrientationCompass() {
-            if (window.DeviceOrientationEvent) {
-                window.addEventListener('deviceorientation', handleOrientationUpdate, true);
-            }
-        }
-
-        function handleOrientationUpdate(event) {
-            let heading = event.webkitCompassHeading || event.alpha;
-            if (heading) {
-                const angle = Math.round(heading);
-                document.getElementById('headingReadout').innerText = String(angle).padStart(3, '0') + "°";
-                if(document.getElementById('compassArrow')) document.getElementById('compassArrow').style.transform = `rotate(${angle}deg)`;
-            }
-        }
-
-        function handleSignIn() {
-            const nameIn = document.getElementById('inputName');
-            const agencyIn = document.getElementById('inputAgency');
-            const rankIn = document.getElementById('inputRank');
-            const tokenIn = document.getElementById('inputToken');
-
-            nameIn.classList.remove('error-field'); agencyIn.classList.remove('error-field'); rankIn.classList.remove('error-field'); tokenIn.classList.remove('error-field');
-            let fault = false;
-            
-            if (nameIn.value.trim() === "") { nameIn.classList.add('error-field'); fault = true; }
-            if (agencyIn.value.trim() === "") { agencyIn.classList.add('error-field'); fault = true; }
-            if (rankIn.value.trim() === "") { rankIn.classList.add('error-field'); fault = true; }
-            if (tokenIn.value.trim() === "") { tokenIn.classList.add('error-field'); fault = true; }
-
-            if (fault) return;
-
-            currentAgencyToken = tokenIn.value.trim();
-
-            databases.getDocument(DATABASE_ID, TOKEN_COLLECTION, currentAgencyToken)
-            .then((doc) => {
-                const expirationDate = new Date(doc.expiration_timestamp);
-                const currentDate = new Date();
-
-                if (currentDate > expirationDate) {
-                    document.getElementById('screenLockout').style.display = 'flex';
-                    return;
-                }
-                proceedWithAuthentication(nameIn.value.trim(), agencyIn.value.trim(), rankIn.value.trim());
-            })
-            .catch((err) => {
-                proceedWithAuthentication(nameIn.value.trim(), agencyIn.value.trim(), rankIn.value.trim());
-            });
-        }
-
-        function proceedWithAuthentication(name, agency, rank) {
-            activeOperatorName = name; 
-            activeOperatorAgency = agency; 
-            activeOperatorCallSign = rank.toUpperCase();
-            isUserAuthenticatedSession = true; 
-            
-            const isCommander = (assignedRole === 'commander');
-            document.getElementById('commanderIntelBlock').style.display = isCommander ? 'block' : 'none';
-            document.getElementById('commanderPerimeterDeck').style.display = isCommander ? 'flex' : 'none';
-            document.getElementById('commanderControlRow').style.display = isCommander ? 'flex' : 'none';
-
-            logEvent(`Verified Authentication: [${activeOperatorCallSign}] logged in as ${assignedRole.toUpperCase()}.`);
-            switchScreen('screenMenu');
-        }
-
-        function logOutSession() {
-            if(gpsWatchId) navigator.geolocation.clearWatch(gpsWatchId);
-            userLocationMarker = null;
-            isUserAuthenticatedSession = false;
-            document.getElementById('inputName').value = ""; document.getElementById('inputAgency').value = ""; document.getElementById('inputRank').value = "";
-            switchScreen('screenSignIn');
-        }
-
-        function startNewSearch() {
-            clearMapAssets(); clearDrawings();
-            perimeterRadiusMeters = 500; 
-            if (tacticalPerimeterCircle) tacticalPerimeterCircle.setRadius(perimeterRadiusMeters);
-            document.getElementById('radiusReadout').innerText = perimeterRadiusMeters + "m";
-            logEvent("Fresh search parameters initialized.");
-            switchScreen('screenMap');
-        }
-
-        function setMapType(type) {
-            if (!map) return;
-            document.querySelectorAll('.map-toggle-btn').forEach(b => b.classList.remove('active'));
-            map.eachLayer((layer) => { if (layer instanceof L.TileLayer) map.removeLayer(layer); });
-
-            if (type === 'satellite') {
-                document.getElementById('btnSat').classList.add('active');
-                L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19 }).addTo(map);
-                L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, opacity: 0.85 }).addTo(map);
-                L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19, opacity: 0.75 }).addTo(map);
-            } else {
-                document.getElementById('btnTerr').classList.add('active');
-                L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', { maxZoom: 18 }).addTo(map);
-            }
-        }
-
-        function toggleVetDirectoryPanel() {
-            const panel = document.getElementById('vetInfoContainerBlock');
-            panel.style.display = (panel.style.display === 'none' || panel.style.display === '') ? 'block' : 'none';
-        }
-
-        function executeAddressSearch() {
-            const query = document.getElementById('mapSearch').value.trim();
-            if(query !== "") {
-                fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(query) + '&limit=1')
-                    .then(r => r.json())
-                    .then(data => {
-                        if (data && data.length > 0) {
-                            const lat = parseFloat(data[0].lat); const lon = parseFloat(data[0].lon);
-                            mapCenter = [lat, lon]; map.setView(mapCenter, 18);
-                            if (tacticalPerimeterCircle) tacticalPerimeterCircle.setLatLng(mapCenter);
-                            
-                            if (persistentTargetPin) {
-                                persistentTargetPin.setLatLng(mapCenter);
-                            } else {
-                                const redDotIcon = L.divIcon({ className: 'tac-marker tac-target-pin', iconSize: [18, 18], iconAnchor: [9, 9] });
-                                persistentTargetPin = L.marker(mapCenter, { icon: redDotIcon, zIndexOffset: 2000 });
-                            }
-                            persistentTargetPin.addTo(map);
-                            logEvent(`Geocoded Focus Lock: Persistent Red Target Dot pinned.`);
-                        }
-                    });
-            }
-        }
-
-        function adjustPerimeterManual(amount) {
-            perimeterRadiusMeters += amount;
-            if (perimeterRadiusMeters < 100) perimeterRadiusMeters = 100;
-            if (perimeterRadiusMeters > 5000) perimeterRadiusMeters = 5000;
-            if (tacticalPerimeterCircle) {
-                tacticalPerimeterCircle.setRadius(perimeterRadiusMeters);
-            }
-            document.getElementById('radiusReadout').innerText = perimeterRadiusMeters + "m";
-            logEvent(`Perimeter Adjusted: Radius modified manually to ${perimeterRadiusMeters}m.`);
-        }
-
-        function toggleMapLock() {
-            isMapLocked = !isMapLocked; document.getElementById('btnLock').style.background = isMapLocked ? '#1d4ed8' : '';
-            if (isMapLocked) { map.dragging.disable(); map.touchZoom.disable(); } else { map.dragging.enable(); map.touchZoom.enable(); }
-        }
-
-        function toggleRedPen() {
-            isPenActive = !isPenActive; document.getElementById('btnPen').classList.toggle('pen-active', isPenActive);
-            if (isPenActive) {
-                if(!isMapLocked) toggleMapLock();
-                map.dragging.disable();
-            } else {
-                if(isMapLocked) toggleMapLock();
-                map.dragging.enable();
-            }
-        }
-
-        function selectAssetToPlace(assetType) {
-            document.querySelectorAll('.asset-chip').forEach(chip => chip.classList.remove('selected'));
-            if (selectedAssetType === assetType) { selectedAssetType = null; return; }
-            selectedAssetType = assetType; document.getElementById(`chip-${assetType}`).classList.add('selected');
-        }
-
-        function executeManualAssetPlacement(lat, lng, assetType) {
-            const htmlIcon = L.divIcon({ className: `tac-marker tac-${assetType}`, iconSize: [22, 22], iconAnchor: [11, 11] });
-            const marker = L.marker([lat, lng], { icon: htmlIcon, draggable: true }).addTo(map);
-            
-            marker.on('click', (e) => {
-                L.DomEvent.stopPropagation(e);
-                if (isPenActive) return; 
-                map.removeLayer(marker);
-                placedMarkers = placedMarkers.filter(m => m !== marker);
-                logEvent(`Asset Removed: Purged [${assetType.toUpperCase()}] marker.`);
-            });
-
-            placedMarkers.push(marker);
-            logEvent(`Asset Deployed: dropped custom operational target token [${assetType.toUpperCase()}].`);
-            selectAssetToPlace(null);
-        }
-
-        function generatePrintPreviewLayout() {
-            document.getElementById('prevDocCaseId').innerText = document.getElementById('reportCaseNumber').value || "UNSPECIFIED";
-            document.getElementById('prevDocOffense').innerText = document.getElementById('reportOffenseType').value || "General Field Ops";
-            
-            document.getElementById('prevDocOfficer').innerText = activeOperatorName || "Not Recorded";
-            document.getElementById('prevDocAgency').innerText = activeOperatorAgency || "Not Recorded";
-            document.getElementById('prevDocCallsign').innerText = activeOperatorCallSign || "Not Recorded";
-            
-            document.getElementById('prevDocNotes').innerText = document.getElementById('reportNotes').value || "No command notes filed.";
-            document.getElementById('prevDocDisp').innerText = document.getElementById('reportDisposition').value || "NO DISPOSITION DEPLOYED";
-            
-            const logsContainer = document.getElementById('prevDocLogs');
-            if (historicalLogs.length === 0) {
-                logsContainer.innerHTML = "<p>No analytical telemetry entries logged during this sequence.</p>";
-            } else {
-                logsContainer.innerHTML = historicalLogs.map(log => `<p style='margin-bottom:0.25rem;'><b>[${log.time}]</b> ${log.text}</p>`).join('');
-            }
-            
-            document.getElementById('printPreviewLayer').style.display = 'block';
-        }
-
-        function closePrintPreviewLayout() {
-            document.getElementById('printPreviewLayer').style.display = 'none';
-        }
-
-        function executeHardPrint() {
-            generatePrintPreviewLayout(); 
-            setTimeout(() => { window.print(); }, 150);
-        }
-
-        function clearDrawings() { 
-            activeMapPolylines.forEach(line => map.removeLayer(line));
-            activeMapPolylines = [];
-            logEvent("Erase Active: Vector overlays completely purged from map layout.");
-        }
-        
-        function clearMapAssets() { 
-            placedMarkers.forEach(m => map.removeLayer(m)); placedMarkers = []; 
-            Object.keys(remoteSearcherMarkers).forEach(key => { map.removeLayer(remoteSearcherMarkers[key]); });
-            remoteSearcherMarkers = {};
-            if(persistentTargetPin) { map.removeLayer(persistentTargetPin); persistentTargetPin = null; } 
-        }
-        
-        function toggleNightVisionFilter() {
-            nvgState = !nvgState;
-            const filterLayer = document.getElementById('nvgGreenFilter');
-            const nvgBtn = document.getElementById('btnNVG');
-            if(nvgState) {
-                filterLayer.style.display = 'block';
-                nvgBtn.style.background = '#22c55e';
-                nvgBtn.style.color = '#000';
-                logEvent("NVG Active: High-contrast night-vision phosphor screen deployed.");
-            } else {
-                filterLayer.style.display = 'none';
-                nvgBtn.style.background = '';
-                nvgBtn.style.color = '#22c55e';
-                logEvent("NVG Inactive: Tactical screen returned to standard color palette.");
-            }
-        }
-
-        function terminateSearch() { 
-            clearMapAssets(); clearDrawings(); if(gpsWatchId) navigator.geolocation.clearWatch(gpsWatchId); 
-            logEvent("Search officially terminated. System resetting permissions...");
-            assignedRole = "searcher";
-            isUserAuthenticatedSession = false; 
-            document.getElementById('commanderIntelBlock').style.display = 'none';
-            document.getElementById('commanderPerimeterDeck').style.display = 'none';
-            document.getElementById('commanderControlRow').style.display = 'none';
-            document.getElementById('inputName').value = ""; document.getElementById('inputAgency').value = ""; document.getElementById('inputRank').value = "";
-            switchScreen('screenSignIn');
-        }
-
-        function triggerEmergencyAlert() { document.getElementById('emergencyStrobe').style.display = 'block'; logEvent("🚨 DISTRESS ALARM DEPLOYED."); }
-        function resetEmergencyAlert() { document.getElementById('emergencyStrobe').style.display = 'none'; }
-
-        function playK9VoiceProtocol(category) {
-            window.speechSynthesis.cancel();
-            currentVoiceCategory = category;
-            const banner = document.getElementById('voiceStatusBanner'); banner.style.display = 'block';
-            let txt = "";
-
-            if (category === 'cpr') {
-                txt = "Canine CPR Protocol. Step 1. Check breathing and pulse. Step 2. Lay dog on its right side. Step 3. Compress chest 1.5 to 2 inches deep at 100 to 120 beats per minute. Step 4. Deliver 2 rescue breaths into the nose for every 30 compressions. Repeat continuously.";
-            } else if (category === 'gunshot') {
-                txt = "Gunshot Trauma Protocol. Step 1. Maintain muzzle control. Step 2. Pack the entry and wound cavity directly with gauze dressing cloth. Step 3. Apply sustained manual direct downward pressure without stopping. Step 4. Bandage firmly while maintaining compression and sprint directly to emergency regional veterinary support links.";
-            } else if (category === 'snake') {
-                txt = "Venomous Snake Bite Protocol. Step 1. Restrain the animal instantly. Minimize physical exertion completely. Step 2. Keep bite site positioned below heart level. Step 3. Flush bite wound puncture opening clean with water. Do not ice. Do not cut.";
-            } else if (category === 'bleeding') {
-                txt = "Severe Hemorrhage Bleeding Protocol. Step 1. Apply clean sterile trauma pad compress dressing cloth over lanceration site. Step 2. Secure maximum two handed direct downward heavy bone pressure. Step 3. Wrap a binding compression wrap. Do not check bleeding cavity until transit complete.";
-            } else if (category === 'heat') {
-                txt = "Heat Exhaustion Protocol. Step 1. Extract animal from hyperthermic exposure elements into deep shade. Step 2. Wrap underbelly, neck, and paws using cool damp cloths. Step 3. Circulate dynamic fan airflow over fur. Do not drop core below 103 degrees.";
-            } else if (category === 'eye') {
-                txt = "Ocular Eye Injury Protocol. Step 1. Restrain paws to prevent mechanical corneal abrasion rubbing. Step 2. Irrigate eye continuously for 3 full minutes with sterile saline solution to clear dirt debris. Step 3. Cover eye with moist padding cloth.";
-            } else if (category === 'paw') {
-                txt = "Paw Pad Fracture Trauma Protocol. Step 1. Clear exterior field glass metal stones out of lancerated tissue. Step 2. Apply pressure dressing patch block directly onto bleeding pad skin for 2 full minutes. Step 3. Wrap protective boot bandage.";
-            }
-
-            banner.innerText = "📢 VOCAL BROADCAST ACTIVE: " + category.toUpperCase();
-            const utterance = new SpeechSynthesisUtterance(txt);
-            utterance.rate = 0.95; utterance.onend = () => { banner.style.display = 'none'; };
-            window.speechSynthesis.speak(utterance);
-        }
-
-        function repeatLastVoiceBroadcast() { if(currentVoiceCategory !== "") playK9VoiceProtocol(currentVoiceCategory); }
-        function stopVoiceBroadcast() { window.speechSynthesis.cancel(); document.getElementById('voiceStatusBanner').style.display = 'none'; }
-
-        function playbackControl(action) {
-            const status = document.getElementById('replayStatus'); clearInterval(replayInterval);
-            if (action === 'play') {
-                status.innerText = "Replaying Case Event Timeline...";
-                let idx = 0;
-                replayInterval = setInterval(() => {
-                    if (idx < historicalLogs.length) {
-                        status.innerText = `Log Update: ${idx + 1}/${historicalLogs.length}`; idx++;
-                    } else { clearInterval(replayInterval); status.innerText = "Replay Complete"; }
-                }, 1000);
-            } else if (action === 'pause') { status.innerText = "Playback Frozen"; }
-        }
-
-        function emailFinalReport() {
-            const notes = document.getElementById('reportNotes').value;
-            const disposition = document.getElementById('reportDisposition').value;
-            let body = `TACNET TACTICAL BRIEF INCIDENT CASE LEDGER\nNotes: ${notes}\nFinal Disposition: ${disposition}\n\n`;
-            historicalLogs.forEach(l => { body += `[${l.time}] ${l.text}\n`; });
-            window.location.href = `mailto:?subject=TACNET Incident Report Log Export&body=${encodeURIComponent(body)}`;
-        }
-
-        function logEvent(message) {
-            const timestamp = new Date().toLocaleTimeString();
-            historicalLogs.unshift({ time: timestamp, text: message });
-            const list = document.getElementById('logList');
-            if(list) list.innerHTML = historicalLogs.map(log => `<li class="log-item"><span>[${log.time}]</span> ${log.text}</li>`).join('');
-        }
-        function openHistoricalLogs() { logEvent("Analytical operating event report ledger opened."); switchScreen('screenReport'); }
-    </script>
-</body>
-</html>
