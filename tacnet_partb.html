@@ -30,8 +30,9 @@
             z-index: 10;
             background-color: #020208;
         }
-        /* CORRECTION: Forces the Secure Portal Sign-In Page to be the active default startup view */
-        #screenSignIn { display: flex !important; z-index: 20; }
+        
+        /* FIX: Restores screenLanding as the sole default first page view */
+        #screenLanding { display: flex !important; z-index: 20; }
         .screen.active { display: flex !important; z-index: 30; }
 
         /* BACKDROP CORE CONFIGURATIONS */
@@ -65,15 +66,20 @@
             overflow: hidden;
             background: #000;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
         }
 
         .homepage-branding-img {
-            width: 100%;
-            height: 100%;
+            max-width: 90%;
+            max-height: 50%;
             object-fit: contain;
             display: block;
+            color: #eab308;
+            font-weight: 800;
+            text-align: center;
+            padding: 1rem;
         }
 
         .graphic-link-wrapper {
@@ -611,12 +617,20 @@
         <div id="prevDocLogs" style="font-family:monospace; font-size:0.7rem; line-height:1.4;"></div>
     </div>
 
-    <!-- HOMEPAGE HUB ENTRY SCREEN (HIDDEN BY DEFAULT TO FORCE SECURE PORTAL OVERRIDE) -->
+    <!-- HOMEPAGE HUB ENTRY SCREEN (RESTORED MAIN STARTUP LOGIC FLUIDITY) -->
     <div id="screenLanding" class="screen">
         <div class="landing-backdrop-pure">
             <div class="homepage-branding-container">
-                <img class="homepage-branding-img" src="IMAGE FOR TAC.png2.jpg" alt="TACNET Multi-Agency Task Force Search App Logo with Space Satellite and Earth Header">
+                <!-- Image Tag with Fallback styled textual layouts if file is buffering or missing on GitHub Pages -->
+                <img class="homepage-branding-img" src="IMAGE FOR TAC.png2.jpg" alt="TACNET MULTI-AGENCY PLATFORM">
                 
+                <!-- Explicit Creator Branding Text Matrix -->
+                <div style="text-align: center; width: 100%; margin-top: 1rem;">
+                    <p style="color: #64748b; font-size: 0.75rem; text-transform: uppercase; font-weight: 800; letter-spacing: 2px;">— APP CREATOR —</p>
+                    <p style="color: #eab308; font-size: 1.4rem; margin: 0.2rem 0; text-transform: uppercase; letter-spacing: 2px; font-weight: 900;">EARL WOOD</p>
+                    <p style="color: #cbd5e1; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px;">DEPUTY SHERIFF RETIRED VIRGINIA</p>
+                </div>
+
                 <div class="graphic-link-wrapper" onclick="switchScreen('screenSignIn')">
                     <div class="advance-prompt-box">
                         <p class="advance-prompt-text">[ Tap Screen to Advance ]</p>
@@ -626,7 +640,7 @@
         </div>
     </div>
 
-    <!-- SECURE FIELD GATEWAY PANEL (CORRECTED DEFENSE STARTUP VIEWPORT) -->
+    <!-- SECURE FIELD GATEWAY PANEL -->
     <div id="screenSignIn" class="screen">
         <div class="backdrop"></div>
         <div style="z-index: 5; margin-top: 1.5rem; display: flex; flex-direction: column; align-items: center;">
@@ -919,8 +933,8 @@
         let traceHUDInterval = null;
 
         window.addEventListener('load', () => {
-            // CORRECTION: Direct initial screen state routing to Sign-In gate for Part B
-            switchScreen('screenSignIn');
+            // FIX: Correctly forces the Landing Page view layout hierarchy setup upon system startup
+            switchScreen('screenLanding');
             logEvent("Platform runtime initialization completely established.");
             setupOrientationCompass();
             setupDragScroll();
