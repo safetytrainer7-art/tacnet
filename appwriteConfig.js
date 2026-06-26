@@ -5,8 +5,8 @@ const client = new Client();
 
 // Replace these placeholders with your actual Appwrite Project IDs
 client
-    .setEndpoint('https://cloud.appwrite.io/v1') // Your Appwrite API Endpoint
-    .setProject('YOUR_PROJECT_ID_HERE');         // Your specific Project ID
+    .setEndpoint('https://nyc.cloud.appwrite.io/v1') // Your Appwrite API Endpoint
+    .setProject('6a38e834003e0cc64c31');         // Your specific Project ID
 
 export const account = new Account(client);
 export const databases = new Databases(client);
